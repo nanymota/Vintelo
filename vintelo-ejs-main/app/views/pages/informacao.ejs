@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/informacao.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+</head>
+<body>
+    <!-- Header Desktop -->
+    <section class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <header class="main-header">
+            <a href="/homevendedor">
+                <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
+            </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <li><a href="/menuvendedor"><img src="imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a></li>
+                    <li><a href="favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <!-- Header Mobile -->
+    <section class="mobile-header">
+        <header>
+            <nav class="grid">
+                <a href="/perfilvender">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Vintélo">
+                <a href="/menuvendedor">
+                    <img src="imagens/imagem sem cadastro.avif" alt="Menu">
+                </a>
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <h1>Informações da Conta</h1>
+            
+            <section class="profile-wrapper">
+                <!-- Sidebar de Navegação -->
+                <aside class="profile-sidebar">
+                    <section class="profile-info">
+                        <img src="imagens/imagem sem cadastro.avif" alt="Foto de perfil" class="profile-image">
+                        <h2>Laviviana Brechó</h2>
+                        <p>@laviviana</p>
+                    </section>
+                    <nav class="profile-menu">
+                        <a href="#" class="active">Dados Pessoais</a>
+                        <a href="#">Endereço</a>
+                        <a href="#">Segurança</a>
+                        <a href="#">Preferências</a>
+                        <a href="#">Notificações</a>
+                    </nav>
+                </aside>
+
+                <!-- Conteúdo Principal -->
+                <section class="profile-content">
+                    <form class="info-form" id="profileForm">
+                        <!-- Dados Pessoais -->
+                        <section class="form-section active" id="dados-pessoais">
+                            <h3>Dados Pessoais</h3>
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="nome_usu">Nome Completo</label>
+                                    <input type="text" id="nome_usu" name="nome_usu" value="" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="email_usu">E-mail</label>
+                                    <input type="email" id="email_usu" name="email_usu" value="" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="fone_usu">Telefone</label>
+                                    <input type="telefone" id="fone_usu" name="fone_usu" value="(11) 99999-9999" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="cpf">CPF</label>
+                                    <input type="text" id="cpf" name="cpf" value="123.456.789-00" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="data_nasc">Data de Nascimento</label>
+                                    <input type="date" id="data_nasc" name="data_nasc" value="" placeholder="DD/MM/AAAA" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="genero">Gênero</label>
+                                    <select id="genero" name="genero" required>
+                                        <option value="feminino" selected>Feminino</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="outro">Outro</option>
+                                        <option value="nao-informar">Prefiro não informar</option>
+                                    </select>
+                                </section>
+                            </section>
+                        </section>
+
+                        <!-- Endereço -->
+                        <section class="form-section" id="endereco">
+                            <h3>Endereço</h3>
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" id="cep" name="cep" value="01234-567" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="numero">Número</label>
+                                    <input type="text" id="numero" name="numero" value="123" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-group">
+                                <label for="logradouro">Logradouro</label>
+                                <input type="text" id="logradouro" name="logradouro" value="Rua das Flores" required>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" id="bairro" name="bairro" value="Centro" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" id="cidade" name="cidade" value="São Paulo" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="estado">Estado</label>
+                                    <select id="estado" name="estado" required>
+                                        <option value="SP" selected>São Paulo</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="MG">Minas Gerais</option>
+                                    </select>
+                                </section>
+                                <section class="form-group">
+                                    <label for="complemento">Complemento</label>
+                                    <input type="text" id="complemento" name="complemento" value="Apto 45">
+                                </section>
+                            </section>
+                        </section>
+
+                        <!-- Segurança -->
+                        <section class="form-section" id="seguranca">
+                            <h3>Segurança</h3>
+                            <section class="form-group">
+                                <label for="senha_usu">Senha Atual</label>
+                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha atual">
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="senha_usu">Nova Senha</label>
+                                    <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite a nova senha">
+                                </section>
+                                <section class="form-group">
+                                    <label for="senha-usu">Confirmar Senha</label>
+                                    <input type="password" id="senha_usu" name="senha_usu" placeholder="Confirme a nova senha">
+                                </section>
+                            </section>
+                            
+                            <section class="security-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Autenticação em dois fatores
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    Notificar sobre novos logins
+                                </label>
+                            </section>
+                        </section>
+
+                        <!-- Preferências -->
+                        <section class="form-section" id="preferencias">
+                            <h3>Preferências</h3>
+                            <section class="form-group">
+                                <label for="categoria-favorita">Categoria Favorita</label>
+                                <select id="categoria-favorita" name="categoria-favorita">
+                                    <option value="vestidos" selected>Vestidos</option>
+                                    <option value="blusas">Blusas</option>
+                                    <option value="saias">Saias</option>
+                                    <option value="calcas">Calças</option>
+                                    <option value="acessorios">Acessórios</option>
+                                </select>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="tamanho-preferido">Tamanho Preferido</label>
+                                    <select id="tamanho-preferido" name="tamanho-preferido">
+                                        <option value="PP">PP</option>
+                                        <option value="P">P</option>
+                                        <option value="M" selected>M</option>
+                                        <option value="G">G</option>
+                                        <option value="GG">GG</option>
+                                    </select>
+                                </section>
+                                <section class="form-group">
+                                    <label for="faixa-preco">Faixa de Preço</label>
+                                    <select id="faixa-preco" name="faixa-preco">
+                                        <option value="ate-50">Até R$ 50</option>
+                                        <option value="50-100" selected>R$ 50 - R$ 100</option>
+                                        <option value="100-200">R$ 100 - R$ 200</option>
+                                        <option value="acima-200">Acima de R$ 200</option>
+                                    </select>
+                                </section>
+                            </section>
+                        </section>
+
+                        <!-- Notificações -->
+                        <section class="form-section" id="notificacoes">
+                            <h3>Notificações</h3>
+                            <section class="notification-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Receber ofertas por e-mail
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Notificações de novos produtos
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    SMS promocionais
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Atualizações de pedidos
+                                </label>
+                            </section>
+                        </section>
+
+                        <section class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">Cancelar</button>
+                            <button type="submit" class="btn-primary">Salvar Alterações</button>
+                        </section>
+                    </form>
+                </section>
+            </section>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga-nos nas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="#" class="social-link"><img src="imagens/TikTok.png" alt="TikTok"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script/informacao.js"></script>
+</body>
+</html>

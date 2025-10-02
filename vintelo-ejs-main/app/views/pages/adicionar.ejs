@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/adicionar.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Desktop -->
+    <section class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <header class="main-header">
+            <a href="/homevendedor">
+                <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
+            </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="#">Saias</a>
+                <a href="#">Blusas</a>
+                <a href="#">Calças</a>
+                <a href="#">Outros</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <li><a href="/menuvendedor"><img src="imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <!-- Header Mobile -->
+    <section class="mobile-header">
+        <header>
+            <nav class="grid">
+                <a href="/homevendedor">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Vintélo">
+                <a href="/carrinho">
+                    <img src="imagens/carrinho.png" alt="Carrinho">
+                </a>
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <h1>Adicionar Peça</h1>
+            
+            <% if (typeof avisoErro !== 'undefined' && avisoErro.mensagem) { %>
+                <div class="alert alert-error">
+                    <strong><%= avisoErro.titulo %></strong>
+                    <p><%= avisoErro.mensagem %></p>
+                </div>
+            <% } %>
+            
+            <section class="content-wrapper">
+                <!-- Upload de Fotos -->
+                <section class="photo-section">
+                    <section class="main-photo">
+                        <img id="main-photo" src="imagens/add foto.png" alt="Foto principal">
+                        <label for="main-photo-input" class="photo-btn">
+                            <span>+</span>
+                        </label>
+                        <input type="file" id="main-photo-input" name="fotos" accept="image/*" style="display: none;">
+                    </section>
+                    
+                    <section class="photo-thumbnails">
+                        <section class="thumbnail-slot">
+                            <img id="thumb-0" src="imagens/add foto.png" alt="Miniatura 1">
+                            <label for="thumb-input-0" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-0" name="fotos" accept="image/*" style="display: none;">
+                        </section>
+                        <section class="thumbnail-slot">
+                            <label for="thumb-input-1" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
+                        </section>
+                        <section class="thumbnail-slot">
+                            <label for="thumb-input-2" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-2" name="fotos" accept="image/*" style="display: none;">
+                        </section>
+                        <section class="thumbnail-slot">
+                            <label for="thumb-input-3" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-3" name="fotos" accept="image/*" style="display: none;">
+                        </section>
+                    </section>
+                    <p class="photo-instructions">Clique para adicionar fotos da galeria</p>
+                </section>
+
+                <!-- Formulário -->
+                <section class="form-section">
+                    <form class="item-form" method="POST" action="/adicionar" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="nome_produto">Nome da peça</label>
+                                <input type="text" id="nome_produto" name="nome_produto" 
+                                       value="<%= typeof valores !== 'undefined' ? valores.nome_produto || '' : '' %>"
+                                       placeholder="Ex: Vestido longo floral" required>
+                            </section>
+                            <section class="form-group desktop-only">
+                                <label for="preco_produto">Preço</label>
+                                <input type="text" id="preco_produto" name="preco_produto" 
+                                       value="<%= typeof valores !== 'undefined' ? valores.preco_produto || '' : '' %>"
+                                       placeholder="R$ 0,00" required>
+                            </section>
+                        </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="categoria_produto">Categoria</label>
+                                <select id="categoria_produto" name="categoria_produto" required>
+                                    <option value="">Selecione a categoria</option>
+                                    <option value="vestidos" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'vestidos' ? 'selected' : '' %>>Vestidos</option>
+                                    <option value="saias" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'saias' ? 'selected' : '' %>>Saias</option>
+                                    <option value="blusas" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'blusas' ? 'selected' : '' %>>Blusas</option>
+                                    <option value="calcas" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'calcas' ? 'selected' : '' %>>Calças</option>
+                                    <option value="acessorios" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'acessorios' ? 'selected' : '' %>>Acessórios</option>
+                                </select>
+                            </section>
+                            <section class="form-group desktop-only">
+                                <label for="cor_produto">Cor</label>
+                                <input type="text" id="cor_produto" name="cor_produto" 
+                                       value="<%= typeof valores !== 'undefined' ? valores.cor_produto || '' : '' %>"
+                                       placeholder="Ex: Azul marinho">
+                            </section>
+                        </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="condicao_produto">Estado da peça</label>
+                                <select id="condicao_produto" name="condicao_produto" required>
+                                    <option value="">Selecione o estado</option>
+                                    <option value="novo" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'novo' ? 'selected' : '' %>>Novo com etiqueta</option>
+                                    <option value="sem-uso" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'sem-uso' ? 'selected' : '' %>>Sem uso</option>
+                                    <option value="pouco-uso" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'pouco-uso' ? 'selected' : '' %>>Pouco uso</option>
+                                    <option value="usado" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'usado' ? 'selected' : '' %>>Usado</option>
+                                </select>
+                            </section>
+                            <section class="form-group">
+                                <label for="tamanho_produto">Tamanho</label>
+                                <select id="tamanho_produto" name="tamanho_produto" required>
+                                    <option value="">Selecione o tamanho</option>
+                                    <option value="PP" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'PP' ? 'selected' : '' %>>PP</option>
+                                    <option value="P" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'P' ? 'selected' : '' %>>P</option>
+                                    <option value="M" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'M' ? 'selected' : '' %>>M</option>
+                                    <option value="G" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'G' ? 'selected' : '' %>>G</option>
+                                    <option value="GG" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'GG' ? 'selected' : '' %>>GG</option>
+                                </select>
+                            </section>
+                        </section>
+                        
+                        <section class="form-group">
+                            <label for="descricao_produto">Descrição (opcional)</label>
+                            <textarea id="descricao_produto" name="descricao_produto" 
+                                      placeholder="Descreva detalhes sobre a peça, marca, tecido, etc..."><%= typeof valores !== 'undefined' ? valores.descricao_produto || '' : '' %></textarea>
+                        </section>
+
+                        <button type="submit" class="submit-btn">
+                            Enviar para Curadoria
+                        </button>
+                    </form>
+                </section>
+            </section>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga-nos nas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="#" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="#" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+                <li><a href="#" class="social-link"><img src="imagens/TikTok.png" alt="TikTok"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">© 2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script>
+        function validateForm(form) {
+            const fileInputs = form.querySelectorAll('input[type="file"]');
+            let hasPhoto = false;
+            fileInputs.forEach(input => {
+                if (input.files && input.files.length > 0) {
+                    hasPhoto = true;
+                }
+            });
+            
+            if (!hasPhoto) {
+                alert('Por favor, adicione pelo menos uma foto do produto.');
+                return false;
+            }
+            return true;
+        }
+        
+        // Preview das imagens
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="file"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (!file) return;
+                    
+                    if (!file.type.startsWith('image/')) {
+                        alert('Por favor, selecione apenas arquivos de imagem.');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('A imagem deve ter no máximo 5MB.');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let img;
+                        if (input.id === 'main-photo-input') {
+                            img = document.getElementById('main-photo');
+                        } else {
+                            const index = input.id.replace('thumb-input-', '');
+                            img = document.getElementById('thumb-' + index);
+                            if (!img) {
+                                // Criar img se não existir
+                                img = document.createElement('img');
+                                img.id = 'thumb-' + index;
+                                img.style.width = '100%';
+                                img.style.height = '100%';
+                                img.style.objectFit = 'cover';
+                                input.parentNode.appendChild(img);
+                                // Esconder botão +
+                                const btn = input.parentNode.querySelector('.add-photo-btn');
+                                if (btn) btn.style.display = 'none';
+                            }
+                        }
+                        if (img) {
+                            img.src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

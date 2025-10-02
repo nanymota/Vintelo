@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vistoria de Usuários - Vintélo Admin</title>
+    <link rel="stylesheet" href="css/usuariosadm.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <section class="oculto-desktop">
+        <header>
+            <nav class="grid">
+                <a href="/homeadm">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo">
+                <img src="imagens/quadrado.png" class="img-branca">
+            </nav>
+        </header>
+    </section>
+
+    <!-- Header Desktop -->
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Vistoria de Usuários</span>
+        </section>
+        <header class="main-header">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Voltar ao Painel</a>
+                <a href="/brechoadm">Brechós</a>
+            </nav>
+            <section class="search-profile">
+                <ul>
+                    <li><img src="imagens/icone sem cadastro.png" class="maria"></li>
+                    <li><img src="imagens/icone saco.png" class="img-tamanho"></li>
+                    <li><img src="imagens/icone coração.png" class="img-tamanho2"></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="admin-container">
+        <section class="admin-header">
+            <h1>Vistoria de Usuários</h1>
+            <p>Gerencie e monitore todos os perfis de clientes</p>
+        </section>
+
+        <!-- Filtros -->
+        <section class="filters-section">
+            <select class="filter-select">
+                <option value="todos">Todos os usuários</option>
+                <option value="ativos">Ativos</option>
+                <option value="suspensos">Suspensos</option>
+                <option value="novos">Novos (30 dias)</option>
+            </select>
+            <select class="filter-select">
+                <option value="todas">Todas atividades</option>
+                <option value="compradores">Compradores ativos</option>
+                <option value="inativos">Sem compras</option>
+            </select>
+            <input type="text" class="search-input" placeholder="Buscar por nome, email ou CPF...">
+        </section>
+
+        <!-- Lista de Usuários -->
+        <section class="perfis-grid">
+            <!-- Usuário 1 -->
+            <article class="perfil-card" data-status="ativo">
+                <section class="perfil-header">
+                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
+                    <section class="perfil-info">
+                        <h3>@maria_cliente</h3>
+                        <p>Maria Silva Santos</p>
+                        <span class="status-badge ativo">Ativo</span>
+                    </section>
+                    <section class="perfil-stats">
+                        <div class="stat">
+                            <span class="stat-number">23</span>
+                            <span class="stat-label">Compras</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">R$ 1.2k</span>
+                            <span class="stat-label">Gasto</span>
+                        </div>
+                    </section>
+                </section>
+                
+                <section class="perfil-detalhes">
+                    <div class="detalhe-item">
+                        <label>Email:</label>
+                        <span>maria.silva@email.com</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Telefone:</label>
+                        <span>(11) 99999-9999</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>CPF:</label>
+                        <span>123.456.789-00</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Cadastro:</label>
+                        <span>10/01/2024</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Última compra:</label>
+                        <span>15/12/2024</span>
+                    </div>
+                </section>
+                
+                <section class="perfil-actions">
+                    <button class="btn-visualizar" onclick="visualizarPerfil(1)">Visualizar</button>
+                    <button class="btn-suspender" onclick="suspenderPerfil(1)">Suspender</button>
+                    <button class="btn-historico" onclick="verHistorico(1)">Histórico</button>
+                </section>
+            </article>
+
+            <!-- Usuário 2 -->
+            <article class="perfil-card" data-status="suspenso">
+                <section class="perfil-header">
+                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
+                    <section class="perfil-info">
+                        <h3>@joao_comprador</h3>
+                        <p>João Oliveira</p>
+                        <span class="status-badge suspenso">Suspenso</span>
+                    </section>
+                    <section class="perfil-stats">
+                        <div class="stat">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">Compras</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">R$ 320</span>
+                            <span class="stat-label">Gasto</span>
+                        </div>
+                    </section>
+                </section>
+                
+                <section class="perfil-detalhes">
+                    <div class="detalhe-item">
+                        <label>Email:</label>
+                        <span>joao@email.com</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Telefone:</label>
+                        <span>(11) 88888-8888</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>CPF:</label>
+                        <span>987.654.321-00</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Cadastro:</label>
+                        <span>25/02/2024</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Suspensão:</label>
+                        <span>10/12/2024</span>
+                    </div>
+                </section>
+                
+                <section class="perfil-actions">
+                    <button class="btn-visualizar" onclick="visualizarPerfil(2)">Visualizar</button>
+                    <button class="btn-reativar" onclick="reativarPerfil(2)">Reativar</button>
+                    <button class="btn-historico" onclick="verHistorico(2)">Histórico</button>
+                </section>
+            </article>
+
+            <!-- Usuário 3 -->
+            <article class="perfil-card" data-status="ativo">
+                <section class="perfil-header">
+                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
+                    <section class="perfil-info">
+                        <h3>@ana_fashion</h3>
+                        <p>Ana Carolina</p>
+                        <span class="status-badge ativo">Ativo</span>
+                    </section>
+                    <section class="perfil-stats">
+                        <div class="stat">
+                            <span class="stat-number">67</span>
+                            <span class="stat-label">Compras</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">R$ 3.4k</span>
+                            <span class="stat-label">Gasto</span>
+                        </div>
+                    </section>
+                </section>
+                
+                <section class="perfil-detalhes">
+                    <div class="detalhe-item">
+                        <label>Email:</label>
+                        <span>ana.carolina@email.com</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Telefone:</label>
+                        <span>(11) 77777-7777</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>CPF:</label>
+                        <span>456.789.123-00</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Cadastro:</label>
+                        <span>05/11/2023</span>
+                    </div>
+                    <div class="detalhe-item">
+                        <label>Última compra:</label>
+                        <span>18/12/2024</span>
+                    </div>
+                </section>
+                
+                <section class="perfil-actions">
+                    <button class="btn-visualizar" onclick="visualizarPerfil(3)">Visualizar</button>
+                    <button class="btn-suspender" onclick="suspenderPerfil(3)">Suspender</button>
+                    <button class="btn-historico" onclick="verHistorico(3)">Histórico</button>
+                </section>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        function visualizarPerfil(id) {
+            window.location.href = `/perfil/cliente/${id}`;
+        }
+
+        function suspenderPerfil(id) {
+            if (confirm(`Tem certeza que deseja suspender o usuário ${id}?`)) {
+                alert(`Usuário ${id} suspenso com sucesso!`);
+                location.reload();
+            }
+        }
+
+        function reativarPerfil(id) {
+            if (confirm(`Tem certeza que deseja reativar o usuário ${id}?`)) {
+                alert(`Usuário ${id} reativado com sucesso!`);
+                location.reload();
+            }
+        }
+
+        function verHistorico(id) {
+            window.location.href = `/usuario/historico/${id}`;
+        }
+
+        // Filtros
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtros = document.querySelectorAll('.filter-select');
+            const searchInput = document.querySelector('.search-input');
+            
+            filtros.forEach(filtro => {
+                filtro.addEventListener('change', filtrarPerfis);
+            });
+            
+            searchInput.addEventListener('input', filtrarPerfis);
+        });
+
+        function filtrarPerfis() {
+            const cards = document.querySelectorAll('.perfil-card');
+            const statusFiltro = document.querySelectorAll('.filter-select')[0].value;
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            
+            cards.forEach(card => {
+                const status = card.dataset.status;
+                const nome = card.querySelector('h3').textContent.toLowerCase();
+                const email = card.querySelector('.detalhe-item span').textContent.toLowerCase();
+                
+                const matchStatus = statusFiltro === 'todos' || status === statusFiltro;
+                const matchSearch = !searchTerm || nome.includes(searchTerm) || email.includes(searchTerm);
+                
+                if (matchStatus && matchSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Painel Administrativo</p>
+        </section>
+        <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

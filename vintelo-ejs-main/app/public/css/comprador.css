@@ -1,0 +1,302 @@
+/*                                                        reset basico                                                 */
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  /* Header - Mobile First */
+  header {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  header .grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header img {
+    height: 40px;
+  }
+  
+  /* Estilos para tablets e acima */
+  @media (min-width: 768px) {
+    header {
+      padding: 40px;
+    }
+  
+    header img {
+      height: 50px;
+    }
+  }
+  
+  /* Estilos para desktops */
+  @media (min-width: 1024px) {
+    header {
+      padding: 50px;
+    }
+  
+    header img {
+      height: 60px;
+    }
+  }
+  
+.back-button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    color: #333;
+}
+
+h1 {
+    font-size: 20px;
+    text-align: center;
+    flex-grow: 1;
+    color: #333;
+}
+
+.cart-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+.profile-section {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.profile-pic {
+    position: relative;
+}
+
+.profile-pic img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    padding: 0 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 22px;
+    color: #888;
+}
+
+.form-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.password-strength {
+    color: green;
+    font-size: 14px;
+}
+
+.status-icon {
+    color: green;
+    font-size: 18px;
+}
+
+.save-button {
+    width: 100%;
+    width: 935px;
+    height: 80px;
+    background-color: #7b2b37;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 50px;
+    cursor: pointer;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.save-button:hover {
+    background-color: #5f1d29;
+}
+
+/* Responsividade */
+
+/* Para telas menores que 768px (celulares) */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .profile-pic img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .edit-button {
+        font-size: 14px;
+    }
+
+    .form-value {
+        font-size: 14px;
+    }
+    
+    .save-button{
+        font-size: 14px;
+        padding: 30px;
+    }
+
+}
+
+/* Para telas entre 769px e 1024px (tablets) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 85%;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .profile-pic img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .edit-button {
+        font-size: 15px;
+    }
+
+    .save-button {
+        font-size: 30px;
+        padding: 12px;
+    }
+}
+
+/* Para telas maiores que 1024px (desktops) */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 400px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .profile-pic img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .edit-button {
+        font-size: 16px;
+    }
+
+    .save-button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/*                                                      Rodapé                                                      */
+.footer {
+    background-color: #7D2838;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer .footer-image {
+    height: 80px;
+    margin-bottom: 20px;
+  }
+  
+  .footer .social-media {
+    margin-bottom: 20px;
+  }
+  
+  .footer .social-media p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .footer .social-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .footer .social-link img {
+    height: 30px;
+    transition: transform 0.3s;
+  }
+  
+  .footer .social-link img:hover {
+    transform: scale(1.2);
+  }
+  
+  .copyright {
+    font-size: 0.9rem;
+    margin-top: 20px;
+  }
+  
+  /*                                            Responsividade para Mobile                                              */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 2fr;
+    }
+  
+    .celula {
+      margin: 0 auto;
+    }
+  
+    .footer .social-links {
+      flex-direction: column;
+    }
+  }
+  

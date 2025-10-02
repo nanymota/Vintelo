@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <head>
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="../../public/script/script.js"></script>
+    <link rel="stylesheet" href="css/entrar.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+  </head>
+  <body>
+
+    <header>
+      <nav class="grid">
+        <a href="/cadastro">
+          <img src="imagens/seta.png" alt="Seta Voltar">
+        </a>
+        <img src="imagens/logo.png" alt="Logo">
+        <a href="/carrinho">
+          <img src="imagens/carrinho.png" alt="Carrinho">
+        </a>
+      </nav>
+    </header>
+  <br>
+  <br>
+  <main>
+    <h1>Entrar</h1>
+    <p class="description">Acesse usando seu cadastro de outra plataforma</p>
+  
+    <section class="social-login">
+      <a href="#"><img src="imagens/icone facebook.png" alt="Login com Facebook"></a>
+      <a href="#"><img src="imagens/icone apple.png" alt="Login com Instagram"></a>
+      <a href="#"><img src="imagens/icone google.png" alt="Login com Google"></a>
+  </section>
+  
+    <p class="divider">ou acesse via email</p>
+    <br>
+    <form id="loginForm" action="/entrar" method="post">
+        <section class="form-group">
+            <label for="email_usu">Endereço de email</label>
+            <input type="email" id="email_usu" name="nome_usu" placeholder="conta.sanders@exemplo.com" required>
+        </section>
+     
+        <section class="form-group">
+            <label for="senha_usu">Senha</label>
+            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
+        </section>
+        <a href="/esqueceusenha" class="forgot-password">Esqueceu sua senha?</a>
+        <br>
+        <a href="/login" class="forgot-password">Não tem conta? Cadastre-se</a>
+        <br>
+        <section class="checkbox-group">
+            <label class="stay-connected">
+                <input type="checkbox" checked>
+                <span class="toggle"></span>
+                Mantenha-me conectado
+            </label>
+            <label class="stay-connected">
+                <input type="checkbox" checked>
+                <span class="toggle"></span>
+                Receber notificações
+            </label>
+            <label class="stay-connected">
+                <input type="checkbox" checked>
+                <span class="toggle"></span>
+                Li e concordo com os Termos de Uso
+            </label>
+        </section>
+    </form>
+  </main>
+   <button type="submit" form="loginForm" class="login-btn">Entrar</button>
+  <script src="js/entrar.js"></script> 
+
+ </body>
+</html>

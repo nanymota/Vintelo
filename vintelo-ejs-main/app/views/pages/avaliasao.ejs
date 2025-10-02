@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/avaliasao.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+</head>
+<body>
+    <!-- Header Mobile -->
+    <header class="mobile-header">
+        <nav class="header-nav">
+            <a href="/perfil1" class="back-btn">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <h1>Avaliações</h1>
+            <a href="/carrinho" class="cart-btn">
+                <img src="imagens/carrinho.png" alt="Carrinho">
+            </a>
+        </nav>
+    </header>
+
+    <!-- Header Desktop -->
+    <header class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <section class="main-header">
+            <a href="/homecomprador">
+                <img src="imagens/logo.png" class="logo" alt="Vintélo">
+            </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/carrinho"><img src="imagens/icone saco.png" alt="Sacola"></a></li>
+                    <li><a href="/perfilcliente"><img src="imagens/imagem sem cadastro.avif" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </section>
+    </header>
+
+    <main>
+        <!-- Seção de Resumo -->
+        <section class="summary">
+            <section class="rating-overview">
+                <img src="imagens/brecho1.png" alt="Avaliações" class="rating-img">
+                <section class="rating-stats">
+                    <h2>4.8 <span class="stars">★★★★☆</span></h2>
+                    <p>Baseado em 127 avaliações</p>
+                </section>
+            </section>
+            <button class="add-review-btn" onclick="toggleReviewForm()">
+                <img src="imagens/editar.png" alt="Adicionar">
+                Adicionar Avaliação
+            </button>
+        </section>
+
+        <!-- Formulário de Nova Avaliação -->
+        <section class="review-form" id="reviewForm" style="display: none;">
+            <h3>Deixe sua avaliação</h3>
+            <form onsubmit="submitReview(event)">
+                <section class="rating-input">
+                    <label>Sua nota:</label>
+                    <section class="star-rating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </section>
+                </section>
+                <section class="form-group">
+                    <label for="reviewText">Seu comentário:</label>
+                    <textarea id="reviewText" placeholder="Conte sobre sua experiência..." required></textarea>
+                </section>
+                <section class="form-actions">
+                    <button type="button" onclick="toggleReviewForm()">Cancelar</button>
+                    <button type="submit">Publicar</button>
+                </section>
+            </form>
+        </section>
+
+        <!-- Lista de Avaliações -->
+        <section class="reviews" id="reviewsList">
+            <section class="review-item">
+                <img src="imagens/brecho1.png" alt="Jenny" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Jenny</h3>
+                        <span class="review-date">1 Set, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Pagamento rápido, preços perfeitos e ainda tem tudo o que alguém precisa, não só roupa. Faço compras neste site pelo menos 1 vez por mês porque adoro e confio muito! Não tenho críticas, super recomendo!</p>
+                </section>
+            </section>
+
+            <section class="review-item">
+                <img src="imagens/brecho2.png" alt="Isabelly" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Isabelly</h3>
+                        <span class="review-date">3 Ago, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Produtos excelentes, preço ótimo, qualidade incríveis. Comprei um vestido e mais coisas e ainda chegou antes da data prevista. Maravilhoso, adorei e adoro comprar na Vintélo.</p>
+                </section>
+            </section>
+
+            <section class="review-item">
+                <img src="imagens/brecho3.png" alt="Soraya" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Soraya</h3>
+                        <span class="review-date">13 Maio, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Todos os produtos de excelente qualidade e tal como anunciados. Precisei de fazer umas questões e o atendimento ao cliente foi rápido a responder e esclarecer.</p>
+                </section>
+            </section>
+
+            <section class="review-item">
+                <img src="imagens/maria.png" alt="Ana Sofia" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Ana Sofia</h3>
+                        <span class="review-date">13 Set, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Sempre tive receio de comprar roupas pela internet, mas a Vintélo me surpreendeu positivamente! Todas as roupas que comprei são de ótima qualidade, vestem super bem e o melhor é que, além de ter preços muito bons, não demoram a chegar!</p>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://twitter.com" target="_blank"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script/avaliacao.js"></script>
+</body>
+</html>

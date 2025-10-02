@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <title>Vintélo</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <link rel="stylesheet" href="css/estilo2.css">
+  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+
+<body>
+                                  <!-- Banner 10% off-->
+    <section class="discount-banner">
+      <span class="highlight">10% OFF Na primeira compra</span>
+    </section>
+                                <!-- Cabeçalho da página-->
+  <br>
+  <section class="oculto-mobile">
+    <header class="main-header">
+      <a href="/homecomprador">
+        <img src="imagens/logo.png" class="img-logo">
+      </a>
+      <nav>
+        <a href="/categorias">Vestidos</a>
+        <a href="/categorias">Saias</a>
+        <a href="/categorias">Blusas</a>
+        <a href="/categorias">Calças</a>
+        <a href="/categorias">Outros</a>
+    </nav>
+      <section class="search-profile">
+        <form>
+          <input type="text" placeholder="Buscar...">
+        </form>
+        <ul>
+          <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+          <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+          <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+        </ul>
+      </section>
+    </header>
+  </section>
+                                    <!-- Menu Hamburguer-->
+
+  <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <nav class="menu-hamburger">
+
+          <input id="menu-hamburguer" type="checkbox" />
+          <label for="menu-hamburguer">
+            <section class="menu">
+              <span class="hamburguer"></span>
+            </section>
+          </label>
+
+          <ul class="menu-hamburguer-elements show">
+            <a href="/cadastro">
+              <section class="profile-section">
+                <img src="imagens/icone sem cadastro.png" alt="Maria de Lourdes" class="profile-pic icone-sem-cadastro">
+                <section class="profile-info">
+                  <h2>Nome de usuário</h2>
+                </section>
+                <button class="create-btn">Criar Conta</button>
+              </section>
+            </a>
+            </li>
+            <br>
+            <br>
+            <br>
+            
+            <aside class="sidebar-menu">
+              <ul>
+                <li>
+                  <a href="/"><img src="imagens/icone informaçao.png" class ="Informação da conta"></a>
+                  Informação da conta
+                </li>
+                <li>
+                  <a href="/favoritos"><img src="imagens/coraçao de fav.png" class ="Favoritos"></a>
+                  Favoritos
+                </li>
+                <li>
+                  <a href="/sacola1"><img src="imagens/icone sacola.png" class ="Sacola"></a>
+                  Sacola
+                </li>
+                <li>
+                  <a href="/minhascompras"><img src="imagens/caminhao.png" class="minhas-compras"></a>
+                  Minhas compras
+                </li>
+                <li>
+                  <a href="#"><img src="imagens/cartao.png" class ="Meus cartões"></a>
+                  Meus cartões
+                </li>
+                <li>
+                  <a href="/blog"><img src="imagens/icone blog.png" class ="Blog"></a>
+                  Blog
+                </li>
+              </ul>
+            </aside>
+        </nav>
+        <img src="imagens/logo.png" class="logo">
+        <a href="/cadastro">
+          <img src="imagens/imagem sem perfil.png" class="logo" />
+        </a>
+      </nav>
+    </header>
+   </section>
+    <main>
+      <br>
+      <!--                                        barra de pesquisa                                              -->
+      <section class="oculto-desktop">
+        <section class="search-section">
+          <section class="search-container">
+            <form class="search-form">
+              <button type="button" class="search-icon">
+                <img src="imagens/pesquisa.png" alt="Pesquisar">
+              </button>
+              <input type="text" placeholder="Buscar..." required>
+            </form>
+          </section>
+        </section>
+        <script src="/js/script.js"></script>
+      </section>
+      <br>
+
+
+      <!--                           Carrossel de banners  mobile                                          -->
+      <section class="oculto-mobile">
+        <section class="carousel-container">
+          <section class="carousel-slide">
+            <img src="imagens/banner outono.png" alt="Imagem 1">
+            <img src="imagens/banner desk.png" alt="Imagem 2">
+            <img src="imagens/banner boss desk.jpg" alt="Imagem 3">
+          </section>
+          <section class="carousel-indicators">
+            <section class="active"></section>
+          </section>
+        </section>
+      </section>
+
+      <section class="oculto-desktop">
+        <section class="carousel-container">
+          <section class="carousel-slide">
+            <img src="imagens/banner outono mobile.png" alt="Imagem 1">
+            <img src="imagens/banner primavera mobile.png" alt="Imagem 2">
+            <img src="imagens/banner boss mobile.png" alt="Imagem 3">
+          </section>
+          <section class="carousel-indicators">
+            <section class="active"></section>
+          </section>
+        </section>
+      </section>
+      <!--                                      Carrossel das categorias                                              -->
+      
+      <!--  Mobile -->
+      <nav class="category-nav category-nav-mobile">
+      <br>
+      <span class="garimpe-text">Garimpe na</span><br>
+      <span class="vintelo-text">Vintélo</span>
+      <br>
+      </nav>
+
+      <!-- Navegação Desktop -->
+      <nav class="category-nav category-nav-desktop">
+        <section class="garimpe-vintelo-container">
+          <span class="garimpe-text">Garimpe na</span><br>
+          <span class="vintelo-text">Vintélo</span>
+        </section>
+
+        <section class="carousel-container">
+          <ul>
+            <li><a href="#" onclick="showSection('novidades')">Novidades</a></li>
+            <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
+            <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
+            <li><a href="/categorias">Categorias</a></li>
+            <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
+          </ul>
+        </section>
+      </nav>
+      <!--                                    Seção dos produtos                                              -->
+      <nav class="grid-produtos">
+        <h3>Novidades</h3>
+        
+      </nav>
+      <section class="product-grid">
+        <article class="product-card">
+          <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
+          <h2>Vestido branco com decote </h2>
+          <p class="price">R$49,99</p>
+          <p class="Descrição">ou em 2x de R$25,00</p>
+
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          
+        </article>
+
+        <article class="product-card">
+          <a href="/produto3"><img src="imagens/vestido roxo.png" alt="Vestido roxo de manga com decote"></a>
+          <h2>Vestido roxo manga longa com decote </h2>
+          <p class="price">R$39,99</p>
+          <p class="Descrição">ou em 2x de R$20,00</p>
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+        </article>
+
+        <article class="product-card">
+          <a href="/produto4"><img src="imagens/conjunto de blusa rosa.png" alt="Conjunto rosa de lã"></a>
+
+          <h2>Conjunto rosa de lã</h2>
+          <p class="price">R$29,99</p>
+          <p class="Descrição">ou em 2x de R$15,00</p>
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+        </article>
+
+        <article class="product-card">
+          <a href="/produto1"><img src="imagens/regata branca.png" alt="Regata branca"></a>
+          <h2>Regata branca</h2>
+          <p class="price">R$19,99</p>
+          <p class="Descrição">ou em 2x de R$10,00</p>
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+        </article>
+
+        <a href="/" class="oculto-desktop"><span class="ver">Ver tudo</span></a>
+      
+      </section>
+
+      <!--                                           PRODUTOS OCULTOS                                              -->
+      <section class="produtos-ocultos">
+        <section class="product-grid">
+          <article class="product-card">
+            <img src="imagens/cropped flor.png" alt="cropped flor">
+            <h2>Cropeed Floral</h2>
+            <p class="price">R$49,99</p>
+            <p class="Descrição">ou em 2x de R$25,00</p>
+            <br>
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
+
+          <article class="product-card">
+            <img src="imagens/vestido branco2.png" alt="vestido branco2">
+            <h2>Vestido Branco </h2>
+            <p class="price">R$39,99</p>
+            <p class="Descrição">ou em 2x de R$20,00</p>
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
+
+          <article class="product-card">
+            <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto rosa de lã">
+            <h2>Conjunto rosa </h2>
+            <p class="price">R$29,99</p>
+            <p class="Descrição">ou em 2x de R$15,00</p>
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
+
+          <article class="product-card">
+            <a href="/produto1"><img src="imagens/vestido roxo2.png" alt="vestido roxo2"></a>
+            <h2>Vestido Roxo </h2>
+            <p class="price">R$19,99</p>
+            <p class="Descrição">ou em 2x de R$10,00</p>
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
+
+          <a href="/"><span class="ver">Ver tudo</span></a>
+
+        </section>
+      </section>
+
+      
+      <!--                                        Perfil dos Brechós                                              -->
+      <section class="titulo-brecho-section">
+        <span class="garimpe-text">Encontre outros</span><br>
+        <span class="vintelo-text">Brechós</span>
+      </section>
+      
+      <center>
+  <ul class="brechos-grid">
+    <li class="profile-item">
+      <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+      <section class="profile-info">
+        <strong>Mayte</strong>
+        <span class="rating">4.8 ⭐⭐⭐⭐⭐</span> <!-- ALTERADO -->
+      </section>
+      <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
+    </li>
+
+    <br><br>
+
+    <li class="profile-item">
+      <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
+      <section class="profile-info">
+        <strong>Karine</strong>
+        <span class="rating">4.9 ⭐⭐⭐⭐⭐</span> <!-- ALTERADO -->
+      </section>
+      <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
+    </li>
+
+    <br><br>
+
+    <li class="profile-item">
+      <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image"> <!-- NOVO -->
+      <section class="profile-info">
+        <strong>Coisitas</strong>
+        <span class="rating">4.8 ⭐⭐⭐⭐⭐</span> <!-- NOVO -->
+      </section>
+      <a href="/perfil3"><button class="follow-button">Favoritar</button></a> <!-- NOVO -->
+    </li>
+  </ul>
+</center>
+
+
+
+        <!--                                       banner de cadastro                                              -->
+        <a href="/cadastro">
+          <img src="imagens/bannercash.png" class="img-cashback">
+        </a>
+        <br>
+        <br>
+        <section class="artigos-section">
+          <h2>Conheça os <br><span class="artigos-title">Artigos</span></h2>
+          <br>
+          <section class="container">
+            <!-- Artigo de Moda Metalizada -->
+            <article class="artigo">
+              <nav class="grid-artigos">
+                <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
+                <section class="artigo-texto">
+                  <h3>MODA |</h3>
+                  <h3>METALIZADA |</h3>
+                  <a href="/artigo" class="ler-agora">Ler agora</a>
+                </section>
+              </nav>
+            </article>
+
+            <!-- Banner de Cashback -->
+            <article class="cashback-banner">
+
+              <img src="imagens/bannercash.png" alt="Ganhe Cashback" class="imagem-banner">
+              <section class="cashback-texto">
+                <h3>Ganhe Cashback</h3>
+                <p>em sua primeira compra</p>
+                <a href="/cadastro" class="cadastre-se">Cadastre-se</a>
+              </section>
+            </article>
+          </section>
+        </section>
+        
+        <!--                                        PRODUTOS OCULTOS                                               -->
+        <section class="produtos-ocultos">
+          <nav class="grid-produtos">
+            <h1>Confira</h1>
+            <a href="/categorias" class="ver-tudo">Ver tudo</a>
+          </nav>
+          <section class="product-grid">
+            <article class="product-card">
+              <img src="imagens/oculos.png" alt="Óculos de sol">
+              <h2>Óculos de sol</h2>
+              <br>
+              <p class="price">R$12,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
+              <h2>Conjunto 3 colares de prata</h2>
+              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
+              <h2>Bolsa preta com alça dourada</h2>
+              <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/aneis.png" alt="Anel de prata">
+              <h2>Anel de prata</h2>
+              <br>
+              <p class="price">R$15,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+          </section>
+
+          
+          <section class="product-grid">
+            <article class="product-card">
+              <img src="imagens/pulseira.png" alt="Bracelete">
+              <h2>Bracelete</h2>
+              <p class="price">R$19,99 <br>ou em 2x R$10,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/relogios.png" alt="Relógio Rose Gold">
+              <h2>Relógio Rose Gold</h2>
+              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/bolsa brilhante.png" alt="Salto preto com prata">
+              <h2>Bolsa Brilhante</h2>
+              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+
+            <article class="product-card">
+              <img src="imagens/BraceleteDuplo.png" alt="Bracelete Duplo">
+              <h2>Bracelete Duplo</h2>
+              <p class="price">R$28,90 <br>ou em 2x R$14,45</p>
+              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+          </section>
+        </section>
+        <!--                                        Seção de artigos                                               -->
+
+        <section class="titulo-artigo-section">
+          <span class="garimpe-text">Tendências</span><br>
+          <span class="vintelo-text">Vintélo</span>
+        </section>
+        <section class="artigos">
+          <br>
+          <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
+          <p class="p-artigos">Confira:</p>
+          <h3 class="h3-artigos">BOSS | MILÃO | VERÃO |</h3>
+            <p class="texto-esquerda">
+          <a href="/cadastro" class="link-preto">Ler agora</a>
+          </p>
+
+        </section>
+        <!--                               seção artigos ocultos para mobile                                       -->
+        <section class="sweet-colors">
+          <a href="/sweer"><img src="imagens/artigo sweer.png" class="image-container"></a>
+        </section>
+    </main>
+    <!--                                                    Rodapé                                                      -->
+    <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png"
+                alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png"
+                alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img
+                src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+<script src="script/dinamicahome.js"></script>
+<script src="js/favoritos.js"></script>
+</body>
+
+</html>

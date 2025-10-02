@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="../../public/script/script.js"></script>
+    <link rel="stylesheet" href="css/criarbrecho.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+
+</head>
+
+<body>
+
+    <section class="oculto-desktop">
+        <header>
+            <nav class="grid">
+                <a href="/homecomprador">
+                    <img src="imagens/seta.png" alt="Seta Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+                    <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <aside class="image-section">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </aside>
+
+            <section class="form-section">
+                <center>
+                    <h2>Crie seu brechó</h2>
+                </center>
+                <p>Insira os dados do seu brechó</p>
+
+                <section class="profile-section">
+                    <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
+                    <section class="oculto-desktop">
+                        <button class="edit-icon" onclick="document.getElementById('profile-photo-input').click()">✎</button>
+                        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
+                    </section>
+                </section>
+
+                <br>
+                <form id="registerForm" action="/criarbrecho" method="post"  enctype="multipart/form-data">
+                    <section class="form-group">
+                        <label for="nomeusu_usu">Nome do Brechó</label>
+                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="email_usu">Endereço de email</label>
+                        <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="nome_usu">Nome Completo</label>
+                        <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="senha_usu">Senha</label>
+                        <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
+                    
+                    </section>
+
+                    <section class="form-group">
+                        <label for="confirmar_senha">Confirmar Senha</label>
+                        <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Digite sua senha...">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="fone_usu">Contato</label>
+                        <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required>
+                    </section>
+
+                    <section class="form-group">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required>
+                    </section>
+
+                    <section class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
+                    </section>
+
+                    <section class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
+                    </section>
+
+                    <section class="form-group">
+                        <label for="uf">UF</label>
+                        <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required>
+                    </section>
+                    <br>
+
+                    <section class="section">
+                        <h3>Onde deseja receber?</h3>
+                        <section class="item payment-option" onclick="selectPayment(this)">
+                            <img src="imagens/itau.png" alt="itau" class="icon">
+                            <span>Itaú</span>
+                            <img src="imagens/erro.png" alt="Erro" class="error-icon">
+                        </section>
+                        <section class="item payment-option" onclick="selectPayment(this)">
+                            <img src="imagens/santander.png" alt="Santander" class="icon">
+                            <span>Santander</span>
+                            <img src="imagens/check.png" alt="Check" class="check-icon">
+                        </section>
+                        <section class="item payment-option" onclick="selectPayment(this)">
+                            <img src="imagens/nubank.png" alt="Boleto" class="icon">
+                            <span>Nubank</span>
+                            <img src="imagens/check.png" alt="Check" class="check-icon">
+                        </section>
+                    </section>
+
+                    <section class="oculto-desktop">
+                        <button type="submit" class="create-button">Criar brechó</button>
+                    </section>
+                    <br>
+                    <section class="oculto-mobile">
+                        <button type="submit" id="btn-submit" class="create-button">Criar brechó</button>
+                    </section>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <script src="script/cep.js"></script>
+   
+    
+    <script>
+        function handleProfilePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('profile-img').src = e.target.result;
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+   
+</body>
+
+</html>

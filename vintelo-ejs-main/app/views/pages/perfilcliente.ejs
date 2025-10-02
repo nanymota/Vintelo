@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/perfilcliente.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+</head>
+<body>
+    <!-- Header Desktop -->
+    <section class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <header class="main-header">
+            <a href="/home">
+                <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
+            </a>
+            <nav>
+                <a href="#">Vestidos</a>
+                <a href="#">Saias</a>
+                <a href="#">Blusas</a>
+                <a href="#">Calças</a>
+                <a href="#">Outros</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="#"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <li><a href="/perfilcliente"><img src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="#"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <!-- Header Mobile -->
+    <section class="mobile-header">
+        <header>
+            <nav class="grid">
+                <a href="/homecomprador">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Vintélo">
+                <a href="/carrinho">
+                    <img src="imagens/carrinho.png" alt="Carrinho">
+                </a>
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <h1>Meu Perfil</h1>
+            
+            <section class="content-wrapper">
+                <!-- Informações do Perfil -->
+                <section class="profile-section">
+                    <section class="profile-header">
+                        <section class="profile-photo">
+                            <img id="profile-img" src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
+                            <button class="photo-edit-btn" onclick="editProfilePhoto()">
+                                <span>+</span>
+                            </button>
+                            <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
+                        </section>
+                        <section class="profile-info">
+                            <h2 id="profile-name"><%= (typeof usuario !== 'undefined' && usuario && usuario.nome) ? usuario.nome : 'Maria Silva' %></h2>
+                            <p id="profile-email"><%= (typeof usuario !== 'undefined' && usuario && usuario.email) ? usuario.email : 'maria.silva@email.com' %></p>
+                            <p class="member-since">Membro desde <%= (typeof usuario !== 'undefined' && usuario && usuario.data_cadastro) ? usuario.data_cadastro : 'Janeiro 2024' %></p>
+                        </section>
+                    </section>
+
+                    <section class="profile-stats">
+                        <section class="stat-item">
+                            <span class="stat-number"><%= (typeof usuario !== 'undefined' && usuario && usuario.compras) ? usuario.compras : '12' %></span>
+                            <span class="stat-label">Compras</span>
+                        </section>
+                        <section class="stat-item">
+                            <span class="stat-number"><%= (typeof usuario !== 'undefined' && usuario && usuario.favoritos) ? usuario.favoritos : '5' %></span>
+                            <span class="stat-label">Favoritos</span>
+                        </section>
+                        <section class="stat-item">
+                            <span class="stat-number"><%= (typeof usuario !== 'undefined' && usuario && usuario.avaliacoes) ? usuario.avaliacoes : '3' %></span>
+                            <span class="stat-label">Avaliações</span>
+                        </section>
+                    </section>
+                </section>
+
+                <!-- Menu de Opções -->
+                <section class="menu-section">
+                    <section class="menu-grid">
+                        <a href="#" class="menu-item" onclick="showSection('personal-info')">
+                            <section class="menu-icon"><img src="imagens/icone informaçao.png" alt="Informações"></section>
+                            <section class="menu-content">
+                                <h3>Informações Pessoais</h3>
+                                <p>Editar dados pessoais</p>
+                            </section>
+                        </a>
+
+                        <a href="#" class="menu-item" onclick="showSection('orders')">
+                            <section class="menu-icon"><img src="imagens/caminhao.png" alt="Pedidos"></section>
+                            <section class="menu-content">
+                                <h3>Meus Pedidos</h3>
+                                <p>Histórico de compras</p>
+                            </section>
+                        </a>
+
+                        <a href="#" class="menu-item" onclick="showSection('favorites')">
+                            <section class="menu-icon"><img src="imagens/coraçao de fav.png" alt="Favoritos"></section>
+                            <section class="menu-content">
+                                <h3>Favoritos</h3>
+                                <p>Itens salvos</p>
+                            </section>
+                        </a>
+
+                        <a href="#" class="menu-item" onclick="showSection('addresses')">
+                            <section class="menu-icon"><img src="imagens/icone sacola.png" alt="Endereços"></section>
+                            <section class="menu-content">
+                                <h3>Endereços</h3>
+                                <p>Gerenciar endereços</p>
+                            </section>
+                        </a>
+
+                        <a href="#" class="menu-item" onclick="showSection('payment')">
+                            <section class="menu-icon"><img src="imagens/cartao.png" alt="Pagamento"></section>
+                            <section class="menu-content">
+                                <h3>Pagamento</h3>
+                                <p>Cartões e métodos</p>
+                            </section>
+                        </a>
+
+                        <a href="#" class="menu-item" onclick="showSection('notifications')">
+                            <section class="menu-icon"><img src="imagens/icone blog.png" alt="Notificações"></section>
+                            <section class="menu-content">
+                                <h3>Notificações</h3>
+                                <p>Preferências</p>
+                            </section>
+                        </a>
+                    </section>
+                </section>
+            </section>
+
+            <!-- Seções de Conteúdo -->
+            <section id="personal-info" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Informações Pessoais</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <form class="profile-form" onsubmit="updatePersonalInfo(event)">
+                    <section class="form-row">
+                        <section class="form-group">
+                            <label for="first-name">Nome</label>
+                            <input type="text" id="first-name" name="firstName" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.nome) ? usuario.nome.split(' ')[0] : 'Maria' %>" required>
+                        </section>
+                        <section class="form-group">
+                            <label for="last-name">Sobrenome</label>
+                            <input type="text" id="last-name" name="lastName" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.nome) ? usuario.nome.split(' ').slice(1).join(' ') : 'Silva' %>" required>
+                        </section>
+                    </section>
+                    
+                    <section class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.email) ? usuario.email : 'maria.silva@email.com' %>" required>
+                    </section>
+                    
+                    <section class="form-row">
+                        <section class="form-group">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone" name="phone" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.telefone) ? usuario.telefone : '(11) 99999-9999' %>" required>
+                        </section>
+                        <section class="form-group">
+                            <label for="birth-date">Data de Nascimento</label>
+                            <input type="date" id="birth-date" name="birthDate" value="1990-01-01">
+                        </section>
+                    </section>
+                    
+                    <section class="form-group">
+                        <label for="bio">Sobre mim</label>
+                        <textarea id="bio" name="bio" placeholder="Conte um pouco sobre você...">Apaixonada por moda sustentável e peças únicas!</textarea>
+                    </section>
+                    
+                    <button type="submit" class="save-btn">Salvar Alterações</button>
+                </form>
+            </section>
+
+            <section id="orders" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Meus Pedidos</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <section class="orders-list">
+                    <section class="order-date-header">15 de Janeiro</section>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/vestido branco.png" alt="Vestido Branco" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Vestido Branco Longo</h3>
+                                <p class="order-status delivered">Entregue</p>
+                                <p class="delivery-info">Chegou no dia 17 de Janeiro</p>
+                                <p class="order-total">R$ 35,90</p>
+                                <section class="order-actions">
+                                    <button class="track-btn" onclick="toggleTracking(this)">Ver Rastreamento</button>
+                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                                </section>
+                            </section>
+                        </section>
+                        
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <section class="detail-row">
+                                <span class="detail-label">Número do Pedido:</span>
+                                <span class="detail-value">#VT2024-001</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Valor Total:</span>
+                                <span class="detail-value">R$ 35,90</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Forma de Pagamento:</span>
+                                <span class="detail-value">PIX</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Vendedor:</span>
+                                <span class="detail-value">Brechó da Maria</span>
+                            </section>
+                        </section>
+                        
+                        <section class="tracking-details" style="display: none;">
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <section class="step-info">
+                                    <p class="step-title">Pedido Confirmado</p>
+                                    <p class="step-time">15/01 - 10:30</p>
+                                </section>
+                            </section>
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <section class="step-info">
+                                    <p class="step-title">Saiu para Entrega</p>
+                                    <p class="step-time">17/01 - 08:15</p>
+                                </section>
+                            </section>
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <section class="step-info">
+                                    <p class="step-title">Entregue</p>
+                                    <p class="step-time">17/01 - 15:20</p>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+
+                    <section class="order-date-header">10 de Janeiro</section>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/vestido roxo.png" alt="Vestido Roxo" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Vestido Roxo com Decote</h3>
+                                <p class="order-status shipped">Em Trânsito</p>
+                                <p class="delivery-info">Chegará hoje antes das 21h</p>
+                                <p class="order-total">R$ 42,50</p>
+                                <section class="order-actions">
+                                    <button class="track-btn" onclick="toggleTracking(this)">Rastrear Pedido</button>
+                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                                </section>
+                            </section>
+                        </section>
+                        
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <section class="detail-row">
+                                <span class="detail-label">Número do Pedido:</span>
+                                <span class="detail-value">#VT2024-002</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Valor Total:</span>
+                                <span class="detail-value">R$ 42,50</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Forma de Pagamento:</span>
+                                <span class="detail-value">Cartão de Crédito</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Vendedor:</span>
+                                <span class="detail-value">Karine Store</span>
+                            </section>
+                        </section>
+                        
+                        <section class="tracking-details" style="display: none;">
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <section class="step-info">
+                                    <p class="step-title">Pedido Confirmado</p>
+                                    <p class="step-time">10/01 - 14:20</p>
+                                </section>
+                            </section>
+                            <section class="tracking-step active">
+                                <span class="step-icon">🚚</span>
+                                <section class="step-info">
+                                    <p class="step-title">Saiu para Entrega</p>
+                                    <p class="step-time">12/01 - 08:15</p>
+                                </section>
+                            </section>
+                            <section class="tracking-step">
+                                <span class="step-icon">○</span>
+                                <section class="step-info">
+                                    <p class="step-title">Entregue</p>
+                                    <p class="step-time">Previsão: 12/01 - 21:00</p>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+
+                    <section class="order-date-header">5 de Janeiro</section>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto Rosa" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Conjunto Rosa de Malha</h3>
+                                <p class="order-status processing">Processando</p>
+                                <p class="delivery-info">Aguardando confirmação do vendedor</p>
+                                <p class="order-total">R$ 28,00</p>
+                                <section class="order-actions">
+                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                                </section>
+                            </section>
+                        </section>
+                        
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <section class="detail-row">
+                                <span class="detail-label">Número do Pedido:</span>
+                                <span class="detail-value">#VT2024-003</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Valor Total:</span>
+                                <span class="detail-value">R$ 28,00</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Forma de Pagamento:</span>
+                                <span class="detail-value">PIX</span>
+                            </section>
+                            <section class="detail-row">
+                                <span class="detail-label">Vendedor:</span>
+                                <span class="detail-value">Coisitas Brechó</span>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </section>
+
+            <section id="favorites" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Meus Favoritos</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <section class="favorites-grid">
+                    <section class="favorite-item">
+                        <section class="favorite-image">
+                            <img src="imagens/vestido branco.png" alt="Vestido Branco">
+                            <button class="remove-favorite" onclick="removeFavorite(1)">❤️</button>
+                        </section>
+                        <section class="favorite-info">
+                            <h3>Vestido Branco Longo</h3>
+                            <p class="favorite-price">R$ 35,90</p>
+                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
+                        </section>
+                    </section>
+
+                    <section class="favorite-item">
+                        <section class="favorite-image">
+                            <img src="imagens/cropped flor.png" alt="Cropped Floral">
+                            <button class="remove-favorite" onclick="removeFavorite(2)">❤️</button>
+                        </section>
+                        <section class="favorite-info">
+                            <h3>Cropped Manga Longa Floral</h3>
+                            <p class="favorite-price">R$ 29,99</p>
+                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
+                        </section>
+                    </section>
+
+                    <section class="favorite-item">
+                        <section class="favorite-image">
+                            <img src="imagens/vestido roxo.png" alt="Vestido Roxo">
+                            <button class="remove-favorite" onclick="removeFavorite(3)">❤️</button>
+                        </section>
+                        <section class="favorite-info">
+                            <h3>Vestido Roxo com Decote</h3>
+                            <p class="favorite-price">R$ 42,50</p>
+                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
+                        </section>
+                    </section>
+                </section>
+            </section>
+
+            <section id="addresses" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Meus Endereços</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <section class="addresses-list">
+                    <section class="address-item">
+                        <section class="address-info">
+                            <h3>Casa</h3>
+                            <p>Rua das Flores, 123</p>
+                            <p>Vila Madalena - São Paulo, SP</p>
+                            <p>CEP: 05435-000</p>
+                        </section>
+                        <section class="address-actions">
+                            <button class="edit-address-btn" onclick="editAddress(1)">Editar</button>
+                            <button class="delete-address-btn" onclick="deleteAddress(1)">Excluir</button>
+                        </section>
+                    </section>
+
+                    <button class="add-address-btn" onclick="addNewAddress()">+ Adicionar Novo Endereço</button>
+                </section>
+            </section>
+
+            <!-- Modal de Endereço -->
+            <section id="address-modal" class="address-modal">
+                <section class="address-modal-content">
+                    <section class="modal-header">
+                        <h3 id="modal-title">Adicionar Novo Endereço</h3>
+                        <button class="close-modal" onclick="closeAddressModal()">×</button>
+                    </section>
+                    
+                    <form class="address-form" onsubmit="saveAddress(event)">
+                        <section class="form-group">
+                            <label for="address-name">Nome do Endereço</label>
+                            <input type="text" id="address-name" name="addressName" placeholder="Ex: Casa, Trabalho" required>
+                        </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="address-cep">CEP</label>
+                                <input type="text" id="address-cep" name="cep" placeholder="00000-000" maxlength="9" required>
+                            </section>
+                            <section class="form-group">
+                                <label for="address-number">Número</label>
+                                <input type="text" id="address-number" name="number" placeholder="123" required>
+                            </section>
+                        </section>
+                        
+                        <section class="form-group">
+                            <label for="address-street">Rua</label>
+                            <input type="text" id="address-street" name="street" placeholder="Nome da rua" required>
+                        </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="address-neighborhood">Bairro</label>
+                                <input type="text" id="address-neighborhood" name="neighborhood" placeholder="Nome do bairro" required>
+                            </section>
+                            <section class="form-group">
+                                <label for="address-city">Cidade</label>
+                                <input type="text" id="address-city" name="city" placeholder="Nome da cidade" required>
+                            </section>
+                        </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="address-state">Estado</label>
+                                <select id="address-state" name="state" required>
+                                    <option value="">Selecione o estado</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="CE">Ceará</option>
+                                </select>
+                            </section>
+                            <section class="form-group">
+                                <label for="address-complement">Complemento</label>
+                                <input type="text" id="address-complement" name="complement" placeholder="Apto, Bloco, etc.">
+                            </section>
+                        </section>
+                        
+                        <section class="modal-actions">
+                            <button type="button" class="cancel-btn" onclick="closeAddressModal()">Cancelar</button>
+                            <button type="submit" class="save-btn">Salvar Endereço</button>
+                        </section>
+                    </form>
+                </section>
+            </section>
+
+            <section id="payment" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Métodos de Pagamento</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <section class="payment-methods">
+                    <section class="payment-item">
+                        <section class="payment-info">
+                            <h3>Cartão de Crédito</h3>
+                            <p>**** **** **** 1234</p>
+                            <p>Visa - Vence em 12/2025</p>
+                        </section>
+                        <section class="payment-actions">
+                            <button class="edit-payment-btn" onclick="editPayment(1)">Editar</button>
+                            <button class="delete-payment-btn" onclick="deletePayment(1)">Remover</button>
+                        </section>
+                    </section>
+
+                    <button class="add-payment-btn" onclick="addNewPayment()">+ Adicionar Cartão</button>
+                </section>
+            </section>
+
+            <section id="notifications" class="content-section" style="display: none;">
+                <section class="section-header">
+                    <h2>Notificações</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </section>
+                
+                <section class="notifications-settings">
+                    <section class="notification-item">
+                        <section class="notification-info">
+                            <h3>Ofertas e Promoções</h3>
+                            <p>Receba notificações sobre descontos especiais</p>
+                        </section>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </section>
+
+                    <section class="notification-item">
+                        <section class="notification-info">
+                            <h3>Status do Pedido</h3>
+                            <p>Atualizações sobre seus pedidos</p>
+                        </section>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </section>
+
+                    <section class="notification-item">
+                        <section class="notification-info">
+                            <h3>Novos Produtos</h3>
+                            <p>Seja a primeira a saber sobre novidades</p>
+                        </section>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga-nos nas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="#" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script/perfilcliente.js"></script>
+</body>
+</html>

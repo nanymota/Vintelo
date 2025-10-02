@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title> 
+    <link rel="stylesheet" href="css/finalizandopagamento.css"> 
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+</head>
+<body>
+  <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <a href="/cadastro">
+          <img src="imagens/seta.png" alt="Seta Voltar">
+        </a>
+        <img src="imagens/logo.png" alt="Logo">
+        <a href="/cadastro">
+          <img src="imagens/foto-branca.png" alt="Carrinho">
+        </a>
+      </nav>
+    </header>
+  </section>
+  <section class="oculto-mobile">
+    <header>
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <section class="main-header">
+          <a href="/index">
+            <img src="imagens/logo.png" alt="Logo Vintelo" class="img-logo">
+          </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
+            </nav>
+            <section class="search-profile oculto-mobile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Adicionar Brechó"></a></li>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </section>
+    </header>
+  </section>
+        <main class="main-mobile">
+        <section class="content">
+            <section class="cart">
+                <img src="imagens/vestido branco.png" alt="Vestido branco com decote" class="cart-item-img">
+                <section class="cart-item-info">
+                    <h2>Vestido branco com decote</h2>
+                    <p>Total</p>
+                    <span>R$ 59,99</span>
+                </section>
+            </section>
+          </section>
+
+          <section class="content">
+            <section class="section">
+              <h2>Endereço de entrega</h2>
+              <section class="item">
+                <img src="imagens/mapa.png" alt="Ícone de localização" class="icon">
+                <span>Av. Paulista</span>
+                <img src="imagens/check.png" alt="Check" class="check-icon">
+              </section>
+            </section>
+      
+            <section class="section">
+              <h2>Forma de pagamento</h2>
+              <section class="item payment-option" onclick="selectPayment(this)">
+                <img src="imagens/visa.png" alt="Visa" class="icon">
+                <span>Adicionar Cartão</span>
+                <img src="imagens/erro.png" alt="Erro" class="error-icon">
+              </section>
+              <section class="item payment-option" onclick="selectPayment(this)">
+                <img src="imagens/pix.png" alt="PIX" class="icon">
+                <span>PIX</span>
+                <img src="imagens/check.png" alt="Check" class="check-icon">
+              </section>
+              <section class="item payment-option" onclick="selectPayment(this)">
+                <img src="imagens/boleto.png" alt="Boleto" class="icon">
+                <span>Boleto</span>
+                <img src="imagens/check.png" alt="Check" class="check-icon">
+              </section>
+            </section>
+            
+            <section class="total">
+              <span>Total</span>
+              <span>R$59,99</span>
+            </section>
+            <section class="oculto-mobile">
+              <a href="/pedidoconf" class="link-branco">
+                  <button class="finalize-button">Finalizar compra</button>
+              </a>
+            </section>
+          </section>
+          </section>
+          <section class="oculto-desktop">
+            <a href="/pedidoconf" class="link-branco">
+                <button class="finalize-button">Finalizar compra</button>
+            </a>
+          </main>
+          </section>
+    </main>
+     <!--                                                    Rodapé                                                      -->
+     <footer class="oculto-mobile">
+     <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+  </section>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

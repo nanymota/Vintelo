@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/editarbanners.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    
+    <!-- Header Mobile
+    <header class="mobile-header mobile-only">
+        <a href="/homeadm">
+            <img src="imagens/seta.png" alt="Voltar">
+        </a>
+        <h1><span class="highlight">VINTÉLO</span></h1>
+        <a href="/homeadm">
+            <img src="imagens/carrinho.png" alt="Home">
+        </a>
+    </header>
+      -->
+    <!-- Header Desktop -->
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Gerenciar Banners</span>
+        </section>
+        <header class="main-header">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/blogadm">Blog</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/avaliacaoadm">Avaliações</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="admin-container">
+        <section class="admin-header">
+            <h1>Gerenciar Banners do Site</h1>
+            <p>Altere os banners que aparecem no carrossel da página inicial</p>
+        </section>
+
+      <section class="oculto-mobile">
+        <form action="/editarbanners" method="post" enctype="multipart/form-data">
+            <!-- Banners Desktop -->
+            <section class="banner-section">
+                <h3>Banners Desktop</h3>
+                
+                <section class="banner-item">
+                    <img src="imagens/banner outono.png" alt="Banner 1" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_desk_1">Banner 1 (Desktop)</label>
+                        <input type="file" id="banner_desk_1" name="banner_desk_1" accept="image/*">
+                        <small>Recomendado: 1200x400px</small>
+                    </section>
+                </section>
+
+                <section class="banner-item">
+                    <img src="imagens/banner desk.png" alt="Banner 2" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_desk_2">Banner 2 (Desktop)</label>
+                        <input type="file" id="banner_desk_2" name="banner_desk_2" accept="image/*">
+                        <small>Recomendado: 1200x400px</small>
+                    </section>
+                </section>
+
+                <section class="banner-item">
+                    <img src="imagens/banner boss desk.jpg" alt="Banner 3" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_desk_3">Banner 3 (Desktop)</label>
+                        <input type="file" id="banner_desk_3" name="banner_desk_3" accept="image/*">
+                        <small>Recomendado: 1200x400px</small>
+                    </section>
+                </section>
+            </section>
+          </section>
+            <!-- Banners Mobile -->
+            <section class="banner-section">
+                <h3>Banners Mobile</h3>
+                
+                <section class="banner-item">
+                    <img src="imagens/banner outono mobile.png" alt="Banner Mobile 1" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_mobile_1">Banner 1 (Mobile)</label>
+                        <input type="file" id="banner_mobile_1" name="banner_mobile_1" accept="image/*">
+                        <small>Recomendado: 800x300px</small>
+                    </section>
+                </section>
+
+                <section class="banner-item">
+                    <img src="imagens/banner primavera mobile.png" alt="Banner Mobile 2" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_mobile_2">Banner 2 (Mobile)</label>
+                        <input type="file" id="banner_mobile_2" name="banner_mobile_2" accept="image/*">
+                        <small>Recomendado: 800x300px</small>
+                    </section>
+                </section>
+
+                <section class="banner-item">
+                    <img src="imagens/banner boss mobile.png" alt="Banner Mobile 3" class="banner-preview">
+                    <section class="banner-info">
+                        <label for="banner_mobile_3">Banner 3 (Mobile)</label>
+                        <input type="file" id="banner_mobile_3" name="banner_mobile_3" accept="image/*">
+                        <small>Recomendado: 800x300px</small>
+                    </section>
+                </section>
+            </section>
+
+            <section class="form-actions">
+                <a href="/homeadm" class="btn-secondary">Cancelar</a>
+                <button type="submit" class="btn-primary">Salvar Alterações</button>
+            </section>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo_vintélo_clara 1.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link">
+                    <img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link">
+                    <img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link">
+                    <img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

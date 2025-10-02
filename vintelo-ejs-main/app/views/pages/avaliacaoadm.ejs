@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/avaliasao.css">
+    <link rel="stylesheet" href="css/avaliacaoadm.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <header class="mobile-header">
+        <nav class="header-nav">
+            <a href="/homeadm" class="back-btn">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <h1>Avaliações Admin</h1>
+            <a href="/homeadm" class="cart-btn">
+                <img src="imagens/quadrado.png" alt="Home">
+            </a>
+        </nav>
+    </header>
+
+    <!-- Header Desktop -->
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Gerenciar Avaliações</span>
+        </section>
+        <header class="main-header">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/blogadm">Blog</a>
+                <a href="/editarbanners">Banners</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main>
+        <!-- Seção de Resumo -->
+        <section class="summary">
+            <section class="rating-overview">
+                <img src="imagens/brecho1.png" alt="Avaliações" class="rating-img">
+                <section class="rating-stats">
+                    <h2>4.8 <span class="stars">★★★★☆</span></h2>
+                    <p>Baseado em 127 avaliações</p>
+                </section>
+            </section>
+            <section class="admin-info">
+                <h3>Painel Administrativo</h3>
+                <p>Gerencie comentários e avaliações</p>
+            </section>
+        </section>
+
+        <!-- Lista de Avaliações -->
+        <section class="reviews" id="reviewsList">
+            <section class="review-item" id="review-1">
+                <img src="imagens/brecho1.png" alt="Jenny" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Jenny</h3>
+                        <span class="review-date">1 Set, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Pagamento rápido, preços perfeitos e ainda tem tudo o que alguém precisa, não só roupa. Faço compras neste site pelo menos 1 vez por mês porque adoro e confio muito! Não tenho críticas, super recomendo!</p>
+                </section>
+                <section class="admin-controls">
+                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="review-item" id="review-2">
+                <img src="imagens/brecho2.png" alt="Isabelly" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Isabelly</h3>
+                        <span class="review-date">3 Ago, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Produtos excelentes, preço ótimo, qualidade incríveis. Comprei um vestido e mais coisas e ainda chegou antes da data prevista. Maravilhoso, adorei e adoro comprar na Vintélo.</p>
+                </section>
+                <section class="admin-controls">
+                    <button class="btn-delete" onclick="excluirComentario(2)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="review-item" id="review-3">
+                <img src="imagens/brecho3.png" alt="Soraya" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Soraya</h3>
+                        <span class="review-date">13 Maio, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Todos os produtos de excelente qualidade e tal como anunciados. Precisei de fazer umas questões e o atendimento ao cliente foi rápido a responder e esclarecer.</p>
+                </section>
+                <section class="admin-controls">
+                    <button class="btn-delete" onclick="excluirComentario(3)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="review-item" id="review-4">
+                <img src="imagens/maria.png" alt="Ana Sofia" class="profile-pic">
+                <section class="review-content">
+                    <section class="review-header">
+                        <h3>Ana Sofia</h3>
+                        <span class="review-date">13 Set, 2023</span>
+                    </section>
+                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
+                    <p class="review-text">Sempre tive receio de comprar roupas pela internet, mas a Vintélo me surpreendeu positivamente! Todas as roupas que comprei são de ótima qualidade, vestem super bem e o melhor é que, além de ter preços muito bons, não demoram a chegar!</p>
+                </section>
+                <section class="admin-controls">
+                    <button class="btn-delete" onclick="excluirComentario(4)">Excluir</button>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        function excluirComentario(id) {
+            if (confirm('Tem certeza que deseja excluir este comentário?')) {
+                const reviewElement = document.getElementById(`review-${id}`);
+                if (reviewElement) {
+                    reviewElement.style.opacity = '0.5';
+                    reviewElement.style.transition = 'opacity 0.3s';
+                    
+                    setTimeout(() => {
+                        reviewElement.remove();
+                        alert(`Comentário ${id} excluído com sucesso!`);
+                    }, 300);
+                }
+            }
+        }
+    </script>
+
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,209 @@
+
+  :root {
+    --vinho: #6d1a35;
+    --bege: #f9f4f2;
+    --cinza: #ddd;
+    --cinza-claro: #f2f2f2;
+  }
+  
+  /* Header */
+  .topo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .topo h1 {
+    font-size: 1.2rem;
+  }
+
+  .upload {
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .upload h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .upload h2 span {
+    font-size: 1rem;
+    display: block;
+  }
+  
+  .upload p {
+    font-size: 0.8rem;
+    color: gray;
+  }
+  
+  .galeria {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .galeria figure img {
+    width: 200px;
+    border-radius: 8px;
+  }
+  
+  .miniaturas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .miniaturas img {
+    width: 80px;
+    border-radius: 4px;
+  }
+  
+  .add-foto {
+    background: var(--vinho);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  /* Formulário */
+  .formulario {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  
+  input {
+    border: none;
+    border-bottom: 1px solid var(--cinza);
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+  }
+  
+  .tamanho {
+    display: flex;
+    gap: 0.5rem;
+    border: none;
+  }
+  
+  .tamanho button {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: var(--cinza-claro);
+    cursor: pointer;
+  }
+  
+  .tamanho button.ativo {
+    background: var(--vinho);
+    color: white;
+  }
+  
+  .aviso {
+    background: var(--cinza-claro);
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  
+  .btn-enviar {
+    background: var(--vinho);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  /* Newsletter */
+  .newsletter {
+    background: #fdf0f2;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  
+  .newsletter h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .newsletter p {
+    margin-bottom: 1rem;
+  }
+  
+  .opcoes {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border: none;
+  }
+  
+  .input-email {
+    display: flex;
+    border: 1px solid var(--vinho);
+    border-radius: 30px;
+    overflow: hidden;
+  }
+  
+  .input-email input {
+    border: none;
+    flex: 1;
+    padding: 0.8rem;
+  }
+  
+  .input-email button {
+    background: var(--vinho);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    cursor: pointer;
+  }
+  
+  /* Rodapé */
+  .rodape {
+    background: var(--vinho);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  
+  .rodape img {
+    margin-bottom: 1rem;
+  }
+  
+  .redes {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .redes a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .links {
+    margin: 1rem 0;
+    text-align: left;
+  }
+  
+  .copy {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
+  

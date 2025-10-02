@@ -1,0 +1,445 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Prata', 'Montserrat', serif;
+    background: #ffffff;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Header Mobile */
+.oculto-desktop {
+    display: block;
+}
+
+.oculto-mobile {
+    display: none;
+}
+
+header nav.grid {
+    background: #ffffff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header nav.grid img {
+    height: 40px;
+}
+
+.img-branca {
+    height: 40px;
+}
+
+/* Header Desktop */
+.discount-banner {
+    background: #7D2838;
+    color: white;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.img-logo {
+    height: 60px;
+}
+
+.main-header nav a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.main-header nav a:hover {
+    color: #7D2838;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    background: #7d2838;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.filters-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 2px solid #7d2838;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+}
+
+.denuncias-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.denuncia-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #7d2838;
+}
+
+.denuncia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-badge.pendente {
+    background: #7D2838;
+    color: #000;
+}
+
+.status-badge.analisada {
+    background: #7D2838;
+    color: white;
+}
+
+.status-badge.resolvida {
+    background: #7D2838;
+    color: white;
+}
+
+.status-badge.analisada {
+    background: #7D2838;
+    color: white;
+}
+
+.data {
+    color: #666;
+    font-size: 14px;
+}
+
+.denuncia-content {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.perfil-denunciado {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 200px;
+}
+
+.perfil-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.perfil-info h3 {
+    margin: 0;
+    color: #7d2838;
+    font-size: 16px;
+}
+
+.perfil-info p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.tipo-usuario {
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.denuncia-detalhes {
+    flex: 1;
+}
+
+.denuncia-detalhes h4 {
+    margin: 0 0 10px 0;
+    color: #7d2838;
+    font-size: 16px;
+}
+
+.motivo {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.denunciante {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.resolucao {
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    color: #155724;
+}
+
+.denuncia-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-analisar, .btn-resolver, .btn-rejeitar {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-analisar {
+    background: #7D2838;
+    color: white;
+}
+
+.btn-analisar:hover {
+    background: #5a1e2a;
+}
+
+.btn-resolver {
+    background: #7D2838;
+    color: white;
+}
+
+.btn-resolver:hover {
+    background: #5a1e2a;
+}
+
+.btn-rejeitar {
+    background: #7D2838;
+    color: white;
+}
+
+.btn-rejeitar:hover {
+    background: #5a1e2a;
+}
+
+.status-text {
+    color: #28a745;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, #7D2838 0%, #5a1e2a 100%);
+    color: #fff;
+    padding: 50px 20px 30px;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.footer-image {
+    height: 70px;
+    margin-bottom: 30px;
+}
+
+.social-media {
+    margin-bottom: 30px;
+}
+
+.social-media .p-footer {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+.social-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 0;
+    margin: 0;
+}
+
+.social-link {
+    display: inline-block;
+}
+
+.social-link a {
+    display: block;
+}
+
+.social-link img {
+    height: 50px;
+    width: 50px;
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover img {
+    transform: scale(1.2);
+}
+
+.copyright {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Validação via CSS */
+.denuncia-card:not([data-id]) {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.denuncia-card[data-status="resolvida"] .btn-analisar,
+.denuncia-card[data-status="resolvida"] .btn-resolver,
+.denuncia-card[data-status="resolvida"] .btn-rejeitar {
+    display: none;
+}
+
+.denuncia-card[data-status="resolvida"] .status-text {
+    display: inline-block;
+}
+
+.denuncia-card:not([data-status="resolvida"]) .status-text {
+    display: none;
+}
+
+.perfil-img[src=""],
+.perfil-img:not([src]) {
+    background: linear-gradient(135deg, #7D2838, #a03450);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.perfil-img[src=""]::before,
+.perfil-img:not([src])::before {
+    content: "?";
+    font-size: 1.2rem;
+}
+
+.motivo:empty::after {
+    content: "Sem descrição";
+    color: #999;
+    font-style: italic;
+}
+
+/* Estados visuais */
+.denuncia-card[data-status="pendente"] {
+    border-left-color: #7D2838;
+}
+
+.denuncia-card[data-status="analisada"] {
+    border-left-color: #7D2838;
+}
+
+.denuncia-card[data-status="resolvida"] {
+    border-left-color: #7D2838;
+    background: #f8fff9;
+}
+
+/* Responsividade Mobile */
+@media (min-width: 768px) {
+    .oculto-desktop {
+        display: none;
+    }
+    
+    .oculto-mobile {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 10px;
+    }
+    
+    .filters-section {
+        flex-direction: column;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    .denuncia-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .perfil-denunciado {
+        min-width: auto;
+    }
+    
+    .denuncia-actions {
+        justify-content: center;
+    }
+    
+    .btn-analisar, .btn-resolver, .btn-rejeitar {
+        flex: 1;
+        min-width: 80px;
+    }
+    
+    .admin-header h1 {
+        font-size: 24px;
+    }
+    
+    .denuncia-card {
+        padding: 15px;
+    }
+}

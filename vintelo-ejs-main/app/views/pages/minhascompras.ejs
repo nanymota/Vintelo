@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <head>
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/minhascompras.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+  </head>
+  <body>
+    <!-- Cabeçalho Desktop -->
+    <section class="oculto-mobile">
+      <section class="top-bar">
+        <p>10% OFF na primeira compra</p>
+      </section>
+      <section class="main-header">
+        <a href="/homecomprador">
+          <img src="imagens/logo.png" class="img-logo">
+        </a>
+        <nav>
+          <a href="/categorias">Vestidos</a>
+          <a href="/categorias">Saias</a>
+          <a href="/categorias">Blusas</a>
+          <a href="/categorias">Calças</a>
+          <a href="/categorias">Outros</a>
+        </nav>
+        <section class="search-profile">
+          <form>
+            <input type="text" placeholder="Buscar...">
+          </form>
+          <ul>
+            <li><a href="#"><img src="imagens/icone sem cadastro.png" class="img-tamanho"></a></li>
+            <li><a href="#"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
+            <li><a href="#"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
+          </ul>
+        </section>
+      </section>
+    </section>
+
+    <!-- Cabeçalho Mobile -->
+    <section class="oculto-desktop">
+      <header>
+        <nav class="grid">
+          <a href="/homecomprador">
+            <img src="imagens/seta.png" alt="seta-voltar">
+          </a>
+          <img src="imagens/titulo-minhas compras.png" alt="Logo">
+          <a href="/carrinho">
+            <img src="imagens/carrinho.png" alt="Descrição da Imagem" />
+          </a>
+        </nav>
+      </header>
+    </section>
+        <main class="main">
+        <section class="order-section">
+          <section class="order-date">15 de Agosto</section>
+          <section class="order-card">
+            <section class="order-content">
+              <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-image">
+              <section class="order-info">
+                <h2 class="product-title">Vestido Branco Longo</h2>
+                <p class="status in-progress">A caminho</p>
+                <p class="delivery-info">Chegará hoje antes das 21h</p>
+                <section class="order-actions">
+                  <button class="track-btn" onclick="toggleTracking(this)">Rastrear Pedido</button>
+                  <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                </section>
+              </section>
+            </section>
+            
+            <section class="order-details" style="display: none;">
+              <h3>Detalhes do Pedido</h3>
+              <section class="detail-row">
+                <span class="detail-label">Número do Pedido:</span>
+                <span class="detail-value">#VT2024-001</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data do Pedido:</span>
+                <span class="detail-value">15 de Agosto, 2024</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Valor Total:</span>
+                <span class="detail-value">R$ 89,90</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Forma de Pagamento:</span>
+                <span class="detail-value">PIX</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Endereço de Entrega:</span>
+                <span class="detail-value">Rua das Flores, 123 - São Paulo, SP</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Vendedor:</span>
+                <span class="detail-value">Brechó da Maria</span>
+              </section>
+            </section>
+              <section class="tracking-details" style="display: none;">
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Pedido Confirmado</p>
+                    <p class="step-time">15/08 - 10:30</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Em Preparação</p>
+                    <p class="step-time">15/08 - 14:20</p>
+                  </section>
+                </section>
+                <section class="tracking-step active">
+                  <span class="step-icon">🚚</span>
+                  <section class="step-info">
+                    <p class="step-title">Saiu para Entrega</p>
+                    <p class="step-time">16/08 - 08:15</p>
+                  </section>
+                </section>
+                <section class="tracking-step">
+                  <span class="step-icon">○</span>
+                  <section class="step-info">
+                    <p class="step-title">Entregue</p>
+                    <p class="step-time">Previsão: 16/08 - 21:00</p>
+                  </section>
+                </section>
+              </section>
+            </section>
+          </section>
+    
+          <section class="order-date">24 de Julho</section>
+          <section class="order-card">
+            <section class="order-content">
+              <img src="imagens/vestido roxo2.png" alt="Vestido Magenta com Decote" class="product-image">
+              <section class="order-info">
+                <h2 class="product-title">Vestido Magenta com Decote</h2>
+                <p class="status canceled">Pedido cancelado</p>
+                <p class="delivery-info">Reembolsamos seu dinheiro na conta em que você pagou via PIX</p>
+                <section class="order-actions">
+                  <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                </section>
+              </section>
+            </section>
+            
+            <section class="order-details" style="display: none;">
+              <h3>Detalhes do Pedido</h3>
+              <section class="detail-row">
+                <span class="detail-label">Número do Pedido:</span>
+                <span class="detail-value">#VT2024-002</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data do Pedido:</span>
+                <span class="detail-value">24 de Julho, 2024</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Valor Total:</span>
+                <span class="detail-value">R$ 65,00</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Motivo do Cancelamento:</span>
+                <span class="detail-value">Produto indisponível</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data do Reembolso:</span>
+                <span class="detail-value">25 de Julho, 2024</span>
+              </section>
+            </section>
+          </section>
+    
+          <section class="order-date">11 de Junho</section>
+          <section class="order-card">
+            <section class="order-content">
+              <img src="imagens/regata branca.png" alt="Regata Branca" class="product-image">
+              <section class="order-info">
+                <h2 class="product-title">Regata Branca</h2>
+                <p class="status delivered">Entregue</p>
+                <p class="delivery-info">Chegou no dia 13 de julho</p>
+                <section class="order-actions">
+                  <button class="track-btn" onclick="toggleTracking(this)">Ver Rastreamento</button>
+                  <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                </section>
+              </section>
+            </section>
+            
+            <section class="order-details" style="display: none;">
+              <h3>Detalhes do Pedido</h3>
+              <section class="detail-row">
+                <span class="detail-label">Número do Pedido:</span>
+                <span class="detail-value">#VT2024-003</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data do Pedido:</span>
+                <span class="detail-value">11 de Junho, 2024</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Valor Total:</span>
+                <span class="detail-value">R$ 35,00</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Forma de Pagamento:</span>
+                <span class="detail-value">Cartão de Crédito</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data de Entrega:</span>
+                <span class="detail-value">13 de Julho, 2024</span>
+              </section>
+            </section>
+              <section class="tracking-details" style="display: none;">
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Pedido Confirmado</p>
+                    <p class="step-time">11/06 - 09:15</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Em Preparação</p>
+                    <p class="step-time">12/06 - 16:30</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Saiu para Entrega</p>
+                    <p class="step-time">13/06 - 07:45</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Entregue</p>
+                    <p class="step-time">13/06 - 15:20</p>
+                  </section>
+                </section>
+              </section>
+            </section>
+          </section>
+    
+          <section class="order-date">05 de Maio</section>
+          <section class="order-card">
+            <section class="order-content">
+              <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto Rosa de Malha" class="product-image">
+              <section class="order-info">
+                <h2 class="product-title">Conjunto Rosa de Malha</h2>
+                <p class="status delivered">Entregue</p>
+                <p class="delivery-info">Chegou no dia 13 de maio</p>
+                <section class="order-actions">
+                  <button class="track-btn" onclick="toggleTracking(this)">Ver Rastreamento</button>
+                  <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
+                </section>
+              </section>
+            </section>
+            
+            <section class="order-details" style="display: none;">
+              <h3>Detalhes do Pedido</h3>
+              <section class="detail-row">
+                <span class="detail-label">Número do Pedido:</span>
+                <span class="detail-value">#VT2024-004</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data do Pedido:</span>
+                <span class="detail-value">05 de Maio, 2024</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Valor Total:</span>
+                <span class="detail-value">R$ 120,00</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Forma de Pagamento:</span>
+                <span class="detail-value">PIX</span>
+              </section>
+              <section class="detail-row">
+                <span class="detail-label">Data de Entrega:</span>
+                <span class="detail-value">13 de Maio, 2024</span>
+              </section>
+            </section>
+              <section class="tracking-details" style="display: none;">
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Pedido Confirmado</p>
+                    <p class="step-time">05/05 - 11:20</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Em Preparação</p>
+                    <p class="step-time">06/05 - 09:10</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Saiu para Entrega</p>
+                    <p class="step-time">13/05 - 08:30</p>
+                  </section>
+                </section>
+                <section class="tracking-step completed">
+                  <span class="step-icon">✓</span>
+                  <section class="step-info">
+                    <p class="step-title">Entregue</p>
+                    <p class="step-time">13/05 - 14:45</p>
+                  </section>
+                </section>
+              </section>
+            </section>
+          </section>
+        </section>
+      </section>
+    </main>
+    <!--                                                    Rodapé                                                      -->
+    <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script src="script/minhascompras.js"></script>
+    </body>
+    </html>
+    

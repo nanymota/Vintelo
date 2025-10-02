@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin - Vintélo</title>
+    <link rel="stylesheet" href="css/blogadm.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <header class="mobile-header">
+        <a href="/homeadm">
+            <img src="imagens/seta.png" alt="Voltar">
+        </a>
+        <h1><span class="highlight">VINTÉLO</span></h1>
+        <a href="/homeadm">
+            <img src="imagens/carrinho.png" alt="Home">
+        </a>
+    </header>
+
+    <!-- Header Desktop -->
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Gerenciar Blog</span>
+        </section>
+        <header class="main-header">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/avaliacaoadm">Avaliações</a>
+                <a href="/editarbanners">Banners</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar posts...">
+                </form>
+                <ul>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <!-- Admin Dashboard -->
+    <main class="admin-dashboard">
+        <!-- Actions Bar -->
+        <section class="actions-bar">
+            <button class="btn-primary" onclick="toggleForm()">
+                <span>+</span> Novo Post
+            </button>
+            <section class="filters">
+                <select id="filterStatus">
+                    <option value="">Todos os Status</option>
+                    <option value="publicado">Publicados</option>
+                    <option value="rascunho">Rascunhos</option>
+                    <option value="agendado">Agendados</option>
+                </select>
+                <select id="filterCategory">
+                    <option value="">Todas Categorias</option>
+                    <option value="Moda">Moda</option>
+                    <option value="Tendência">Tendência</option>
+                    <option value="Sustentabilidade">Sustentabilidade</option>
+                    <option value="Style">Style</option>
+                </select>
+            </section>
+        </section>
+
+        <!-- Desktop Content -->
+        <main class="desktop-content oculto-mobile">
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">05 nov</span>
+                    <h3 class="category">Style</h3>
+                    <h2 class="post-title">Moda Metalizada</h2>
+                    <p class="post-excerpt">"Brilha, brilha, movie star". A tendência metalizada de 2024...</p>
+                    <a href="/artigo" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/metalizado.png" alt="Moda Metalizada" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(1)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(1)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">03 nov</span>
+                    <h3 class="category">BOSS</h3>
+                    <h2 class="post-title">BOSS | Milão Verão 2024</h2>
+                    <p class="post-excerpt">Uma distopia na qual seres humanos se unem às máquinas...</p>
+                    <a href="/bossartigo" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/boss milão.png" alt="BOSS Milão" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(2)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(2)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">25 out</span>
+                    <h3 class="category">Gucci</h3>
+                    <h2 class="post-title">Gucci | Milão Verão 2024</h2>
+                    <p class="post-excerpt">Nova era com Sabato De Sarno...</p>
+                    <a href="/gucciartigo" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/gucci-milao 1.png" alt="Gucci Milão" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(3)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(3)">Excluir</button>
+                </section>
+            </section>
+        </main>
+
+        <!-- Mobile Content -->
+        <main class="mobile-content mobile-only">
+            <section class="mobile-hero">
+                <img src="imagens/metalizado.png" alt="Tendências de moda" class="hero-image">
+                <section class="mobile-card-content">
+                    <h2>MODA | METALIZADA <br> Verão 2025</h2>
+                    <a href="/artigo">Ver artigo</a>
+                </section>
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(1)">Editar</button>
+                </section>
+            </section>
+
+            <section class="mobile-articles">
+                <article class="mobile-card">
+                    <img src="imagens/boss milão 2.png" alt="BOSS Milão">
+                    <section class="mobile-card-content">
+                        <h2>BOSS | Milão <br> Verão 2024</h2>
+                        <a href="/bossartigo">Ver artigo</a>
+                    </section>
+                    <section class="admin-controls">
+                        <button class="admin-btn" onclick="editarPost(2)">Editar</button>
+                    </section>
+                </article>
+
+                <article class="mobile-card">
+                    <img src="imagens/gucci-milao 1.png" alt="Gucci Milão">
+                    <section class="mobile-card-content">
+                        <h2>Gucci | Milão <br> Verão 2024</h2>
+                        <a href="/gucciartigo">Ver artigo</a>
+                    </section>
+                    <section class="admin-controls">
+                        <button class="admin-btn" onclick="editarPost(3)">Editar</button>
+                    </section>
+                </article>
+
+                <article class="mobile-card">
+                    <img src="imagens/tendencia sweer.png" alt="Tendência Sweet">
+                    <section class="mobile-card-content">
+                        <h2>Tendência <br> Sweet</h2>
+                        <a href="/sweer">Ver artigo</a>
+                    </section>
+                    <section class="admin-controls">
+                        <button class="admin-btn" onclick="editarPost(4)">Editar</button>
+                    </section>
+                </article>
+
+                <article class="mobile-card">
+                    <img src="imagens/tendencia sustentável.png" alt="Moda Sustentável">
+                    <section class="mobile-card-content">
+                        <h2>A tendência é: <br>Sustentável</h2>
+                        <a href="/tensustentavel">Ver artigo</a>
+                    </section>
+                    <section class="admin-controls">
+                        <button class="admin-btn" onclick="editarPost(5)">Editar</button>
+                    </section>
+                </article>
+
+                <section class="mobile-featured">
+                    <section class="featured-text">
+                        <h3>MODA <span>Sustentável</span></h3>
+                        <p class="subtitle">Fast fashion <br> Moda sustentável</p>
+                        <a href="/ecologicoartigo" class="description">NOSSO LADO ECOLÓGICO</a>
+                    </section>
+                    <img src="imagens/moda sustentável.png" alt="Moda sustentável" class="featured-img">
+                    <section class="admin-controls">
+                        <button class="admin-btn" onclick="editarPost(6)">Editar</button>
+                    </section>
+                </section>
+            </section>
+        </main>
+    </main>
+
+    <!-- Modal Form -->
+    <section class="modal-overlay" id="postModal" style="display: none;">
+        <section class="modal-content">
+            <section class="modal-header">
+                <h3>Criar Novo Post</h3>
+                <button class="modal-close" onclick="toggleForm()">&times;</button>
+            </section>
+            <form action="/blogadm" method="post" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+                <section class="form-row">
+                    <section class="form-group">
+                        <label for="titulo">Título:</label>
+                        <input type="text" id="titulo" name="titulo" required>
+                    </section>
+                    <section class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Selecione...</option>
+                            <option value="Moda">Moda</option>
+                            <option value="Tendência">Tendência</option>
+                            <option value="Sustentabilidade">Sustentabilidade</option>
+                            <option value="Style">Style</option>
+                            <option value="BOSS">BOSS</option>
+                            <option value="Gucci">Gucci</option>
+                        </select>
+                    </section>
+                </section>
+                <section class="form-row">
+                    <section class="form-group">
+                        <label for="autor">Autor:</label>
+                        <input type="text" id="autor" name="autor" value="Vintélo Fashion" required>
+                    </section>
+                    <section class="form-group">
+                        <label for="tempo_leitura">Tempo de Leitura (min):</label>
+                        <input type="number" id="tempo_leitura" name="tempo_leitura" min="1" max="60" value="5">
+                    </section>
+                </section>
+                <section class="form-group">
+                    <label for="resumo">Resumo/Excerpt:</label>
+                    <textarea id="resumo" name="resumo" rows="3" placeholder="Breve descrição do artigo..."></textarea>
+                </section>
+                <section class="form-group">
+                    <label for="imagem">Imagem Principal:</label>
+                    <input type="file" id="imagem" name="imagem" accept="image/*">
+                </section>
+                <section class="form-group">
+                    <label for="conteudo">Conteúdo:</label>
+                    <textarea id="conteudo" name="conteudo" rows="8" required></textarea>
+                </section>
+                <section class="form-row">
+                    <section class="form-group">
+                        <label for="tags">Tags (separadas por vírgula):</label>
+                        <input type="text" id="tags" name="tags" placeholder="moda, sustentável, tendência">
+                    </section>
+                    <section class="form-group">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="rascunho">Rascunho</option>
+                            <option value="publicado" selected>Publicar</option>
+                            <option value="agendado">Agendar</option>
+                        </select>
+                    </section>
+                </section>
+                <section class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="toggleForm()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Publicar Post</button>
+                </section>
+            </form>
+        </section>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo_vintélo_clara 1.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link">
+                    <img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link">
+                    <img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link">
+                    <img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleForm() {
+            const modal = document.getElementById('postModal');
+            modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
+        }
+        
+        function handleSubmit(event) {
+            const status = document.getElementById('status').value;
+            const titulo = document.getElementById('titulo').value;
+            
+            if (status === 'publicado') {
+                if (confirm(`Deseja publicar o artigo "${titulo}" imediatamente?`)) {
+                    alert('Artigo publicado com sucesso!');
+                    setTimeout(() => {
+                        window.location.href = '/blogadm';
+                    }, 1000);
+                    return true;
+                }
+                return false;
+            } else if (status === 'rascunho') {
+                alert('Artigo salvo como rascunho!');
+                return true;
+            } else if (status === 'agendado') {
+                alert('Artigo agendado para publicação!');
+                return true;
+            }
+        }
+        
+        function editarPost(id) {
+            window.location.href = '/editarpost?id=' + id;
+        }
+        
+        function excluirPost(id) {
+            if (confirm('Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.')) {
+                alert('Post ' + id + ' excluído com sucesso!');
+                location.reload();
+            }
+        }
+
+        // Filtros
+        document.getElementById('filterStatus').addEventListener('change', function() {
+            // Implementar filtro por status
+        });
+
+        document.getElementById('filterCategory').addEventListener('change', function() {
+            // Implementar filtro por categoria
+        });
+    </script>
+</body>
+</html>

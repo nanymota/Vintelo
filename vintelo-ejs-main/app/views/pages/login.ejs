@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav class="grid">
+            <!-- <a href="/index">
+                <img src="imagens/seta.png" alt="Seta Voltar">
+            </a> -->
+            <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+            <img src="imagens/foto-branca.png" alt="Descrição da Imagem">
+        </nav>
+    </header>
+    <br>
+    <main>
+        <section class="welcome-section">
+            <h2>Cadastre-se</h2>
+            <br>
+            <p>"Acesse usando seu cadastro de outra plataforma"</p>
+        </section>
+        <br>
+        <br>
+        <section class="social-login">
+            <a href="#"><img src="imagens/icone facebook.png" alt="Login com Facebook"></a>
+            <a href="#"><img src="imagens/icone apple.png" alt="Login com Apple"></a>
+            <a href="#"><img src="imagens/icone google.png" alt="Login com Google"></a>
+        </section>
+        <br>
+        <p class="divider">ou acesse via email</p>
+        <br>
+        <form id="registerForm" action="/login" method="post">
+            <section class="form-group">
+                <label for="nome_usu">Nome Completo</label>
+                <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" value="<%= valores?.nome_usu || '' %>">
+            </section>
+            
+            <section class="form-group">
+                <label for="nomeusu_usu">Nome de Usuário</label>
+                <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite seu nome de usuário" value="<%= valores?.nomeusu_usu || '' %>">
+            </section>
+            
+            <section class="form-group">
+                <label for="email_usu">Endereço de email</label>
+                <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com"
+                    value="<%= valores?.email_usu || '' %>" class="<%= avisoErro?.email_usu || '' %>">
+            </section>
+         
+            <section class="form-group">
+                <label for="senha_usu">Senha</label>
+                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..."
+                    value="<%= valores?.senha_usu || '' %>" class="<%= avisoErro?.senha_usu || '' %>">
+            </section>
+            <br>
+            <br>
+            <label class="stay-connected">
+                <input type="checkbox" name="conectado" checked>
+                <span class="toggle"></span>
+                <p class="notificaçao"> Mantenha-me conectado </p>
+            </label>
+            <label class="stay-connected">
+                <input type="checkbox" name="notificacoes" checked>
+                <span class="toggle"></span>
+                <p class="notificaçao"> Receber notificações </p>
+            </label>
+            <label class="stay-connected">
+                <input type="checkbox" name="termos" checked required>
+                <span class="toggle"></span>
+                <p class="notificaçao"> Li e concordo com os Termos de Uso </p>
+            </label>
+            <br>
+            <button type="submit" name="submit" id="submit" class="submit-btn">Cadastrar</button>
+        </form>
+    </main>
+    <footer class="footer">
+    </footer>
+</body>
+</html>

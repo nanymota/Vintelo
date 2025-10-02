@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <head>
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/estatistica.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+  </head>
+  <body>
+    <section class="oculto-mobile">
+      <header1>
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <section class="main-header">
+          <a href="/homevendedor">
+            <img src="imagens/logo.png" class="img-logo">
+          </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/criarbrecho" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
+                    <li><a href="/menuvendedor" ><img src="imagens/icone sem cadastro.png" class="img-tamanho"> </a></li>
+                    <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                </ul>
+            </section>
+        </section>
+      </header>
+    </section>
+    <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <a href="/homevendedor">
+          <img src="imagens/seta.png" alt="Seta Voltar">
+        </a>
+        <img src="imagens/logo.png" alt="Logo">
+        <a href="/carrinho">
+          <img src="imagens/carrinho.png" alt="Carrinho">
+        </a>
+      </nav>
+    </header>
+  </section>
+    <main>
+      <h3 class="titulo">Dashboard de Vendas</h3>
+      
+      <section class="dashboard">
+        <!-- Cards de Estatísticas -->
+        <section class="stats-card">
+          <h3>Receita Total</h3>
+          <section class="stats-value">R$ 12.450</section>
+          <section class="stats-change">+15% este mês</section>
+        </section>
+        
+        <section class="stats-card">
+          <h3>Produtos Vendidos</h3>
+          <section class="stats-value">89</section>
+          <section class="stats-change">+8% este mês</section>
+        </section>
+        
+        <section class="stats-card">
+          <h3>Visualizações do Perfil</h3>
+          <section class="stats-value">1.234</section>
+          <section class="stats-change">+22% este mês</section>
+        </section>
+        
+        <section class="stats-card">
+          <h3>Taxa de Conversão</h3>
+          <section class="stats-value">7.2%</section>
+          <section class="stats-change negative">-2% este mês</section>
+        </section>
+        
+        <!-- Gráfico de Barras -->
+        <section class="chart-container">
+          <h3 class="chart-title">Vendas por Categoria</h3>
+          <section class="bar-chart">
+            <section class="bar" style="height: 80%;">
+              <span class="bar-value">32</span>
+              <span class="bar-label">Vestidos</span>
+            </section>
+            <section class="bar" style="height: 60%;">
+              <span class="bar-value">24</span>
+              <span class="bar-label">Blusas</span>
+            </section>
+            <section class="bar" style="height: 45%;">
+              <span class="bar-value">18</span>
+              <span class="bar-label">Saias</span>
+            </section>
+            <section class="bar" style="height: 35%;">
+              <span class="bar-value">14</span>
+              <span class="bar-label">Calças</span>
+            </section>
+            <section class="bar" style="height: 20%;">
+              <span class="bar-value">8</span>
+              <span class="bar-label">Outros</span>
+            </section>
+          </section>
+        </section>
+        
+        <!-- Gráfico de Pizza -->
+        <section class="chart-container">
+          <h3 class="chart-title">Distribuição de Receita</h3>
+          <section class="pie-chart">
+            <section class="pie-center">100%</section>
+          </section>
+          <section class="pie-legend">
+            <section class="legend-item">
+              <section class="legend-color" style="background: #8c2b44;"></section>
+              <span>Vestidos (40%)</span>
+            </section>
+            <section class="legend-item">
+              <section class="legend-color" style="background: #a64d61;"></section>
+              <span>Blusas (30%)</span>
+            </section>
+            <section class="legend-item">
+              <section class="legend-color" style="background: #c96d7e;"></section>
+              <span>Saias (20%)</span>
+            </section>
+            <section class="legend-item">
+              <section class="legend-color" style="background: #e8a5b0;"></section>
+              <span>Outros (10%)</span>
+            </section>
+          </section>
+        </section>
+      </section>
+    </main>
+  <!--                                                    Rodapé                                                      -->
+  <footer class="footer">
+    <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+    <section class="social-media">
+      <p class="p-footer">Siga nossas redes sociais</p>
+      <ul class="social-links">
+        <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+        <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+        <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+      </ul>
+    </section>
+     <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+  </footer>
+  <script src="script/estatisticas.js"></script>
+</body>
+</html>

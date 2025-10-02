@@ -1,0 +1,140 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Prata, Montserrat;
+    background-color: #fff;
+  }
+  
+  /* Estilos gerais */
+  header {
+    background-color: #fff;
+    padding: 40px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  header .grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header img {
+    height: 100px;
+  }
+  
+  main{
+    padding: 20px;
+  }
+.img-responsiva{
+    position: center;
+    width: 70%;
+    height: auto;
+}
+
+/*                                                     Divisão                                                           */
+.divider {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #7c7c7c;
+    position: relative;
+    font-size: 30px;
+    padding: 20px;
+  }
+  
+  .divider:before, .divider:after {
+    content: "";
+    width: 30%;
+    height: 1px;
+    background-color: #7c7c7c;
+    position: absolute;
+    top: 50%;
+  }
+  
+  .divider:before {
+    left: 0;
+  }
+  
+  .divider:after {
+    right: 0;
+  }
+  /*                                                  formulário                                                         */
+  form {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 44px;
+    color: #7c7c7c;
+    padding: 10px;
+  }
+  
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    font-size: 46px;
+    margin-bottom: 10px;
+  }
+  
+  .check-mark {
+    position: absolute;
+    right: 10px;
+    top: 42px;
+    color: green;
+    font-size: 16px;
+  }
+  
+  .password-strength {
+    position: absolute;
+    right: 10px;
+    top: 94px;
+    color: green;
+    font-size: 34px;
+  }
+  
+  .forgot-password {
+    color: red;
+    display: block;
+    text-align: right;
+    margin-bottom: 20px;
+    text-decoration: none;
+    font-size: 25px;
+  }
+  
+  .stay-connected {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  p{
+    font-size: 30px;
+    color: #7c7c7c;
+    padding: 10px;
+    text-align: center;
+  }
+  
+/*                                                     footer                                                          */
+.login-btn {
+    width: 100%;
+    padding: 55px;
+    background-color: #6f1d1b;
+    color: #fff;
+    font-size: 48px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

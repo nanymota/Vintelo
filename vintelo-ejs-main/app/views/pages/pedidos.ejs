@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Pedidos - Vintélo</title>
+    <link rel="stylesheet" href="css/pedidos.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <header class="mobile-header">
+        <nav class="grid">
+            <a href="/homevendedor">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo Vintélo">
+            <a href="/carrinho">
+                <img src="imagens/carrinho.png" alt="Carrinho">
+            </a>
+        </nav>
+    </header>
+
+    <!-- Header Desktop -->
+    <section class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        
+        <header class="main-header">
+            <a href="/homecomprador">
+                <img src="imagens/logo.png" class="img-logo" alt="Logo Vintélo">
+            </a>
+            <nav>
+                <a href="/vestidos">Vestidos</a>
+                <a href="/saias">Saias</a>
+                <a href="/blusas">Blusas</a>
+                <a href="/acessorios">Acessórios</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Criar Brechó"></a></li>
+                    <li><a href="/menu"><img src="imagens/maria.png" class="img-tamanho maria" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="main">
+        <section class="page-header">
+            <h1>Meus Pedidos</h1>
+            <p class="subtitle">Acompanhe o status dos seus pedidos</p>
+        </section>
+
+        <section class="container">
+            <!-- Filtros Desktop -->
+            <aside class="desktop-filters">
+                <h3>Filtros</h3>
+                <details open>
+                    <summary>Status do Pedido</summary>
+                    <ul>
+                        <li><input type="checkbox" id="entregue"> <label for="entregue">Entregue</label></li>
+                        <li><input type="checkbox" id="caminho"> <label for="caminho">A caminho</label></li>
+                        <li><input type="checkbox" id="cancelado"> <label for="cancelado">Cancelado</label></li>
+                    </ul>
+                </details>
+                <button class="button-filtro">Aplicar Filtros</button>
+            </aside>
+
+            <!-- Lista de Pedidos -->
+            <section class="order-section">
+                <article class="order-group">
+                    <h2 class="order-date">15 de Agosto</h2>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Vestido Branco Longo</h3>
+                                <p class="status in-progress">A caminho</p>
+                                <p class="delivery-info">Chegará hoje antes das 21h</p>
+                                <p class="order-number">Pedido #VT2024-001</p>
+                            </section>
+                            <section class="order-price">
+                                <span class="price">R$ 89,90</span>
+                            </section>
+                        </section>
+                        <section class="order-actions">
+                            <button class="track-btn" onclick="toggleTracking(this)">Rastrear</button>
+                            <button class="details-btn" onclick="toggleDetails(this)">Detalhes</button>
+                        </section>
+                        <section class="tracking-details" style="display: none;">
+                            <h4>Rastreamento do Pedido</h4>
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <span class="step-info">Pedido confirmado - 14/08 10:30</span>
+                            </section>
+                            <section class="tracking-step completed">
+                                <span class="step-icon">✓</span>
+                                <span class="step-info">Em preparação - 14/08 14:20</span>
+                            </section>
+                            <section class="tracking-step active">
+                                <span class="step-icon">🚚</span>
+                                <span class="step-info">A caminho - 15/08 08:15</span>
+                            </section>
+                        </section>
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <p><strong>Número:</strong> VT2024-001</p>
+                            <p><strong>Data:</strong> 14/08/2024</p>
+                            <p><strong>Pagamento:</strong> PIX</p>
+                            <p><strong>Endereço:</strong> Rua das Flores, 123 - São Paulo, SP</p>
+                        </section>
+                    </section>
+                </article>
+
+                <article class="order-group">
+                    <h2 class="order-date">24 de Julho</h2>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/vestido roxo2.png" alt="Vestido Magenta" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Vestido Magenta com Decote</h3>
+                                <p class="status canceled">Pedido cancelado</p>
+                                <p class="delivery-info">Reembolsamos seu dinheiro via PIX</p>
+                                <p class="order-number">Pedido #VT2024-002</p>
+                            </section>
+                            <section class="order-price">
+                                <span class="price">R$ 125,00</span>
+                            </section>
+                        </section>
+                        <section class="order-actions">
+                            <button class="details-btn" onclick="toggleDetails(this)">Detalhes</button>
+                            <button class="reorder-btn">Comprar Novamente</button>
+                        </section>
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <p><strong>Número:</strong> VT2024-002</p>
+                            <p><strong>Data:</strong> 24/07/2024</p>
+                            <p><strong>Motivo:</strong> Produto indisponível</p>
+                            <p><strong>Reembolso:</strong> 25/07/2024</p>
+                        </section>
+                    </section>
+                </article>
+
+                <article class="order-group">
+                    <h2 class="order-date">11 de Junho</h2>
+                    <section class="order-card">
+                        <section class="order-content">
+                            <img src="imagens/regata branca.png" alt="Regata Branca" class="product-image">
+                            <section class="order-info">
+                                <h3 class="product-title">Regata Branca</h3>
+                                <p class="status delivered">Entregue</p>
+                                <p class="delivery-info">Chegou no dia 13 de junho</p>
+                                <p class="order-number">Pedido #VT2024-003</p>
+                            </section>
+                            <section class="order-price">
+                                <span class="price">R$ 45,90</span>
+                            </section>
+                        </section>
+                        <section class="order-actions">
+                            <button class="details-btn" onclick="toggleDetails(this)">Detalhes</button>
+                            <button class="review-btn" onclick="openReview()">Avaliar</button>
+                        </section>
+                        <section class="order-details" style="display: none;">
+                            <h4>Detalhes do Pedido</h4>
+                            <p><strong>Número:</strong> VT2024-003</p>
+                            <p><strong>Data:</strong> 11/06/2024</p>
+                            <p><strong>Entrega:</strong> 13/06/2024</p>
+                            <p><strong>Pagamento:</strong> Cartão de Crédito</p>
+                        </section>
+                    </section>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    <!-- Modal de Avaliação -->
+    <section id="reviewModal" class="modal" style="display: none;">
+        <section class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Avaliar Produto</h3>
+            <section class="rating">
+                <span class="star" onclick="setRating(1)">★</span>
+                <span class="star" onclick="setRating(2)">★</span>
+                <span class="star" onclick="setRating(3)">★</span>
+                <span class="star" onclick="setRating(4)">★</span>
+                <span class="star" onclick="setRating(5)">★</span>
+            </section>
+            <textarea placeholder="Deixe seu comentário..."></textarea>
+            <button class="submit-review" onclick="submitReview()">Enviar Avaliação</button>
+        </section>
+    </section>
+
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Logo Vintélo" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleDetails(button) {
+            const orderCard = button.closest('.order-card');
+            const details = orderCard.querySelector('.order-details');
+            
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+                button.textContent = 'Ocultar';
+            } else {
+                details.style.display = 'none';
+                button.textContent = 'Detalhes';
+            }
+        }
+
+        function toggleTracking(button) {
+            const orderCard = button.closest('.order-card');
+            const tracking = orderCard.querySelector('.tracking-details');
+            
+            if (tracking.style.display === 'none' || tracking.style.display === '') {
+                tracking.style.display = 'block';
+                button.textContent = 'Ocultar';
+            } else {
+                tracking.style.display = 'none';
+                button.textContent = 'Rastrear';
+            }
+        }
+
+        function openReview() {
+            document.getElementById('reviewModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        let currentRating = 0;
+
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+            });
+        }
+
+        function submitReview() {
+            const comment = document.querySelector('#reviewModal textarea').value;
+            
+            if (currentRating === 0) {
+                alert('Por favor, selecione uma avaliação');
+                return;
+            }
+            
+            alert(`Avaliação enviada: ${currentRating} estrelas`);
+            closeModal();
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('reviewModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="script/script.js"></script>
+    <script src="script/cep.js"></script>
+    <link rel="stylesheet" href="css/cadastro.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    
+</head>
+<body>
+
+    <header>
+        <nav class="grid">
+            <a href="/index">
+                <img src="imagens/seta.png" alt="Seta Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+            <img src="imagens/quadrado.png" class="img-branca">
+        </nav>
+    </header>
+    <main class="login-container">
+        <aside class="image-section">
+            <section class="seta">
+                <a href="/index">
+                    <img src="imagens/seta.png">
+                </a>
+            </section>
+            <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
+            <section class="content">
+                <h1>Sua essência na aparência</h1>
+                <p>Crie seu estilo individual e único e fique incrível todos os dias.</p>
+                <br>
+                <section class="buttons">
+                    <a href="/criarbrecho" class="button">Vender</a>
+                    <a href="/login" class="button">Comprar</a>
+                </section>
+                <br>
+                <p>Ja tem uma conta? <a href="/entrar"> Entrar</a></p>
+            </section>
+        </aside>
+        <section class="form-section">
+            <section class="form-container">
+                    <h2>Acesso fácil</h2>
+                    <p>Conecte-se usando seu cadastro de outra plataforma</p>
+
+                <section class="social-login">
+                    <a href="#"><img src="imagens/face.jpg"></a>
+                    <a href="#"><img src="imagens/insta.jpg"></a>
+                    <a href="#"><img src="imagens/google.jpg"></a>
+                </section>
+
+                <p class="divider">ou acesse via email</p>
+                <section class="login-register">
+                    <section class="login">
+                        <h3>Entrar</h3>
+                        <form id="loginForm" action="/login" method="post" >
+                            <label for="nomeusu_usu">Email ou nome de usuário</label>
+                            <input type="text" id="nomeusu_usu" name="nome_usu" placeholder="Digite aqui...">
+
+                            <label for="senha_usu">Senha</label>
+                            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite aqui...">
+
+                            <button class="submit-btn">Entrar</button>
+                        </form>
+                    </section>
+
+                    <section class="register">
+                        <h3>Cadastrar</h3>
+                        <form id="registerForm" action="/cadastro" method="post">
+                            <label for="nome_usu">Nome completo</label>
+                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome completo">
+
+                            <label for="nomeusu_usu">Nome de usuário</label>
+                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite seu nome de usuário">
+
+                            <label for="email_usu">Endereço de email</label>
+                            <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com">
+
+                            <label for="senha_usu">Senha</label>
+                            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite aqui...">
+
+                            <label for="fone_usu">Contato</label>
+                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****">
+
+                            <label for="cep">CEP</label>
+                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" onblur="buscarCEP(this.value)">
+
+                            <label for="endereco">Endereço</label>
+                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." readonly>
+
+                            <label for="numero">Número</label>
+                            <input type="text" id="numero" name="numero" placeholder="123">
+
+                            <label for="bairro">Bairro</label>
+                            <input type="text" id="bairro" name="bairro" placeholder="Bairro" readonly>
+
+                            <label for="cidade">Cidade</label>
+                            <input type="text" id="cidade" name="cidade" placeholder="Cidade" readonly>
+
+                            <label for="uf">UF</label>
+                            <input type="text" id="uf" name="uf" placeholder="SP" readonly maxlength="2">
+
+                            <button type="submit" name="submit" id="submit" class="submit-btn">  Cadastrar</button>
+                        </form>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </main>
+
+</body>
+</html>
