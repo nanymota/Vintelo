@@ -1,48 +1,145 @@
 <!DOCTYPE html>
-<html>
-  <meta charset="UTF-8">
-  <head>
-    <title>Vintélo</title>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Vintélo - Esqueceu a Senha</title>
     <link rel="stylesheet" href="css/esqueceusenha.css">
-
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-    
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <nav class="grid">
-        <a href="/cadastro">
-          <img src="imagens/seta.png" alt="Seta Voltar">
-        </a>
-        <img src="imagens/logo.png" alt="Logo">
-        <a href="/carrinho">
-          <img src="imagens/carrinho.png" alt="Carrinho">
-        </a>
-      </nav>
+        <nav class="grid">
+            <a href="/login">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+            <img src="imagens/foto-branca.png" alt="Descrição da Imagem">
+        </nav>
     </header>
-  <br>
-  <br>
-  <main>
-    <center><img src="imagens/imagem da senha.png" class="img-responsiva"></center>
-    <br>
-    <p class="divider">Redefina sua senha</p>
-    <br>
-    <br>
-    <form>
-        <label for="email_usu>Endereço De Email</label>
-        <input type="email_usu" id="email_usu" value="<%= valores.email_usu %>" class="<%= avisoErro.email_usu %>"
+
+    <main>
+        <section class="welcome-section">
+            <img src="imagens/imagem da senha.png" class="img-responsiva" alt="Esqueceu Senha">
+            <h2>Esqueceu sua senha?</h2>
+            <% if (typeof etapa === 'undefined' || etapa === 'email') { %>
+                <p>Digite seu e-mail para receber o código de verificação.</p>
+            <% } else if (etapa === 'codigo') { %>
+                <p>Digite o código de 6 dígitos enviado para seu e-mail.</p>
+            <% } else if (etapa === 'senha') { %>
+                <p>Digite uma nova senha forte para sua conta.</p>
+            <% } %>
+        </section>
+
+        <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+            <section class="notificacao <%= dadosNotificacao.tipo %>">
+                <p><%= dadosNotificacao.mensagem %></p>
+            </section>
+        <% } %>
+
+        <% if (typeof etapa === 'undefined' || etapa === 'email') { %>
+            <!-- Etapa 1: Solicitar E-mail -->
+            <form method="POST" action="/esqueceusenha">
+                <section class="form-group">
+                    <label for="email_usu">E-mail</label>
+                    <input 
+                        type="email" 
+                        id="email_usu" 
+                        name="email_usu" 
+                        value="<%= typeof valores !== 'undefined' ? valores.email_usu || '' : '' %>" 
+                        class="<%= typeof avisoErro !== 'undefined' && avisoErro.email_usu ? 'erro' : '' %>"
+                        placeholder="Digite seu e-mail"
+                        required
+                    >
+                    <% if (typeof avisoErro !== 'undefined' && avisoErro.email_usu) { %>
+                        <span class="erro-msg"><%= avisoErro.email_usu %></span>
+                    <% } %>
+                </section>
+                <button type="submit" class="submit-btn">Enviar Código</button>
+            </form>
+        <% } else if (etapa === 'codigo') { %>
+            <!-- Etapa 2: Verificar Código -->
+            <form method="POST" action="/esqueceusenha/verificar">
+                <input type="hidden" name="email_usu" value="<%= email_usu %>">
+                <section class="form-group">
+                    <label for="codigo">Código de Verificação</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        class="<%= typeof avisoErro !== 'undefined' && avisoErro.codigo ? 'erro' : '' %>"
+                        placeholder="Digite o código de 6 dígitos"
+                        maxlength="6"
+                        required
+                    >
+                    <% if (typeof avisoErro !== 'undefined' && avisoErro.codigo) { %>
+                        <span class="erro-msg"><%= avisoErro.codigo %></span>
+                    <% } %>
+                    <small class="codigo-dica">Código enviado para <%= email_usu %></small>
+                </section>
+                <button type="submit" class="submit-btn">Verificar Código</button>
+            </form>
+        <% } else if (etapa === 'senha') { %>
+            <!-- Etapa 3: Nova Senha -->
+            <form method="POST" action="/esqueceusenha/redefinir">
+                <input type="hidden" name="email_usu" value="<%= email_usu %>">
+                <input type="hidden" name="codigo" value="<%= codigo %>">
+                <section class="form-group">
+                    <label for="nova_senha">Nova Senha</label>
+                    <input 
+                        type="password" 
+                        id="nova_senha" 
+                        name="nova_senha" 
+                        class="<%= typeof avisoErro !== 'undefined' && avisoErro.nova_senha ? 'erro' : '' %>"
+                        placeholder="Digite sua nova senha"
+                        minlength="8"
+                        required
+                    >
+                    <% if (typeof avisoErro !== 'undefined' && avisoErro.nova_senha) { %>
+                        <span class="erro-msg"><%= avisoErro.nova_senha %></span>
+                    <% } %>
+                    <small class="senha-dica">Mínimo 8 caracteres, incluindo letras, números e símbolos</small>
+                </section>
+                <section class="form-group">
+                    <label for="confirmar_senha">Confirmar Nova Senha</label>
+                    <input 
+                        type="password" 
+                        id="confirmar_senha" 
+                        name="confirmar_senha" 
+                        class="<%= typeof avisoErro !== 'undefined' && avisoErro.confirmar_senha ? 'erro' : '' %>"
+                        placeholder="Confirme sua nova senha"
+                        required
+                    >
+                    <% if (typeof avisoErro !== 'undefined' && avisoErro.confirmar_senha) { %>
+                        <span class="erro-msg"><%= avisoErro.confirmar_senha %></span>
+                    <% } %>
+                </section>
+                <button type="submit" class="submit-btn">Redefinir Senha</button>
+            </form>
+        <% } %>
+
+        <section class="links">
+            <a href="/login">Voltar ao Login</a>
+            <a href="/cadastro">Criar Nova Conta</a>
+        </section>
+    </main>
     
-        <label for="senha_usu">Senha Antiga</label>
-        <input type="senha_usu" id="senha_usu" value="<%= valores.senha_usu %>" class="<%= avisoErro.senha_usu %>">
-         
-        <label for="senha_usu">Nova Senha</label>
-        <input type="senha_usu" id="senha_usu" value="<%= valores.senha_usu %>" class="<%= avisoErro.senha_usu %>">
-      </form>
-  </main>
-  <br>
-  <p>Por favor, escreva seu e-mail para definir uma nova senha.</p>
-  <br>
-  <br>
-<footer>
-  <a href="/homecomprador"><button class="login-btn">Redefinir Senha</button></a> 
-</footer>
+   <!--                                                    Rodapé                                                      -->
+    <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png"
+                alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png"
+                alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img
+                src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script src="js/esqueceusenha.js"></script>
+</body>
+</html>

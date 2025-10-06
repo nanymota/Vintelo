@@ -19,7 +19,7 @@ body {
     display: none;
 }
 
-/* Header Desktop */
+/*                      Desktop                         */
 .desktop-header {
     display: none;
 }
@@ -28,8 +28,8 @@ body {
     background: linear-gradient(135deg, #7D2838, #a64d61);
     color: white;
     text-align: center;
-    padding: 10px;
-    font-size: 14px;
+    padding: 20px;
+    font-size: 20px;
 }
 
 .main-header {
@@ -80,11 +80,11 @@ body {
 }
 
 .img-tamanho, .maria {
-    height: 30px;
-    width: 30px;
+    height: 45px;
+    width: 45px;
 }
 
-/* Header Mobile */
+/*                         Mobile                */
 .mobile-header {
     display: block;
 }
@@ -95,7 +95,6 @@ body {
     align-items: center;
     padding: 15px 20px;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .grid img {
@@ -124,7 +123,7 @@ body {
     gap: 25px;
 }
 
-/* Seção de Fotos */
+/*                      Seção de Fotos                  */
 .photo-section {
     background: white;
     padding: 20px;
@@ -241,7 +240,7 @@ body {
     font-size: 14px;
 }
 
-/* Seção do Formulário */
+/*                 Formulário                  */
 .form-section {
     background: white;
     padding: 20px;
@@ -342,7 +341,7 @@ body {
     box-shadow: 0 10px 20px rgba(125, 40, 56, 0.3);
 }
 
-/* rodapé */
+/*                               rodapé                      */
 .footer {
     background-color: #7D2838;
     color: #fff;
@@ -390,7 +389,7 @@ body {
     margin-top: 20px;
 }
 
-/* Responsividade Desktop */
+/*                       Responsividade Desktop                 */
 @media (min-width: 768px) {
     .mobile-only {
         display: none;
@@ -492,7 +491,7 @@ body {
     }
 }
 
-/* Animações */
+/*                          Animações                         */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }

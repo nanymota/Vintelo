@@ -14,10 +14,10 @@ const denunciaModel = {
                     COALESCE(d.STATUS, 'pendente') as STATUS,
                     d.RESOLUCAO,
                     u.NOME_USUARIO as DENUNCIANTE,
-                    u.USER_USUARIO as USER_DENUNCIANTE,
+                    u.USER_USUARIO as d.USER_USUARIO,
                     CASE 
                         WHEN d.TIPO_ALVO = 'Brecho' THEN b.NOME_FANTASIA
-                        WHEN d.TIPO_ALVO = 'Produto' THEN p.NOME_PROD
+                        WHEN d.TIPO_ALVO = 'Produto' THEN p.NOME_PRODUTO
                     END as NOME_ALVO,
                     CASE 
                         WHEN d.TIPO_ALVO = 'Brecho' THEN ub.USER_USUARIO

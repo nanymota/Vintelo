@@ -32,6 +32,12 @@ const usuarioModel = {
  
     findCampoCustom: async (campo, valor) => {
         try {
+            // Validar nome do campo para evitar SQL injection
+            const camposPermitidos = ['email_usuario', 'user_usuario', 'google_id', 'instagram_id'];
+            if (!camposPermitidos.includes(campo.toLowerCase())) {
+                throw new Error('Campo não permitido');
+            }
+            
             const [resultados] = await pool.query(
                 `SELECT count(*) as totalReg FROM USUARIOS WHERE ${campo} = ?`,
                 [valor]
@@ -40,6 +46,32 @@ const usuarioModel = {
         } catch (error) {
             console.log (error);
             return 0;
+        }
+    },
+
+    findUserByGoogleId: async (googleId) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM USUARIOS WHERE GOOGLE_ID = ?",
+                [googleId]
+            )
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    },
+
+    findUserByInstagramId: async (instagramId) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM USUARIOS WHERE INSTAGRAM_ID = ?",
+                [instagramId]
+            )
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return [];
         }
     },
  

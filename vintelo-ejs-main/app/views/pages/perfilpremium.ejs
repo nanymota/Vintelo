@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
-    <link rel="stylesheet" href="/css/estilo.css">
     <link rel="stylesheet" href="/css/perfilpremium.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
@@ -39,187 +38,194 @@
     <!-- Cabeçalho Mobile -->
     <section class="oculto-desktop">
         <header>
-            <div>
-                <span>Olá Administrador!</span><br>
-                <span><a href="/sair"><img class="icone-perfil" src="/imagens/icone sem cadastro.png"></a></span>
-                <p><a href="/sair">sair</a></p>
-            </div>
+            <nav class="grid">
+                <a href="/homeadm">
+                    <img src="imagens/seta.png" class="seta-voltar" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo" class="logo">
+                <a href="/sacola1">
+                    <img src="imagens/carrinho.png" alt="Carrinho" class="logo">
+                </a>
+            </nav>
         </header>
     </section>
 
     <!-- Conteúdo Principal -->
     <main>
-        <div class="premium-container">
-            <div class="premium-header">
+        <section class="premium-container">
+            <section class="premium-header">
                 <h1>Perfil Premium</h1>
                 <p>Gerencie planos e acompanhe estatísticas dos usuários premium</p>
-            </div>
+            </section>
 
             <!-- Navegação por Abas -->
-            <div class="tab-navigation">
+            <section class="tab-navigation">
                 <button class="tab-btn active" data-tab="planos">Gerenciar Planos</button>
                 <button class="tab-btn" data-tab="estatisticas">Estatísticas</button>
-            </div>
+            </section>
 
             <!-- Seção Planos -->
-            <div class="tab-content active" id="planos">
-                <div class="plans-container">
-                    <div class="plan-card">
+            <section class="tab-content active" id="planos">
+                <section class="plans-container">
+                    <section class="plan-card">
                         <h3>Plano Básico</h3>
-                        <div class="price-section">
+                        <section class="price-section">
                             <span>R$</span>
                             <input type="number" value="19.90" step="0.01">
                             <span>/mês</span>
-                        </div>
+                        </section>
                         <ul class="benefits">
                             <li>Destaque em pesquisas</li>
                             <li>Badge premium</li>
                             <li>Suporte prioritário</li>
                         </ul>
-                        <div class="actions">
+                        <section class="actions">
                             <button class="btn-save">Salvar</button>
                             <button class="btn-toggle">Desativar</button>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
 
-                    <div class="plan-card featured">
-                        <div class="popular">Mais Popular</div>
+                    <section class="plan-card featured">
+                        <section class="popular">Mais Popular</section>
                         <h3>Plano Premium</h3>
-                        <div class="price-section">
+                        <section class="price-section">
                             <span>R$</span>
                             <input type="number" value="39.90" step="0.01">
                             <span>/mês</span>
-                        </div>
+                        </section>
                         <ul class="benefits">
                             <li>Todos benefícios do Básico</li>
                             <li>Produtos em destaque</li>
                             <li>Analytics avançados</li>
                         </ul>
-                        <div class="actions">
+                        <section class="actions">
                             <button class="btn-save">Salvar</button>
                             <button class="btn-toggle">Desativar</button>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
 
-                    <div class="plan-card">
+                    <section class="plan-card">
                         <h3>Plano Enterprise</h3>
-                        <div class="price-section">
+                        <section class="price-section">
                             <span>R$</span>
                             <input type="number" value="79.90" step="0.01">
                             <span>/mês</span>
-                        </div>
+                        </section>
                         <ul class="benefits">
                             <li>Todos benefícios do Premium</li>
                             <li>Gerente dedicado</li>
                             <li>API personalizada</li>
                         </ul>
-                        <div class="actions">
+                        <section class="actions">
                             <button class="btn-save">Salvar</button>
                             <button class="btn-toggle">Desativar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
 
             <!-- Seção Estatísticas -->
-            <div class="tab-content" id="estatisticas">
-                <div class="stats-overview">
-                    <div class="stat-item">
+            <section class="tab-content" id="estatisticas">
+                <section class="stats-overview">
+                    <section class="stat-item">
                         <h4>Total Premium</h4>
-                        <div class="number">247</div>
+                        <section class="number">247</section>
                         <span class="trend up">+12%</span>
-                    </div>
-                    <div class="stat-item">
+                    </section>
+                    <section class="stat-item">
                         <h4>Receita Mensal</h4>
-                        <div class="number">R$ 8.450</div>
+                        <section class="number">R$ 8.450</section>
                         <span class="trend up">+8%</span>
-                    </div>
-                    <div class="stat-item">
+                    </section>
+                    <section class="stat-item">
                         <h4>Taxa Conversão</h4>
-                        <div class="number">3.2%</div>
+                        <section class="number">3.2%</section>
                         <span class="trend down">-0.5%</span>
-                    </div>
-                    <div class="stat-item">
+                    </section>
+                    <section class="stat-item">
                         <h4>Taxa Retenção</h4>
-                        <div class="number">89%</div>
+                        <section class="number">89%</section>
                         <span class="trend up">+2%</span>
-                    </div>
-                </div>
+                    </section>
+                </section>
 
-                <div class="charts-area">
-                    <div class="chart-container">
+                <section class="charts-area">
+                    <section class="chart-container">
                         <h4>Distribuição por Planos</h4>
-                        <div class="chart-bars">
-                            <div class="bar-row">
+                        <section class="chart-bars">
+                            <section class="bar-row">
                                 <span>Básico (45%)</span>
-                                <div class="bar"><div class="fill" style="width: 45%"></div></div>
-                            </div>
-                            <div class="bar-row">
+                                <section class="bar"><section class="fill" style="width: 45%"></section></section>
+                            </section>
+                            <section class="bar-row">
                                 <span>Premium (40%)</span>
-                                <div class="bar"><div class="fill" style="width: 40%"></div></div>
-                            </div>
-                            <div class="bar-row">
+                                <section class="bar"><section class="fill" style="width: 40%"></section></section>
+                            </section>
+                            <section class="bar-row">
                                 <span>Enterprise (15%)</span>
-                                <div class="bar"><div class="fill" style="width: 15%"></div></div>
-                            </div>
-                        </div>
-                    </div>
+                                <section class="bar"><section class="fill" style="width: 15%"></section></section>
+                            </section>
+                        </section>
+                    </section>
 
-                    <div class="chart-container">
+                    <section class="chart-container">
                         <h4>Usuários Premium Recentes</h4>
-                        <div class="users-list">
-                            <div class="user-item">
+                        <section class="users-list">
+                            <section class="user-item">
                                 <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <div class="user-info">
+                                <section class="user-info">
                                     <strong>Maria Silva</strong>
                                     <span>Premium - 15/03/2024</span>
-                                </div>
-                                <div class="user-buttons">
+                                </section>
+                                <section class="user-buttons">
                                     <button class="btn-view">Ver</button>
                                     <button class="btn-suspend">Suspender</button>
-                                </div>
-                            </div>
-                            <div class="user-item">
+                                </section>
+                            </section>
+                            <section class="user-item">
                                 <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <div class="user-info">
+                                <section class="user-info">
                                     <strong>João Santos</strong>
                                     <span>Básico - 14/03/2024</span>
-                                </div>
-                                <div class="user-buttons">
+                                </section>
+                                <section class="user-buttons">
                                     <button class="btn-view">Ver</button>
                                     <button class="btn-suspend">Suspender</button>
-                                </div>
-                            </div>
-                            <div class="user-item">
+                                </section>
+                            </section>
+                            <section class="user-item">
                                 <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <div class="user-info">
+                                <section class="user-info">
                                     <strong>Ana Costa</strong>
                                     <span>Enterprise - 13/03/2024</span>
-                                </div>
-                                <div class="user-buttons">
+                                </section>
+                                <section class="user-buttons">
                                     <button class="btn-view">Ver</button>
                                     <button class="btn-suspend">Suspender</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </section>
     </main>
 
     <!-- Rodapé -->
     <footer class="footer">
-        <img src="imagens/brilhoescuro.png" alt="Vintélo" class="footer-image">
-        <section class="social-media">
-            <p>Siga-nos nas redes sociais</p>
-            <ul class="social-links">
-                <li><a href="#" class="social-link"><img src="imagens/instagram.png" alt="Instagram"></a></li>
-                <li><a href="#" class="social-link"><img src="imagens/facebook.png" alt="Facebook"></a></li>
-                <li><a href="#" class="social-link"><img src="imagens/twitter.png" alt="Twitter"></a></li>
-            </ul>
-        </section>
-        <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png"
+                alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png"
+                alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img
+                src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
     <script src="/js/perfilpremium.js"></script>

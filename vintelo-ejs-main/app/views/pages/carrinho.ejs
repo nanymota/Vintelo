@@ -10,8 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <script src="js/comprar-carrinho.js"></script>
-    <script src="js/script.js"></script>
+    <script src="/script/script.js"></script>
     <link rel="stylesheet" href="css/estilo.css">
 </head>
 
@@ -64,15 +63,15 @@
                                 <td>  <img class="thumb-cart" src="<%= item.imagem %>" alt=""> </td>
                                 <td>
                                     <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
-                                        <img class="icon-cart" src="imagem/add.png" alt=""></a>
+                                        <img class="icon-cart" src="imagens/add.png" alt=""></a>
                                     <span class="qtde-cart"><%= item.qtde %></span>
                                     <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
-                                        <img class="icon-cart" src="imagem/remov.png" alt=""></a>
+                                        <img class="icon-cart" src="imagens/lixeira.png" alt=""></a>
                                 </td>
                                 <td> R$ <%= item.preco.toFixed(2) %> </td>
                                 <td>
                                     <a href="/excluirItem?id=<%= item.codproduto %>">
-                                        <img src="imagem/excluir.png" alt="">
+                                        <img src="imagens/lixeira.png" alt="">
                                     </a>
                                 </td>
                             </tr>

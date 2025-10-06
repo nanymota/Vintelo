@@ -1,4 +1,4 @@
-/* Reset */
+/*                      Reset                       */
 * {
     margin: 0;
     padding: 0;
@@ -12,7 +12,7 @@ body {
     line-height: 1.6;
 }
 
-/* Header Mobile */
+/*                  cabeçalho mobile                */
 .mobile-header {
     display: block;
     background-color: #fff;
@@ -36,7 +36,7 @@ body {
     height: 40px;
 }
 
-/* Header Desktop */
+/*                cabeçalho  Desktop                  */
 .desktop-header {
     display: none;
 }
@@ -109,7 +109,7 @@ body {
     height: 40px;
 }
 
-/* Seção de Resumo */
+/*                            Seção de Resumo                  */
 .summary {
     background-color: #fff;
     padding: 20px;
@@ -126,8 +126,8 @@ body {
 }
 
 .rating-img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
 }
 
 .rating-stats h2 {
@@ -172,7 +172,7 @@ body {
     height: 20px;
 }
 
-/* Formulário de Avaliação */
+/*                         Formulário de Avaliação                  */
 .review-form {
     background-color: #fff;
     padding: 20px;
@@ -271,7 +271,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* Lista de Avaliações */
+/*                   Lista de Avaliações                  */
 .reviews {
     padding: 0 20px;
 }
@@ -329,7 +329,7 @@ body {
     line-height: 1.5;
 }
 
-/* Footer */
+/*                     rodapé            */
 .footer {
     background-color: #7D2838;
     color: #fff;
@@ -371,7 +371,7 @@ body {
     color: #ccc;
 }
 
-/* Responsividade Desktop */
+/*                    Responsividade Desktop             */
 @media (min-width: 768px) {
     .mobile-header {
         display: none;

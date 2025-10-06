@@ -19,7 +19,7 @@ const perfilModel = {
             const [resultados] = await pool.query(
                 "SELECT p.*, u.NOME_USUARIO, u.IMAGEM_USUARIO FROM PERFIS p " +
                 "INNER JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE p.ID_USUARIO = ?",
+                "WHERE p.ID_USUARIO = u.ID_USUARIO",
                 [idUsuario]
             );
             return resultados;

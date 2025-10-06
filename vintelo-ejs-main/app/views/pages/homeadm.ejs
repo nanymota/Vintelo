@@ -18,24 +18,24 @@
   <br>
   <section class="oculto-mobile">
     <header class="main-header">
-      <a href="/homecomprador">
+      <a href="/homeadm">
         <img src="imagens/logo.png" class="img-logo">
       </a>
       <nav>
-        <a href="/categorias">Vestidos</a>
-        <a href="/categorias">Saias</a>
-        <a href="/categorias">Blusas</a>
-        <a href="/categorias">Calças</a>
-        <a href="/categorias">Outros</a>
+        <a href="/blogadm">Blog</a>
+        <a href="/denuncias">Denúncias</a>
+        <a href="/avaliacaoadm">Avaliações</a>
+        <a href="/estatistica">Estatísticas</a>
+        <a href="/vistoriaprodutos">Produtos</a>
     </nav>
       <section class="search-profile">
         <form>
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
-          <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
-          <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+          <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+          <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+          <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
       </section>
     </header>
@@ -55,15 +55,16 @@
           </label>
 
           <ul class="menu-hamburguer-elements show">
-            <a href="/cadastro">
-              <section class="profile-section">
-                <img src="imagens/icone sem cadastro.png" alt="Maria de Lourdes" class="profile-pic icone-sem-cadastro">
-                <section class="profile-info">
-                  <h2>Nome de usuário</h2>
+            <li>
+              <a href="/homeadm">
+                <section class="profile-section">
+                  <img src="imagens/icone sem cadastro.png" alt="Admin" class="profile-pic icone-sem-cadastro">
+                  <section class="profile-info">
+                    <h2>Administrador</h2>
+                  </section>
+                  <button class="create-btn">Painel Admin</button>
                 </section>
-                <button class="create-btn">Criar Conta</button>
-              </section>
-            </a>
+              </a>
             </li>
             <br>
             <br>
@@ -72,35 +73,34 @@
             <aside class="sidebar-menu">
               <ul>
                 <li>
-                  <a href="/vistoriapedidos"><img src="imagens/caminhao.png" class="vistoria-pedidos"></a>
+                  <a href="/vistoriapedidos"><img src="imagens/checkadm.png" class="icones" alt="Pedidos"></a>
                   Pedidos
                 </li>
                 <li>
-                  <a href="/vistoriaprodutos"><img src="imagens/icone sacola.png" class="vistoria-produtos"></a>
+                  <a href="/vistoriaprodutos"><img src="imagens/adicionaradm.png" class="icones" alt="Produtos"></a>
                   Produtos
                 </li>
                 <li>
-                  <a href="/administradorperfis"><img src="imagens/icone sem cadastro.png" class="admin-perfis"></a>
+                  <a href="/administradorperfis"><img src="imagens/adm.png" class="icones" alt="Perfis"></a>
                   Administrador de Perfis
                 </li>
                 <li>
-                  <a href="/denuncias"><img src="imagens/icone informaçao.png" class="denuncias"></a>
+                  <a href="/denuncias"><img src="imagens/denuncias.png" class="icones" alt="Denúncias"></a>
                   Denúncias
                 </li>
-
                 <li>
-                  <a href="/perfilpremium"><img src="imagens/coraçao de fav.png" class="perfil-premium"></a>
+                  <a href="/perfilpremium"><img src="imagens/premium icone.png" class="icones" alt="Premium"></a>
                   Perfil Premium
                 </li>
                 <li>
-                  <a href="/blogadm"><img src="imagens/icone blog.png" class="blog"></a>
+                  <a href="/blogadm"><img src="imagens/icone blog.png" class="icones" alt="Blog"></a>
                   Blog
                 </li>
               </ul>
             </aside>
         </nav>
         <img src="imagens/logo.png" class="logo">
-        <a href="/cadastro">
+        <a href="/homeadm">
           <img src="imagens/imagem sem perfil.png" class="logo" />
         </a>
       </nav>
@@ -139,8 +139,7 @@
           </section>
         </section>
       </section>
-      <!--                           Carrossel de banners  desktop                                   -->
-   
+
       <section class="oculto-desktop">
         <section class="carousel-container" style="position: relative;">
           <a href="/editarbanners" style="position: absolute; top: 15px; left: 15px; background: #7d2838; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold; z-index: 10;">Alterar Banners</a>
@@ -162,6 +161,13 @@
       <span class="garimpe-text">Garimpe na</span><br>
       <span class="vintelo-text">Vintélo</span>
       <br>
+      <ul>
+        <li><a href="#" onclick="showSection('novidades')">Novidades</a></li>
+        <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
+        <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
+      </ul>
       </nav>
 
       <!-- Navegação Desktop -->
@@ -177,8 +183,7 @@
             <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
             <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
             <li><a href="/categorias">Categorias</a></li>
-            <li><a href="#" onclick="showSection('plussize')">Plus Size</a></li>
-            <li><a href="#" onclick="showSection('reformadas')">Peças Reformadas</a></li>
+            <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
           </ul>
         </section>
       </nav>
@@ -190,16 +195,18 @@
       <section class="product-grid">
         <article class="product-card">
           <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
-          <h2>Vestido branco </h2>
+          <h2>Vestido branco com decote </h2>
           <p class="price">R$49,99</p>
           <p class="Descrição">ou em 2x de R$25,00</p>
+
           <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
           <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          
         </article>
 
         <article class="product-card">
           <a href="/produto3"><img src="imagens/vestido roxo.png" alt="Vestido roxo de manga com decote"></a>
-          <h2>Vestido roxo </h2>
+          <h2>Vestido roxo manga longa com decote </h2>
           <p class="price">R$39,99</p>
           <p class="Descrição">ou em 2x de R$20,00</p>
           <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
@@ -208,7 +215,8 @@
 
         <article class="product-card">
           <a href="/produto4"><img src="imagens/conjunto de blusa rosa.png" alt="Conjunto rosa de lã"></a>
-          <h2>Conjunto rosa </h2>
+
+          <h2>Conjunto rosa de lã</h2>
           <p class="price">R$29,99</p>
           <p class="Descrição">ou em 2x de R$15,00</p>
           <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
@@ -272,50 +280,54 @@
 
         </section>
       </section>
-      <br>
-      <br>
 
-      <!--                                        banner de anuncio                                             -->
-      <img src="imagens/exemplo de anuncio.png" class="banner-exemplo">
-      <img src="imagens/banner exemplo.png" class="exemplo-desktop">
-      <br>
-      <br>
+      
       <!--                                        Perfil dos Brechós                                              -->
       <section class="titulo-brecho-section">
-        <span class="garimpe-text">Encontre</span><br>
+        <span class="garimpe-text">Encontre outros</span><br>
         <span class="vintelo-text">Brechós</span>
       </section>
-      <br>
-      <br>
-      <center>
-        <ul class="brechos-grid">
-          <li class="profile-item">
-            <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
-            <section class="profile-info">
-              <strong>Mayte</strong>
-              <span class="rating">4.8 <small>avaliação</small></span>
-              <section class="stars">★★★★★</section>
-            </section>
-            <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
-          </li>
-          <br>
-          <br>
-          <li class="profile-item">
-            <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
-            <section class="profile-info">
-              <strong>Karine</strong>
-              <span class="rating">4.3 <small>avaliação</small></span>
-              <section class="stars">★★★★☆</section>
-            </section>
-            <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
-          </li>
-          <br>
-          <br>
+      
+      <ul class="brechos-grid">
+        <li class="profile-item">
+          <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+          <section class="profile-info">
+            <strong>Mayte</strong>
+            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil1"><button class="follow-button">Excluir</button></a>
+        </li>
 
-        </ul>
+        <li class="profile-item">
+          <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
+          <section class="profile-info">
+            <strong>Karine</strong>
+            <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil2"><button class="follow-button">Excluir</button></a>
+        </li>
 
-        <br>
-        <br>
+        <li class="profile-item">
+          <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image">
+          <section class="profile-info">
+            <strong>Coisitas</strong>
+            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil3"><button class="follow-button">Excluir</button></a>
+        </li>
+
+        <li class="profile-item">
+          <img src="imagens/brecho4.png" alt="Luana" class="profile-image">
+          <section class="profile-info">
+            <strong>Luana</strong>
+            <span class="rating">4.7 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil1"><button class="follow-button">Excluir</button></a>
+        </li>
+      </ul>
+
+
+
         <!--                                       banner de cadastro                                              -->
         <a href="/cadastro">
           <img src="imagens/bannercash.png" class="img-cashback">
@@ -350,11 +362,7 @@
             </article>
           </section>
         </section>
-        <!--                                        banner de anúncio                                              -->
-        <img src="imagens/exemplo de anuncio.png" class="banner-exemplo">
-        <img src="imagens/banner exemplo.png" class="exemplo-desktop">
-        <br>
-        <br>
+        
         <!--                                        PRODUTOS OCULTOS                                               -->
         <section class="produtos-ocultos">
           <nav class="grid-produtos">
@@ -373,7 +381,7 @@
 
             <article class="product-card">
               <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
-              <h2>Conjunto 3 colares de prata</h2>
+              <h2>Colares de prata</h2>
               <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
               <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
@@ -381,7 +389,7 @@
 
             <article class="product-card">
               <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
-              <h2>Bolsa preta com alça dourada</h2>
+              <h2>Bolsa preta </h2>
               <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
               <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
@@ -442,16 +450,66 @@
           <br>
           <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
           <p class="p-artigos">Confira:</p>
-          <h3 class="h3-artigos">BOSS | MILÃO | VERÃO |</h3>
+          <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
+          <br>
             <p class="texto-esquerda">
-          <a href="/cadastro" class="link-preto">Ler agora</a>
+          <a href="/blogadm" class="link-preto">Editar</a>
           </p>
 
         </section>
         <!--                               seção artigos ocultos para mobile                                       -->
-        <section class="sweet-colors">
-          <a href="/sweer"><img src="imagens/artigo sweer.png" class="image-container"></a>
-        </section>
+    <section class="oculto-mobile">
+    <section class="sweet-colors">
+    <!-- Seção da imagem principal -->
+    <section class="image-section">
+      <figure>
+        <img src="imagens/tendencia.png" alt="Modelo vestindo roupas coloridas da coleção Sweet Colors">
+        <aside class="extra-info">
+        <p>
+          Nessa paleta encontramos diversos tons versáteis que podem ser facilmente combinados. 
+          As cores claras transmitem elegância e suavidade que combinam com o clima primaveril.
+        </p>
+        <p>
+          Os acessórios nas cores pastéis, combinados com tons naturais e tecidos como linho, 
+          são a grande aposta da estação.
+        </p>
+      </aside>
+      </figure>
+    </section>
+
+    <!-- Seção de conteúdo principal -->
+    <section class="content-section">
+
+      <section class="title">
+        <p>A tendência é:</p>
+        <h1>Sweet Colors</h1>
+      </section>
+
+      <article class="intro-text">
+        <p>
+          Para a primavera/verão 2024, as cores são inspiradas na beleza da natureza 
+          e trazem o retorno da serenidade com tons delicados.
+          A tendência Sweet Colors funciona melhor com tecidos fluidos como chiffon, seda, 
+          algodão orgânico e linho. Texturas suaves como tricô fino e malhas delicadas também 
+          complentam perfeitamente essa estética romântica e contemporânea.
+        </p>
+      </article>
+
+      <section class="images-section">
+        <figure class="image-item">
+          <img src="imagens/salto rosa.png" alt="Sapatos em tom rosa pastel">
+        </figure>
+        <figure class="image-item">
+          <img src="imagens/bolsa brilhante.png" alt="Bolsa em tons neutros com brilho">
+        </figure>
+      </section>
+      <footer class="footer-link">
+        <a href="/blogadm" class="link">Ler mais &gt;</a>
+      </footer>
+
+     </section>
+    </section>
+    </section>
     </main>
     <!--                                                    Rodapé                                                      -->
     <footer class="footer">
@@ -471,6 +529,7 @@
     </footer>
 
 <script src="script/dinamicahome.js"></script>
+<script src="js/favoritos.js"></script>
 </body>
 
 </html>

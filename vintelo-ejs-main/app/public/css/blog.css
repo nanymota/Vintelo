@@ -11,7 +11,7 @@ body {
     line-height: 1.6;
 }
 
-/* Mobile Header */
+/*            cabeçalho mobile        */
 .mobile-header {
     background: #ffffff;
     padding: 20px;
@@ -40,7 +40,7 @@ body {
     font-size: 1.0rem;
 }
 
-/* Desktop Header */
+/*             Cabeçalho Desktop            */
 .desktop-header {
     display: none;
 }
@@ -86,7 +86,7 @@ body {
     color: #333;
     text-decoration: none;
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 20px;
     transition: color 0.3s ease;
     letter-spacing: 0.5px;
 }
@@ -111,7 +111,7 @@ body {
 }
 
 .user-actions img {
-    height: 35px;
+    height: 45px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -120,7 +120,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Mobile Content */
+/*            Mobile            */
 .mobile-content {
     padding: 0;
 }
@@ -255,7 +255,7 @@ body {
     object-fit: cover;
 }
 
-/* Desktop Content */
+/*                  Desktop             */
 .desktop-content {
     display: none;
 }
@@ -343,7 +343,7 @@ body {
     object-fit: cover;
 }
 
-/* Footer */
+/*                            Rodapé             */
 .footer {
     background: linear-gradient(135deg, #818F84 0%, #6a7a6d 100%);
     color: #fff;
@@ -380,7 +380,7 @@ body {
     opacity: 0.8;
 }
 
-/* Desktop Styles */
+/*                    Desktop                 */
 @media (min-width: 769px) {
     .mobile-header {
         display: none;
@@ -397,7 +397,7 @@ body {
     .desktop-content {
         display: block;
         padding: 40px 20px;
-        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        background: #ffffff;
         min-height: 100vh;
     }
     
@@ -418,7 +418,6 @@ body {
     }
 }
 
-/* Large Desktop */
 @media (min-width: 1200px) {
     .main-nav {
         padding: 25px 60px;

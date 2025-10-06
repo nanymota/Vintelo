@@ -16,24 +16,24 @@
             <p>10% OFF na primeira compra</p>
         </section>
         <header class="main-header">
-            <a href="/home">
+            <a href="/homecomprador">
                 <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
             </a>
             <nav>
-                <a href="#">Vestidos</a>
-                <a href="#">Saias</a>
-                <a href="#">Blusas</a>
-                <a href="#">Calças</a>
-                <a href="#">Outros</a>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Categorias</a>
             </nav>
             <section class="search-profile">
                 <form>
                     <input type="text" placeholder="Buscar...">
                 </form>
                 <ul>
-                    <li><a href="#"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
                     <li><a href="/perfilcliente"><img src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
-                    <li><a href="#"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
         </header>
@@ -47,7 +47,7 @@
                     <img src="imagens/seta.png" alt="Voltar">
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
-                <a href="/carrinho">
+                <a href="/sacola1">
                     <img src="imagens/carrinho.png" alt="Carrinho">
                 </a>
             </nav>

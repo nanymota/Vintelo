@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
-<meta charset="UTF-8">
-
+<html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
   <title>Vintélo</title>
   <link rel="stylesheet" href="css/estilo.css">
-  <link rel="stylesheet" href="css/estilo2.css">
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+  <meta name="description" content="Descubra peças únicas em brechós online. Moda sustentável, preços acessíveis e estilo autêntico na Vintélo.">
+  <link rel="preload" href="js/app.js" as="script">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
         <a href="/categorias">Saias</a>
         <a href="/categorias">Blusas</a>
         <a href="/categorias">Calças</a>
-        <a href="/categorias">Outros</a>
+        <a href="/categorias">Categorias</a>
     </nav>
       <section class="search-profile">
         <form>
@@ -55,20 +55,20 @@
           </label>
 
           <ul class="menu-hamburguer-elements show">
-            <a href="/cadastro">
-              <section class="profile-section">
-                <img src="imagens/icone sem cadastro.png" alt="Maria de Lourdes" class="profile-pic icone-sem-cadastro">
-                <section class="profile-info">
-                  <h2>Nome de usuário</h2>
+            <li>
+              <a href="/cadastro">
+                <section class="profile-section">
+                  <img src="imagens/icone sem cadastro.png" alt="usuario" class="profile-pic icone-sem-cadastro">
+                  <section class="profile-info">
+                    <h2>Nome de usuário</h2>
+                  </section>
+                  <button class="create-btn">Criar Conta</button>
                 </section>
-                <button class="create-btn">Criar Conta</button>
-              </section>
-            </a>
+              </a>
             </li>
             <br>
             <br>
             <br>
-            
             <aside class="sidebar-menu">
               <ul>
                 <li>
@@ -158,6 +158,13 @@
       <span class="garimpe-text">Garimpe na</span><br>
       <span class="vintelo-text">Vintélo</span>
       <br>
+      <ul>
+        <li><a href="#" onclick="showSection('novidades')">Novidades</a></li>
+        <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
+        <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
+      </ul>
       </nav>
 
       <!-- Navegação Desktop -->
@@ -180,23 +187,20 @@
       <!--                                    Seção dos produtos                                              -->
       <nav class="grid-produtos">
         <h3>Novidades</h3>
-        
       </nav>
       <section class="product-grid">
-        <article class="product-card">
-          <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
-          <h2>Vestido branco com decote </h2>
-          <p class="price">R$49,99</p>
-          <p class="Descrição">ou em 2x de R$25,00</p>
-
+         <article class="product-card">
+          <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido roxo de manga com decote"></a>
+          <h2>Vestido branco com decote</h2>
+          <p class="price">R$ 49,99</p>
+          <p class="Descrição">ou em 2x de R$ 25,00</p>
           <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
           <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-          
         </article>
 
         <article class="product-card">
           <a href="/produto3"><img src="imagens/vestido roxo.png" alt="Vestido roxo de manga com decote"></a>
-          <h2>Vestido roxo manga longa com decote </h2>
+          <h2>Vestido roxo manga longa</h2>
           <p class="price">R$39,99</p>
           <p class="Descrição">ou em 2x de R$20,00</p>
           <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
@@ -278,43 +282,46 @@
         <span class="vintelo-text">Brechós</span>
       </section>
       
-      <center>
-  <ul class="brechos-grid">
-    <li class="profile-item">
-      <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
-      <section class="profile-info">
-        <strong>Mayte</strong>
-        <span class="rating">4.8 ⭐⭐⭐⭐⭐</span> <!-- ALTERADO -->
-      </section>
-      <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
-    </li>
-
-    <br><br>
-
-    <li class="profile-item">
-      <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
-      <section class="profile-info">
-        <strong>Karine</strong>
-        <span class="rating">4.9 ⭐⭐⭐⭐⭐</span> <!-- ALTERADO -->
-      </section>
-      <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
-    </li>
-
-    <br><br>
-
-    <li class="profile-item">
-      <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image"> <!-- NOVO -->
-      <section class="profile-info">
-        <strong>Coisitas</strong>
-        <span class="rating">4.8 ⭐⭐⭐⭐⭐</span> <!-- NOVO -->
-      </section>
-      <a href="/perfil3"><button class="follow-button">Favoritar</button></a> <!-- NOVO -->
-    </li>
-  </ul>
-</center>
+      <ul class="brechos-grid">
+        <li class="profile-item">
+          <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+          <section class="profile-info">
+            <strong>Mayte</strong>
+            <span class="rating">4.9 <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
 
 
 
+          </section>
+          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
+        </li>
+
+        <li class="profile-item">
+          <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
+          <section class="profile-info">
+            <strong>Karine</strong>
+            <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
+        </li>
+
+        <li class="profile-item">
+          <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image">
+          <section class="profile-info">
+            <strong>Coisitas</strong>
+            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil3"><button class="follow-button">Favoritar</button></a>
+        </li>
+
+        <li class="profile-item">
+          <img src="imagens/brecho4.png" alt="Luana" class="profile-image">
+          <section class="profile-info">
+            <strong>Luana</strong>
+            <span class="rating">4.7 ⭐⭐⭐⭐⭐</span>
+          </section>
+          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
+        </li>
+      </ul>
         <!--                                       banner de cadastro                                              -->
         <a href="/cadastro">
           <img src="imagens/bannercash.png" class="img-cashback">
@@ -368,7 +375,7 @@
 
             <article class="product-card">
               <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
-              <h2>Conjunto 3 colares de prata</h2>
+              <h2>Colares de prata</h2>
               <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
               <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
@@ -376,7 +383,7 @@
 
             <article class="product-card">
               <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
-              <h2>Bolsa preta com alça dourada</h2>
+              <h2>Bolsa preta </h2>
               <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
               <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
@@ -428,7 +435,6 @@
           </section>
         </section>
         <!--                                        Seção de artigos                                               -->
-
         <section class="titulo-artigo-section">
           <span class="garimpe-text">Tendências</span><br>
           <span class="vintelo-text">Vintélo</span>
@@ -437,16 +443,65 @@
           <br>
           <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
           <p class="p-artigos">Confira:</p>
-          <h3 class="h3-artigos">BOSS | MILÃO | VERÃO |</h3>
+          <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
+          <br>
             <p class="texto-esquerda">
-          <a href="/cadastro" class="link-preto">Ler agora</a>
+          <a href="/cadastro" class="link-preto">ver mais</a>
           </p>
+        </section>
+      <!--                               seção artigos ocultos para mobile                                       -->
+    <section class="oculto-mobile">
+    <section class="sweet-colors">
+    <!-- Seção da imagem principal -->
+    <section class="image-section">
+      <figure>
+        <img src="imagens/tendencia.png" alt="Modelo vestindo roupas coloridas da coleção Sweet Colors">
+        <aside class="extra-info">
+        <p>
+          Nessa paleta encontramos diversos tons versáteis que podem ser facilmente combinados. 
+          As cores claras transmitem elegância e suavidade que combinam com o clima primaveril.
+        </p>
+        <p>
+          Os acessórios nas cores pastéis, combinados com tons naturais e tecidos como linho, 
+          são a grande aposta da estação.
+        </p>
+      </aside>
+      </figure>
+    </section>
 
-        </section>
-        <!--                               seção artigos ocultos para mobile                                       -->
-        <section class="sweet-colors">
-          <a href="/sweer"><img src="imagens/artigo sweer.png" class="image-container"></a>
-        </section>
+    <!-- Seção de conteúdo principal -->
+    <section class="content-section">
+
+      <section class="title">
+        <p>A tendência é:</p>
+        <h1>Sweet Colors</h1>
+      </section>
+
+      <article class="intro-text">
+        <p>
+          Para a primavera/verão 2024, as cores são inspiradas na beleza da natureza 
+          e trazem o retorno da serenidade com tons delicados.
+          A tendência Sweet Colors funciona melhor com tecidos fluidos como chiffon, seda, 
+          algodão orgânico e linho. Texturas suaves como tricô fino e malhas delicadas também 
+          complementam perfeitamente essa estética romântica e contemporânea.
+        </p>
+      </article>
+
+      <section class="images-section">
+        <figure class="image-item">
+          <img src="imagens/salto rosa.png" alt="Sapatos em tom rosa pastel">
+        </figure>
+        <figure class="image-item">
+          <img src="imagens/bolsa brilhante.png" alt="Bolsa em tons neutros com brilho">
+        </figure>
+      </section>
+      <footer class="footer-link">
+        <a href="/cadastro" class="link">Ler mais &gt;</a>
+      </footer>
+
+     </section>
+    </section>
+    </section>
     </main>
     <!--                                                    Rodapé                                                      -->
     <footer class="footer">
@@ -464,9 +519,7 @@
       </section>
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-<script src="script/dinamicahome.js"></script>
-<script src="js/favoritos.js"></script>
+    
+    <script src="js/menu.js"></script>
 </body>
-
 </html>

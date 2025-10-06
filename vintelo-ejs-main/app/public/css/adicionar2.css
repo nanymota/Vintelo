@@ -6,7 +6,7 @@
     --cinza-claro: #f2f2f2;
   }
   
-  /* Header */
+  /*                             cabeçalho                  */
   .topo {
     display: flex;
     align-items: center;
@@ -69,7 +69,7 @@
     cursor: pointer;
   }
   
-  /* Formulário */
+  /*                          Formulário                     */
   .formulario {
     padding: 1rem;
     display: flex;
@@ -127,7 +127,7 @@
     cursor: pointer;
   }
   
-  /* Newsletter */
+
   .newsletter {
     background: #fdf0f2;
     padding: 2rem 1rem;
@@ -172,7 +172,7 @@
     cursor: pointer;
   }
   
-  /* Rodapé */
+  /*                        Rodapé                   */
   .rodape {
     background: var(--vinho);
     color: white;

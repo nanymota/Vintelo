@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="../../public/script/script.js"></script>
+    <link rel="stylesheet" href="css/criarbrecho.css">
+
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+
+</head>
+
+<body>
+
+    <section class="oculto-desktop">
+        <header>
+            <nav class="grid">
+                <a href="/homecomprador">
+                    <img src="imagens/seta.png" alt="Seta Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+                    <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <aside class="image-section">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </aside>
+
+            <section class="form-section">
+                <center>
+                    <h2>Bem-Vindo Administrador</h2>
+                </center>
+                <p>Insira os dados do perfil de Administrador</p>
+
+                <section class="profile-section">
+                    <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
+                    <section class="oculto-desktop">
+                        <button class="edit-icon" onclick="document.getElementById('profile-photo-input').click()">✎</button>
+                        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
+                    </section>
+                </section>
+
+                <br>
+                <form id="registerForm" action="/cadastroadm" method="post"  enctype="multipart/form-data">
+                    <section class="form-group">
+                        <label for="nomeusu_usu">Nome do Administrador</label>
+                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó">
+                    </section>
+
+                    <!-- Seção Informações Pessoais -->
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('personal-info')">
+                            <h3>Informações Pessoais</h3>
+                            <span class="arrow" id="personal-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="personal-info">
+                            <section class="form-group">
+                                <label for="email_usu">Endereço de email</label>
+                                <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="nome_usu">Nome Completo</label>
+                                <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="senha_usu">Senha</label>
+                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="senha_usu">Confirmar Senha</label>
+                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="fone_usu">Contato</label>
+                                <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****">
+                            </section>
+                        </section>
+                    </section>
+                    <br>
+                    <section class="oculto-desktop">
+                        <button type="submit" class="create-button">Entrar</button>
+                    </section>
+                    <br>
+                    <section class="oculto-mobile">
+                        <button type="submit" id="btn-submit" class="create-button">Entrar</button>
+                    </section>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        function handleProfilePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('profile-img').src = e.target.result;
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.innerHTML = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.innerHTML = '▼';
+            }
+        }
+
+        function buscarCEP(cep) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro || '';
+                        document.getElementById('bairro').value = data.bairro || '';
+                        document.getElementById('cidade').value = data.localidade || '';
+                        document.getElementById('uf').value = data.uf || '';
+                    } else {
+                        alert('CEP não encontrado!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar CEP:', error);
+                    alert('Erro ao buscar CEP.');
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('personal-info').style.display = 'none';
+            document.getElementById('address-info').style.display = 'none';
+            
+            const cepInput = document.getElementById('cep');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 5) {
+                        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+                
+                cepInput.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        buscarCEP(cep);
+                    }
+                });
+            }
+        });
+    </script>
+   
+</body>
+
+</html>

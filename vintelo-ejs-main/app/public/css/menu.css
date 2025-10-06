@@ -221,7 +221,6 @@ main {
   
 
   /*                                                   menu favoritos                                                  */
-    /*                                                  corpo da pagina                                                   */
 main{
     padding: 5%;
 }
@@ -274,7 +273,7 @@ p {
     margin-bottom: 30px;
 }
 
-/* Utilitários de Responsividade */
+/*          Responsividade                 */
 .mobile-only {
     display: none;
 }
@@ -283,7 +282,6 @@ p {
     display: block;
 }
 
-/* Header Mobile */
 .mobile-header {
     display: none;
 }
@@ -301,7 +299,7 @@ p {
     height: 35px;
 }
 
-/* Footer */
+/*               rodapé                 */
 .footer {
     background-color: #8c2b44;
     color: #fff;

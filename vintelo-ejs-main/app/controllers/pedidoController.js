@@ -1,5 +1,5 @@
 
-const {pedidoModel } = require("../models/pedidoModel");
+const { pedidoModel } = require("../models/pedidoModel");
 const moment = require("moment");
 
 const pedidoController = {
@@ -9,17 +9,15 @@ const pedidoController = {
             const carrinho = req.session.carrinho;
             const camposJsonPedido = {
                 data: moment().format("YYYY-MM-DD HH:mm:ss"),
-                USUARIO_ID_USUARIO: req.session.autenticado.id,
-                STATUS_PEDIDO: 1,
-                STATUS_PAGAMENTO: req.query.status,
-                ID_PAGAMENTO: req.query.payment_id
+                ID_USUARIO: req.session.autenticado.id,
+                STATUS_PEDIDO: 1
             }
             var create = await pedidoModel.createPedido(camposJsonPedido);
             carrinho.forEach(async element => {
                 camposJsonItemPedido = {
-                    PEDIDO_ID_PEDIDO: create.insertId,
-                    PRODUTO_ID_PRODUTO: element.codproduto,
-                    quantidade: element.qtde
+                    ID_PEDIDO: create.insertId,
+                    ID_PRODUTO: element.codproduto,
+                    QUANTIDADE: element.qtde
                 }
                 await pedidoModel.createItemPedido(camposJsonItemPedido);
             });
@@ -32,4 +30,4 @@ const pedidoController = {
     
 }
 
-module.exports = {pedidoController}
+module.exports = pedidoController

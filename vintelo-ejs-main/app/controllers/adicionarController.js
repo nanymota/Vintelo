@@ -50,7 +50,6 @@ const adicionarController = {
             });
         }
 
-        // Validar se pelo menos uma imagem foi enviada
         if (!req.files || req.files.length === 0) {
             return res.render('pages/adicionar', {
                 valores: req.body,
@@ -69,7 +68,7 @@ const adicionarController = {
             
             
             const dadosProduto = {
-                NOME_PROD: nome_produto,
+                NOME_PRODUTO: nome_produto,
                 PRECO_PRODUTO: parseFloat(preco_produto.replace('R$ ', '').replace(',', '.')),
                 CATEGORIA_PRODUTO: categoria_produto,
                 COR_PRODUTO: cor_produto,

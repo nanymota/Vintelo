@@ -89,62 +89,97 @@
                     </section>
                 </section>
 
+                <!-- Exibição de erros lá no topo -nany -->
+                <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
+                    <div class="alert alert-danger">
+                        <% listaErros.array().forEach(function(erro) { %>
+                            <p><%= erro.msg %></p>
+                        <% }); %>
+                    </div>
+                <% } %>
+
+                <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+                    <div class="alert alert-<%= dadosNotificacao.tipo %>">
+                        <strong><%= dadosNotificacao.titulo %></strong>
+                        <p><%= dadosNotificacao.mensagem %></p>
+                    </div>
+                <% } %>
                 <br>
                 <form id="registerForm" action="/criarbrecho" method="post"  enctype="multipart/form-data">
                     <section class="form-group">
                         <label for="nomeusu_usu">Nome do Brechó</label>
-                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó">
+                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
                     </section>
 
-                    <section class="form-group">
-                        <label for="email_usu">Endereço de email</label>
-                        <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com">
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('personal-info')">
+                            <h3>Informações Pessoais</h3>
+                            <span class="arrow" id="personal-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="personal-info">
+                            <section class="form-group">
+                                <label for="email_usu">Endereço de email</label>
+                                <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="nome_usu">Nome Completo</label>
+                                <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="senha_usu">Senha</label>
+                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="confirmar_senha">Confirmar Senha</label>
+                                <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha...">
+                            </section>
+
+                            <section class="form-group">
+                                <label for="fone_usu">Contato</label>
+                                <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
+                            </section>
+                        </section>
                     </section>
 
-                    <section class="form-group">
-                        <label for="nome_usu">Nome Completo</label>
-                        <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome">
-                    </section>
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('address-info')">
+                            <h3>Endereço</h3>
+                            <span class="arrow" id="address-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="address-info">
+                            <section class="form-group">
+                                <label for="cep">CEP</label>
+                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required>
+                            </section>
 
-                    <section class="form-group">
-                        <label for="senha_usu">Senha</label>
-                        <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
-                    
-                    </section>
+                            <section class="form-group">
+                                <label for="endereco">Endereço</label>
+                                <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
+                            </section>
 
-                    <section class="form-group">
-                        <label for="confirmar_senha">Confirmar Senha</label>
-                        <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Digite sua senha...">
-                    </section>
+                            <section class="form-group">
+                                <label for="numero">Número</label>
+                                <input type="text" id="numero" name="numero" placeholder="123" required value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
+                            </section>
 
-                    <section class="form-group">
-                        <label for="fone_usu">Contato</label>
-                        <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****">
-                    </section>
+                            <section class="form-group">
+                                <label for="bairro">Bairro</label>
+                                <input type="text" id="bairro" name="bairro" placeholder="Bairro" required value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
+                            </section>
 
-                    <section class="form-group">
-                        <label for="cep">CEP</label>
-                        <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required>
-                    </section>
+                            <section class="form-group">
+                                <label for="cidade">Cidade</label>
+                                <input type="text" id="cidade" name="cidade" placeholder="Cidade" required value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
+                            </section>
 
-                    <section class="form-group">
-                        <label for="endereco">Endereço</label>
-                        <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required>
-                    </section>
-
-                    <section class="form-group">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
-                    </section>
-
-                    <section class="form-group">
-                        <label for="cidade">Cidade</label>
-                        <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
-                    </section>
-
-                    <section class="form-group">
-                        <label for="uf">UF</label>
-                        <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required>
+                            <section class="form-group">
+                                <label for="uf">UF</label>
+                                <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
+                            </section>
+                        </section>
                     </section>
                     <br>
 
@@ -179,21 +214,114 @@
         </section>
     </main>
 
-    <script src="script/cep.js"></script>
-   
-    
     <script>
         function handleProfilePhotoUpload(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
                     document.getElementById('profile-img').src = e.target.result;
                 };
-                
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.innerHTML = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.innerHTML = '▼';
+            }
+        }
+
+        function buscarCEP(cep) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro || '';
+                        document.getElementById('bairro').value = data.bairro || '';
+                        document.getElementById('cidade').value = data.localidade || '';
+                        document.getElementById('uf').value = data.uf || '';
+                    } else {
+                        alert('CEP não encontrado!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar CEP:', error);
+                    alert('Erro ao buscar CEP.');
+                });
+        }
+
+        function validarFormulario() {
+            const senha = document.getElementById('senha_usu').value;
+            const confirmarSenha = document.getElementById('confirmar_senha').value;
+            
+            if (senha !== confirmarSenha) {
+                alert('As senhas não coincidem!');
+                return false;
+            }
+            
+            if (senha.length < 8) {
+                alert('A senha deve ter pelo menos 8 caracteres!');
+                return false;
+            }
+            
+            const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+            if (!regexSenha.test(senha)) {
+                alert('A senha deve conter ao menos: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial!');
+                return false;
+            }
+            
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('personal-info').style.display = 'none';
+            document.getElementById('address-info').style.display = 'none';
+            
+            const cepInput = document.getElementById('cep');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 5) {
+                        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+                
+                cepInput.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        buscarCEP(cep);
+                    }
+                });
+            }
+            
+            const telefoneInput = document.getElementById('fone_usu');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        value = value.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+                    }
+                    e.target.value = value;
+                });
+            }
+            
+            const form = document.getElementById('registerForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!validarFormulario()) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
     </script>
    
 </body>

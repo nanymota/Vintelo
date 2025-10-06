@@ -11,7 +11,7 @@ body {
     line-height: 1.6;
 }
 
-/* Cabeçalho Desktop */
+/*             Cabeçalho Desktop                */
 .desktop-header {
     background-color: #ffffff;
     padding: 20px 0;
@@ -74,7 +74,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Cabeçalho Mobile */
+/*                    Cabeçalho Mobile                 */
 .mobile-header {
     background: #ffffff;
     padding: 15px 20px;
@@ -96,7 +96,7 @@ body {
     flex: 1;
 }
 
-/* Layout Desktop */
+/*                  Layout Desktop                     */
 .desktop-layout {
     display: flex;
     max-width: 1400px;
@@ -132,7 +132,7 @@ body {
     font-weight: 600;
 }
 
-/* Conteúdo do Artigo */
+/*                Conteúdo do Artigo                 */
 .article-container {
     max-width: 800px;
     margin: 40px auto;
@@ -277,7 +277,7 @@ body {
     border-bottom: none;
 }
 
-/* Sidebar Styles */
+
 .related-articles {
     display: flex;
     flex-direction: column;
@@ -349,14 +349,14 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .newsletter-btn:hover {
     background: #3d1520;
 }
 
-/* Footer */
+/*                   rodapé                   */
 .footer {
     background: linear-gradient(135deg, #818F84 0%, #6a7a6d 100%);
     color: #fff;

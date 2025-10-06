@@ -29,14 +29,23 @@ module.exports = (campoArquivo) => {
     })
 
     return (req, res, next) => {
-        req.session.erroMulter = null;
+        // Validação básica do objeto req
+        if (!req || !req.headers) {
+            return res.status(400).send('Requisição inválida');
+        }
+        
+        if (req.session) {
+            req.session.erroMulter = null;
+        }
         upload.single(campoArquivo)(req, res, function (err) {
             if (err) {
-                req.session.erroMulter = {
-                    value: '',
-                    msg: err.message,
-                    path: campoArquivo
-                };
+                if (req.session) {
+                    req.session.erroMulter = {
+                        value: '',
+                        msg: err.message,
+                        path: campoArquivo
+                    };
+                }
                 return res.status(400).send(err.message);
             }
             console.log("Arquivo recebido no middleware:", req.file);

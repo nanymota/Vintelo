@@ -30,7 +30,7 @@ gravarUsuAutenticado = async (req, res, next) => {
         if (total == 1) {
             if (bcrypt.compareSync(dadosForm.SENHA_USUARIO, results[0].SENHA_USUARO)) {
                 var autenticado = {
-                    autenticado: results[0].NOME_USUARIO,
+                    autenticado: results[0].USER_USUARIO,
                     id: results[0].ID_USUARIO,
                     tipo: results[0].TIPO_USUARIO
                 };

@@ -12,7 +12,7 @@ body {
     min-height: 100vh;
 }
 
-/* Header Mobile */
+/*            cabeçalho Mobile              */
 .oculto-desktop {
     display: block;
 }
@@ -37,7 +37,7 @@ header nav.grid img {
     height: 30px;
 }
 
-/* Header Desktop */
+/*                 cabeçalho Desktop                 */
 .discount-banner {
     background: #7D2838;
     color: white;
@@ -436,7 +436,7 @@ header nav.grid img {
     font-weight: 600;
 }
 
-/* Footer */
+/*                   rodapé               */
 .footer {
     background: linear-gradient(135deg, #7D2838 0%, #5a1e2a 100%);
     color: #fff;
