@@ -18,7 +18,7 @@ body {
     display: none;
 }
 
-/* Header Desktop */
+/*           cabeçalho Desktop                */
 .desktop-header {
     display: none;
 }
@@ -83,7 +83,7 @@ body {
     width: 50px;
 }
 
-/* Header Mobile */
+/*             cabeçalho Mobile                  */
 .mobile-header {
     display: block;
 }
@@ -114,7 +114,7 @@ body {
     font-weight: 600;
 }
 
-/* Layout do Perfil */
+/*                Layout do Perfil             */
 .profile-wrapper {
     display: flex;
     flex-direction: column;
@@ -324,7 +324,7 @@ body {
     color: #7D2838;
 }
 
-/* rodapé */
+/*                   rodapé                          */
 .footer {
     background-color: #7D2838;
     color: #fff;
@@ -371,8 +371,8 @@ body {
     opacity: 0.8;
     margin-top: 20px;
 }
-
-/* Responsividade Desktop */
+ 
+/*             Responsividade Desktop             */
 @media (min-width: 768px) {
     .mobile-only {
         display: none;
@@ -436,7 +436,7 @@ body {
     }
 }
 
-/* Responsividade Mobile */
+/*            Responsividade Mobile                 */
 @media (max-width: 767px) {
     .profile-menu {
         display: grid;

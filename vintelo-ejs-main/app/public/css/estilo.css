@@ -8,8 +8,7 @@ body {
 }
 
 
-
-/* Banner em GIF - full width */
+/*                                           Banner em GIF                                       */
 .discount-banner {
   background-color: #92444d;
   color: white;
@@ -25,12 +24,11 @@ body {
   margin: 20px 0p 0px;
 }
 
-/* Corrigindo o peso da fonte */
+
 .highlight {
   font-weight: bold;
 }
 
-/* Animação */
 @keyframes fadeIn {
   0% {
     opacity: 0.1;
@@ -39,7 +37,7 @@ body {
     opacity: 1;
   }
 }
-/* Estilos para o cabeçalho desktop */
+/*                                        cabeçalho desktop                                      */
 .main-header {
   display: flex;
   justify-content: space-between;
@@ -65,9 +63,9 @@ nav a {
 }
 
 .search-profile form input {
-  padding: 18px;
+  padding: 14px;
   border: 1px solid #7d2738;
-  border-radius: 18px;
+  border-radius: 28px;
   width: 130%;
 }
 
@@ -86,9 +84,6 @@ nav a {
   width: 60px;
 }
 
-/* Responsividade */
-
-/* Ocultar o cabeçalho em dispositivos móveis (telas menores que 992px) */
 @media (max-width: 992px) {
   .oculto-mobile {
       display: none;
@@ -107,7 +102,6 @@ nav a {
   color: white;
 }
 
-/* ELEMENTOS DO MENU */
 .menu-hamburguer-elements {
   width: 80%;
   height: 100%;
@@ -139,7 +133,6 @@ nav a {
   color: rgb(71, 22, 22);
 }
 
-/* BOTÃO MENU HAMBURGER */
 .menu {
   background-color: #7d2838;
   width: 110px;
@@ -148,6 +141,8 @@ nav a {
   border-radius: 80px;
   cursor: pointer;
   display: flex;
+  z-index: 100001;
+  position: relative;
 }
 
 .hamburguer {
@@ -160,12 +155,13 @@ nav a {
   left: 15px;
   transition: 0.5s ease-in-out;
   line-height: 3px;
+  z-index: 100002;
 }
 
 
 .hamburguer:before,
 .hamburguer:after {
-  background: #ffff;
+  background: #ffffff;
   content: '';
   display: block;
   width: 100%;
@@ -182,33 +178,30 @@ nav a {
   bottom: -10px;
 }
 
-/* OCULTAR CHECKBOX */
-input {
+#menu-hamburguer {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* ANIMAÇÃO HAMBURGER AO CLICAR */
-input:checked ~ label .hamburguer {
+#menu-hamburguer:checked ~ label .hamburguer {
   transform: rotate(45deg);
   background: transparent;
 }
 
-input:checked ~ label .hamburguer:before {
-  transform: rotate(90deg);
+#menu-hamburguer:checked ~ label .hamburguer:before {
+  transform: rotate(-90deg);
   top: 0;
   background: #ffffff;
 }
 
-input:checked ~ label .hamburguer:after {
+#menu-hamburguer:checked ~ label .hamburguer:after {
   transform: rotate(90deg);
   bottom: 0;
   background: #ffffff;
 }
 
-/* MOSTRAR MENU QUANDO O BOTÃO HAMBURGER FOR CLICADO */
-input:checked ~ .menu-hamburguer-elements {
+#menu-hamburguer:checked ~ .menu-hamburguer-elements {
   left: 0;
   z-index: 99999;
 }
@@ -217,6 +210,11 @@ input:checked ~ .menu-hamburguer-elements {
   padding: 10px;
   position: center;
   padding: 20px;
+}
+
+.icones{
+  width: 20px;
+  height: auto;
 }
 /*                                                     icones de menu                                                   */
 
@@ -233,8 +231,8 @@ input:checked ~ .menu-hamburguer-elements {
 }
 
 .sidebar-menu li img {
-  width: 90px;
-  height: 30px;
+  width: 60px;
+  height: 20px;
   margin-right: 0.75rem;
 }
 
@@ -310,7 +308,7 @@ nav.grid {
 }
 
 nav.grid img {
-  height: 140px;
+  height: 120px;
   width: auto;
   cursor: pointer;
 }
@@ -357,13 +355,6 @@ nav.grid-2 p:hover {
   margin: 0 auto;
 }
    
-.bemvindo{
-  font-size: 30px; 
-  color: #a3a1a1;
-  text-align: left;
-  padding: 20px;
-}
-
 /*                                                           barra de pesquisa                                                                */
 .search-section {
   padding: 20px;
@@ -406,12 +397,12 @@ nav.grid-2 p:hover {
 }
 
 .mic-icon img {
-  width: 50px; /* O ícone de microfone pode ser ligeiramente maior */
+  width: 50px; 
   height: 50px;
 }
 
 
-/*                                                          Carrossel de banners                                                              */
+/*                                                 Carrossel de banners                                                              */
 
 .carousel-container {
   position: relative;
@@ -420,7 +411,6 @@ nav.grid-2 p:hover {
   overflow: hidden;
 }
 
-/*                                                  Slides do carrossel                                                 */
 .carousel-slide {
   display: flex;
   width: 100%;
@@ -433,7 +423,6 @@ nav.grid-2 p:hover {
   flex: 1 0 100%;
 }
 
-/*                                                  Animação do carrossel                                               */
 @keyframes slide-animation {
   0% { transform: translateX(0%); }
   33% { transform: translateX(-100%); }
@@ -483,7 +472,7 @@ nav.grid-2 p:hover {
 
 
 
-/*                                                       botão para as categorias                                     */ 
+/*                                                botão para as categorias                                     */ 
 .garimpe{
  width: auto;
  height: auto;
@@ -531,16 +520,33 @@ nav.grid-2 p:hover {
 .category-nav ul li a.active {
   background-color: #5a2424; 
   color: #ffffff; 
+  gap: 10px;
+} 
+ .category-nav ul li a:hover,
+ .category-nav ul li a.active{
+  border-radius: 40px; 
+  color: #5a2424;
+  font-size: 40px; 
+  font-weight: 500; 
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block; 
+  font-family: 'Raleway', sans-serif;
 }
 
-/* Transição suave para mudança de conteúdo */
-.product-grid, .brechos-grid {
-  transition: opacity 0.3s ease;
-  padding: 0px 50px;
+.category-nav ul li a:hover,
+.category-nav ul li a.active {
+  background-color: #5a2424; 
+  color: #ffffff; 
   gap: 10px;
 }
 
-/* Estilo para preços antigos em descontos */
+
+.product-grid, .brechos-grid {
+  transition: opacity 0.3s ease;
+  padding: 0px 50px;
+  gap: 0px;
+}
+
 .old-price {
   text-decoration: line-through;
   color: #999;
@@ -562,7 +568,7 @@ nav.grid-2 p:hover {
 }
 
 
-/*                                          Estilos para a seção de produtos                                           */
+/*                                           seção de produtos                                           */
 h3 {
   font-size: 40px;
   color: #797373;
@@ -612,14 +618,21 @@ h3 {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
   padding: 20px 120px;
   align-items: center;
   position: center;
 }
 
-/* Mobile layout for product cards */
+@media (min-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    padding: 20px 80px;
+  }
+}
+
 @media (max-width: 768px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -658,7 +671,6 @@ h3 {
   }
 }
 
-/* Mobile layout for brechos-grid */
 @media (max-width: 768px) {
   .brechos-grid {
     list-style: none;
@@ -733,7 +745,6 @@ h3 {
   }
 }
 
-/* Desktop layout for brechos-grid */
 @media (min-width: 992px) {
   .brechos-grid {
     display: grid;
@@ -755,6 +766,7 @@ h3 {
     width: 100%;
     max-width: 400px;
     gap: 15px;
+    flex-direction: row;
   }
 
   .brechos-grid .profile-image {
@@ -807,7 +819,7 @@ h3 {
 
 .product-card {
   background-color: #fff;
-  border-radius: 40px;
+  border-radius: 50px;
   padding: 5px;
   text-align: center;
   position: relative;
@@ -816,25 +828,44 @@ h3 {
 
 .product-card img {
   width: 95%;
-  border-radius: 25px;
+  border-radius: 50px;
   color: #000;
   margin-top: 10px
 }
 
 .product-card .favorite {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 35px;
+    right: 35px;
     border: none;
     border-radius: 50%;
-    width: 65px;
-    height: 65px;
+    width: 45px;
+    height: 45px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    z-index: 0;
+    z-index: 2;
+}
+
+.product-card .favorite:hover {
+    background: #7D2838;
+    transform: scale(1.1);
+}
+
+.product-card .favorite.favorited {
+    background: #7D2838;
+}
+
+.product-card .favorite.favorited img {
+    filter: brightness(0) invert(1);
+}
+
+.product-card .favorite img {
+    width: 60px;
+    height: 60px;
+    margin: 0;
 }
 
 .product-card h2 {
@@ -859,7 +890,7 @@ h3 {
 
 .price {
   color: #000000;
-  margin-bottom: -1rem;
+  margin-bottom: 1rem;
   font-size: 36px;
   text-align: left;
   padding: 0px 20px;
@@ -875,58 +906,35 @@ h3 {
 }
 
 .favorite {
-  top: 50px;
-  right: 50px;
+  top: 15px;
+  right: 15px;
   color: #8b0000;
 }
 
 .cart {
   bottom: 10px;
-  right: 30px;
+  right: 10px;
 }
 
 
-/*                                           seção produtos ocultos para mobile                                     */
+/*                                      produtos ocultos para mobile                                     */
 
-/* A partir de 768px, exibe 4 colunas */
 @media (min-width: 768px) {
   .produto-grid {
       display: none;
       grid-template-columns: repeat(4, 1fr);
     }
-  }
-/* A partir de 768px, exibe 4 colunas */
+
 @media (max-width: 769px) {
 .produto-grid {
     display: inline-block;
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
-/*                                                         banner de anuncio                                                                  */
-
-.exemplo-desktop{
-  width: 80%;
-  height: auto;
-  padding: 0px 190px;
-  display: none;
-}
-@media  (max-width: 768px){
-  .exemplo-desktop {display: none;
-  }
-}
-@media  (min-width: 993px){
-  .exemplo-desktop {display: block;
-  }
 }
 
-@media  (min-width: 993px){
-  .banner-exemplo {display: none;
-  }
-}
+/*                                               botão dos perfis                                                         */
 
-/*                                                    Estilos para o botão dos perfis                                                         */
-/*                                      Estilo básico da lista de perfis                                              */
 
 .profile-list, .profile-list-oculta {
   list-style: none;
@@ -934,14 +942,11 @@ h3 {
   margin: 0;
 }
 
-/* Layout mobile (até 768px) */
 @media (max-width: 768px) {
-  /* Ocultar a lista de perfis específica para desktop */
   .profile-list-oculta {
     display: none;
   }
 
-  /* Exibir os itens em coluna no mobile com layout melhorado */
   .profile-list {
     list-style: none;
     padding: 20px;
@@ -951,8 +956,7 @@ h3 {
     flex-direction: column;
     gap: 15px;
   }
-  
-  /* Estilo dos itens individuais no mobile - layout completo */
+
   .profile-item {
     display: flex;
     align-items: center;
@@ -1016,21 +1020,19 @@ h3 {
   }
 }
 
-/* Layout desktop (a partir de 992px) */
+
 @media (min-width: 992px) {
-  /* Exibir a lista de perfis com layout de 5 itens por linha */
   .profile-list, .profile-list-oculta {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 50px; /* Ajusta o espaço entre os perfis */
-    max-width: 1200px; /* Limita a largura máxima da lista para alinhamento centralizado */
+    gap: 50px; 
+    max-width: 1200px; 
     margin: 0 auto;
   }
 
-  /* Definir largura dos itens para ocupar 1/5 da linha */
   .profile-item {
-    flex: 1 1 calc(20% - 20px); /* Calcula a largura para 5 itens por linha, com espaço entre eles */
+    flex: 1 1 calc(20% - 20px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1070,11 +1072,10 @@ h3 {
 
 @media (min-width: 992px) {
   .oculto-mobile{
-    display: none;
+    display: block;
   }
 }
 
-/* Estilo adicional para os textos e botões */
 .titulo-brecho {
   width: auto;
   height: auto;
@@ -1088,7 +1089,7 @@ h3 {
 }
 
 .profile-item .rating, .profile-item .stars {
-  font-size: 14px;
+  font-size: 29px;
   color: #999;
 }
 
@@ -1104,7 +1105,7 @@ h3 {
 .follow-button:hover {
   background-color: #7b3333;
 }
-/* Estilos base para desktop - aplicados quando não há media query específica */
+
 @media (min-width: 769px) {
   .profile-list {
     list-style: none;
@@ -1119,17 +1120,17 @@ h3 {
    align-items: center;
    background-color: white;
    padding: 40px 35px;
-   border-radius: 30px;
-   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+   border-radius: 40px;
+   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
    gap: 10px;
    margin: 10px;
-   margin-bottom: -45px;
+   margin-bottom: 50px;
  }
 
 
   .profile-image {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
   }
@@ -1142,6 +1143,10 @@ h3 {
     font-size: 40px;
     display: block;
     color: #333;
+    text-align: left;
+    font-family: sans-serif;
+    margin-left: 0;
+    margin-top: 0;
   }
 
   .rating {
@@ -1159,12 +1164,13 @@ h3 {
     color: #ffc107;
   }
 
+
   .follow-button {
     background-color: #8a2b38;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 20px 35px;
+    border-radius: 18px;
     font-size: 30px ;
     cursor: pointer;
     font-weight: bold;
@@ -1173,7 +1179,7 @@ h3 {
     position:inherit; 
     top: 50%; 
     left: 50%; 
-    transform: translate( 9%, 0%);
+    transform: translate( 0%, 0%);
   }
 
   .follow-button:hover {
@@ -1210,7 +1216,7 @@ h3 {
   }
 } 
 
-/*                         perfis de brecho                   */
+/*                                              perfis de brecho                                */
 @media (max-width: 768px) {
   .profile-list-oculta{
       display: none;
@@ -1221,21 +1227,21 @@ h3 {
 .profile-list-oculta,
 .profile-list {
   display: inline-flex;
-  align-items: center; /* opcional, centraliza o conteúdo verticalmente */
-  gap: 20px; /* ajusta o espaço entre os itens */
+  align-items: center;
+  gap: 20px; 
   padding: 50px 250px;
 }
 
 }
-/*                                                 Estilos para a seção de banner                                       */
-/*                                                       banner  de cadastro                                                                  */
+/*                                              seção de banner                                       */
 
 .img-cashback{
   display: block;
   margin: 50px;
   width: 90%;
+   margin-top: 270px;
 }
-/* Estilo padrão: ocultar o banner */
+
  @media  (max-width: 768px)  {
   .img-cashback#phone  {display: block;}
   .img-cashback {display: none;}
@@ -1246,7 +1252,7 @@ h3 {
   .img-cashback {display: none;}
   
 }
-/*                                    seção de artigos que ficara oculta para mobile                                  */
+/*                                 artigos que ficam ocultos para mobile                                  */
 .artigos-section {
   text-align: center;
   padding: 20px 60px;
@@ -1272,18 +1278,18 @@ h3 {
 }
 
 .imagem-artigo {
-  width: 70%;
+  width: 120%;
   border-radius: 10px;
 }
 .grid-artigos{
   display: flex;
   justify-content:space-evenly;
-  gap: 100px;
-  padding: 10px 80px;
+  gap: 0px;
+  padding: 10px 0px;
   background-color: #fff;
 }
 .artigo-texto {
-  padding-left: 20px; /* Espaçamento entre o texto e a imagem */
+  padding-left: 0px; 
   text-align: left;
 }
 
@@ -1298,14 +1304,13 @@ h3 {
   text-decoration: none;
 }
 
-/* Estilos para o banner de Cashback */
 .cashback-banner {
   position: relative;
-  width: 40%; /* Largura para desktop/PC */
+  width: 50%; 
 }
 
 .imagem-banner {
-  width: 90%;
+  width: 200%;
   border-radius: 10px;
 }
 
@@ -1325,14 +1330,14 @@ h3 {
   text-decoration: none;
 }
 
-/* Estilos para dispositivos móveis */
+
 @media (max-width: 768px) {
   .artigos-section {
     display: none;
   }
 }
 
-/* Estilos para telas maiores (tablets, desktops e PCs) */
+
 @media (min-width: 992px) {
   .artigos-section {
     display: block;
@@ -1354,20 +1359,76 @@ h1 {
   display: none;
 }
 
-/* Ate 768px  exibe */
+.produtos-ocultos .product-card {
+  background-color: #fff;
+  border-radius: 50px;
+  padding: 5px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.150);
+}
+
+.produtos-ocultos .product-card img {
+  width: 95%;
+  border-radius: 50px;
+  color: #000;
+  margin-top: 10px;
+}
+
+.produtos-ocultos .product-card h2 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 29px;
+  margin: 0.5rem 0;
+  color: #4e4e4eee;
+  text-align: left;
+  padding: 0px 20px;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+.produtos-ocultos .price {
+  color: #000000;
+  margin-bottom: 2rem;
+  font-size: 30px;
+  text-align: left;
+  padding: 0px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.produtos-ocultos .Descrição {
+  color: #000000;
+  margin-bottom: 1rem;
+  font-size: 16px;
+  text-align: left;
+  padding: 0px 20px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+.produtos-ocultos .favorite {
+  top: 15px;
+  right: 15px;
+  color: #8b0000;
+}
+
+.produtos-ocultos .cart {
+  bottom: 10px;
+  right: 10px;
+}
+
 @media (max-width: 768px) {
   .produtos-ocultos {
       display: none;
     }
   }
-/* A partir de 769px, oculta*/
+
 @media (min-width: 992px) {
   .produtos-ocultos {
     display: block;
   }
 }
 
-/*                                              Estilos para a seção de artigos                                        */
+/*                                            seção de artigos                                        */
 .titulo-artigo{
   width: auto;
   height: auto;
@@ -1382,7 +1443,7 @@ h1 {
 
 .p-artigos {
   color: #666;
-  font-size: 16px;
+  font-size: 40px;
   text-align: left;
 }
 
@@ -1404,11 +1465,6 @@ h1 {
 .span-artigos{
   padding: 0;
 }
-.h3-artigos{
-  color: #000000;
-  font-size: 90px;
-  text-align: left;
-}
 
 .img-Boss{
   width: 100%;
@@ -1416,47 +1472,119 @@ h1 {
 
 .link-preto {
   color: rgb(0, 0, 0); 
-  text-decoration: none; 
+  text-decoration: none;
+  text-align: left;
+  font-size: 25px; 
 }
 
 /*                                                ocultação do blog                                                 */
 .sweet-colors {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
   gap: 20px;
   padding: 40px;
   max-width: 2200px;
   margin: 0 auto;
-  background-color: #edd4d5; /* Cor suave de fundo da seção */
-  display: none;
+  background: linear-gradient(90deg, #9a5de586, #cbbae4, #9e3a478a);
 }
-.image-container{
-  width: 100%; /* A imagem ocupa toda a largura do container */
+
+.container {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.image-section figure img {
+  width: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+  gap: 10px;
+}
+
+.content-section {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; 
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+
+.title p {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.title h1 {
+  font-size: 38px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #201f1f;
+}
+
+.intro-text p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #3a3a3a;
+  max-width: 90%;
+}
+
+.images-section {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.image-item img {
+  width: 180px;
   height: auto;
+  border-radius: 4px;
+  object-fit: cover;
 }
-/* Ate 768px  exibe */
+
+.extra-info {
+  font-size: 14px;
+  color: #4a4a4a;
+  line-height: 1.7;
+  max-width: 90%;
+}
+
+.extra-info p + p {
+  margin-top: 12px;
+}
+
+.footer-link {
+  margin-top: 10px;
+}
+
+.link {
+  font-size: 14px;
+  color: #4a3b3b;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .artigos {
       display: block;
     }
   }
-/* A partir de 769px, oculta*/
+
 @media (min-width: 992px) {
   .artigos {
     display: none;
   }
 }
 
-/*    Ate 768px oculta   */
-@media (max-width: 768px) {
-  .sweet-colors {
-      display: none;
-    }
-  }
-/* A partir de 769px exibe*/
-@media (min-width: 992px) {
-  .sweet-colors {
-    display: block;
-  }
-}
 
 /*                                                      Rodapé                                                      */
 .footer {
@@ -1471,7 +1599,7 @@ h1 {
   font-size: 20px;
 }
 .footer .footer-image {
-  height: 150px;
+  height: 100px;
   margin-bottom: 20px;
 }
 
@@ -1493,7 +1621,7 @@ h1 {
 }
 
 .footer .social-link img {
-  height: 90px;
+  height: 50px;
   transition: transform 0.3s;
 }
 
@@ -1517,12 +1645,23 @@ h1 {
     margin: 0 auto;
   }
 
-  .footer .social-links {
-    flex-direction: column;
+  .create-btn {
+    padding: 2rem;
+    font-size: 36px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+  .oculto-desktop {
+      display: block;
+  }
+  .oculto-mobile {
+      display: none;
   }
 }
 
-/* Oculta .oculto-desktop em telas pequenas (max-width: 768px) e exibe em telas grandes (min-width: 992px) */
 @media (max-width: 768px) {
   .oculto-desktop {
       display: block;
@@ -1543,9 +1682,8 @@ h1 {
 
 
 
-/*                             carrossel desktop                  */
+/*                                 carrossel desktop                  */
 @media (min-width: 992px) {
-  /* Configura o container para exibir o texto e o carrossel lado a lado */
   .category-nav-desktop {
     display: flex;
     align-items: center;
@@ -1556,13 +1694,12 @@ h1 {
     margin: 0 auto;
   }
 
-  /* Container do texto "Garimpe na Vintélo" */
+  /*                                Garimpe na Vintélo                */
   .garimpe-vintelo-container {
     flex-shrink: 0;
     text-align: left;
   }
 
-  /* Estiliza o container do carrossel */
   .category-nav-desktop .carousel-container {
     flex-grow: 1;
     display: flex;
@@ -1581,12 +1718,12 @@ h1 {
 
   .category-nav-desktop ul li a {
     text-decoration: none;
-    padding: 14px 22px;
+    padding: 12px 18px;
     background-color: transparent; 
     border: 2px solid #5a2424; 
     border-radius: 40px; 
     color: #5a2424;
-    font-size: 18px; 
+    font-size: 16px; 
     font-weight: 500; 
     transition: background-color 0.3s ease, color 0.3s ease;
     display: inline-block;
@@ -1599,57 +1736,63 @@ h1 {
   }
 }
 
-/* Alinhar LER AGORA dos artigos */
+/*                            artigos                 */
  .texto-esquerda {
-      text-align: left;       /* Garante o alinhamento à esquerda */
-      margin-left: 20px;      /* Define a margem à esquerda */
+      text-align: left;       
+      margin-left: 20px;      
       font-size: 20px;
 
  }
 
-/* fonte da home GARIMPE NA VINTELO */
 
 .garimpe-text {
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  font-size: 30px;
-  letter-spacing: 4px;
+  font-size: 24px;
+  letter-spacing: 3px;
   color: #7d2838; 
   margin-left: 90px;
   display: inline-block;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 
 .vintelo-text {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
-  font-size: 90px;
+  font-size: 70px;
   color: #7d2838; 
   line-height: 1.2;
   margin-left: 150px;
   display: inline-block;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
-/* Estilos para os títulos das seções */
+
 .titulo-brecho-section, .titulo-artigo-section {
   text-align: center;
-  padding: 20px 0;
 }
 
-.titulo-brecho-section {
-  text-align: left;
-  padding: 20px 0 0 90px;
+
+@media (max-width: 991px) {
+  .titulo-brecho-section {
+    text-align: left;
+    padding: 20px;
+  }
+  
+  .titulo-artigo-section {
+    padding: 20px;
+  }
 }
 
 .titulo-brecho-section .garimpe-text {
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  font-size: 30px;
-  letter-spacing: 4px;
+  font-size: 24px;
+  letter-spacing: 3px;
   color: #7d2838;
-  margin-left: 0;
+  margin-left: 90px;
   display: inline-block;
+  margin-top: 40px;
 }
 
 .titulo-brecho-section .vintelo-text {
@@ -1658,9 +1801,9 @@ h1 {
   font-size: 70px;
   color: #7d2838;
   line-height: 1.2;
-  margin-left: 60px;
+  margin-left: 150px;
   display: inline-block;
-  margin-left: 100px
+  margin-bottom: 30px;
 }
 
 .titulo-artigo-section .garimpe-text {
@@ -1669,7 +1812,7 @@ h1 {
   font-size: 30px;
   letter-spacing: 4px;
   color: #7d2838;
-  margin-left: 0;
+  margin-left: 90px;
   display: inline-block;
 }
 
@@ -1679,8 +1822,45 @@ h1 {
   font-size: 60px;
   color: #7d2838;
   line-height: 1.2;
-  margin-left: 0;
+  margin-left: 100px;
   display: inline-block;
+}
+
+.artigo-text {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 90px;
+  color: #000000;
+  line-height: 1.2;
+  text-align: left;
+  display: flex;
+}
+
+
+@media (min-width: 992px) {
+  .titulo-brecho-section .garimpe-text {
+    font-size: 18px;
+    margin-left: 60px;
+    margin-top: 30px;
+  }
+  
+  .titulo-brecho-section .vintelo-text {
+    font-size: 50px;
+    margin-left: 100px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .titulo-brecho-section .garimpe-text,
+  .titulo-artigo-section .garimpe-text {
+    margin-left: 0;
+  }
+  
+  .titulo-brecho-section .vintelo-text,
+  .titulo-artigo-section .vintelo-text {
+    margin-left: 0;
+  }
 }
 
 
@@ -1693,15 +1873,79 @@ h1 {
 }
 
 
-@media (min-width: 768px) {
+.category-nav {
+  display: block;
+}
+
+
+@media (max-width: 991px) {
   .category-nav-desktop {
-    display: block;
-  }
-  .category-nav-mobile {
     display: none;
+  }
+  
+  .category-nav-mobile {
+    display: block;
+    text-align: left;
+    padding: 20px;
+  }
+  
+  /*               carrossel de categorias mobile            */
+  .category-nav ul {
+    display: flex !important;
+    gap: 10px;
+    list-style: none;
+    padding: 10px 30px;
+    margin: 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+  
+  .category-nav ul li {
+    flex: 0 0 auto;
+  }
+  
+  .category-nav ul li a {
+    text-decoration: none;
+    padding: 18px 26px;
+    background-color: transparent;
+    border: 2px solid #5a2424;
+    border-radius: 40px;
+    color: #5a2424;
+    font-size: 40px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-block;
+    font-family: 'Raleway', sans-serif;
   }
 }
 
+/*                       Desktop do carrossel               */
+@media (min-width: 992px) {
+  .category-nav-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 30px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .category-nav-mobile {
+    display: none;
+  }
+  
+  .garimpe-vintelo-container {
+    flex-shrink: 0;
+    text-align: left;
+  }
+  
+  .category-nav-desktop .carousel-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
 
 
 

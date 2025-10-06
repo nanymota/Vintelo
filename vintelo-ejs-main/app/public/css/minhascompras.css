@@ -12,23 +12,24 @@ body {
   line-height: 1.6;
 }
 
-/* Header Mobile */
+/*        cebeçalho Mobile         */
 header {
   background-color: #fff;
-  padding: 40px;
 }
 
 header .grid {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
+  padding: 10px;
 }
 
 header img {
-  height: 100px;
+  height: 80px;
 }
 
-/* Header Desktop */
+/*                      cabeçalho Desktop                     */
 .top-bar {
   background-color: #7D2838;
   text-align: center;
@@ -44,7 +45,6 @@ header img {
   align-items: center;
   padding: 20px 50px;
   background-color: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .main-header h1 {
@@ -115,7 +115,7 @@ nav a:hover {
   transform: scale(1.1);
 }
 
-/* Visibility Controls */
+/*          ocultação          */
 .oculto-mobile {
   display: none;
 }
@@ -124,7 +124,7 @@ nav a:hover {
   display: block;
 }
 
-/* Main Mobile Original Size */
+/*              Mobile             */
 .main {
   padding: 50px;
 }
@@ -350,7 +350,7 @@ nav a:hover {
   text-align: right;
 }
 
-/* Footer */
+/*                                                      Rodapé                                                      */
 .footer {
   background-color: #7D2838;
   color: #fff;
@@ -358,8 +358,12 @@ nav a:hover {
   text-align: center;
 }
 
+.p-footer{
+  color: #ffffffe7;
+  font-size: 20px;
+}
 .footer .footer-image {
-  height: 130px;
+  height: 100px;
   margin-bottom: 20px;
 }
 
@@ -368,7 +372,7 @@ nav a:hover {
 }
 
 .footer .social-media p {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 10px;
 }
 
@@ -381,7 +385,7 @@ nav a:hover {
 }
 
 .footer .social-link img {
-  height: 80px;
+  height: 50px;
   transition: transform 0.3s;
 }
 
@@ -390,12 +394,13 @@ nav a:hover {
 }
 
 .copyright {
-  font-size: 45px;
+  font-size: 15px;
   margin-top: 20px;
   color: #ffffffe7;
 }
 
-/* Tablet Responsiveness */
+
+/*        responsividade   Tablet           */
 @media (min-width: 768px) {
   .main {
     padding: 30px 40px;
@@ -433,10 +438,11 @@ nav a:hover {
   }
 }
 
-/* Desktop Responsiveness */
+/*             responsividade Desktop         */
 @media (min-width: 992px) {
   .oculto-mobile {
     display: block;
+    display: inline-flex;
   }
   
   .oculto-desktop {

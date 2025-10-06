@@ -1,7 +1,4 @@
-
-
-
-/*                                                   oculto para mobile                                                */
+/*                        oculto para mobile                        */
 .produtos-ocultos{
     padding: 50px;
   }
@@ -20,7 +17,7 @@
     border-radius: 10px;
   }
   
-  /* Estilos da imagem do produto */
+  /*                     Estilos da imagem do produto                   */
   .imagem-produto {
     flex: 1;
     display: flex;
@@ -34,7 +31,7 @@
     border-radius: 10px;
   }
   
-  /* Estilos da descrição do produto */
+  /*                      Estilos da descrição do produto               */
   .info-produto {
     flex: 1;
     padding: 20px;
@@ -131,7 +128,7 @@
     display: inline-block;
     margin-top: 5px;
   }
-  /*                                               produtos semelhantes                                                        */
+  /*                   produtos semelhantes                          */
   .product-list {
     display: flex;
     gap: 16px;
@@ -174,7 +171,7 @@
   font-weight: bold;
   text-align: center;
 }
-  /*                                          Estilos para a seção de produtos                                           */
+  /*                    Estilos para a seção de produtos                          */
   h3 {
     font-size: 40px;
     color: #000000;
@@ -278,7 +275,7 @@
     height: 100%; 
   }
 
-  /* Estilos para telas menores */
+  /*                          Estilos para telas menores                        */
   @media (max-width: 768px) {
     .produto-container {
         flex-direction: column;
@@ -293,13 +290,13 @@
         padding: 10px;
     }
   }
-  /* A partir de 768px, exibe 4 colunas */
+
   @media (max-width: 768px) {
     .produtos-ocultos {
         display: none;
       }
     }
-  /* A partir de 768px, exibe 4 colunas */
+
   @media (min-width: 992px) {
     .produtos-ocultos {
       display: block;
@@ -309,34 +306,33 @@
   .product-view{
     padding: 10px;
   }
-  
-  /* A partir de 768px, exibe 4 colunas */
+
+
   @media (max-width: 768px) {
     .product-view {
         display: block;
       }
     }
-  /* A partir de 768px, exibe 4 colunas */
+
   @media (min-width: 992px) {
     .product-view {
       display: none;
     }
   }
 
-    /* A partir de 768px, exibe 4 colunas */
     @media (max-width: 768px) {
       .oculto-mobile {
           display: none;
         }
       }
-    /* A partir de 768px, exibe 4 colunas */
+
     @media (min-width: 992px) {
       .oculto-mobile {
         display: block;
       }
     }
 
-  /*                                                      Rodapé                                                      */
+  /*                         Rodapé                        */
 .footer {
   background-color: #7D2838;
   color: #fff;

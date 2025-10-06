@@ -1,4 +1,4 @@
-/* Reset básico */
+/*                  Reset básico                     */
 * {
     margin: 0;
     padding: 0;
@@ -10,11 +10,10 @@
     background-color: #fff;
   }
   
-  /* Estilos gerais */
+  /*              Estilos gerais                  */
   header {
     background-color: #fff;
     padding: 40px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
   header .grid {
@@ -67,8 +66,8 @@
   }
   
   .social-login img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     border-radius: 15px;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -180,7 +179,7 @@ input[type="checkbox"]:checked + .toggle:before {
   .form-group input {
     width: 100%;
     padding: 20px;
-    border: 2px solid #ddd;
+    border: 2px solid #7D2838;
     border-radius: 25px;
     font-size: 40px;
     margin-bottom: 15px;

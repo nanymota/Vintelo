@@ -6,13 +6,13 @@
 
 body {
     font-family: 'Prata', 'Montserrat', serif;
-    background: #f8f9fa;
+    background: #ffffff;
     color: #333;
     line-height: 1.6;
     min-height: 100vh;
 }
 
-/* Header Mobile */
+/*                cabeçalho Mobile                 */
 .oculto-desktop {
     display: block;
 }
@@ -29,15 +29,19 @@ header nav.grid {
     align-items: center;
 }
 
-header nav.grid img {
+header nav.grid img:first-child {
     height: 30px;
+}
+
+header nav.grid img:nth-child(2) {
+    height: 50px;
 }
 
 .img-branca {
     height: 30px;
 }
 
-/* Header Desktop */
+/*        cabeçalho Desktop                */
 .discount-banner {
     background: #7D2838;
     color: white;
@@ -53,7 +57,6 @@ header nav.grid img {
     align-items: center;
     padding: 20px 40px;
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .img-logo {
@@ -78,6 +81,15 @@ header nav.grid img {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+.search-profile form input {
+    padding: 8px 15px;
+    border: 1px solid #7D2838;
+    border-radius: 24px;
+    outline: none;
+    min-width: 150px;
+    font-size: 14px;
 }
 
 .search-profile ul {
@@ -109,8 +121,8 @@ header nav.grid img {
 }
 
 .admin-header {
-    background: linear-gradient(135deg, #7D2838 0%, #5a1e2a 100%);
-    color: white;
+    background: white;
+    color: #333;
     padding: 40px 30px;
     border-radius: 20px;
     margin-bottom: 40px;
@@ -118,16 +130,18 @@ header nav.grid img {
 }
 
 .admin-header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 300;
     margin-bottom: 10px;
     letter-spacing: 1px;
+    color: #333;
 }
 
 .admin-header p {
-    font-size: 1.2rem;
+    font-size: 1rem;
     opacity: 0.9;
     font-weight: 300;
+    color: #333;
 }
 
 .filters-section {
@@ -246,17 +260,17 @@ header nav.grid img {
 }
 
 .status-badge.ativo {
-    background: #28a745;
+    background: #7D2838;
     color: white;
 }
 
 .status-badge.suspenso {
-    background: #dc3545;
+    background: #7D2838;
     color: white;
 }
 
 .status-badge.novo {
-    background: #17a2b8;
+    background: #7D2838;
     color: white;
 }
 
@@ -327,76 +341,98 @@ header nav.grid img {
 }
 
 .btn-visualizar {
-    background: #17a2b8;
+    background: #7D2838;
     color: white;
 }
 
 .btn-visualizar:hover {
-    background: #138496;
+    background: #651e2c;
     transform: translateY(-2px);
 }
 
 .btn-suspender {
-    background: #dc3545;
+    background: #7D2838;
     color: white;
 }
 
 .btn-suspender:hover {
-    background: #c82333;
+    background: #651e2c;
     transform: translateY(-2px);
 }
 
 .btn-reativar {
-    background: #28a745;
+    background: #7D2838;
     color: white;
 }
 
 .btn-reativar:hover {
-    background: #218838;
+    background: #651e2c;
     transform: translateY(-2px);
 }
 
 .btn-historico {
-    background: #6c757d;
+    background: #7D2838;
     color: white;
 }
 
 .btn-historico:hover {
-    background: #5a6268;
+    background: #651e2c;
     transform: translateY(-2px);
 }
 
-/* Footer */
+/*                rodapé                   */
 .footer {
-    background: linear-gradient(135deg, #7D2838 0%, #5a1e2a 100%);
+    background-color: #7D2838;
     color: #fff;
-    padding: 50px 20px 30px;
+    padding: 20px 0;
     text-align: center;
-    margin-top: 60px;
+    margin-top: 40px;
 }
 
-.footer-image {
-    height: 70px;
-    margin-bottom: 30px;
+.p-footer {
+    color: #ffffffe7;
+    font-size: 20px;
 }
 
-.social-media {
-    margin-bottom: 30px;
-}
-
-.social-media .p-footer {
-    font-size: 1rem;
+.footer .footer-image {
+    height: 90px;
     margin-bottom: 20px;
-    font-weight: 300;
-    letter-spacing: 0.5px;
+}
+
+.footer .social-media {
+    margin-bottom: 20px;
+}
+
+.footer .social-media p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer .social-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.footer .social-link img {
+    height: 60px;
+    transition: transform 0.3s;
+}
+
+.footer .social-link img:hover {
+    transform: scale(1.2);
 }
 
 .copyright {
-    font-size: 0.9rem;
-    opacity: 0.8;
+    font-size: 15px;
+    margin-top: 20px;
+    color: #ffffffe7;
 }
 
-/* Responsividade */
+/*                    Responsividade                         */
 @media (min-width: 768px) {
     .oculto-desktop {
         display: none;

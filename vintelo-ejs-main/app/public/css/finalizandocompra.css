@@ -26,7 +26,6 @@
   font-weight: prata;
 }
 
-/* Animação */
 @keyframes fadeIn {
   0% {
     opacity: 0.1;
@@ -49,7 +48,8 @@
   }
   
   header img {
-    height: 40px;
+    width: 80px;
+    height: auto;
   }
   
   .header h2 {
@@ -124,7 +124,7 @@ nav a {
 .search-profile form input {
   padding: 10px;
   border: 1px solid #7d2738;
-  border-radius: 10px;
+  border-radius: 30px;
   width: 130%;
 }
 
@@ -136,7 +136,7 @@ nav a {
 }
 
 .img-logo {
-  width: 150px;
+  width: 120px;
 }
 
 .img-tamanho{
@@ -146,9 +146,9 @@ nav a {
 
 nav.grid {
   display: grid;
-  grid-template-columns: auto 1fr auto auto auto; /* Define 5 colunas: logo, barra de pesquisa e ícones */
-  align-items: center; /* Alinha todos os itens verticalmente no centro */
-  gap: 80px; /* Espaçamento entre os itens, ajuste conforme necessário */
+  grid-template-columns: auto 1fr auto auto auto; 
+  align-items: center;
+  gap: 80px; 
   padding: 20px;
 }
 
@@ -389,4 +389,3 @@ nav.grid-2 a {
   margin-top: 20px;
   color: #ffffffe7;
 }
-

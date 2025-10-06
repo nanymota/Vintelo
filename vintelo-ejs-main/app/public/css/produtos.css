@@ -1,4 +1,4 @@
-/*                                            Reset básico                                                              */
+/*                                        Reset básico                                                              */
 * {
     margin: 0;
     padding: 0;
@@ -12,7 +12,7 @@ body {
     line-height: 1.6;
 }
 
-/*                                                 cabeçalho  do  menu                                               */
+/*                                     cabeçalho  do  menu                                               */
 .top-bar {
   background-color: #8c2b44;
   text-align: center;
@@ -74,7 +74,12 @@ nav a {
    width: 50px;
 }
 
-/*                                               Cabeçalho                                                              */
+.img-seta{
+  width: 40px;
+  height: auto;
+  position: fixed;
+}
+/*                                      Cabeçalho                                                 */
 header {
     background-color: #fff;
     padding: 15px 20px;
@@ -94,7 +99,7 @@ header img {
     height: 40px;
 }
 
-/*                                                 Main                                                                */
+/*                              Main                                                   */
 .main-image {
   width: 100%;
 }
@@ -177,24 +182,22 @@ height: 100%;
 }
 
 
-/* A partir de 768px, exibe 4 colunas */
-@media (max-width: 768px) {
+
+    /*                                              responsivivdade                                                       */
+
+    @media (max-width: 768px) {
     .submit-btn .link-branco  {
         display: block;
       }
     }
-  /* A partir de 768px, exibe 4 colunas */
   @media (min-width: 992px) {
     .submit-btn .link-branco  {
       display: none;
     }
-  }
-
-    /*                                              responsivivdade                                                       */
-
     .oculto-mobile{
       margin: 0;
     }
+   }
     
   
     .oculto-desktop{
