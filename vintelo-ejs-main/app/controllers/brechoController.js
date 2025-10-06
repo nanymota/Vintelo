@@ -21,9 +21,19 @@ const brechoController = {
 
     regrasValidacaoUsuario: [
         body("nomeusu_usu")
-            .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!"),
+            .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!")
+            .custom(async (value) => {
+            const existe = await usuario.findCampoCustom('user_usuario', value);
+            if (existe > 0) throw new Error('Nome de usuário já existe');
+            return true;
+        }),
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!"),
+            .custom(async (value) => {
+            const existe = await usuario.findCampoCustom('email_usuario', value);
+            if (existe > 0) throw new Error('E-mail já cadastrado');
+            return true;
+        }),
         body("nome_usu")
             .isLength({ min: 3, max: 100 }).withMessage("Nome completo deve ter de 3 a 100 caracteres!"),
         body("senha_usu")
