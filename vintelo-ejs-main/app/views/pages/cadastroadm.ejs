@@ -77,9 +77,9 @@
 
             <section class="form-section">
                 <center>
-                    <h2>Crie seu brechó</h2>
+                    <h2>Bem-Vindo Administrador</h2>
                 </center>
-                <p>Insira os dados do seu brechó</p>
+                <p>Insira os dados do perfil de Administrador</p>
 
                 <section class="profile-section">
                     <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
@@ -90,9 +90,9 @@
                 </section>
 
                 <br>
-                <form id="registerForm" action="/criarbrecho" method="post"  enctype="multipart/form-data">
+                <form id="registerForm" action="/cadastroadm" method="post"  enctype="multipart/form-data">
                     <section class="form-group">
-                        <label for="nomeusu_usu">Nome do Brechó</label>
+                        <label for="nomeusu_usu">Nome do Administrador</label>
                         <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó">
                     </section>
 
@@ -129,67 +129,13 @@
                             </section>
                         </section>
                     </section>
-
-                    <!-- Seção Endereço -->
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('address-info')">
-                            <h3>Endereço</h3>
-                            <span class="arrow" id="address-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="address-info">
-                            <section class="form-group">
-                                <label for="cep">CEP</label>
-                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required>
-                            </section>
-
-                            <section class="form-group">
-                                <label for="endereco">Endereço</label>
-                                <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required>
-                            </section>
-
-                            <section class="form-group">
-                                <label for="bairro">Bairro</label>
-                                <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
-                            </section>
-
-                            <section class="form-group">
-                                <label for="cidade">Cidade</label>
-                                <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
-                            </section>
-
-                            <section class="form-group">
-                                <label for="uf">UF</label>
-                                <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required>
-                            </section>
-                        </section>
-                    </section>
                     <br>
-
-                    <section class="section">
-                        <h3>Onde deseja receber?</h3>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/itau.png" alt="itau" class="icon">
-                            <span>Itaú</span>
-                            <img src="imagens/erro.png" alt="Erro" class="error-icon">
-                        </section>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/santander.png" alt="Santander" class="icon">
-                            <span>Santander</span>
-                            <img src="imagens/check.png" alt="Check" class="check-icon">
-                        </section>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/nubank.png" alt="Boleto" class="icon">
-                            <span>Nubank</span>
-                            <img src="imagens/check.png" alt="Check" class="check-icon">
-                        </section>
-                    </section>
-
                     <section class="oculto-desktop">
-                        <button type="submit" class="create-button">Criar brechó</button>
+                        <button type="submit" class="create-button">Entrar</button>
                     </section>
                     <br>
                     <section class="oculto-mobile">
-                        <button type="submit" id="btn-submit" class="create-button">Criar brechó</button>
+                        <button type="submit" id="btn-submit" class="create-button">Entrar</button>
                     </section>
                 </form>
             </section>

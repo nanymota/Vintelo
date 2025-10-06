@@ -5,7 +5,6 @@
     <title>Vintélo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <script src="../../public/script/script.js"></script>
     <link rel="stylesheet" href="css/entrar.css">
 
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
@@ -32,21 +31,24 @@
   
     <section class="social-login">
       <a href="#"><img src="imagens/icone facebook.png" alt="Login com Facebook"></a>
-      <a href="#"><img src="imagens/icone apple.png" alt="Login com Instagram"></a>
-      <a href="#"><img src="imagens/icone google.png" alt="Login com Google"></a>
+      <a href="/auth/instagram"><img src="imagens/icone apple.png" alt="Login com Instagram"></a>
+      <a href="/auth/google"><img src="imagens/icone google.png" alt="Login com Google"></a>
   </section>
   
     <p class="divider">ou acesse via email</p>
     <br>
+
     <form id="loginForm" action="/entrar" method="post">
         <section class="form-group">
             <label for="email_usu">Endereço de email</label>
-            <input type="email" id="email_usu" name="nome_usu" placeholder="conta.sanders@exemplo.com" required>
+            <input type="email" id="email_usu" name="email_usu" placeholder="seu.email@exemplo.com" 
+            value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
         </section>
      
         <section class="form-group">
             <label for="senha_usu">Senha</label>
-            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
+            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." 
+            value="<%= typeof valores !== 'undefined' && valores.senha_usu ? valores.senha_usu : '' %>">
         </section>
         <a href="/esqueceusenha" class="forgot-password">Esqueceu sua senha?</a>
         <br>
@@ -72,7 +74,7 @@
     </form>
   </main>
    <button type="submit" form="loginForm" class="login-btn">Entrar</button>
-  <script src="js/entrar.js"></script> 
+  <script src="script/entrar.js"></script> 
 
  </body>
 </html>

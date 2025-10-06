@@ -1,142 +1,232 @@
-
 <!DOCTYPE html>
-<html>
-  <meta charset="UTF-8">
-  <head>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
+    <link rel="stylesheet" href="css/sacola.css">
     <link rel="stylesheet" href="css/minhascompras.css">
-
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
-  </head>
-  <body>
+</head>
+<body>
+      <!-- Cabeçalho desktop -->
+       <section class="oculto-mobile">
+        <header1>
+          <section class="top-bar">
+              <p class="banner">10% OFF na primeira compra</p>
+          </section>
+          <section class="main-header">
+              <a href="/homecomprador">
+              <img src="imagens/logo.png" class="img-logo">
+              </a>
+              <nav>
+                  <a href="/categorias">Vestidos</a>
+                  <a href="/categorias">Saias</a>
+                  <a href="/categorias">Blusas</a>
+                  <a href="/categorias">Calças</a>
+                  <a href="/categorias">Outros</a>
+              </nav>
+              <section class="search-profile">
+                  <form>
+                      <input type="text" placeholder="Buscar...">
+                  </form>
+                  <ul>
+                      <li><a href="/perfilcliente" ></a><img src="imagens/icone sem cadastro.png" class="maria"> </li>
+                      <li><a href="/criarbrecho" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
+                      <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                  </ul>
+              </section>
+          </section>
+      </header>
+       </section>
 
-    <section class="oculto-notebook-1">
-    <header1>
-      <section class="top-bar">
-          <p>10% OFF na primeira compra</p>
-      </section>
-      <section class="main-header">
-        <a href="/homecomprador">
-          <img src="imagens/logo.png" class="img-logo">
-        </a>
-          <nav>
-              <a href="/categorias">Vestidos</a>
-              <a href="/categorias">Saias</a>
-              <a href="/categorias">Blusas</a>
-              <a href="/categorias">Calças</a>
-              <a href="/categorias">Outros</a>
-          </nav>
-          <section class="search-profile">
-              <form>
-                  <input type="text" placeholder="Buscar...">
-              </form>
-              <ul>
-                  <li><a href="/criarbrecho" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                  <li><a href="/menu" ><img src="imagens/imagem sem cadastro.avif" class="img-tamanho"></a> </li>
-                  <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
-              </ul>
-          </section>
-          </section>
-        </header>
-      <br>
-      <section class="container">
+    <!-- Cabeçalho -->
+     <section class="oculto-desktop">
+    <header>
+        <nav class="grid">
+          <a href="/">
+            <img src="imagens/seta.png" alt="Seta Voltar">
+          </a>
+          <img src="imagens/logo.png" alt="Logo">
+          <a href="/cadastro">
+            <img src="imagens/icone sem cadastro.png" alt="Carrinho">
+          </a>
+        </nav>
+      </header>
+    </section>
+
+
+    <!-- Lista de Produtos -->
+     <main>
+        <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
+        <!-- Informações de lista -->
+        <section class="list-info">
+            <p class="favorite-text"> Veja suas compras</p>
+        </section>
+        
+
+        
+        <!-- Layout com Sidebar (Desktop) -->
+        <section class="content-layout oculto-mobile">
+            <aside class="sidebar-filters">
+                <section class="filter-group">
+                    <h3>Categoria</h3>
+                    <label><input type="checkbox"> Vestidos</label>
+                    <label><input type="checkbox"> Saias</label>
+                    <label><input type="checkbox"> Blusas</label>
+                    <label><input type="checkbox"> Calças</label>
+                    <label><input type="checkbox"> Outros</label>
+                </section>
+                
+                <section class="filter-group">
+                    <h3>Preço</h3>
+                    <label><input type="checkbox"> Até R$ 30</label>
+                    <label><input type="checkbox"> R$ 30 - R$ 60</label>
+                    <label><input type="checkbox"> R$ 60 - R$ 100</label>
+                    <label><input type="checkbox"> Acima de R$ 100</label>
+                </section>
+                
+                <section class="filter-group">
+                    <h3>Tamanho</h3>
+                    <label><input type="checkbox"> PP</label>
+                    <label><input type="checkbox"> P</label>
+                    <label><input type="checkbox"> M</label>
+                    <label><input type="checkbox"> G</label>
+                    <label><input type="checkbox"> GG</label>
+                </section>
+                
+                <section class="filter-group">
+                    <h3>Cor</h3>
+                    <label><input type="checkbox"> Preto</label>
+                    <label><input type="checkbox"> Branco</label>
+                    <label><input type="checkbox"> Rosa</label>
+                    <label><input type="checkbox"> Marrom</label>
+                    <label><input type="checkbox"> Outros</label>
+                </section>
+            </aside>
+            
+            <main class="product-list">
+        <article class="product">
+            <img src="imagens/conjunto.png" alt="Saia Branca">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Saia Branca</p>
+            <p>R$25,00</p>
+        </article>
+
+        <article class="product">
+            <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Saia Preta Com Brilho</p>
+            <p>R$30,00</p>
+        </article>
+
+        <article class="product">
+            <img src="imagens/saia marrom.png" alt="Saia Marrom">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Saia De Veludo Marrom</p>
+            <p>R$25,00</p>
+        </article>
+
+        <article class="product">
+            <img src="imagens/calça reta.png" alt="Calça Jeans">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Calça Reta Jeans Clara</p>
+            <p>R$49,99</p>
+        </article>
+
+        <article class="product">
+            <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Conjunto saia preta c/ brilho + Top preto</p>
+            <p>R$57,00</p>
+        </article>
+
+        <article class="product">
+            <img src="imagens/vestido pink.png" alt="Vestido Rosa">
+            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+            <p>Vestido rosa longo</p>
+            <p>R$15,00</p>
+        </article>
+        </main>
+      </main>
+                        <!-- Botão de Ver Mais Mobile -->
         <section class="oculto-mobile">
-          <section class="filtro">
-            <details open>
-                <summary>Categorias</summary>
-                <ul>
-                    <li>Vestidos</li>
-                    <li>Calças</li>
-                    <li>Saias</li>
-                    <li>Blusas</li>
-                    <li>Acessórios</li>
-                    <li>Calçados</li>
-                </ul>
-            </details>
-           <br>
-           <br>
-            <details open>
-                <summary>Valor</summary>
-                <section class="faixa-valor">
-                    <label for="min">Min</label>
-                    <input type="range" id="min" min="0" max="500" value="10">
-                    <label for="max">Max</label>
-                    <input type="range" id="max" min="0" max="500" value="300">
-                </section>
-                <section class="valores">
-                    <input type="text" placeholder="10">
-                    <input type="text" placeholder="300">
-                </section>
-            </details>
-            <br>
-            <br>
-            <details open>
-                <summary>Data</summary>
-                <section class="data">
-                    <input type="text" placeholder="xx / xx / xxxx">
-                    <button>APLICAR</button>
-                </section>
-            </details>
+        <nav class="load-more">
+            <button>Ver mais</button>
+        </nav>
+            </main>
         </section>
         </section>
-        <main class="main">
-        <section class="order-section">
-          <section class="order-date">15 de Agosto</section>
-          <section class="order-card">
-            <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-image">
-            <section class="order-info">
-              <h2 class="product-title">Vestido Branco Longo</h2>
-              <p class="status in-progress">A caminho</p>
-              <p class="delivery-info">Chegará hoje antes das 21h</p>
-            </section>
-          </section>
-    
-          <section class="order-date">24 de Julho</section>
-          <section class="order-card">
-            <img src="imagens/vestido roxo2.png" alt="Vestido Magenta com Decote" class="product-image">
-            <section class="order-info">
-              <h2 class="product-title">Vestido Magenta com Decote</h2>
-              <p class="status canceled">Pedido cancelado</p>
-              <p class="delivery-info">Reembolsamos seu dinheiro na conta em que você pagou via PIX</p>
-            </section>
-          </section>
-    
-          <section class="order-date">11 de Junho</section>
-          <section class="order-card">
-            <img src="imagens/regata branca.png" alt="Regata Branca" class="product-image">
-            <section class="order-info">
-              <h2 class="product-title">Regata Branca</h2>
-              <p class="status delivered">Entregue</p>
-              <p class="delivery-info">Chegou no dia 13 de julho</p>
-            </section>
-          </section>
-    
-          <section class="order-date">05 de Maio</section>
-          <section class="order-card">
-            <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto Rosa de Malha" class="product-image">
-            <section class="order-info">
-              <h2 class="product-title">Conjunto Rosa de Malha</h2>
-              <p class="status delivered">Entregue</p>
-              <p class="delivery-info">Chegou no dia 13 de maio</p>
-            </section>
-          </section>
+        <!-- Layout Mobile -->
+        <section class="oculto-desktop">
+            <main class="product-list">
+                <article class="product">
+                    <img src="imagens/conjunto.png" alt="Saia Branca">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Saia Branca</p>
+                    <p>R$25,00</p>
+                </article>
+
+                <article class="product">
+                    <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Saia Preta Com Brilho</p>
+                    <p>R$30,00</p>
+                </article>
+
+                <article class="product">
+                    <img src="imagens/saia marrom.png" alt="Saia Marrom">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Saia De Veludo Marrom</p>
+                    <p>R$25,00</p>
+                </article>
+
+                <article class="product">
+                    <img src="imagens/calça reta.png" alt="Calça Jeans">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Calça Reta Jeans Clara</p>
+                    <p>R$49,99</p>
+                </article>
+
+                <article class="product">
+                    <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Conjunto saia preta c/ brilho + Top preto</p>
+                    <p>R$57,00</p>
+                </article>
+
+                <article class="product">
+                    <img src="imagens/vestido pink.png" alt="Vestido Rosa">
+                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p>Vestido rosa longo</p>
+                    <p>R$15,00</p>
+                </article>
+                
+            </main>
         </section>
-      </section>
-    </main>
-    <!--                                                    Rodapé                                                      -->
-    <footer class="footer">
-      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
-      <section class="social-media">
-        <p class="p-footer">Siga nossas redes sociais</p>
-        <ul class="social-links">
-          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
-          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
-        </ul>
-      </section>
-       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
-    </footer>
-    </body>
-    </html>
-    
+                <br>
+                <section class="oculto-desktop">
+                 <!-- Botão de Ver Mais Mobile -->
+                 <nav class="load-more">
+                     <button>Ver mais</button>
+                 </nav>
+                </section>
+   </main>
+   <!--                                                    Rodapé                                                      -->
+   <footer class="footer">
+    <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+    <section class="social-media">
+      <p class="rodape">Siga nossas redes sociais</p>
+      <ul class="social-links">
+        <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/icone do face.jpeg" alt="Facebook"></a></li>
+        <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/icone do twitter.jpeg" alt="Twitter"></a></li>
+        <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/icone do insta.jpeg" alt="Instagram"></a></li>
+      </ul>
+    </section>
+     <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+  </footer>
+
+    <script src="js/filtros.js"></script>
+</body>
+</html>

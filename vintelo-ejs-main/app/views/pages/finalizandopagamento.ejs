@@ -29,7 +29,7 @@
             <p>10% OFF na primeira compra</p>
         </section>
         <section class="main-header">
-          <a href="/index">
+          <a href="/">
             <img src="imagens/logo.png" alt="Logo Vintelo" class="img-logo">
           </a>
             <nav>
@@ -92,6 +92,78 @@
                 <img src="imagens/check.png" alt="Check" class="check-icon">
               </section>
             </section>
+
+            <!-- MERCADO PAGO 
+             <section class="payment-form dark">
+  <section class="block-heading">
+    <h2>Checkout</h2>
+  </section>
+
+  <section class="products">
+    <h3>Resumo do pedido</h3>
+    <script>
+      let carrinho = [
+        { produto: "Produto A", qtd: 2, preco: 49.90 },
+        { produto: "Produto B", qtd: 1, preco: 89.90 },
+        { produto: "Produto C", qtd: 3, preco: 19.90 }
+      ];
+
+      let total = 0;
+      carrinho.forEach(item => {
+        total += item.qtd * item.preco;
+        document.write(`
+          <section class="item">
+            <span class="price">R$ ${item.preco.toFixed(2)}</span>
+            <span class="name">${item.produto}</span>
+            <span class="quantity">Qtd: ${item.qtd}</span>
+          </section>
+        `);
+      });
+
+      document.write(`
+        <section class="total">
+          <span>Total: R$ ${total.toFixed(2)}</span>
+        </section>
+      `);
+    </script>
+  </section>
+</section>
+            -->
+
+            <section class="payment-form dark">
+  <section class="block-heading">
+    <h2>Checkout</h2>
+  </section>
+
+  <section class="products">
+    <h3>Resumo do pedido</h3>
+    <script>
+      let carrinho = [
+        { produto: "Produto A", qtd: 2, preco: 49.90 },
+        { produto: "Produto B", qtd: 1, preco: 89.90 },
+        { produto: "Produto C", qtd: 3, preco: 19.90 }
+      ];
+
+      let total = 0;
+      carrinho.forEach(item => {
+        total += item.qtd * item.preco;
+        document.write(`
+          <section class="item">
+            <span class="price">R$ ${item.preco.toFixed(2)}</span>
+            <span class="name">${item.produto}</span>
+            <span class="quantity">Qtd: ${item.qtd}</span>
+          </section>
+        `);
+      });
+
+      document.write(`
+        <section class="total">
+          <span>Total: R$ ${total.toFixed(2)}</span>
+        </section>
+      `);
+    </script>
+  </section>
+</section>
             
             <section class="total">
               <span>Total</span>

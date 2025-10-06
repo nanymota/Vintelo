@@ -11,7 +11,7 @@
     <!-- Header Desktop -->
     <section class="desktop-header">
         <section class="top-bar">
-            <p>10% OFF na primeira compra online</p>
+            <p>10% OFF na primeira compra</p>
         </section>
         <header class="main-header">
             <a href="/homevendedor">
@@ -19,10 +19,10 @@
             </a>
             <nav>
                 <a href="/categorias">Vestidos</a>
-                <a href="#">Saias</a>
-                <a href="#">Blusas</a>
-                <a href="#">Calças</a>
-                <a href="#">Outros</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
             </nav>
             <section class="search-profile">
                 <form>
@@ -54,7 +54,7 @@
 
     <main>
         <section class="container">
-            <h1>Adicionar Peça</h1>
+            <h1 class="garimpe-text">Adicionar Peça</h1>
             
             <% if (typeof avisoErro !== 'undefined' && avisoErro.mensagem) { %>
                 <div class="alert alert-error">
@@ -76,9 +76,8 @@
                     
                     <section class="photo-thumbnails">
                         <section class="thumbnail-slot">
-                            <img id="thumb-0" src="imagens/add foto.png" alt="Miniatura 1">
-                            <label for="thumb-input-0" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-0" name="fotos" accept="image/*" style="display: none;">
+                            <label for="thumb-input-1" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
                             <label for="thumb-input-1" class="add-photo-btn">+</label>

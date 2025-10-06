@@ -1,28 +1,25 @@
-function favoritar(produtoId) {
-    fetch(`/favoritar?idProduto=${produtoId}&situacao=favoritar`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const btn = document.querySelector(`[data-produto-id="${produtoId}"]`);
-                btn.style.opacity = '0.5';
-                alert('Produto adicionado aos favoritos!');
-            } else {
-                alert('Erro ao favoritar produto');
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao favoritar produto');
-        });
-}
-
-// Adicionar IDs aos botões de favorito quando a página carregar
+// Funcionalidade dos botões de favoritar
 document.addEventListener('DOMContentLoaded', function() {
     const favoriteButtons = document.querySelectorAll('.favorite');
-    favoriteButtons.forEach((btn, index) => {
-        if (!btn.hasAttribute('data-produto-id')) {
-            btn.setAttribute('data-produto-id', index + 1);
-            btn.setAttribute('onclick', `favoritar(${index + 1})`);
-        }
+    
+    favoriteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle do estado de favorito
+            this.classList.toggle('favorited');
+            
+            // Feedback visual
+            if (this.classList.contains('favorited')) {
+                this.style.backgroundColor = '#ff6b6b';
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            } else {
+                this.style.backgroundColor = 'transparent';
+            }
+        });
     });
 });

@@ -15,3 +15,14 @@ function notify(titulo, texto, tipo, posicao,duracao=3000) {
         position:posicao 
     })
 }
+
+// barra de pesquisa //
+document.addEventListener("DOMContentLoaded", () => {
+  const searchIcon = document.querySelector(".search-icon");
+  const searchInput = document.querySelector(".search-form input");
+
+  searchIcon.addEventListener("click", () => {
+    searchInput.classList.toggle("ativo");
+    searchInput.focus();
+  });
+});

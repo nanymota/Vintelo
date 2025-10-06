@@ -18,7 +18,7 @@
             </a>
             <h1>Avaliações Admin</h1>
             <a href="/homeadm" class="cart-btn">
-                <img src="imagens/quadrado.png" alt="Home">
+                <img src="imagens/foto-branca.png" alt="Home">
             </a>
         </nav>
     </header>
@@ -26,21 +26,21 @@
     <!-- Header Desktop -->
     <section class="oculto-mobile">
         <section class="discount-banner">
-            <span class="highlight">Painel Administrativo - Gerenciar Avaliações</span>
+            <span class="highlight">Painel Administrativo - Gerenciar Blog</span>
         </section>
         <header class="main-header">
             <a href="/homeadm">
                 <img src="imagens/logo.png" class="img-logo">
             </a>
             <nav>
-                <a href="/homeadm">Home Admin</a>
-                <a href="/denuncias">Denúncias</a>
-                <a href="/blogadm">Blog</a>
-                <a href="/editarbanners">Banners</a>
+                <a href="/homeadm" class="adm">Home Admin</a>
+                <a href="/denuncias" class="adm">Denúncias</a>
+                <a href="/avaliacaoadm" class="adm">Avaliações</a>
+                <a href="/editarbanners" class="adm">Banners</a>
             </nav>
             <section class="search-profile">
                 <form>
-                    <input type="text" placeholder="Buscar...">
+                    <input type="text" placeholder="Buscar posts...">
                 </form>
                 <ul>
                     <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
@@ -55,21 +55,17 @@
         <!-- Seção de Resumo -->
         <section class="summary">
             <section class="rating-overview">
-                <img src="imagens/brecho1.png" alt="Avaliações" class="rating-img">
+                <img src="imagens/brilhoescuro.png" alt="Avaliações" class="rating-img">
                 <section class="rating-stats">
-                    <h2>4.8 <span class="stars">★★★★☆</span></h2>
-                    <p>Baseado em 127 avaliações</p>
+                    <h2>Vintélo</h2>
+                    <p>A essência na aparência</p>
                 </section>
-            </section>
-            <section class="admin-info">
-                <h3>Painel Administrativo</h3>
-                <p>Gerencie comentários e avaliações</p>
             </section>
         </section>
 
         <!-- Lista de Avaliações -->
         <section class="reviews" id="reviewsList">
-            <section class="review-item" id="review-1">
+            <section class="review-item">
                 <img src="imagens/brecho1.png" alt="Jenny" class="profile-pic">
                 <section class="review-content">
                     <section class="review-header">
@@ -84,7 +80,7 @@
                 </section>
             </section>
 
-            <section class="review-item" id="review-2">
+            <section class="review-item">
                 <img src="imagens/brecho2.png" alt="Isabelly" class="profile-pic">
                 <section class="review-content">
                     <section class="review-header">
@@ -95,11 +91,11 @@
                     <p class="review-text">Produtos excelentes, preço ótimo, qualidade incríveis. Comprei um vestido e mais coisas e ainda chegou antes da data prevista. Maravilhoso, adorei e adoro comprar na Vintélo.</p>
                 </section>
                 <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(2)">Excluir</button>
+                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
                 </section>
             </section>
 
-            <section class="review-item" id="review-3">
+            <section class="review-item">
                 <img src="imagens/brecho3.png" alt="Soraya" class="profile-pic">
                 <section class="review-content">
                     <section class="review-header">
@@ -110,11 +106,11 @@
                     <p class="review-text">Todos os produtos de excelente qualidade e tal como anunciados. Precisei de fazer umas questões e o atendimento ao cliente foi rápido a responder e esclarecer.</p>
                 </section>
                 <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(3)">Excluir</button>
+                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
                 </section>
             </section>
 
-            <section class="review-item" id="review-4">
+            <section class="review-item">
                 <img src="imagens/maria.png" alt="Ana Sofia" class="profile-pic">
                 <section class="review-content">
                     <section class="review-header">
@@ -125,7 +121,7 @@
                     <p class="review-text">Sempre tive receio de comprar roupas pela internet, mas a Vintélo me surpreendeu positivamente! Todas as roupas que comprei são de ótima qualidade, vestem super bem e o melhor é que, além de ter preços muito bons, não demoram a chegar!</p>
                 </section>
                 <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(4)">Excluir</button>
+                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
                 </section>
             </section>
         </section>
@@ -148,17 +144,21 @@
         }
     </script>
 
+    <!--                                                    Rodapé                                                      -->
     <footer class="footer">
-        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
-        <section class="social-media">
-            <p class="p-footer">Siga nossas redes sociais</p>
-            <ul class="social-links">
-                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-                <li><a href="https://pinterest.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
-                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
-            </ul>
-        </section>
-        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png"
+                alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png"
+                alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img
+                src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>
