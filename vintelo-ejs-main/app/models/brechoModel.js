@@ -4,16 +4,19 @@ const brechoModel = {
     findAll: async () => {
         try {
             const [resultados] = await pool.query(
-                "SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
-                "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.LOGRADOURO_USUARIO, u.BAIRRO_USUARIO" +
-                "u.CIDADE_USUARIO, u.UF_USUARIO, u.CEP_USUARIO, u.IMG_URL, u.DESCRICAO_USUARIO" +
-                "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE u.STATUS_USUARIO = 'ativo' "
+                `SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, 
+                 u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.LOGRADOURO_USUARIO, 
+                 u.BAIRRO_USUARIO, u.CIDADE_USUARIO, u.UF_USUARIO, u.CEP_USUARIO, 
+                 u.IMG_URL, u.DESCRICAO_USUARIO
+                 FROM BRECHOS b 
+                 INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO 
+                 WHERE u.STATUS_USUARIO = ?`,
+                [1]
             );
             return resultados;
         } catch (error) {
-            console.log(error);
-            return error;
+            console.error('Erro no brechoModel.findAll:', error);
+            throw error;
         }
     },
 
@@ -23,13 +26,13 @@ const brechoModel = {
                 "SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
                 "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.CEP_USUARIO " +
                 "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE b.ID_USUARIO = ? AND u.STATUS_USUARIO = 'ativo' ",
-                [id]
+                "WHERE b.ID_USUARIO = ? AND u.STATUS_USUARIO = ? ",
+                [id, 1]
             );
             return resultados;
         } catch (error) {
-            console.log(error);
-            return error;
+            console.error('Erro no brechoModel.findId:', error);
+            throw error;
         }
     },
 
@@ -75,18 +78,18 @@ const brechoModel = {
 
     create: async (camposForm) => {
         try {
-            if (camposForm.CNPJ_BRECHO && camposForm.CNPJ_BRECHO.length !== 14) {
-                throw new Error('CNPJ deve ter 14 caracteres');
-            }
-            if (!camposForm.ID_USUARIO || !camposForm.RAZAO_SOCIAL || !camposForm.NOME_FANTASIA) {
+            if (!camposForm.ID_USUARIO || !camposForm.NOME_FANTASIA) {
                 throw new Error('Campos obrigatórios não foram preenchidos');
             }
-            const [resultados] = await pool.query('INSERT INTO BRECHOS SET ?', [camposForm]);
+            
+            const [resultados] = await pool.query(
+                'INSERT INTO BRECHOS (ID_USUARIO, CNPJ_BRECHO, RAZAO_SOCIAL, NOME_FANTASIA) VALUES (?, ?, ?, ?)', 
+                [camposForm.ID_USUARIO, camposForm.CNPJ_BRECHO, camposForm.RAZAO_SOCIAL, camposForm.NOME_FANTASIA]
+            );
             return resultados;
-
         } catch (error) {
-            console.log(error);
-            return null;
+            console.error('Erro no brechoModel.create:', error);
+            throw error;
         }
     },
 

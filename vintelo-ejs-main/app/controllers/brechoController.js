@@ -2,8 +2,23 @@ const brechoModel = require("../models/brechoModel");
 const usuario = require("../models/usuarioModel");
 const tipoUsuario = require("../models/tipoUsuarioModel");
 const { body, validationResult } = require("express-validator");
+const validator = require('validator');
 const bcrypt = require("bcryptjs");
-var salt = bcrypt.genSaltSync(12);
+
+const sanitizeInput = (input) => {
+    if (typeof input === 'string') {
+        return validator.escape(input.trim());
+    }
+    return input;
+};
+
+const sanitizeObject = (obj) => {
+    const sanitized = {};
+    for (const key in obj) {
+        sanitized[key] = sanitizeInput(obj[key]);
+    }
+    return sanitized;
+};
 
 const brechoController = {
 
@@ -23,27 +38,52 @@ const brechoController = {
         body("nomeusu_usu")
             .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!")
             .custom(async (value) => {
-            const existe = await usuario.findCampoCustom('user_usuario', value);
-            if (existe > 0) throw new Error('Nome de usuário já existe');
-            return true;
-        }),
+                const existe = await usuario.findCampoCustom('user_usuario', value);
+                if (existe > 0) throw new Error('Nome de usuário já existe');
+                return true;
+            }),
         body("email_usu")
-            .isEmail().withMessage("Digite um e-mail válido!"),
+            .isEmail().withMessage("Digite um e-mail válido!")
             .custom(async (value) => {
-            const existe = await usuario.findCampoCustom('email_usuario', value);
-            if (existe > 0) throw new Error('E-mail já cadastrado');
-            return true;
-        }),
+                const existe = await usuario.findCampoCustom('email_usuario', value);
+                if (existe > 0) throw new Error('E-mail já cadastrado');
+                return true;
+            }),
         body("nome_usu")
             .isLength({ min: 3, max: 100 }).withMessage("Nome completo deve ter de 3 a 100 caracteres!"),
         body("senha_usu")
-            .isLength({ min: 6 }).withMessage("Senha deve ter no mínimo 6 caracteres!"),
+            .isLength({ min: 8 }).withMessage("Senha deve ter no mínimo 8 caracteres!")
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+            .withMessage("Senha deve conter: maiúscula, minúscula, número e caractere especial"),
+        body("confirmar_senha")
+            .custom((value, { req }) => {
+                if (value !== req.body.senha_usu) {
+                    throw new Error('Confirmação de senha não confere');
+                }
+                return true;
+            }),
         body("fone_usu")
-            .optional({ checkFalsy: true })
-            .isLength({ min: 10, max: 15 }).withMessage("Telefone deve ter entre 10 e 15 dígitos!"),
+            .notEmpty().withMessage("Telefone é obrigatório!")
+            .isLength({ min: 10, max: 15 }).withMessage("Telefone inválido!"),
         body("cep")
-            .optional({ checkFalsy: true })
-            .isLength({ min: 8, max: 9 }).withMessage("CEP deve ter 8 dígitos!")
+            .notEmpty().withMessage("CEP é obrigatório!")
+            .matches(/^\d{5}-?\d{3}$/).withMessage("CEP inválido!"),
+        body("endereco")
+            .notEmpty().withMessage("Endereço é obrigatório!")
+            .isLength({ min: 3, max: 100 }).withMessage("Endereço deve ter de 3 a 100 caracteres!"),
+        body("bairro")
+            .notEmpty().withMessage("Bairro é obrigatório!")
+            .isLength({ min: 2, max: 50 }).withMessage("Bairro deve ter de 2 a 50 caracteres!"),
+        body("cidade")
+            .notEmpty().withMessage("Cidade é obrigatória!")
+            .isLength({ min: 2, max: 50 }).withMessage("Cidade deve ter de 2 a 50 caracteres!"),
+        body("uf")
+            .notEmpty().withMessage("UF é obrigatório!")
+            .isLength({ min: 2, max: 2 }).withMessage("UF deve ter 2 caracteres!")
+            .isAlpha().withMessage("UF deve conter apenas letras"),
+        body("numero")
+            .notEmpty().withMessage("Número é obrigatório!")
+            .isLength({ min: 1, max: 10 }).withMessage("Número deve ter de 1 a 10 caracteres!")
     ],
 
     mostrarPerfil: async (req, res) => {
@@ -56,12 +96,16 @@ const brechoController = {
                 dadosNotificacao: null
             });
         } catch (error) {
-            console.log(error);
+            console.error('Erro ao carregar perfil do brechó:', {
+                userId: req.session?.autenticado?.id,
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
             res.render("pages/perfilvender", {
                 brecho: null,
                 dadosNotificacao: {
-                    titulo: "Erro!",
-                    mensagem: "Erro ao carregar perfil do brechó!",
+                    titulo: sanitizeInput("Erro!"),
+                    mensagem: sanitizeInput("Erro interno do servidor"),
                     tipo: "error"
                 }
             });
@@ -87,12 +131,16 @@ const brechoController = {
                 valores: brecho || {}
             });
         } catch (error) {
-            console.log(error);
+            console.error('Erro ao carregar informações:', {
+                userId: req.session?.autenticado?.id,
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
             res.render("pages/informacao", {
                 brecho: null,
                 dadosNotificacao: {
-                    titulo: "Erro!",
-                    mensagem: "Erro ao carregar informações!",
+                    titulo: sanitizeInput("Erro!"),
+                    mensagem: sanitizeInput("Erro interno do servidor"),
                     tipo: "error"
                 },
                 valores: {}
@@ -104,23 +152,27 @@ const brechoController = {
         const erros = validationResult(req);
         
         if (!erros.isEmpty()) {
-            return res.render("pages/perfilvender", {
+            return res.render("pages/criarbrecho", {
                 listaErros: erros,
                 dadosNotificacao: null,
-                valores: req.body
+                valores: sanitizeObject(req.body)
             });
         }
 
         const tipoVendedor = await tipoUsuario.findByTipo('vendedor');
         
         const dadosUsuario = {
-            USER_USUARIO: req.body.nomeusu_usu,
-            SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, salt),
-            NOME_USUARIO: req.body.nome_usu,
-            EMAIL_USUARIO: req.body.email_usu,
-            CELULAR_USUARIO: req.body.fone_usu,
-            CEP_USUARIO: req.body.cep ? req.body.cep.replace("-", "") : null,
-            NUMERO_USUARIO: req.body.numero || null,
+            USER_USUARIO: req.body.nomeusu_usu.trim(),
+            SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
+            NOME_USUARIO: req.body.nome_usu.trim(),
+            EMAIL_USUARIO: req.body.email_usu.toLowerCase().trim(),
+            CELULAR_USUARIO: req.body.fone_usu.replace(/\D/g, ''),
+            LOGRADOURO_USUARIO: req.body.endereco.trim(),
+            NUMERO_USUARIO: req.body.numero.trim(),
+            BAIRRO_USUARIO: req.body.bairro.trim(),
+            CIDADE_USUARIO: req.body.cidade.trim(),
+            UF_USUARIO: req.body.uf.toUpperCase().trim(),
+            CEP_USUARIO: req.body.cep.replace(/\D/g, ''),
             TIPO_USUARIO: tipoVendedor.length > 0 ? tipoVendedor[0].ID_TIPO_USUARIO : 3,
             STATUS_USUARIO: 1
         };
@@ -129,10 +181,10 @@ const brechoController = {
             const createUsuario = await usuario.create(dadosUsuario);
             if (createUsuario && createUsuario.insertId) {
                 const dadosBrecho = {
-                    ID_BRECHO: createUsuario.insertId,
-                    CNPJ_BRECHO: req.body.cnpj_brecho || null,
-                    RAZAO_SOCIAL: req.body.razao_social || null,
-                    NOME_FANTASIA: req.body.nomeusu_usu
+                    ID_USUARIO: createUsuario.insertId,
+                    CNPJ_BRECHO: null,
+                    RAZAO_SOCIAL: null,
+                    NOME_FANTASIA: req.body.nomeusu_usu.trim()
                 };
                 
                 await brechoModel.create(dadosBrecho);
@@ -140,23 +192,28 @@ const brechoController = {
                 req.session.autenticado = {
                     autenticado: dadosUsuario.NOME_USUARIO,
                     id: createUsuario.insertId,
-                    TIPO_USUARIO: dadosUsuario.TIPO_USUARIO,
-                    NOME_USUARIO: dadosUsuario.NOME_USUARIO,
-                    EMAIL_USUARIO: dadosUsuario.EMAIL_USUARIO
+                    tipo: dadosUsuario.TIPO_USUARIO,
+                    nome: dadosUsuario.NOME_USUARIO,
+                    email: dadosUsuario.EMAIL_USUARIO
                 };
                 
                 res.redirect('/perfilvender');
             }
         } catch (error) {
-            console.log(error);
+            console.error('Erro ao criar brechó:', {
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
             res.render("pages/criarbrecho", {
                 listaErros: null,
                 dadosNotificacao: {
-                    titulo: "Erro!",
-                    mensagem: "Erro ao criar brechó!",
+                    titulo: sanitizeInput("Erro!"),
+                    mensagem: error.message.includes('Duplicate') ? 
+                        sanitizeInput("E-mail ou nome de usuário já cadastrado!") : 
+                        sanitizeInput("Erro interno do servidor"),
                     tipo: "error"
                 },
-                valores: req.body
+                valores: sanitizeObject(req.body)
             });
         }
     },
@@ -200,15 +257,19 @@ const brechoController = {
                 valores: req.body
             });
         } catch (error) {
-            console.log(error);
+            console.error('Erro ao atualizar informações:', {
+                userId: req.session?.autenticado?.id,
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
             res.render("pages/informacao", {
                 listaErros: null,
                 dadosNotificacao: {
-                    titulo: "Erro!",
-                    mensagem: "Erro ao atualizar informações!",
+                    titulo: sanitizeInput("Erro!"),
+                    mensagem: sanitizeInput("Erro interno do servidor"),
                     tipo: "error"
                 },
-                valores: req.body
+                valores: sanitizeObject(req.body)
             });
         }
     },
@@ -221,11 +282,15 @@ const brechoController = {
             req.session.destroy();
             res.redirect('/homevendedor');
         } catch (error) {
-            console.log(error);
+            console.error('Erro ao excluir brechó:', {
+                userId: req.session?.autenticado?.id,
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
             res.render("pages/perfilvender", {
                 dadosNotificacao: {
-                    titulo: "Erro!",
-                    mensagem: "Erro ao excluir brechó!",
+                    titulo: sanitizeInput("Erro!"),
+                    mensagem: sanitizeInput("Erro interno do servidor"),
                     tipo: "error"
                 }
             });
