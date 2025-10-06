@@ -1,5 +1,4 @@
 const { carrinho } = require("../util/carrinho");
-
 const carrinhoController = {
 
     addItem: (req, res) => {
