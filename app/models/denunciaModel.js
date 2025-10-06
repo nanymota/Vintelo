@@ -14,7 +14,7 @@ const denunciaModel = {
                     COALESCE(d.STATUS, 'pendente') as STATUS,
                     d.RESOLUCAO,
                     u.NOME_USUARIO as DENUNCIANTE,
-                    u.USER_USUARIO as d.USER_USUARIO,
+                    u.USER_USUARIO as USER_DENUNCIANTE,
                     CASE 
                         WHEN d.TIPO_ALVO = 'Brecho' THEN b.NOME_FANTASIA
                         WHEN d.TIPO_ALVO = 'Produto' THEN p.NOME_PRODUTO
@@ -25,9 +25,9 @@ const denunciaModel = {
                     END as USER_ALVO
                 FROM DENUNCIAS d
                 JOIN USUARIOS u ON d.ID_USUARIO = u.ID_USUARIO
-                LEFT JOIN BRECHOS b ON d.TIPO_ALVO = 'Brecho' AND d.ID_ALVO = b.ID_BRECHO
-                LEFT JOIN USUARIOS ub ON b.ID_BRECHO = ub.ID_USUARIO
-                LEFT JOIN PRODUTOS p ON d.TIPO_ALVO = 'Produto' AND d.ID_ALVO = p.ID_PROD
+                LEFT JOIN BRECHOS b ON d.TIPO_ALVO = 'Brecho' AND d.ID_ALVO = b.ID_USUARIO
+                LEFT JOIN USUARIOS ub ON b.ID_USUARIO = ub.ID_USUARIO
+                LEFT JOIN PRODUTOS p ON d.TIPO_ALVO = 'Produto' AND d.ID_ALVO = p.ID_PRODUTO
                 LEFT JOIN USUARIOS up ON p.ID_USUARIO = up.ID_USUARIO
                 ORDER BY d.DATA_DENUNCIA DESC
             `);
