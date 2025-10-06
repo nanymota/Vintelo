@@ -1,11 +1,8 @@
-// Controller para Perfil Premium
 
-// Atualizar valor do plano
 const atualizarPlano = async (req, res) => {
     try {
         const { planType, price } = req.body;
         
-        // Validar dados
         if (!planType || !price) {
             return res.status(400).json({ 
                 success: false, 
@@ -13,7 +10,6 @@ const atualizarPlano = async (req, res) => {
             });
         }
         
-        // Validar preço
         const priceValue = parseFloat(price);
         if (isNaN(priceValue) || priceValue <= 0) {
             return res.status(400).json({ 
@@ -21,9 +17,6 @@ const atualizarPlano = async (req, res) => {
                 message: 'Preço deve ser um valor válido maior que zero' 
             });
         }
-        
-        // Aqui você salvaria no banco de dados
-        // Exemplo: await planModel.updatePrice(planType, priceValue);
         
         console.log(`Plano ${planType} atualizado para R$ ${priceValue}`);
         
@@ -43,7 +36,6 @@ const atualizarPlano = async (req, res) => {
     }
 };
 
-// Alternar status do plano
 const alternarStatusPlano = async (req, res) => {
     try {
         const { planType, status } = req.body;
@@ -54,10 +46,6 @@ const alternarStatusPlano = async (req, res) => {
                 message: 'Tipo de plano e status são obrigatórios' 
             });
         }
-        
-        // Aqui você salvaria no banco de dados
-        // Exemplo: await planModel.updateStatus(planType, status);
-        
         console.log(`Plano ${planType} ${status ? 'ativado' : 'desativado'}`);
         
         res.json({ 

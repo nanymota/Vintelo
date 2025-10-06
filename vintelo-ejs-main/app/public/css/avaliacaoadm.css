@@ -1,3 +1,20 @@
+.discount-banner {
+    background-color: #7D2838;
+    color: white;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.img-logo {
+    width: 100px;
+}
+
+.adm{
+    font-size: 20px;
+}
+
 .admin-info {
     text-align: center;
     color: #7d2838;
@@ -15,21 +32,67 @@
 }
 
 .review-item {
-    position: relative;
     display: flex;
     align-items: flex-start;
     gap: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.profile-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.review-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.review-date {
+    font-size: 12px;
+    color: #666;
+}
+
+.rating {
+    margin: 5px 0 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.review-text {
+    margin: 0;
+    line-height: 1.5;
+    color: #555;
+    font-size: 14px;
+    text-align: left;
 }
 
 .admin-controls {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 20px;
+    right: 20px;
 }
 
 .btn-delete {
@@ -37,32 +100,60 @@
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background 0.3s;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .btn-delete:hover {
     background: #c82333;
+    transform: translateY(-1px);
 }
 
-/* Mobile adjustments */
+/*            ajustes responsividade mobile      */
 @media (max-width: 768px) {
     .review-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .profile-pic {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .review-header {
         flex-direction: column;
-        padding: 10px;
+        align-items: flex-start;
+        gap: 3px;
+    }
+    
+    .review-header h3 {
+        font-size: 15px;
+    }
+    
+    .review-date {
+        font-size: 11px;
+    }
+    
+    .rating {
+        font-size: 13px;
+    }
+    
+    .review-text {
+        font-size: 13px;
+        margin-top: 8px;
     }
     
     .admin-controls {
-        position: static;
-        margin-top: 10px;
-        text-align: center;
+        top: 15px;
+        right: 15px;
     }
     
     .btn-delete {
-        width: 100%;
-        padding: 10px;
+        padding: 6px 12px;
+        font-size: 11px;
     }
 }

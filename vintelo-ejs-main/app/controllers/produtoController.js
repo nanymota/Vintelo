@@ -13,7 +13,7 @@ const produtoController = {
 
     listar: async (req, res) => {
         req.session.autenticado.login = req.query.login;
-        results = await produtoModel.findAll(req.session.autenticado.id);
+        const results = await produtoModel.findAll(req.session.autenticado.id);
         carrinho.atualizarCarrinho(req);
         res.render("pages/index", {
             autenticado: req.session.autenticado,
@@ -46,6 +46,5 @@ const produtoController = {
 }
 
 
-module.exports = { produtoController }
-
+module.exports = produtoController
 

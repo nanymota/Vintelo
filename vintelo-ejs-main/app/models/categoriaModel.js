@@ -3,106 +3,101 @@ var pool = require("../config/pool_conexoes");
 const categoriaModel = {
     findAll: async () => {
         try {
-            const [resultados] = await pool.query(
-                "SELECT * FROM CATEGORIAS_PRODUTOS"
+            const [resultados] = await pool.execute(
+                'SELECT * FROM CATEGORIAS_PRODUTOS ORDER BY NOME_CATEGORIA_PRODUTO'
             );
-            return resultados;
+            return resultados || [];
         } catch (error) {
-            console.log(error);
-            return error;
+            console.log('Erro ao buscar categorias:', error);
+            return [];
         }
     },
 
     findById: async (id) => {
         try {
-            const [resultados] = await pool.query(
-                "SELECT * FROM CATEGORIAS_PRODUTOS WHERE ID_CATEGORIA_PROD = ?",
+            const [resultados] = await pool.execute(
+                'SELECT * FROM CATEGORIAS_PRODUTOS WHERE ID_CATEGORIA_PRODUTO = ?',
                 [id]
             );
             return resultados;
         } catch (error) {
-            console.log(error);
             return error;
         }
     },
 
-    create: async (camposForm) => {
+    findProductsByCategory: async (categoryId, filters = {}) => {
         try {
-            const [resultados] = await pool.query(
-                "INSERT INTO CATEGORIAS_PRODUTOS SET ?",
-                [camposForm]
-            );
+            let query = `
+                SELECT DISTINCT p.*, u.NOME_USUARIO, img.URL_IMG
+                FROM PRODUTOS p
+                INNER JOIN PRODUTOS_CATEGORIAS pc ON p.ID_PRODUTO = pc.ID_PRODUTO
+                INNER JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE pc.ID_CATEGORIA_PRODUTO = ?
+            `;
+            
+            let params = [categoryId];
+            
+            if (filters.tamanho) {
+                query += ' AND p.TAMANHO_PRODUTO = ?';
+                params.push(filters.tamanho);
+            }
+            
+            if (filters.cor) {
+                query += ' AND p.COR_PRODUTO LIKE ?';
+                params.push(`%${filters.cor}%`);
+            }
+            
+            if (filters.condicao) {
+                query += ' AND p.CONDICAO_PRODUTO = ?';
+                params.push(filters.condicao);
+            }
+            
+            if (filters.precoMin) {
+                query += ' AND p.PRECO_PRODUTO >= ?';
+                params.push(filters.precoMin);
+            }
+            
+            if (filters.precoMax) {
+                query += ' AND p.PRECO_PRODUTO <= ?';
+                params.push(filters.precoMax);
+            }
+            
+            query += ' ORDER BY p.DATA_CADASTRO DESC';
+            
+            const [resultados] = await pool.execute(query, params);
             return resultados;
         } catch (error) {
-            console.log(error);
             return error;
         }
     },
 
-    update: async (camposForm, id) => {
+    getFilters: async () => {
         try {
-            const [resultados] = await pool.query(
-                "UPDATE CATEGORIAS_PRODUTOS SET ? WHERE ID_CATEGORIA_PROD = ?",
-                [camposForm, id]
+            const [tamanhos] = await pool.execute(
+                'SELECT DISTINCT TAMANHO_PRODUTO FROM PRODUTOS WHERE TAMANHO_PRODUTO IS NOT NULL ORDER BY TAMANHO_PRODUTO'
             );
-            return resultados;
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-
-    delete: async (id) => {
-        try {
-            const [resultados] = await pool.query(
-                "DELETE FROM CATEGORIAS_PRODUTOS WHERE ID_CATEGORIA_PROD = ?",
-                [id]
+            
+            const [cores] = await pool.execute(
+                'SELECT DISTINCT COR_PRODUTO FROM PRODUTOS ORDER BY COR_PRODUTO'
             );
-            return resultados;
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-
-    addProdutoCategoria: async (idProduto, idCategoria) => {
-        try {
-            const [resultados] = await pool.query(
-                "INSERT INTO PRODUTOS_CATEGORIAS (ID_PROD, ID_CATEGORIA_PROD) VALUES (?, ?)",
-                [idProduto, idCategoria]
+            
+            const [condicoes] = await pool.execute(
+                'SELECT DISTINCT CONDICAO_PRODUTO FROM PRODUTOS ORDER BY CONDICAO_PRODUTO'
             );
-            return resultados;
+            
+            return {
+                tamanho_produto: (tamanhos || []).map(t => t.TAMANHO_PRODUTO),
+                cor_produto: (cores || []).map(c => c.COR_PRODUTO),
+                condicao_produto: (condicoes || []).map(c => c.CONDICAO_PRODUTO)
+            };
         } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-
-    removeProdutoCategoria: async (idProduto, idCategoria) => {
-        try {
-            const [resultados] = await pool.query(
-                "DELETE FROM PRODUTOS_CATEGORIAS WHERE ID_PROD = ? AND ID_CATEGORIA_PROD = ?",
-                [idProduto, idCategoria]
-            );
-            return resultados;
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    },
-
-    findProdutosPorCategoria: async (idCategoria) => {
-        try {
-            const [resultados] = await pool.query(
-                "SELECT p.* FROM PRODUTOS p " +
-                "INNER JOIN PRODUTOS_CATEGORIAS pc ON p.ID_PROD = pc.ID_PROD " +
-                "WHERE pc.ID_CATEGORIA_PROD = ?",
-                [idCategoria]
-            );
-            return resultados;
-        } catch (error) {
-            console.log(error);
-            return error;
+            console.log('Erro ao buscar filtros:', error);
+            return {
+                tamanho_produto: [],
+                cor_produto: [],
+                condicao_produto: []
+            };
         }
     }
 };

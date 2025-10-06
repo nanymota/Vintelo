@@ -51,7 +51,7 @@ var pool = require("../config/pool_conexoes");
         findItensPedido: async (idPedido) => {
             try {
                 const [resultados] = await pool.query(
-                    "SELECT * FROM ITEM_PEDIDO WHERE PEDIDO_ID_PEDIDO = ?",
+                    "SELECT * FROM ITEM_PEDIDO WHERE ID_PEDIDO = ?",
                     [idPedido]
                 )
                 return resultados;
@@ -63,9 +63,9 @@ var pool = require("../config/pool_conexoes");
         findPedidoCompleto: async (idPedido) => {
             try {
                 const [resultados] = await pool.query(
-                    "SELECT p.*, ip.*, pr.NOME_PROD FROM PEDIDOS p " +
-                    "LEFT JOIN ITEM_PEDIDO ip ON p.ID_PEDIDO = ip.PEDIDO_ID_PEDIDO " +
-                    "LEFT JOIN PRODUTOS pr ON ip.PRODUTO_ID_PRODUTO = pr.ID_PROD " +
+                    "SELECT p.*, ip.*, pr.NOME_PRODUTO FROM PEDIDOS p " +
+                    "LEFT JOIN ITEM_PEDIDO ip ON p.ID_PEDIDO = ip.ID_PEDIDO " +
+                    "LEFT JOIN PRODUTOS pr ON ip.ID_PRODUTO = pr.ID_PRODUTO " +
                     "WHERE p.ID_PEDIDO = ?",
                     [idPedido]
                 )
@@ -123,4 +123,4 @@ var pool = require("../config/pool_conexoes");
         }
     };
 
-module.exports = {PedidoModel}
+module.exports = { pedidoModel: PedidoModel }

@@ -9,14 +9,16 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    
 });
 
 pool.getConnection((err, conn) => {
-    if(err) 
-        console.log(err)
-    else
-        console.log("Conectado ao SGBD!")
+    if(err) {
+        console.error("ERRO CRÍTICO: Não foi possível conectar ao SGBD.");
+        console.error(err.message);
+    } else {
+        console.log("Conectado ao SGBD!");
+        conn.release();
+    }
 })
 
-module.exports = pool.promise()
+module.exports = pool.promise();

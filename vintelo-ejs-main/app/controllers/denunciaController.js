@@ -17,11 +17,11 @@ const denunciaController = {
     criarDenuncia: async function(req, res) {
         try {
             const dadosDenuncia = {
-                idUsuario: req.session.autenticado.id,
-                tipoAlvo: req.body.tipoAlvo,
-                idAlvo: req.body.idAlvo,
-                motivo: req.body.motivo,
-                descricao: req.body.descricao
+                ID_USUARIO: req.session.autenticado.id,
+                TIPO_ALVO: req.body.tipoAlvo,
+                ID_ALVO: req.body.idAlvo,
+                MOTIVO: req.body.motivo,
+                DESCRICAO: req.body.descricao
             };
 
             const resultado = await denunciaModel.criarDenuncia(dadosDenuncia);
@@ -88,8 +88,7 @@ const denunciaController = {
 
     analisarDenunciaDetalhada: async function(req, res) {
         const id = req.params.id;
-        
-        // Dados estáticos para demonstração
+//melhorar
         const denunciasEstaticas = {
             '1': {
                 ID_DENUNCIA: 1,
@@ -100,7 +99,7 @@ const denunciaController = {
                 STATUS: 'pendente',
                 USER_ALVO: 'mayte_brecho',
                 NOME_ALVO: 'Mayte Silva',
-                USER_DENUNCIANTE: 'maria_cliente',
+                USER_: 'maria_cliente',
                 DENUNCIANTE: 'Maria Cliente'
             },
             '2': {

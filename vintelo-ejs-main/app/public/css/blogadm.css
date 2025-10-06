@@ -11,7 +11,7 @@ body {
     line-height: 1.6;
 }
 
-/* Mobile Header */
+/*         cabreçalho Mobile        */
 .mobile-header {
     background: #ffffff;
     padding: 20px;
@@ -40,7 +40,7 @@ body {
     font-size: 1.6rem;
 }
 
-/* Desktop Header */
+/*    cabeçalho Desktop    */
 .discount-banner {
     background-color: #7D2838;
     color: white;
@@ -58,7 +58,6 @@ body {
     margin: 0 auto;
     padding: 20px 40px;
     background: white;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
 }
 
 .img-logo {
@@ -116,7 +115,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Admin Dashboard Layout */
+/*            Adm Layout           */
 .admin-dashboard {
     max-width: 1200px;
     margin: 0 auto;
@@ -124,7 +123,7 @@ body {
     min-height: calc(100vh - 200px);
 }
 
-/* Actions Bar */
+
 .actions-bar {
     background: white;
     margin: 30px auto;
@@ -188,7 +187,7 @@ body {
     box-shadow: 0 0 10px rgba(125, 40, 56, 0.2);
 }
 
-/* Desktop Content */
+/*             Desktop             */
 .desktop-content {
     display: none;
     padding: 40px 20px;
@@ -283,7 +282,7 @@ body {
     object-fit: cover;
 }
 
-/* Admin Controls */
+/*            Controle de ADM         */
 .admin-controls {
     position: absolute;
     top: 20px;
@@ -312,7 +311,7 @@ body {
     box-shadow: 0 5px 15px rgba(125, 40, 56, 0.3);
 }
 
-/* Category Tags */
+/*            Categorias              */
 .category-tag {
     padding: 8px 16px;
     border-radius: 20px;

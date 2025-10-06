@@ -4,10 +4,11 @@ const brechoModel = {
     findAll: async () => {
         try {
             const [resultados] = await pool.query(
-                "SELECT b.ID_BRECHO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
-                "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.CEP_USUARIO " +
-                "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_BRECHO = u.ID_USUARIO " +
-                "WHERE u.STATUS_USUARIO = 1"
+                "SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
+                "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.LOGRADOURO_USUARIO, u.BAIRRO_USUARIO" +
+                "u.CIDADE_USUARIO, u.UF_USUARIO, u.CEP_USUARIO, u.IMG_URL, u.DESCRICAO_USUARIO" +
+                "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO " +
+                "WHERE u.STATUS_USUARIO = 'ativo' "
             );
             return resultados;
         } catch (error) {
@@ -19,10 +20,10 @@ const brechoModel = {
     findId: async (id) => {
         try {
             const [resultados] = await pool.query(
-                "SELECT b.ID_BRECHO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
+                "SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
                 "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.CEP_USUARIO " +
-                "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_BRECHO = u.ID_USUARIO " +
-                "WHERE b.ID_BRECHO = ? AND u.STATUS_USUARIO = 1",
+                "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO " +
+                "WHERE b.ID_USUARIO = ? AND u.STATUS_USUARIO = 'ativo' ",
                 [id]
             );
             return resultados;
@@ -74,14 +75,15 @@ const brechoModel = {
 
     create: async (camposForm) => {
         try {
-            if (camposForm.CNPJ_BRECHO === '' || camposForm.CNPJ_BRECHO === null) {
-                delete camposForm.CNPJ_BRECHO;
+            if (camposForm.CNPJ_BRECHO && camposForm.CNPJ_BRECHO.length !== 14) {
+                throw new Error('CNPJ deve ter 14 caracteres');
             }
-            const [resultados] = await pool.query(
-                "INSERT INTO BRECHOS SET ?",
-                [camposForm]
-            );
+            if (!camposForm.ID_USUARIO || !camposForm.RAZAO_SOCIAL || !camposForm.NOME_FANTASIA) {
+                throw new Error('Campos obrigatórios não foram preenchidos');
+            }
+            const [resultados] = await pool.query('INSERT INTO BRECHOS SET ?', [camposForm]);
             return resultados;
+
         } catch (error) {
             console.log(error);
             return null;
@@ -91,7 +93,7 @@ const brechoModel = {
     update: async (camposForm, id) => {
         try {
             const [resultados] = await pool.query(
-                "UPDATE BRECHOS SET ? WHERE ID_BRECHO = ?",
+                "UPDATE BRECHOS SET ? WHERE ID_USUARIO = ?",
                 [camposForm, id]
             );
             return resultados;
@@ -104,7 +106,7 @@ const brechoModel = {
     delete: async (id) => {
         try {
             const [resultados] = await pool.query(
-                "DELETE FROM BRECHOS WHERE ID_BRECHO = ?",
+                "UPDATE USUARIOS SET STATUS_USUARIO = 'inativo' WHERE ID_USUARIO = ?",
                 [id]
             );
             return resultados;

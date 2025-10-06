@@ -30,7 +30,7 @@ header .grid {
 
 .login-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .seta{
@@ -43,6 +43,7 @@ header .grid {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 .mannequin {
@@ -92,16 +93,18 @@ header .grid {
 }
 
 .button:hover {
-  background-color: #5a1f2b; /* Cor mais escura ao passar o mouse */
+  background-color: #5a1f2b; 
 }
 
 /*                                  formulário                         */
 .form-section {
   width: 50%;
+  background: white;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 80px 0px;
+  align-items: flex-start;
+  padding: 80px 40px;
+  min-height: 100vh;
 }
 
 .form-container {
@@ -222,7 +225,12 @@ input[readonly]:focus {
   height: 100%; 
 }
 
-/* Estilos para telas maiores */
+.link-preto {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+/*              telas maiores             */
 @media (min-width: 768px) {
   .container {
       flex-direction: row;
@@ -262,7 +270,7 @@ input[readonly]:focus {
           }
       }
   
-      /* Estilos para tablets e desktops (mínimo 768px) */
+      /*               desktops              */
 @media (min-width: 768px) {
   .container {
       flex-direction: row;
@@ -296,7 +304,7 @@ input[readonly]:focus {
   }
 }
 
-/* Estilos para dispositivos móveis (máximo 768px) */
+/*                   mobile                 */
 @media (max-width: 768px) {
   .container {
       flex-direction: column;
@@ -330,14 +338,60 @@ input[readonly]:focus {
   }
 }
 
-/* Estilos para telas maiores */
 @media (max-width: 768px) {
   .header {
       display: block;
   }
 }
 
-/* Estilos para telas maiores */
+.collapsible-section {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.section-header:hover {
+    background-color: #e9ecef;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: #7D2838;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.arrow {
+    color: #7D2838;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.section-content {
+    padding: 20px;
+    background-color: white;
+    display: none;
+}
+
+.section-content label {
+    margin-top: 10px;
+}
+
+.section-content label:first-child {
+    margin-top: 0;
+}
+
 @media (min-width: 992px) {
   .header {
       display: none;

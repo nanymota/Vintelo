@@ -4,9 +4,9 @@ const sacolaModel = {
     findByUserId: async (idUsuario) => {
         try {
             const [resultados] = await pool.query(
-                "SELECT s.*, is.*, p.NOME_PROD, p.PRECO_PRODUTO FROM SACOLA s " +
+                "SELECT s.*, is.*, p.NOME_PRODUTO, p.PRECO FROM SACOLA s " +
                 "LEFT JOIN ITENS_SACOLA is ON s.ID_SACOLA = is.ID_SACOLA " +
-                "LEFT JOIN PRODUTOS p ON is.ID_PROD = p.ID_PROD " +
+                "LEFT JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO " +
                 "WHERE s.ID_USUARIO = ?",
                 [idUsuario]
             );
@@ -33,7 +33,7 @@ const sacolaModel = {
     addItem: async (idSacola, idProduto, quantidade = 1) => {
         try {
             const [resultados] = await pool.query(
-                "INSERT INTO ITENS_SACOLA (ID_SACOLA, ID_PROD, QUANTIDADE) VALUES (?, ?, ?) " +
+                "INSERT INTO ITENS_SACOLA (ID_SACOLA, ID_PRODUTO, QUANTIDADE) VALUES (?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE QUANTIDADE = QUANTIDADE + ?",
                 [idSacola, idProduto, quantidade, quantidade]
             );
@@ -103,9 +103,9 @@ const sacolaModel = {
     getValorTotal: async (idUsuario) => {
         try {
             const [resultados] = await pool.query(
-                "SELECT SUM(is.QUANTIDADE * p.PRECO_PRODUTO) as valor_total FROM ITENS_SACOLA is " +
+                "SELECT SUM(is.QUANTIDADE * p.PRECO) as VALOR_TOTAL FROM ITENS_SACOLA is " +
                 "INNER JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA " +
-                "INNER JOIN PRODUTOS p ON is.ID_PROD = p.ID_PROD " +
+                "INNER JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO " +
                 "WHERE s.ID_USUARIO = ?",
                 [idUsuario]
             );

@@ -3,17 +3,12 @@ const { body, validationResult } = require("express-validator");
 
 const clienteController = {
 
-    regrasValidacao: [
-        body("nome_usu")
-            .isLength({ min: 3, max: 100 }).withMessage("Nome deve ter de 3 a 100 caracteres!"),
+    regrasValidacaoEntrar: [
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!"),
-        body("fone_usu")
-            .isLength({ min: 10, max: 15 }).withMessage("Digite um celular válido!"),
-        body("cpf")
-            .isLength({ min: 11, max: 14 }).withMessage("Digite um CPF válido!"),
-        body("data_nasc")
-            .isDate().withMessage("Digite uma data válida!")
+        body("senha_usu")
+            .isStrongPassword()
+            .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)")
     ],
 
     listar: async (req, res) => {
@@ -88,9 +83,9 @@ const clienteController = {
 
         try {
             const dadosForm = {
-                ID_USUARIO: req.body.id_usuario,
+                ID_USUARIO: req.body.user_usuario,
                 DATA_NASC: req.body.data_nasc, 
-                CPF_CLIENTE: req.body.cpf_cliente
+                CPF_CLIENTE: req.body.cpf
             };
 
             const resultado = await clienteModel.create(dadosForm);
@@ -128,7 +123,7 @@ const clienteController = {
         try {
             const dadosForm = {
                 DATA_NASC: req.body.data_nasc,
-                CPF_CLIENTE: req.body.cpf_cliente
+                CPF_CLIENTE: req.body.cpf
             };
 
             const resultado = await clienteModel.update(dadosForm, req.params.id);

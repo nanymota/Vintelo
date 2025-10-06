@@ -71,7 +71,7 @@ const brechoController = {
             const results = await brechoModel.findId(req.session.autenticado.id);
             const brecho = results.length > 0 ? results[0] : null;
             
-            res.render("pages/informacao", {
+            res.render("pages/perfilvender", {
                 brecho: brecho,
                 dadosNotificacao: null,
                 valores: brecho || {}
@@ -94,7 +94,7 @@ const brechoController = {
         const erros = validationResult(req);
         
         if (!erros.isEmpty()) {
-            return res.render("pages/criarbrecho", {
+            return res.render("pages/perfilvender", {
                 listaErros: erros,
                 dadosNotificacao: null,
                 valores: req.body
@@ -108,7 +108,7 @@ const brechoController = {
             SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, salt),
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email_usu,
-            CELULAR_USUARIO: req.body.fone_usu || null,
+            CELULAR_USUARIO: req.body.fone_usu,
             CEP_USUARIO: req.body.cep ? req.body.cep.replace("-", "") : null,
             NUMERO_USUARIO: req.body.numero || null,
             TIPO_USUARIO: tipoVendedor.length > 0 ? tipoVendedor[0].ID_TIPO_USUARIO : 3,
@@ -130,9 +130,9 @@ const brechoController = {
                 req.session.autenticado = {
                     autenticado: dadosUsuario.NOME_USUARIO,
                     id: createUsuario.insertId,
-                    tipo: dadosUsuario.TIPO_USUARIO,
-                    nome: dadosUsuario.NOME_USUARIO,
-                    email: dadosUsuario.EMAIL_USUARIO
+                    TIPO_USUARIO: dadosUsuario.TIPO_USUARIO,
+                    NOME_USUARIO: dadosUsuario.NOME_USUARIO,
+                    EMAIL_USUARIO: dadosUsuario.EMAIL_USUARIO
                 };
                 
                 res.redirect('/perfilvender');
@@ -209,10 +209,10 @@ const brechoController = {
             await usuario.update({ STATUS_USUARIO: 0 }, req.session.autenticado.id);
             
             req.session.destroy();
-            res.redirect('/login');
+            res.redirect('/homevendedor');
         } catch (error) {
             console.log(error);
-            res.render("pages/informacao", {
+            res.render("pages/perfilvender", {
                 dadosNotificacao: {
                     titulo: "Erro!",
                     mensagem: "Erro ao excluir brechó!",
