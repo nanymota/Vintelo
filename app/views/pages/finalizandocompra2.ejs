@@ -42,7 +42,7 @@
   <section class="oculto-desktop">
     <header>
     <nav class="grid">
-      <a href="/produto2">
+      <a href="/carrinho">
         <img src="imagens/seta.png" alt="Seta Voltar">
       </a>
       <h1>Sacola</h1>
@@ -58,25 +58,45 @@
   </section>
 
   <section class="product-section">
-    <article class="product-card1">
-      <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
-      <section class="product-info">
-        <h3>Vestido Branco</h3>
+    <% if (carrinho && carrinho.length > 0) { %>
+        <% carrinho.forEach((item, index) => { %>
+            <article class="product-card1">
+                <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
+                <section class="product-info">
+                    <h3><%= item.nome %></h3>
+                    <p>Tamanho: <%= item.tamanho %></p>
+                    <p>R$<%= item.preco.toFixed(2) %></p>
+                    <section class="quantity-control">
+                        <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
+                        <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
+                        <button class="qty-btn" onclick="increaseQuantity('<%= item.produto_id %>')">+</button>
+                    </section>
+                </section>
+                <button class="remove-item" onclick="removeItem('<%= item.produto_id %>')">
+                    <img src="imagens/lixeira.png" class="lixeira">
+                </button>
+            </article>
+        <% }) %>
+    <% } else { %>
+        <article class="product-card1">
+            <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
+            <section class="product-info">
+                <h3>Vestido Branco</h3>
                 <p>Cor:Branco</p>
                 <p>Estilo:Sensual</p>
                 <p>Estampa:Simples</p>
-        <p>R$49,90</p>
-        <!-- Controle de quantidade -->
-        <section class="quantity-control">
-          <button class="qty-btn" onclick="decreaseQuantity(1)">-</button>
-          <span class="quantity" id="qty-1">1</span>
-          <button class="qty-btn" onclick="increaseQuantity(1)">+</button>
-        </section>
-      </section>
-      <button class="remove-item" onclick="removeItem(1)">
-        <img src="imagens/lixeira.png" class="lixeira">
-      </button>
-    </article>
+                <p>R$49,90</p>
+                <section class="quantity-control">
+                    <button class="qty-btn" onclick="decreaseQuantity('produto2')">-</button>
+                    <span class="quantity" id="qty-produto2">1</span>
+                    <button class="qty-btn" onclick="increaseQuantity('produto2')">+</button>
+                </section>
+            </section>
+            <button class="remove-item" onclick="removeItem('produto2')">
+                <img src="imagens/lixeira.png" class="lixeira">
+            </button>
+        </article>
+    <% } %>
   </section>
 
 
@@ -98,10 +118,10 @@
   </section>
     <h4>Informações do pedido</h4>
     <section class="order-details">
-      <p>Subtotal</p><p id="subtotal">R$49,90</p>
-      <p>Frete</p><p id="shipping-cost">R$10,00</p>
+      <p>Subtotal</p><p id="subtotal">R$<%= subtotal || '49,90' %></p>
+      <p>Frete</p><p id="shipping-cost">R$<%= frete || '10,00' %></p>
       <p>Desconto</p><p id="discount">R$0,00</p>
-      <p><strong>Total</strong></p><p><strong id="total">R$59,90</strong></p>
+      <p><strong>Total</strong></p><p><strong id="total">R$<%= total || '59,90' %></strong></p>
     </section>
   </section>
 
@@ -154,7 +174,7 @@
     <br>
     <br>
   </section>
-  <a href="/finalizandopagamento" ><button class="finalizar-compra">Finalizar Compra</button></a> 
+  <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a> 
   </section>
   </section>
 </section>
@@ -216,7 +236,7 @@
                     <input type="text" placeholder="Inserir cupom de desconto">
                     <button>Inserir</button>
               </section>
-                <a href="/finalizadopagamento" ><button class="finalizar-compra">Finalizar Compra</button></a> 
+                <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a> 
               </section>
         </section>
     </section>
@@ -262,7 +282,7 @@
                 </section>
   <!-- Botão Finalizar Compra -->
   <section class="oculto-desktop">
-    <a href="/cadastro"><button class="finalize-button2">Finalizar compra</button></a>
+    <a href="/finalizandopagamento"><button class="finalize-button2">Finalizar compra</button></a>
   </section>
   <br>
   <br>
@@ -287,38 +307,69 @@
 
 <script>
 // Variáveis globais
-let quantities = {1: 1, 2: 1};
 let itemPrice = 49.90;
 let shippingCost = 10.00;
 let discount = 0.00;
 
 // Funções de quantidade
-function increaseQuantity(itemId) {
-    quantities[itemId]++;
-    updateQuantityDisplay(itemId);
-    updateTotals();
-    showNotification('Quantidade aumentada!');
+function increaseQuantity(produtoId) {
+    const quantityElement = document.getElementById('qty-' + produtoId);
+    const currentQuantity = parseInt(quantityElement.textContent);
+    const newQuantity = currentQuantity + 1;
+    
+    fetch('/atualizar-quantidade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            quantityElement.textContent = newQuantity;
+            updateTotals();
+            showNotification('Quantidade aumentada!');
+        }
+    });
 }
 
-function decreaseQuantity(itemId) {
-    if (quantities[itemId] > 1) {
-        quantities[itemId]--;
-        updateQuantityDisplay(itemId);
-        updateTotals();
-        showNotification('Quantidade diminuída!');
+function decreaseQuantity(produtoId) {
+    const quantityElement = document.getElementById('qty-' + produtoId);
+    const currentQuantity = parseInt(quantityElement.textContent);
+    
+    if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        
+        fetch('/atualizar-quantidade', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                quantityElement.textContent = newQuantity;
+                updateTotals();
+                showNotification('Quantidade diminuída!');
+            }
+        });
     }
 }
 
-function updateQuantityDisplay(itemId) {
-    document.getElementById('qty-' + itemId).textContent = quantities[itemId];
-}
-
 // Função para remover item
-function removeItem(itemId) {
+function removeItem(produtoId) {
     if (confirm('Deseja remover este item da sacola?')) {
-        delete quantities[itemId];
-        showNotification('Item removido da sacola!');
-        // Aqui você pode adicionar lógica para remover o elemento do DOM
+        fetch('/remover-item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produto_id: produtoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Item removido da sacola!');
+                location.reload();
+            }
+        });
     }
 }
 
@@ -357,8 +408,15 @@ function updateShippingDesktop(cost) {
 
 // Atualizar totais
 function updateTotals() {
-    const totalQuantity = Object.values(quantities).reduce((a, b) => a + b, 0);
-    const subtotal = itemPrice * totalQuantity;
+    // Recalcular baseado nos elementos da página
+    let subtotal = 0;
+    const quantityElements = document.querySelectorAll('.quantity');
+    
+    quantityElements.forEach(element => {
+        const quantity = parseInt(element.textContent);
+        subtotal += itemPrice * quantity;
+    });
+    
     const total = subtotal + shippingCost - discount;
     
     // Mobile
@@ -413,6 +471,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Finalizar compra
+function finalizarCompra() {
+    window.location.href = '/finalizandopagamento';
+}
 </script>
 
 <style>

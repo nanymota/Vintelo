@@ -48,13 +48,17 @@
   }
   
   header img {
-    width: 80px;
+    width: 50px;
     height: auto;
   }
   
   .header h2 {
     font-size: 18px;
     font-weight: bold;
+  }
+  
+  header nav h1 {
+    font-size: 16px;
   }
   
   /*                                                     corpo da pagina                                             */
@@ -71,7 +75,8 @@
     justify-content: space-between;
     background-color: #ffffff;
     border-radius: 15px;
-    padding: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.274);
   }
   
@@ -305,6 +310,56 @@ nav.grid-2 a {
     font-size: 16px;
     cursor: pointer;
     margin-top: 24px;
+  }
+  
+  @media (min-width: 769px) {
+    .finalize-button2 {
+      display: none;
+    }
+  }
+  
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .quantity-controls-desktop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .qty-btn {
+    background: #7b2f35;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  
+  .qty-btn:hover {
+    background: #5a1e28;
+  }
+  
+  .qty-display {
+    min-width: 30px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
   }
   
   @media (min-width: 480px) {

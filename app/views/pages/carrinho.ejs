@@ -1,155 +1,289 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <script src="/script/script.js"></script>
-    <link rel="stylesheet" href="css/estilo.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vintélo</title>
+  <link rel="stylesheet" href="css/finalizandocompra.css">
+  <link rel="stylesheet" href="css/finalizando2.css">
+  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
-
 <body>
+  <section class="oculto-mobile">
     <header>
-        <div>
-            <% if(autenticado.autenticado){ if(autenticado.login){%>
-                <script>
-                    notify("Login efetuado com sucesso", "Olá <%= autenticado %>", "success", "center")                        
-                </script>
-                <% } let arquivo={"imagem":"imagem/img-perfil.png"} ; if(autenticado.img_perfil_pasta !=null){
-                    arquivo.imagem=autenticado.img_perfil_pasta; }else if(autenticado.img_perfil_banco !=null){
-                    arquivo.imagem=autenticado.img_perfil_banco; } %>
-                    <span>Olá <%= autenticado.autenticado %>!</span><br>
-                    <span><a href="/perfil"><img class="icone-perfil" src="<%= arquivo.imagem %>" </a></span>
-                    <p><a href="/sair">sair</a></p>
+      <section class="top-bar">
+          <p>10% OFF na primeira compra</p>
+      </section>
+      <section class="main-header">
+          <img src="imagens/logo.png" class="img-logo">
+          <nav>
+              <a href="/categorias">Vestidos</a>
+              <a href="/categorias">Saias</a>
+              <a href="/categorias">Blusas</a>
+              <a href="/categorias">Calças</a>
+              <a href="/categorias">Outros</a>
+          </nav>
+          <section class="search-profile">
+              <form>
+                  <input type="text" placeholder="Buscar...">
+              </form>
+              <ul>
+                  <li><a href="/criarbrecho" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
+                  <li><a href="/cadastro" ></a><img src="imagens/icone sem cadastro.png" class="img-tamanho"> </li>
+                  <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+              </ul>
+          </section>
+      </section>
+  </header>
+  </section>
+  
+  <section class="oculto-desktop">
+    <header>
+    <nav class="grid">
+      <a href="/produto2">
+        <img src="imagens/seta.png" alt="Seta Voltar">
+      </a>
+      <h1>Sacola</h1>
+      <img src="imagens/foto-branca.png" alt="Descrição da Imagem" />
+    </nav>
+  </header>
+  </section>
+  
+  <main>
+  <section class="oculto-desktop">
+  <!-- Produto Adicionado -->
+  <section class="product-section">
+    <% if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){ %>
+      <% carrinho.forEach(function(item){ %>
+        <article class="product-card1">
+          <img src="<%= item.imagem %>" alt="<%= item.produto %>" class="product-img">
+          <section class="product-info">
+            <h3><%= item.produto %></h3>
+            <p>R$<%= item.preco.toFixed(2) %></p>
+            <p>Qtd: <%= item.qtde %></p>
+          </section>
+          <section class="quantity-controls">
+            <a href="/removeItem?id=<%= item.codproduto %>&qtde=1" class="qty-btn">-</a>
+            <span class="qty-display"><%= item.qtde %></span>
+            <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>" class="qty-btn">+</a>
+          </section>
+          <a href="/excluirItem?id=<%= item.codproduto %>">
+            <img src="imagens/lixeira.png" class="lixeira">
+          </a>
+        </article>
+      <% }); %>
+    <% } else { %>
+      <p>Seu carrinho está vazio</p>
+    <% } %>
+  </section>
 
-                    <% }else{ %>
-                        <span>Olá visitante!</span>
-                        <p><a href="/login">Login</a></p>
-                        <p><a href="/cadastro">Cadastro</a></p>
-                        <% } %>
-        </div>
-    </header>
+  <!-- Informações do Pedido -->
+  <section class="order-info">
+    <h4>Informações do pedido</h4>
+    <section class="order-details">
+      <% 
+      var total = 0;
+      if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){
+        carrinho.forEach(function(item){ 
+          total += (item.qtde * item.preco); 
+        });
+      }
+      var frete = total > 0 ? 10 : 0;
+      %>
+      <p>Subtotal</p><p>R$<%= total.toFixed(2) %></p>
+      <p>Frete</p><p>R$<%= frete.toFixed(2) %></p>
+      <p>Desconto</p><p>R$0,00</p>
+      <p><strong>Total</strong></p><p><strong>R$<%= (total + frete).toFixed(2) %></strong></p>
+    </section>
+  </section>
 
-    <main class="carrinho">
-        <h1>Carrinho de Compras</h1>
-        <section class="shopping-cart dark">
-            <% if(carrinho){ %>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Codigo Item</th>
-                            <th>Produto</th>
-                            <th>Imagem</th>
-                            <th>Quantidade</th>
-                            <th>Valor unitário</th>
-                            <th>excluir</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% 
-                        var total=0; 
-                        carrinho.forEach(function(item){ 
-                            total += (item.qtde * item.preco); 
-                        %>
-                            <tr>
-                                <td>  <%= item.codproduto %> </td>
-                                <td>  <%= item.produto %>    </td>
-                                <td>  <img class="thumb-cart" src="<%= item.imagem %>" alt=""> </td>
-                                <td>
-                                    <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
-                                        <img class="icon-cart" src="imagens/add.png" alt=""></a>
-                                    <span class="qtde-cart"><%= item.qtde %></span>
-                                    <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
-                                        <img class="icon-cart" src="imagens/lixeira.png" alt=""></a>
-                                </td>
-                                <td> R$ <%= item.preco.toFixed(2) %> </td>
-                                <td>
-                                    <a href="/excluirItem?id=<%= item.codproduto %>">
-                                        <img src="imagens/lixeira.png" alt="">
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Sub total</td>
-                                <td colspan="4">R$ <%= (item.qtde * item.preco).toFixed(2); %> </td>
-                            </tr>
+  <!-- Cupom de Desconto -->
+  <section class="discount-section">
+    <h4>Inserir cupom de desconto</h4>
+    <form class="discount-input">
+      <input type="text" placeholder="Digite o cupom">
+      <button class="apply-button">Inserir</button>
+    </form>
+  </section>
 
-                        <% 
-                        });
-                        %>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td colspan="2">Total</td>
-                            <td colspan="2">R$ <%= total.toFixed(2) %>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            <%
-            }
-            %>
-                <% if(autenticado.autenticado){%>
-                    <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Comprar</button>
-                <% }else {%>
-                        <p class="btn btn-warning btn-lg btn-block">Para comprar faça <a href="/login">Login</a></p>
-                <% }%>
+  <!-- Adicionar mais ao carrinho -->
+  <section class="suggestions-section">
+    <h4>Adicione mais ao carrinho</h4>
+    <ul class="product-list">
+      <li class="product-suggestion">
+        <img src="imagens/conjunto.png" alt="Saia Branca">
+        <p>Saia Branca</p>
+        <p>R$25,00</p>
+      </li>
+      <li class="product-suggestion">
+        <img src="imagens/saia preta.png" alt="Saia Preta">
+        <p>Saia Preta</p>
+        <p>R$30,00</p>
+      </li>
+      <li class="product-suggestion">
+        <img src="imagens/saia marrom-2.png" alt="Saia de Veludo">
+        <p>Saia de Veludo</p>
+        <p>R$25,00</p>
+      </li>
+      <li class="product-suggestion">
+        <img src="imagens/saia rosa brilhante-2.png" alt="Saia Rosa Brilhante">
+        <p>Saia Rosa Brilhante</p>
+        <p>R$25,00</p>
+      </li>
+      <li class="product-suggestion">
+        <img src="imagens/saia marrom de couro-2.png" alt="Saia de Vinil">
+        <p>Saia de Vinil</p>
+        <p>R$25,00</p>
+      </li>
+    </ul>
+    <br>
+    <a href="/favoritos" class="link-branco"><p class="favorites-link">Conferir peças favoritas ></p></a> 
+  </section>
+  </section>
+  
+  <!--  parte para desktop-->
+    <section class="oculto-mobile">
+      <main class="carrinho-desktop">
+        <section class="carrinho-content">
+          <h1>Carrinho de Compras</h1>
+          
+          <section class="carrinho-items">
+            <% if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){ %>
+              <% carrinho.forEach(function(item){ %>
+                <article class="item-card">
+                  <img src="<%= item.imagem %>" alt="<%= item.produto %>">
+                  <section class="item-details">
+                    <h3><%= item.produto %></h3>
+                    <p class="item-price">R$ <%= item.preco.toFixed(2) %></p>
+                  </section>
+                  <section class="item-controls">
+                    <section class="quantity-control">
+                      <a href="/removeItem?id=<%= item.codproduto %>&qtde=1" class="qty-btn">-</a>
+                      <span class="qty-number"><%= item.qtde %></span>
+                      <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>" class="qty-btn">+</a>
+                    </section>
+                    <p class="subtotal">R$ <%= (item.preco * item.qtde).toFixed(2) %></p>
+                    <a href="/excluirItem?id=<%= item.codproduto %>" class="remove-item">
+                      <img src="imagens/lixeira.png" alt="Remover">
+                    </a>
+                  </section>
+                </article>
+              <% }); %>
+            <% } else { %>
+              <section class="empty-cart">
+                <p>Seu carrinho está vazio</p>
+                <a href="/categorias" class="continue-shopping">Continuar comprando</a>
+              </section>
+            <% } %>
+          </section>
         </section>
+        
+        <aside class="order-summary">
+          <h2>Resumo do Pedido</h2>
+          <% 
+          var total = 0;
+          if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){
+            carrinho.forEach(function(item){ 
+              total += (item.qtde * item.preco); 
+            });
+          }
+          var frete = total > 0 ? 10 : 0;
+          %>
+          <section class="summary-details">
+            <section class="summary-line">
+              <span>Subtotal</span>
+              <span>R$ <%= total.toFixed(2) %></span>
+            </section>
+            <section class="summary-line">
+              <span>Frete</span>
+              <span>R$ <%= frete.toFixed(2) %></span>
+            </section>
+            <section class="summary-line">
+              <span>Desconto</span>
+              <span>R$ 0,00</span>
+            </section>
+            <hr>
+            <section class="summary-line total">
+              <span>Total</span>
+              <span>R$ <%= (total + frete).toFixed(2) %></span>
+            </section>
+          </section>
+          
+          <section class="coupon-section">
+            <input type="text" placeholder="Código do cupom">
+            <button type="button">Aplicar</button>
+          </section>
+          
+          <% if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){ %>
+            <a href="/finalizandocompra2" class="checkout-btn">Finalizar Compra</a>
+          <% } else { %>
+            <a href="/categorias" class="checkout-btn">Continuar Comprando</a>
+          <% } %>
+        </aside>
+      </main>
+    </section>
 
-
-        <section class="payment-form dark">
-            <div class="container_payment">
-                <div class="block-heading"> <h2>Checkout</h2> </div>
-                <div class="form-payment">
-                    <div class="products">
-                        <h2 class="title">Resumo do pedido</h2>
-                        <% 
-                        var total = 0; 
-                        carrinho.forEach(function(item){ 
-                            total +=(item.qtde * item.preco); 
-                        %>
-                            <div class="item">
-                                <span class="price hidden" id="summary-price">R$ <%= item.preco.toFixed(2) %> </span>
-                                <span class="price" id="subtot-price">R$ <%= (item.qtde * item.preco).toFixed(2) %> </span>
-                                <p class="item-name"> <%= item.produto %> 
-                                    (<span id="summary-quantity"> <%= item.qtde %>
-                                    </span>x R$ <%= item.preco.toFixed(2) %>) 
-                                </p>
-                            </div>
-                        <% }); %>
-                        <div class="total">
-                            <span class="price" id="summary-total">Total R$ <%= total.toFixed(2) %> </span>
-                        </div>
-                    </div>
-
-                    <div class="payment-details">
-                        <div class="form-group col-sm-12">
-                            <br>
-                            <div id="button-checkout"></div>
-                            <br>
-                            <a id="go-back">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10"
-                                    class="chevron-left">
-                                    <path fill="#009EE3" fill-rule="nonzero" id="chevron_left"
-                                        d="M7.05 1.4L6.2.552 1.756 4.997l4.449 4.448.849-.848-3.6-3.6z"></path>
-                                </svg>
-                                Voltar ao carrinho
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+               <!--                                        PRODUTOS OCULTOS                                               -->
+               <section class="produtos-ocultos oculto-mobile">
+                  <h1 class="adicionar">Adicione mais à sacola</h1>
+                  <section class="product-grid">
+                    <article class="product-card">
+                        <img src="imagens/oculos.png" alt="Óculos de sol">
+                        <h2>Óculos de sol</h2>
+                        <br>
+                        <p class="price">R$12,00</p>
+                        <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                    </article>
+            
+                    <article class="product-card">
+                        <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
+                        <h2>Conjunto 3 cores de prata</h2>
+                        <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
+                        <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                        <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
+                    </article>
+            
+                    <article class="product-card">
+                        <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
+                        <h2>Bolsa preta com alça dourada</h2>
+                        <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
+                        <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                        <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
+                    </article>
+            
+                    <article class="product-card">
+                        <img src="imagens/aneis.png" alt="Anel de prata">
+                        <h2>Anel de prata</h2>
+                        <br>
+                        <p class="price">R$15,00</p>
+                        <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                        <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
+                    </article>
+                  </section>
+                </section>
+  <!-- Botão Finalizar Compra -->
+  <% if(typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0){ %>
+    <a href="/finalizandocompra2"><button class="finalize-button2">Finalizar compra</button></a>
+  <% } else { %>
+    <a href="/categorias"><button class="finalize-button2">Continuar comprando</button></a>
+  <% } %>
+  <br>
+  <br>
+      </main>
+      <section class="oculto-mobile">
+      <!--                                                    Rodapé                                                      -->
+      <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+        <section class="social-media">
+          <p class="p-footer">Siga nossas redes sociais</p>
+          <ul class="social-links">
+            <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+            <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+            <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+          </ul>
         </section>
-
-    </main>
-    <footer>
-
-    </footer>
+         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+      </footer>
+      </section>
 </body>

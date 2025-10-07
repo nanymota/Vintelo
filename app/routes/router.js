@@ -13,6 +13,7 @@ const usuarioController = require("../controllers/usuarioController");
 const brechoController = require("../controllers/brechoController");
 const carrinhoController = require("../controllers/carrinhoController");
 const produtoController = require("../controllers/produtoController");
+const compraController = require('../controllers/compraController');
 const { adicionarController } = require("../controllers/adicionarController");
 const categoriaController = require("../controllers/categoriaController");
 const denunciaController = require("../controllers/denunciaController");
@@ -30,6 +31,7 @@ const { MercadoPagoConfig, Preference } = require('mercadopago');
 const client = new MercadoPagoConfig({
   accessToken: process.env.accessToken
 });
+const pagamentoController = require('../controllers/pagamentoController');
 
 router.get("/addItem", function (req, res) {
   carrinhoController.addItem(req, res);
@@ -308,9 +310,34 @@ router.get('/ecologicoartigo', (req, res) => res.render('pages/ecologicoartigo')
 router.get('/tensustentavel', (req, res) => res.render('pages/tensustentavel'));
 router.get('/sweer', (req, res) => res.render('pages/sweer'));
 
-router.get('/pedidoconf', (req, res) => res.render('pages/pedidoconf'));
+router.get('/pedidoconf', function(req, res){
+    res.render('pages/pedidoconf', {
+        pedido_id: Math.floor(Math.random() * 1000000),
+        metodo_pagamento: 'PIX',
+        total: '59,99',
+        autenticado: req.session.autenticado || { autenticado: false }
+    });
+});
 router.get('/finalizandocompra1', (req, res) => res.render('pages/finalizandocompra1'));
-router.get('/finalizandocompra2', (req, res) => res.render('pages/finalizandocompra2'));
+router.get('/finalizandocompra2', function(req, res){
+    const carrinho = req.session.carrinho || [];
+    let subtotal = 0;
+    
+    carrinho.forEach(item => {
+        subtotal += (item.preco * item.quantidade);
+    });
+    
+    const frete = subtotal > 0 ? 10 : 0;
+    const total = subtotal + frete;
+    
+    res.render('pages/finalizandocompra2', {
+        carrinho: carrinho,
+        subtotal: subtotal.toFixed(2),
+        frete: frete.toFixed(2),
+        total: total.toFixed(2),
+        autenticado: req.session.autenticado || { autenticado: false }
+    });
+});
 router.get('/favoritos', (req, res) => res.render('pages/favoritos'));
 router.get('/sacola1', (req, res) => res.render('pages/sacola1'));
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
@@ -673,7 +700,25 @@ router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProduto
 router.get('/editarbanners', bannerController.mostrarFormulario);
 router.post('/editarbanners', uploadFile('banners'), bannerController.atualizarBanners);
 router.get('/minhascompras', (req, res) => res.render('pages/minhascompras'));
-router.get('/finalizandopagamento', (req, res) => res.render('pages/finalizandopagamento'));
+router.get('/finalizandopagamento', function(req, res){
+    const carrinho = req.session.carrinho || [];
+    let subtotal = 0;
+    
+    carrinho.forEach(item => {
+        subtotal += (item.preco * item.quantidade);
+    });
+    
+    const frete = subtotal > 0 ? 10 : 0;
+    const total = subtotal + frete;
+    
+    res.render('pages/finalizandopagamento', {
+        carrinho: carrinho,
+        subtotal: subtotal.toFixed(2),
+        frete: frete.toFixed(2),
+        total: total.toFixed(2),
+        autenticado: req.session.autenticado || { autenticado: false }
+    });
+});
 router.get('/pedidos', (req, res) => res.render('pages/pedidos'));
 router.get('/enviopedido', (req, res) => res.render('pages/enviopedido'));
 router.get('/menu', carregarDadosUsuario, (req, res) => {
@@ -1018,5 +1063,21 @@ router.get('/usuariosadm', (req, res) => res.render('pages/usuariosadm'));
 
 router.post('/premium/atualizar-plano', atualizarPlano);
 router.post('/premium/alternar-status', alternarStatusPlano);
+
+// Rotas de Compra
+router.post('/adicionar-carrinho', compraController.adicionarAoCarrinho);
+router.get('/carrinho', compraController.mostrarCarrinho);
+router.post('/atualizar-quantidade', compraController.atualizarQuantidade);
+router.post('/remover-item', compraController.removerItem);
+router.get('/finalizar-compra', compraController.finalizarCompra);
+router.post('/limpar-carrinho', compraController.limparCarrinho);
+router.get('/confirmar-pedido', compraController.confirmarPedido);
+
+// Rotas do Mercado Pago
+router.post('/processar-pagamento', pagamentoController.processarPagamento);
+router.get('/pagamento-sucesso', pagamentoController.pagamentoSucesso);
+router.get('/pagamento-falha', pagamentoController.pagamentoFalha);
+router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
+router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
 
 module.exports = router;

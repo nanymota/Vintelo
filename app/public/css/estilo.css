@@ -628,8 +628,8 @@ h3 {
 @media (min-width: 992px) {
   .product-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    padding: 20px 80px;
+    gap: 1.5rem;
+    padding: 15px 60px;
   }
 }
 
@@ -870,30 +870,30 @@ h3 {
 
 .product-card h2 {
   font-family: 'Raleway', sans-serif;
-  font-size: 29px;
-  margin: 0.5rem 0;
+  font-size: 24px;
+  margin: 0.4rem 0;
   color: #4e4e4eee;
   text-align: left;
-  padding: 0px 20px;
+  padding: 0px 15px;
   font-weight: 100; 
   letter-spacing: 1px;
 }
 .Descrição{
   color: #000000;
-  margin-bottom: 1rem;
-  font-size: 20px;
+  margin-bottom: 0.8rem;
+  font-size: 16px;
   text-align: left;
-  padding: 0px 20px;
+  padding: 0px 15px;
   font-family: Arial, sans-serif;
   font-weight: bold;
 }
 
 .price {
   color: #000000;
-  margin-bottom: 1rem;
-  font-size: 36px;
+  margin-bottom: 0.8rem;
+  font-size: 30px;
   text-align: left;
-  padding: 0px 20px;
+  padding: 0px 15px;
   font-family: Arial, sans-serif;
 }
 
@@ -1294,8 +1294,10 @@ h3 {
 }
 
 .artigo-texto h3 {
-  font-size: 40px;
+  font-size: 50px;
   color: #000;
+  line-height: 1.2;
+  margin: 2px 0;
 }
 
 .artigo-texto .ler-agora {
@@ -1537,7 +1539,7 @@ h1 {
 .container {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
-  gap: 80px;
+  gap: 180px;
   max-width: 1200px;
   margin: 0 auto;
   align-items: start;
@@ -1794,7 +1796,7 @@ h1 {
     transform: none !important;
     transition: background-color 0.3s ease, color 0.3s ease !important;
   }
-} background-color: 0.3s ease, color 0.3s ease !important;
+} 
   
   
   .category-nav-desktop ul li a,
@@ -1811,7 +1813,7 @@ h1 {
       font-size: 20px;
  }
 
-/*  favoritar  */
+/*  favoritar peça */
 .favorite {
   position: absolute !important;
   top: 15px !important;
@@ -1849,7 +1851,7 @@ h1 {
   filter: brightness(0) invert(1) !important;
 }
 
-/* Garantir que a primeira lista use o mesmo estilo */
+/* estilização da seção de produtos */
 .product-grid .favorite,
 .product-card .favorite {
   position: absolute !important;

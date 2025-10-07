@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/produtos.css">
     <link rel="stylesheet" href="css/produtos2.css">
 
+
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
 </head>
@@ -121,6 +122,10 @@
         </section>
 
         <section class="info-produto">
+            <button class="favorite-desktop" onclick="toggleFavorite(this, 'produto2')">
+                <img src="imagens/coraçao de fav2.png" alt="Favoritar">
+            </button>
+            
             <nav class="breadcrumb">
                 <a href="#">Home</a> >
                 <a href="#">Filtros</a> >
@@ -149,8 +154,8 @@
                     <li>Condições: Semi-novo</li>
                 </ul>
             </section>
-
-            <button class="btn-sacola"><a href="/finalizandopagamento" class="link-branco">Adicionar à sacola</button></a>
+            
+            <button class="btn-sacola" onclick="adicionarAoCarrinho()">Adicionar à sacola</button>
 
             <section class="tamanhos-alternativos">
                 <p class="detalhe"><b>Seu tamanho não está disponível? Encontre peças similares:</b></p>
@@ -178,7 +183,7 @@
                     <h2>Óculos de sol</h2>
                     <br>
                     <p class="price">R$12,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'oculos-sol')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
         
@@ -186,7 +191,7 @@
                     <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
                     <h2>Conjunto 3 cores de prata</h2>
                     <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'colar-prata')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
         
@@ -194,7 +199,7 @@
                     <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
                     <h2>Bolsa preta com alça dourada</h2>
                     <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'bolsa-preta')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
         
@@ -203,7 +208,7 @@
                     <h2>Anel de prata</h2>
                     <br>
                     <p class="price">R$15,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'anel-prata')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
               </section>
@@ -213,7 +218,7 @@
                     <img src="imagens/pulseira.png" alt="Bracelete">
                     <h2>Bracelete</h2>
                     <p class="price">R$19,99 <br>ou em 2x R$10,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'bracelete')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
         
@@ -221,7 +226,7 @@
                     <img src="imagens/relogios.png" alt="Relógio Rose Gold">
                     <h2>Relógio Rose Gold</h2>
                     <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'relogio-rose')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
         
@@ -229,7 +234,7 @@
                     <img src="imagens/bolsa brilhante.png" alt="Salto preto com prata">
                     <h2>Bolsa Brilhante</h2>
                     <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'bolsa-brilhante')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
         
@@ -237,7 +242,7 @@
                     <img src="imagens/BraceleteDuplo.png" alt="Bracelete Duplo">
                     <h2>Bracelete Duplo</h2>
                     <p class="price">R$28,90 <br>ou em 2x R$14,45</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="favorite" onclick="toggleFavorite(this, 'bracelete-duplo')"><img src="imagens/coraçao de fav2.png"></button>
                     <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                 </article>
 
@@ -245,7 +250,7 @@
                       <a href="/produto2"><img src="imagens/vestido marrom.png" alt="Vestido marrom com decote"></a>
                       <h2>Vestido Marrom Com Decote</h2>
                       <p class="price">R$49,99</p>
-                      <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                      <button class="favorite" onclick="toggleFavorite(this, 'vestido-marrom')"><img src="imagens/coraçao de fav2.png"></button>
                       <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                   </article>
           
@@ -253,7 +258,7 @@
                       <a href="/produto3"><img src="imagens/vestido com botoes.png" alt="Vestido com botao"></a>
                       <h2>Vestido Longo Com Botoes</h2>
                       <p class="price">R$39,99</p>
-                      <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                      <button class="favorite" onclick="toggleFavorite(this, 'vestido-botoes')"><img src="imagens/coraçao de fav2.png"></button>
                       <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                   </article>
           
@@ -261,7 +266,7 @@
                       <a href="/produto4"><img src="imagens/saia cargo.png" alt="Saia cargo"></a>
                       <h2>Saia Cargo Jeans</h2>
                       <p class="price">R$29,99</p>
-                      <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                      <button class="favorite" onclick="toggleFavorite(this, 'saia-cargo')"><img src="imagens/coraçao de fav2.png"></button>
                       <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                   </article>
           
@@ -269,14 +274,14 @@
                       <a href="/produto1"><img src="imagens/saia longa.png" alt="saia longa"></a>
                       <h2>Saia Longa Jeans</h2>
                       <p class="price">R$19,99</p>
-                      <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                      <button class="favorite" onclick="toggleFavorite(this, 'saia-longa')"><img src="imagens/coraçao de fav2.png"></button>
                       <button class="cart"><img src="imagens/sacola.png"class="img-sacola"></button>
                   </article>
             </section>
           </section>
         </main>
        
-             <button type="submit" class="submit-btn"> <a href="/finalizandocompra2" class="link-branco">Adicionar à sacola</a></button>
+             <button type="submit" class="submit-btn" onclick="adicionarAoCarrinho()">Adicionar à sacola</button>
        <section class="oculto-mobile">
             <!--                                                    Rodapé                                                      -->
     <footer class="footer">
@@ -292,5 +297,48 @@
          <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
       </footer>
        </section>
+    <script>
+        window.isAuthenticated = false; // Definir baseado na sessão
+        
+        function toggleFavorite(button, productId) {
+            if (window.isAuthenticated) {
+                button.classList.toggle('favorited');
+                // Aqui você pode adicionar lógica para salvar no backend
+            } else {
+                window.location.href = '/cadastro';
+            }
+        }
+        
+        function adicionarAoCarrinho() {
+            const produtoData = {
+                produto_id: 'produto2',
+                nome: 'Vestido branco com decote',
+                preco: 49.90,
+                imagem: 'imagens/produto2.png',
+                tamanho: 'P'
+            };
+            
+            fetch('/adicionar-carrinho', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(produtoData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Produto adicionado ao carrinho!');
+                    window.location.href = '/carrinho';
+                } else {
+                    alert('Erro ao adicionar produto');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar produto');
+            });
+        }
+    </script>
 </body>
 </html>
