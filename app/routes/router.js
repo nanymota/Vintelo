@@ -144,7 +144,7 @@ router.post("/login", async function (req, res) {
                     email: usuario.EMAIL_USUARIO
                 };
                 
-                return res.redirect(usuario.TIPO_USUARIO == 2 ? '/homevendedor' : '/homecomprador');
+                return res.redirect(usuario.TIPO_USUARIO == b ? '/homevendedor' : '/homecomprador');
             }
         }
         
@@ -377,7 +377,7 @@ router.post('/entrar', async function(req, res){
                     email: usuario.EMAIL_USUARIO
                 };
                 
-                if (usuario.TIPO_USUARIO == 2) {
+                if (usuario.TIPO_USUARIO == b) {
                     req.session.brecho = {
                         nome: 'Meu Brechó',
                         proprietario: usuario.NOME_USUARIO,

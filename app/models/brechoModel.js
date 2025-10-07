@@ -10,7 +10,7 @@ const brechoModel = {
                  u.IMG_URL, u.DESCRICAO_USUARIO
                  FROM BRECHOS b 
                  INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO 
-                 WHERE u.STATUS_USUARIO = ?`,
+                 WHERE u.STATUS_USUARIO = a`,
                 [1]
             );
             return resultados;
