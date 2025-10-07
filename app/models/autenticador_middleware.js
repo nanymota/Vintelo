@@ -12,6 +12,7 @@ carregarDadosUsuario = async (req, res, next) => {
                 req.session.autenticado.email = user.EMAIL_USUARIO;
                 req.session.autenticado.imagem = user.IMG_URL;
                 req.session.autenticado.user_usuario = user.USER_USUARIO;
+                req.session.autenticado.tipo_usuario = user.TIPO_USUARIO;
             }
         } catch (error) {
             console.log('Erro ao carregar dados do usuário:', error);

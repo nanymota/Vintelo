@@ -45,6 +45,19 @@ const clienteModel = {
         }
     },
 
+    findByUserId: async (userId) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM CLIENTES WHERE ID_USUARIO = ?",
+                [userId]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+
     create: async (camposForm) => {
         try {
             const [resultados] = await pool.query(

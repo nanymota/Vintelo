@@ -76,6 +76,19 @@ const brechoModel = {
         }
     },
 
+    findByUserId: async (userId) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM BRECHOS WHERE ID_USUARIO = ?",
+                [userId]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+
     create: async (camposForm) => {
         try {
             if (!camposForm.ID_USUARIO || !camposForm.NOME_FANTASIA) {

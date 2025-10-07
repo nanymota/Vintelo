@@ -80,16 +80,16 @@
                             <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
-                            <label for="thumb-input-1" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
-                        </section>
-                        <section class="thumbnail-slot">
                             <label for="thumb-input-2" class="add-photo-btn">+</label>
                             <input type="file" id="thumb-input-2" name="fotos" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
                             <label for="thumb-input-3" class="add-photo-btn">+</label>
                             <input type="file" id="thumb-input-3" name="fotos" accept="image/*" style="display: none;">
+                        </section>
+                        <section class="thumbnail-slot">
+                            <label for="thumb-input-4" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-input-4" name="fotos" accept="image/*" style="display: none;">
                         </section>
                     </section>
                     <p class="photo-instructions">Clique para adicionar fotos da galeria</p>
@@ -125,7 +125,7 @@
                                     <option value="acessorios" <%= typeof valores !== 'undefined' && valores.categoria_produto === 'acessorios' ? 'selected' : '' %>>Acessórios</option>
                                 </select>
                             </section>
-                            <section class="form-group desktop-only">
+                            <section class="form-group">
                                 <label for="cor_produto">Cor</label>
                                 <input type="text" id="cor_produto" name="cor_produto" 
                                        value="<%= typeof valores !== 'undefined' ? valores.cor_produto || '' : '' %>"
@@ -188,7 +188,7 @@
     
     <script>
         function validateForm(form) {
-            const fileInputs = form.querySelectorAll('input[type="file"]');
+            const fileInputs = form.querySelectorAll('input[name="fotos"]');
             let hasPhoto = false;
             fileInputs.forEach(input => {
                 if (input.files && input.files.length > 0) {
@@ -203,8 +203,26 @@
             return true;
         }
         
+        // Formatação de preço
+        function formatarPreco(input) {
+            let valor = input.value.replace(/\D/g, '');
+            valor = (valor / 100).toFixed(2) + '';
+            valor = valor.replace('.', ',');
+            valor = valor.replace(/(\d)(\d{3})(\d{3}),/g, '$1.$2.$3,');
+            valor = valor.replace(/(\d)(\d{3}),/g, '$1.$2,');
+            input.value = 'R$ ' + valor;
+        }
+        
         // Preview das imagens
         document.addEventListener('DOMContentLoaded', function() {
+            // Formatar preço
+            const precoInputs = document.querySelectorAll('input[name="preco_produto"]');
+            precoInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    formatarPreco(this);
+                });
+            });
+            
             const inputs = document.querySelectorAll('input[type="file"]');
             
             inputs.forEach(input => {

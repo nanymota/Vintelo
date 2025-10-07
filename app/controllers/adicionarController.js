@@ -19,9 +19,7 @@ const adicionarController = {
         
         body('preco_produto')
             .notEmpty()
-            .withMessage('Preço é obrigatório')
-            .matches(/^R\$\s?\d+([.,]\d{2})?$/)
-            .withMessage('Formato de preço inválido'),
+            .withMessage('Preço é obrigatório'),
         
         body('categoria_produto')
             .notEmpty()
@@ -64,25 +62,33 @@ const adicionarController = {
         const { nome_produto, preco_produto, categoria_produto, cor_produto, condicao_produto, tamanho_produto, descricao_produto } = req.body;
         
         try {
-            let imagensProduto = req.files.map(file => file.filename);
-            
+            // Converter preço
+            let preco = preco_produto.replace('R$', '').replace(' ', '').replace(',', '.');
+            preco = parseFloat(preco);
             
             const dadosProduto = {
                 NOME_PRODUTO: nome_produto,
-                PRECO_PRODUTO: parseFloat(preco_produto.replace('R$ ', '').replace(',', '.')),
-                CATEGORIA_PRODUTO: categoria_produto,
+                PRECO: preco,
+                TIPO_PRODUTO: categoria_produto,
                 COR_PRODUTO: cor_produto,
                 CONDICAO_PRODUTO: condicao_produto,
                 TAMANHO_PRODUTO: tamanho_produto,
-                DESCRICAO_PRODUTO: descricao_produto || null,
-                IMAGENS_PRODUTO: imagensProduto.join(','),
-                STATUS_PRODUTO: 0, 
+                OUTROS: descricao_produto || null,
+                STATUS_PRODUTO: 'disponivel',
                 ID_USUARIO: req.session.autenticado ? req.session.autenticado.id : null
             };
             
             const resultado = await produtoModel.create(dadosProduto);
             
             if (resultado && resultado.insertId) {
+                // Salvar imagens na tabela IMG_PRODUTOS
+                for (let file of req.files) {
+                    await produtoModel.createImage({
+                        ID_PRODUTO: resultado.insertId,
+                        URL_IMG: 'imagem/produtos/' + file.filename
+                    });
+                }
+                
                 res.redirect('/homevendedor?sucesso=produto_enviado');
             } else {
                 throw new Error('Falha ao criar produto');

@@ -18,8 +18,10 @@ const categoriaController = require("../controllers/categoriaController");
 const denunciaController = require("../controllers/denunciaController");
 const { atualizarPlano, alternarStatusPlano } = require("../controllers/premiumController");
 const pedidoController = require("../controllers/pedidoController");
+const { bannerController } = require("../controllers/bannerController");
 const usuarioModel = require('../models/usuarioModel');
 const tipoUsuarioModel = require('../models/tipoUsuarioModel');
+const cliente = require('../models/clienteModel');
 
 const uploadFile = require("../util/uploader");
 const uploadProduto = require("../util/uploaderProduto");
@@ -63,16 +65,36 @@ router.post(
   }
 );
 
-router.get("/", function (req, res) {
-  res.render('pages/index', {
-    autenticado: req.session ? req.session.autenticado : null
-  });
+router.get("/", async function (req, res) {
+  try {
+    const { bannerModel } = require('../models/bannerModel');
+    const banners = await bannerModel.findByPosition('Home');
+    res.render('pages/index', {
+      autenticado: req.session ? req.session.autenticado : null,
+      banners: banners || []
+    });
+  } catch (error) {
+    res.render('pages/index', {
+      autenticado: req.session ? req.session.autenticado : null,
+      banners: []
+    });
+  }
 });
 
-router.get("/index", function (req, res) {
-  res.render('pages/index', {
-    autenticado: req.session ? req.session.autenticado : null
-  });
+router.get("/index", async function (req, res) {
+  try {
+    const { bannerModel } = require('../models/bannerModel');
+    const banners = await bannerModel.findByPosition('Home');
+    res.render('pages/index', {
+      autenticado: req.session ? req.session.autenticado : null,
+      banners: banners || []
+    });
+  } catch (error) {
+    res.render('pages/index', {
+      autenticado: req.session ? req.session.autenticado : null,
+      banners: []
+    });
+  }
 });
 
 router.get("/favoritar", verificarUsuAutenticado, function (req, res) {
@@ -200,35 +222,59 @@ router.get('/perfil3', (req, res) => res.render('pages/perfil3'));
 router.get('/homecomprador', carregarDadosUsuario, async function(req, res){
     try {
         const { produtoModel } = require('../models/produtoModel');
+        const { bannerModel } = require('../models/bannerModel');
         const produtos = await produtoModel.findRecent(8) || [];
+        const banners = await bannerModel.findByPosition('Home') || [];
         
         res.render('pages/homecomprador', {
             autenticado: req.session.autenticado,
-            produtos: produtos
+            produtos: produtos,
+            banners: banners
         });
     } catch (error) {
-        console.log('Erro ao buscar produtos:', error);
+        console.log('Erro ao buscar dados:', error);
         res.render('pages/homecomprador', {
             autenticado: req.session.autenticado,
-            produtos: []
+            produtos: [],
+            banners: []
         });
     }
 });
 
-router.get('/homevendedor', carregarDadosUsuario, function(req, res){
-    const brechoData = req.session.brecho || {
-        nome: 'Meu Brechó',
-        proprietario: 'Vendedor',
-        avaliacao: '0.0',
-        itens_venda: '0',
-        vendidos: '0',
-        seguidores: '0'
-    };
-    
-    res.render('pages/homevendedor', {
-        brecho: brechoData,
-        autenticado: req.session.autenticado
-    });
+router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
+    try {
+        const { bannerModel } = require('../models/bannerModel');
+        const banners = await bannerModel.findByPosition('Home') || [];
+        const brechoData = req.session.brecho || {
+            nome: 'Meu Brechó',
+            proprietario: 'Vendedor',
+            avaliacao: '0.0',
+            itens_venda: '0',
+            vendidos: '0',
+            seguidores: '0'
+        };
+        
+        res.render('pages/homevendedor', {
+            brecho: brechoData,
+            autenticado: req.session.autenticado,
+            banners: banners
+        });
+    } catch (error) {
+        const brechoData = req.session.brecho || {
+            nome: 'Meu Brechó',
+            proprietario: 'Vendedor',
+            avaliacao: '0.0',
+            itens_venda: '0',
+            vendidos: '0',
+            seguidores: '0'
+        };
+        
+        res.render('pages/homevendedor', {
+            brecho: brechoData,
+            autenticado: req.session.autenticado,
+            banners: []
+        });
+    }
 });
 
 
@@ -610,8 +656,8 @@ router.get('/estatistica-desktop', (req, res) => res.render('pages/estatistica-d
 router.get('/categorias', categoriaController.mostrarCategorias);
 router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProdutos);
 
-router.get('/editarbanners', (req, res) => res.render('pages/editarbanners'));
-router.post('/editarbanners', function(req, res){ console.log('Banners atualizados:', req.files); res.redirect('/homeadm'); });
+router.get('/editarbanners', bannerController.mostrarFormulario);
+router.post('/editarbanners', uploadFile('banners'), bannerController.atualizarBanners);
 router.get('/minhascompras', (req, res) => res.render('pages/minhascompras'));
 router.get('/finalizandopagamento', (req, res) => res.render('pages/finalizandopagamento'));
 router.get('/pedidos', (req, res) => res.render('pages/pedidos'));
@@ -627,32 +673,266 @@ router.get('/menuvendedor', carregarDadosUsuario, (req, res) => {
         autenticado: req.session.autenticado || null
     });
 });
-router.get('/informacao', (req, res) => res.render('pages/informacao'));
+router.get('/informacao', carregarDadosUsuario, async (req, res) => {
+    try {
+        let userData = {
+            nome: 'Usuário',
+            email: 'email@exemplo.com',
+            telefone: '(11) 99999-9999',
+            imagem: null,
+            user_usuario: 'usuario',
+            cnpj: '',
+            razao_social: '',
+            nome_fantasia: ''
+        };
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+            if (userDetails && userDetails.length > 0) {
+                const user = userDetails[0];
+                userData.nome = user.NOME_USUARIO || 'Usuário';
+                userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
+                userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
+                userData.imagem = user.IMG_URL || null;
+                userData.user_usuario = user.USER_USUARIO || 'usuario';
+                
+                // Se for brechó, buscar dados específicos
+                if (user.TIPO_USUARIO === 'brechó') {
+                    const brechoModel = require('../models/brechoModel');
+                    const brechoData = await brechoModel.findByUserId(req.session.autenticado.id);
+                    if (brechoData && brechoData.length > 0) {
+                        userData.cnpj = brechoData[0].CNPJ_BRECHO || '';
+                        userData.razao_social = brechoData[0].RAZAO_SOCIAL || '';
+                        userData.nome_fantasia = brechoData[0].NOME_FANTASIA || '';
+                    }
+                }
+            }
+        }
+        
+        res.render('pages/informacao', {
+            autenticado: req.session ? req.session.autenticado : null,
+            usuario: userData
+        });
+    } catch (error) {
+        console.log('Erro ao carregar informações:', error);
+        res.render('pages/informacao', {
+            autenticado: req.session ? req.session.autenticado : null,
+            usuario: {
+                nome: 'Usuário',
+                email: 'email@exemplo.com',
+                telefone: '(11) 99999-9999',
+                imagem: null,
+                user_usuario: 'usuario',
+                cnpj: '',
+                razao_social: '',
+                nome_fantasia: ''
+            }
+        });
+    }
+});
 router.get('/menufavoritos', (req, res) => res.render('pages/menufavoritos'));
 router.get('/menucompras', (req, res) => res.render('pages/menucompras'));
 router.get('/planos', (req, res) => res.render('pages/planos'));
 
-router.get('/perfilcliente', function(req, res){
-   
-    
-    const userData = {
-        nome: (req.session && req.session.autenticado && req.session.autenticado.nome) ? req.session.autenticado.nome : 'Maria Silva',
-        email: (req.session && req.session.autenticado && req.session.autenticado.email) ? req.session.autenticado.email : 'maria.silva@email.com',
-        telefone: (req.session && req.session.autenticado && req.session.autenticado.telefone) ? req.session.autenticado.telefone : '(11) 99999-9999',
-        imagem: (req.session && req.session.autenticado && req.session.autenticado.imagem) ? req.session.autenticado.imagem : null,
-        data_cadastro: (req.session && req.session.autenticado && req.session.autenticado.data_cadastro) ? req.session.autenticado.data_cadastro : 'Janeiro 2024',
-        compras: (req.session && req.session.autenticado && req.session.autenticado.compras) ? req.session.autenticado.compras : 12,
-        favoritos: (req.session && req.session.autenticado && req.session.autenticado.favoritos) ? req.session.autenticado.favoritos : 5,
-        avaliacoes: (req.session && req.session.autenticado && req.session.autenticado.avaliacoes) ? req.session.autenticado.avaliacoes : 3
-    };
-    
-    res.render('pages/perfilcliente', {
-        usuario: userData,
-        autenticado: req.session ? req.session.autenticado : null
-    });
+router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(req, res){
+    try {
+        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
+            const imagePath = 'imagem/perfil/' + req.file.filename;
+            const dadosUsuario = {
+                IMG_URL: imagePath
+            };
+            
+            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
+            
+            res.json({
+                success: true,
+                imagePath: imagePath
+            });
+        } else {
+            res.json({ success: false, error: 'Arquivo não enviado' });
+        }
+    } catch (error) {
+        console.log('Erro ao salvar foto:', error);
+        res.json({ success: false, error: error.message });
+    }
 });
 
-router.get('/homeadm', (req, res) => res.render('pages/homeadm'));
+router.post('/upload-foto', uploadFile('foto'), async function(req, res){
+    try {
+        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
+            const imagePath = 'imagem/perfil/' + req.file.filename;
+            const dadosUsuario = {
+                IMG_URL: imagePath
+            };
+            
+            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
+            req.session.autenticado.imagem = imagePath;
+            
+            res.json({
+                success: true,
+                imagePath: imagePath
+            });
+        } else {
+            res.json({ success: false, error: 'Arquivo não enviado' });
+        }
+    } catch (error) {
+        console.log('Erro ao salvar foto:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
+
+router.post('/perfilcliente', async function(req, res){
+    try {
+        console.log('Dados recebidos:', req.body);
+        console.log('Sessão:', req.session.autenticado);
+        
+        const { firstName, lastName, email, phone, 'birth-date': birthDate, bio } = req.body;
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const dadosUsuario = {
+                NOME_USUARIO: `${firstName} ${lastName}`,
+                EMAIL_USUARIO: email,
+                CELULAR_USUARIO: phone
+            };
+            
+            // Salvar bio separadamente se existir campo na tabela
+            if (bio) {
+                dadosUsuario.DESCRICAO_USUARIO = bio;
+            }
+            
+
+            
+            console.log('Atualizando usuário:', dadosUsuario);
+            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
+            
+            // Se for cliente, atualizar data de nascimento
+            if (birthDate) {
+                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
+                if (clienteData && clienteData.length > 0) {
+                    const dadosCliente = {
+                        DATA_NASC: birthDate
+                    };
+                    console.log('Atualizando cliente:', dadosCliente);
+                    await cliente.update(dadosCliente, req.session.autenticado.id);
+                }
+            }
+            
+            console.log('Dados atualizados com sucesso');
+        }
+        
+        res.redirect('/perfilcliente');
+    } catch (error) {
+        console.log('Erro ao salvar perfil:', error);
+        res.redirect('/perfilcliente');
+    }
+});
+
+router.get('/perfilcliente', async function(req, res){
+    try {
+        console.log('Sessão autenticado:', req.session.autenticado);
+        
+        let userData = {
+            nome: 'Usuário',
+            email: 'email@exemplo.com',
+            telefone: '(11) 99999-9999',
+            imagem: null,
+            user_usuario: 'usuario',
+            data_cadastro: 'Janeiro 2024',
+            compras: 12,
+            favoritos: 5,
+            avaliacoes: 3,
+            cep: '',
+            logradouro: '',
+            numero: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
+            cpf: '',
+            data_nasc: ''
+        };
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            console.log('Buscando dados do usuário ID:', req.session.autenticado.id);
+            const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+            console.log('Dados encontrados:', userDetails);
+            
+            if (userDetails && userDetails.length > 0) {
+                const user = userDetails[0];
+                userData = {
+                    nome: user.NOME_USUARIO || 'Usuário',
+                    email: user.EMAIL_USUARIO || 'email@exemplo.com',
+                    telefone: user.CELULAR_USUARIO || '(11) 99999-9999',
+                    imagem: user.IMG_URL || null,
+                    user_usuario: user.USER_USUARIO || 'usuario',
+                    tipo_usuario: user.TIPO_USUARIO || 'cliente',
+                    bio: user.DESCRICAO_USUARIO || '',
+                    data_cadastro: 'Janeiro 2024',
+                    compras: 12,
+                    favoritos: 5,
+                    avaliacoes: 3,
+                    cep: user.CEP_USUARIO || '',
+                    logradouro: user.LOGRADOURO_USUARIO || '',
+                    numero: user.NUMERO_USUARIO || '',
+                    bairro: user.BAIRRO_USUARIO || '',
+                    cidade: user.CIDADE_USUARIO || '',
+                    uf: user.UF_USUARIO || '',
+                    cpf: '',
+                    data_nasc: ''
+                };
+                
+                // Buscar dados específicos do cliente apenas se for tipo 'cliente'
+                if (user.TIPO_USUARIO === 'cliente') {
+                    const clienteData = await cliente.findByUserId(req.session.autenticado.id);
+                    console.log('Dados do cliente:', clienteData);
+                    if (clienteData && clienteData.length > 0) {
+                        userData.cpf = clienteData[0].CPF_CLIENTE || '';
+                        userData.data_nasc = clienteData[0].DATA_NASC || '';
+                    }
+                }
+            }
+        }
+        
+        console.log('userData final:', userData);
+        res.render('pages/perfilcliente', {
+            usuario: userData,
+            autenticado: req.session ? req.session.autenticado : null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar perfil:', error);
+        res.render('pages/perfilcliente', {
+            usuario: {
+                nome: 'Usuário',
+                email: 'email@exemplo.com',
+                telefone: '(11) 99999-9999',
+                imagem: null,
+                user_usuario: 'usuario',
+                data_cadastro: 'Janeiro 2024',
+                compras: 12,
+                favoritos: 5,
+                avaliacoes: 3,
+                cep: '',
+                logradouro: '',
+                numero: '',
+                bairro: '',
+                cidade: '',
+                uf: '',
+                cpf: '',
+                data_nasc: ''
+            },
+            autenticado: req.session ? req.session.autenticado : null
+        });
+    }
+});
+
+router.get('/homeadm', async (req, res) => {
+    try {
+        const { bannerModel } = require('../models/bannerModel');
+        const banners = await bannerModel.findByPosition('Home') || [];
+        res.render('pages/homeadm', { banners: banners });
+    } catch (error) {
+        res.render('pages/homeadm', { banners: [] });
+    }
+});
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
 
 router.get('/denuncias', denunciaController.listarDenuncias);

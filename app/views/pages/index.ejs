@@ -124,13 +124,19 @@
       <br>
 
 
-      <!--                           Carrossel de banners  mobile                                          -->
+      <!--                           Carrossel de banners  desktop                                          -->
       <section class="oculto-mobile">
         <section class="carousel-container">
           <section class="carousel-slide">
-            <img src="imagens/banner outono.png" alt="Imagem 1">
-            <img src="imagens/banner desk.png" alt="Imagem 2">
-            <img src="imagens/banner boss desk.jpg" alt="Imagem 3">
+            <% if (banners && banners.length > 0) { %>
+              <% banners.slice(0, 3).forEach(banner => { %>
+                <img src="<%= banner.URL_IMAGEM %>" alt="Banner">
+              <% }) %>
+            <% } else { %>
+              <img src="imagens/banner outono.png" alt="Imagem 1">
+              <img src="imagens/banner desk.png" alt="Imagem 2">
+              <img src="imagens/banner boss desk.jpg" alt="Imagem 3">
+            <% } %>
           </section>
           <section class="carousel-indicators">
             <section class="active"></section>
@@ -141,9 +147,15 @@
       <section class="oculto-desktop">
         <section class="carousel-container">
           <section class="carousel-slide">
-            <img src="imagens/banner outono mobile.png" alt="Imagem 1">
-            <img src="imagens/banner primavera mobile.png" alt="Imagem 2">
-            <img src="imagens/banner boss mobile.png" alt="Imagem 3">
+            <% if (banners && banners.length > 3) { %>
+              <% banners.slice(3, 6).forEach(banner => { %>
+                <img src="<%= banner.URL_IMAGEM %>" alt="Banner">
+              <% }) %>
+            <% } else { %>
+              <img src="imagens/banner outono mobile.png" alt="Imagem 1">
+              <img src="imagens/banner primavera mobile.png" alt="Imagem 2">
+              <img src="imagens/banner boss mobile.png" alt="Imagem 3">
+            <% } %>
           </section>
           <section class="carousel-indicators">
             <section class="active"></section>

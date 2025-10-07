@@ -32,7 +32,7 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/perfilcliente"><img src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/perfilcliente"><img src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? '/' + usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -63,16 +63,15 @@
                 <section class="profile-section">
                     <section class="profile-header">
                         <section class="profile-photo">
-                            <img id="profile-img" src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
+                            <img id="profile-img" src="<%= (typeof usuario !== 'undefined' && usuario && usuario.imagem) ? '/' + usuario.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
                             <button class="photo-edit-btn" onclick="editProfilePhoto()">
                                 <span>+</span>
                             </button>
-                            <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
+                            <input type="file" id="profile-photo-input" name="profile-photo" accept="image/*" style="display: none;" onchange="uploadProfilePhoto(this)">
                         </section>
                         <section class="profile-info">
                             <h2 id="profile-name"><%= (typeof usuario !== 'undefined' && usuario && usuario.nome) ? usuario.nome : 'Maria Silva' %></h2>
                             <p id="profile-email"><%= (typeof usuario !== 'undefined' && usuario && usuario.email) ? usuario.email : 'maria.silva@email.com' %></p>
-                            <p class="member-since">Membro desde <%= (typeof usuario !== 'undefined' && usuario && usuario.data_cadastro) ? usuario.data_cadastro : 'Janeiro 2024' %></p>
                         </section>
                     </section>
 
@@ -148,12 +147,13 @@
 
             <!-- Seções de Conteúdo -->
             <section id="personal-info" class="content-section" style="display: none;">
-                <section class="section-header">
-                    <h2>Informações Pessoais</h2>
-                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </section>
+                <section class="section-wrapper">
+                    <section class="section-header">
+                        <h2>Informações Pessoais</h2>
+                        <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                    </section>
                 
-                <form class="profile-form" onsubmit="updatePersonalInfo(event)">
+                <form class="profile-form" method="POST" action="/perfilcliente" enctype="multipart/form-data">
                     <section class="form-row">
                         <section class="form-group">
                             <label for="first-name">Nome</label>
@@ -177,17 +177,18 @@
                         </section>
                         <section class="form-group">
                             <label for="birth-date">Data de Nascimento</label>
-                            <input type="date" id="birth-date" name="birthDate" value="1990-01-01">
+                            <input type="date" id="birth-date" name="birth-date" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.data_nasc) ? usuario.data_nasc.toISOString().split('T')[0] : '' %>">
                         </section>
                     </section>
                     
                     <section class="form-group">
                         <label for="bio">Sobre mim</label>
-                        <textarea id="bio" name="bio" placeholder="Conte um pouco sobre você...">Apaixonada por moda sustentável e peças únicas!</textarea>
+                        <textarea id="bio" name="bio" placeholder="Conte um pouco sobre você..."><%= (typeof usuario !== 'undefined' && usuario && usuario.bio) ? usuario.bio : 'Apaixonada por moda sustentável e peças únicas!' %></textarea>
                     </section>
                     
                     <button type="submit" class="save-btn">Salvar Alterações</button>
                 </form>
+                </section>
             </section>
 
             <section id="orders" class="content-section" style="display: none;">
@@ -412,9 +413,9 @@
                     <section class="address-item">
                         <section class="address-info">
                             <h3>Casa</h3>
-                            <p>Rua das Flores, 123</p>
-                            <p>Vila Madalena - São Paulo, SP</p>
-                            <p>CEP: 05435-000</p>
+                            <p><%= (typeof usuario !== 'undefined' && usuario && usuario.logradouro) ? usuario.logradouro + ', ' + usuario.numero : 'Rua das Flores, 123' %></p>
+                            <p><%= (typeof usuario !== 'undefined' && usuario && usuario.bairro) ? usuario.bairro + ' - ' + usuario.cidade + ', ' + usuario.uf : 'Vila Madalena - São Paulo, SP' %></p>
+                            <p>CEP: <%= (typeof usuario !== 'undefined' && usuario && usuario.cep) ? usuario.cep.replace(/^(\d{5})(\d{3})$/, '$1-$2') : '05435-000' %></p>
                         </section>
                         <section class="address-actions">
                             <button class="edit-address-btn" onclick="editAddress(1)">Editar</button>
@@ -443,27 +444,27 @@
                         <section class="form-row">
                             <section class="form-group">
                                 <label for="address-cep">CEP</label>
-                                <input type="text" id="address-cep" name="cep" placeholder="00000-000" maxlength="9" required>
+                                <input type="text" id="address-cep" name="cep" placeholder="00000-000" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.cep) ? usuario.cep.replace(/^(\d{5})(\d{3})$/, '$1-$2') : '' %>" maxlength="9" required>
                             </section>
                             <section class="form-group">
                                 <label for="address-number">Número</label>
-                                <input type="text" id="address-number" name="number" placeholder="123" required>
+                                <input type="text" id="address-number" name="number" placeholder="123" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.numero) ? usuario.numero : '' %>" required>
                             </section>
                         </section>
                         
                         <section class="form-group">
                             <label for="address-street">Rua</label>
-                            <input type="text" id="address-street" name="street" placeholder="Nome da rua" required>
+                            <input type="text" id="address-street" name="street" placeholder="Nome da rua" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.logradouro) ? usuario.logradouro : '' %>" required>
                         </section>
                         
                         <section class="form-row">
                             <section class="form-group">
                                 <label for="address-neighborhood">Bairro</label>
-                                <input type="text" id="address-neighborhood" name="neighborhood" placeholder="Nome do bairro" required>
+                                <input type="text" id="address-neighborhood" name="neighborhood" placeholder="Nome do bairro" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.bairro) ? usuario.bairro : '' %>" required>
                             </section>
                             <section class="form-group">
                                 <label for="address-city">Cidade</label>
-                                <input type="text" id="address-city" name="city" placeholder="Nome da cidade" required>
+                                <input type="text" id="address-city" name="city" placeholder="Nome da cidade" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.cidade) ? usuario.cidade : '' %>" required>
                             </section>
                         </section>
                         
@@ -472,16 +473,16 @@
                                 <label for="address-state">Estado</label>
                                 <select id="address-state" name="state" required>
                                     <option value="">Selecione o estado</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="CE">Ceará</option>
+                                    <option value="SP" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'SP') ? 'selected' : '' %>>São Paulo</option>
+                                    <option value="RJ" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'RJ') ? 'selected' : '' %>>Rio de Janeiro</option>
+                                    <option value="MG" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'MG') ? 'selected' : '' %>>Minas Gerais</option>
+                                    <option value="RS" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'RS') ? 'selected' : '' %>>Rio Grande do Sul</option>
+                                    <option value="PR" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'PR') ? 'selected' : '' %>>Paraná</option>
+                                    <option value="SC" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'SC') ? 'selected' : '' %>>Santa Catarina</option>
+                                    <option value="BA" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'BA') ? 'selected' : '' %>>Bahia</option>
+                                    <option value="GO" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'GO') ? 'selected' : '' %>>Goiás</option>
+                                    <option value="PE" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'PE') ? 'selected' : '' %>>Pernambuco</option>
+                                    <option value="CE" <%= (typeof usuario !== 'undefined' && usuario && usuario.uf === 'CE') ? 'selected' : '' %>>Ceará</option>
                                 </select>
                             </section>
                             <section class="form-group">
@@ -580,5 +581,45 @@
     </footer>
 
     <script src="script/perfilcliente.js"></script>
+    <script>
+        function editProfilePhoto() {
+            document.getElementById('profile-photo-input').click();
+        }
+        
+        function uploadProfilePhoto(input) {
+            if (input.files && input.files[0]) {
+                const formData = new FormData();
+                formData.append('profile-photo', input.files[0]);
+                
+                fetch('/perfilcliente/foto', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const imagePath = '/' + data.imagePath;
+                        document.getElementById('profile-img').src = imagePath;
+                        const headerImg = document.querySelector('.maria');
+                        if (headerImg) headerImg.src = imagePath;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao fazer upload:', error);
+                });
+            }
+        }
+        
+        function showSection(sectionId) {
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        function hideAllSections() {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+    </script>
 </body>
 </html>

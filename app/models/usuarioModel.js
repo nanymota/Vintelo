@@ -5,11 +5,9 @@ const usuarioModel = {
     findAll: async () => {
         try {
             const [resultados] = await pool.query(
-                "SELECT u.ID_USUARIO, u.NOME_USUARIO, u.USER_USUARIO, " +
-                "u.SENHA_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.TIPO_USUARIO, " +
-                "u.STATUS_USUARIO, t.TIPO_USUARIO as NOME_TIPO, t.DESCRICAO_USUARIO " +
-                "FROM USUARIOS u INNER JOIN TIPO_USUARIO t ON u.TIPO_USUARIO = t.ID_TIPO_USUARIO " +
-                "WHERE u.STATUS_USUARIO = 1"
+                "SELECT ID_USUARIO, NOME_USUARIO, USER_USUARIO, EMAIL_USUARIO, " +
+                "CELULAR_USUARIO, TIPO_USUARIO, STATUS_USUARIO " +
+                "FROM USUARIOS WHERE STATUS_USUARIO = 'ativo'"
             );
             return resultados;
         } catch (error) {
@@ -78,12 +76,11 @@ const usuarioModel = {
     findId: async (id) => {
         try {
             const [resultados] = await pool.query(
-                "SELECT u.ID_USUARIO, u.NOME_USUARIO, u.USER_USUARIO, " + 
-                "u.SENHA_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.TIPO_USUARIO, " +
-                "u.STATUS_USUARIO, u.NUMERO_USUARIO, u.CEP_USUARIO, u.IMAGEM_USUARIO, " + 
-                "t.ID_TIPO_USUARIO, t.DESCRICAO_USUARIO " +
-                "FROM USUARIOS u INNER JOIN TIPO_USUARIO t ON u.TIPO_USUARIO = t.ID_TIPO_USUARIO " +
-                "WHERE u.STATUS_USUARIO = 1 AND u.ID_USUARIO = ?", [id]
+                "SELECT ID_USUARIO, NOME_USUARIO, USER_USUARIO, EMAIL_USUARIO, " + 
+                "CELULAR_USUARIO, TIPO_USUARIO, STATUS_USUARIO, LOGRADOURO_USUARIO, " +
+                "NUMERO_USUARIO, BAIRRO_USUARIO, CIDADE_USUARIO, UF_USUARIO, " +
+                "CEP_USUARIO, IMG_URL, DESCRICAO_USUARIO " +
+                "FROM USUARIOS WHERE ID_USUARIO = ?", [id]
             )
             return resultados;
         } catch (error) {

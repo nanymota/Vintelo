@@ -32,7 +32,7 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/menuvendedor"><img src="imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -48,7 +48,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menuvendedor">
-                    <img src="imagens/imagem sem cadastro.avif" alt="Menu">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu">
                 </a>
             </nav>
         </header>
@@ -62,9 +62,17 @@
                 <!-- Sidebar de Navegação -->
                 <aside class="profile-sidebar">
                     <section class="profile-info">
-                        <img src="imagens/imagem sem cadastro.avif" alt="Foto de perfil" class="profile-image">
-                        <h2>Laviviana Brechó</h2>
-                        <p>@laviviana</p>
+                        <section class="photo-upload-container">
+                            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-image" id="profileImage">
+                            <section class="photo-upload-overlay">
+                                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                                <button type="button" class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
+                                    +
+                                </button>
+                            </section>
+                        </section>
+                        <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
+                        <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'usuario' %></p>
                     </section>
                     <nav class="profile-menu">
                         <a href="#" class="active">Dados Pessoais</a>
@@ -77,29 +85,40 @@
 
                 <!-- Conteúdo Principal -->
                 <section class="profile-content">
-                    <form class="info-form" id="profileForm">
+                    <form class="info-form" id="profileForm" enctype="multipart/form-data">
                         <!-- Dados Pessoais -->
                         <section class="form-section active" id="dados-pessoais">
                             <h3>Dados Pessoais</h3>
                             <section class="form-row">
                                 <section class="form-group">
                                     <label for="nome_usu">Nome Completo</label>
-                                    <input type="text" id="nome_usu" name="nome_usu" value="" required>
+                                    <input type="text" id="nome_usu" name="nome_usu" value="<%= autenticado && autenticado.nome ? autenticado.nome : '' %>" required>
                                 </section>
                                 <section class="form-group">
                                     <label for="email_usu">E-mail</label>
-                                    <input type="email" id="email_usu" name="email_usu" value="" required>
+                                    <input type="email" id="email_usu" name="email_usu" value="<%= autenticado && autenticado.email ? autenticado.email : '' %>" required>
                                 </section>
                             </section>
                             
                             <section class="form-row">
                                 <section class="form-group">
                                     <label for="fone_usu">Telefone</label>
-                                    <input type="telefone" id="fone_usu" name="fone_usu" value="(11) 99999-9999" required>
+                                    <input type="telefone" id="fone_usu" name="fone_usu" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.telefone) ? usuario.telefone : '(11) 99999-9999' %>" required>
                                 </section>
                                 <section class="form-group">
-                                    <label for="cpf">CPF</label>
-                                    <input type="text" id="cpf" name="cpf" value="123.456.789-00" required>
+                                    <label for="cnpj">CNPJ</label>
+                                    <input type="text" id="cnpj" name="cnpj" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.cnpj) ? usuario.cnpj : '' %>" maxlength="18" placeholder="00.000.000/0000-00" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="razao_social">Razão Social</label>
+                                    <input type="text" id="razao_social" name="razao_social" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.razao_social) ? usuario.razao_social : '' %>" minlength="5" maxlength="100" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="nome_fantasia">Nome Fantasia</label>
+                                    <input type="text" id="nome_fantasia" name="nome_fantasia" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.nome_fantasia) ? usuario.nome_fantasia : '' %>" minlength="2" maxlength="100" required>
                                 </section>
                             </section>
                             
@@ -288,5 +307,163 @@
     </footer>
 
     <script src="script/informacao.js"></script>
+    <script>
+        // Upload de foto
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload da foto
+                const formData = new FormData();
+                formData.append('foto', file);
+                
+                fetch('/upload-foto', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Foto enviada com sucesso');
+                    } else {
+                        alert('Erro ao enviar foto');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao enviar foto');
+                });
+            }
+        });
+        
+        // Validação e formatação de CEP
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('input', function() {
+                this.value = formatCEP(this.value);
+            });
+            
+            cepInput.addEventListener('blur', function() {
+                if (this.value.length === 9) {
+                    buscarCEP(this.value);
+                }
+            });
+        }
+        
+        function formatCEP(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{5})(\d)/, '$1-$2')
+                .replace(/(-\d{3})\d+?$/, '$1');
+        }
+        
+        function buscarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            
+            if (cep.length === 8) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            document.getElementById('logradouro').value = data.logradouro || '';
+                            document.getElementById('bairro').value = data.bairro || '';
+                            document.getElementById('cidade').value = data.localidade || '';
+                            document.getElementById('estado').value = data.uf || '';
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Erro ao buscar CEP:', error);
+                    });
+            }
+        }
+        
+        // Validação e formatação de CNPJ
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1/$2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        // Validação de CNPJ
+        function validarCNPJ(cnpj) {
+            cnpj = cnpj.replace(/[^\d]+/g, '');
+            if (cnpj.length !== 14) return false;
+            
+            // Elimina CNPJs inválidos conhecidos
+            if (/^(\d)\1{13}$/.test(cnpj)) return false;
+            
+            // Valida DVs
+            let tamanho = cnpj.length - 2;
+            let numeros = cnpj.substring(0, tamanho);
+            let digitos = cnpj.substring(tamanho);
+            let soma = 0;
+            let pos = tamanho - 7;
+            
+            for (let i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2) pos = 9;
+            }
+            
+            let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(0)) return false;
+            
+            tamanho = tamanho + 1;
+            numeros = cnpj.substring(0, tamanho);
+            soma = 0;
+            pos = tamanho - 7;
+            
+            for (let i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2) pos = 9;
+            }
+            
+            resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            return resultado == digitos.charAt(1);
+        }
+        
+        // Validação no envio do formulário
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            const cnpj = document.getElementById('cnpj').value;
+            const razaoSocial = document.getElementById('razao_social').value;
+            const nomeFantasia = document.getElementById('nome_fantasia').value;
+            
+            // Validar CNPJ
+            if (cnpj && !validarCNPJ(cnpj)) {
+                e.preventDefault();
+                alert('CNPJ inválido!');
+                return;
+            }
+            
+            // Validar Razão Social (mínimo 5 caracteres)
+            if (razaoSocial && razaoSocial.length < 5) {
+                e.preventDefault();
+                alert('Razão Social deve ter pelo menos 5 caracteres!');
+                return;
+            }
+            
+            // Validar Nome Fantasia (mínimo 2 caracteres)
+            if (nomeFantasia && nomeFantasia.length < 2) {
+                e.preventDefault();
+                alert('Nome Fantasia deve ter pelo menos 2 caracteres!');
+                return;
+            }
+            
+            // Validar CEP
+            const cep = document.getElementById('cep').value;
+            if (cep && !/^\d{5}-?\d{3}$/.test(cep)) {
+                e.preventDefault();
+                alert('CEP inválido!');
+                return;
+            }
+        });
+    </script>
 </body>
 </html>

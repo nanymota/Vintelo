@@ -98,6 +98,16 @@ const produtoModel = {
             return [];
         }
     },
+
+    createImage: async (camposJson) => {
+        try {
+            const [resultados] = await pool.query("INSERT INTO IMG_PRODUTOS SET ?", camposJson);
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
 }
 
 module.exports = { produtoModel };
