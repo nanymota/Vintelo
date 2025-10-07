@@ -116,6 +116,51 @@
                     <button class="admin-btn" onclick="excluirPost(3)">Excluir</button>
                 </section>
             </section>
+
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">20 out</span>
+                    <h3 class="category">Tendência</h3>
+                    <h2 class="post-title">Tendência Sweet Colors</h2>
+                    <p class="post-excerpt">Para a primavera/verão 2024, as cores são inspiradas na beleza da natureza...</p>
+                    <a href="/sweer" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/tendencia sweer.png" alt="Tendência Sweet" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(4)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(4)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">15 out</span>
+                    <h3 class="category">Sustentabilidade</h3>
+                    <h2 class="post-title">Moda Sustentável</h2>
+                    <p class="post-excerpt">A tendência é sustentável. Fast fashion vs Moda sustentável...</p>
+                    <a href="/tensustentavel" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/tendencia sustentável.png" alt="Moda Sustentável" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(5)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(5)">Excluir</button>
+                </section>
+            </section>
+
+            <section class="featured-post">
+                <section class="post-content">
+                    <span class="date">10 out</span>
+                    <h3 class="category">Ecológico</h3>
+                    <h2 class="post-title">Nosso Lado Ecológico</h2>
+                    <p class="post-excerpt">Descubra como a moda pode ser mais sustentável e ecológica...</p>
+                    <a href="/ecologicoartigo" class="read-more">Ver agora</a>
+                </section>
+                <img src="imagens/moda sustentável.png" alt="Lado Ecológico" class="post-image">
+                <section class="admin-controls">
+                    <button class="admin-btn" onclick="editarPost(6)">Editar</button>
+                    <button class="admin-btn" onclick="excluirPost(6)">Excluir</button>
+                </section>
+            </section>
         </main>
 
         <!-- Mobile Content -->
@@ -307,13 +352,41 @@
         }
         
         function editarPost(id) {
-            window.location.href = '/editarpost?id=' + id;
+            // Redirect to specific edit page based on blog ID
+            const editPages = {
+                1: '/editarpost?id=1', // Moda Metalizada
+                2: '/editarboss?id=2', // BOSS Milão
+                3: '/editargucci?id=3', // Gucci Milão
+                4: '/editarsweet?id=4', // Tendência Sweet
+                5: '/editarsustentavel?id=5', // Moda Sustentável
+                6: '/editarecologico?id=6' // Lado Ecológico
+            };
+            
+            if (editPages[id]) {
+                window.location.href = editPages[id];
+            } else {
+                alert('Página de edição não encontrada para este post.');
+            }
         }
         
         function excluirPost(id) {
             if (confirm('Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.')) {
-                alert('Post ' + id + ' excluído com sucesso!');
-                location.reload();
+                fetch('/blog/deletar/' + id, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        alert('Post excluído com sucesso!');
+                        location.reload();
+                    } else {
+                        alert('Erro ao excluir post: ' + data.erro);
+                    }
+                })
+                .catch(error => {
+                    alert('Erro ao excluir post');
+                    console.error(error);
+                });
             }
         }
 

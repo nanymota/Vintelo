@@ -963,13 +963,50 @@ router.get('/denuncias/analisar/:id', denunciaController.analisarDenunciaDetalha
 
 router.get('/analisardenuncia', (req, res) => res.render('pages/analisardenuncia'));
 router.get('/perfilpremium', (req, res) => res.render('pages/perfilpremium'));
-router.get('/blogadm', (req, res) => res.render('pages/blogadm'));
+router.get('/blogadm', (req, res) => {
+    const posts = [
+        {
+            ID_ARTIGO: 1,
+            TITULO: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
+            CONTEUDO: 'O metalizado se destaca em 2024 como uma tendência versátil...',
+            AUTOR: 'Vintélo Fashion',
+            DT_PUBLICACAO: '2024-11-05'
+        },
+        {
+            ID_ARTIGO: 2,
+            TITULO: 'BOSS | Milão Verão 2024',
+            CONTEUDO: 'A marca alemã BOSS apresentou em Milão...',
+            AUTOR: 'Vintélo Fashion',
+            DT_PUBLICACAO: '2024-11-03'
+        },
+        {
+            ID_ARTIGO: 3,
+            TITULO: 'Gucci | Milão Verão 2024',
+            CONTEUDO: 'Sob a direção criativa de Sabato De Sarno...',
+            AUTOR: 'Vintélo Fashion',
+            DT_PUBLICACAO: '2024-10-25'
+        }
+    ];
+    res.render('pages/blogadm', { posts: posts });
+});
 
 router.post('/blogadm', function(req, res){
-    const { titulo, categoria, conteudo, data } = req.body;
-    console.log('Novo post criado:', { titulo, categoria, conteudo, data: data || new Date().toLocaleDateString('pt-BR') });
+    console.log('Novo post criado:', req.body);
     res.redirect('/blogadm');
 });
+
+router.get('/editarpost', (req, res) => res.render('pages/editarpost'));
+router.get('/editarboss', (req, res) => res.render('pages/editarboss'));
+router.get('/editargucci', (req, res) => res.render('pages/editargucci'));
+router.get('/editarsweet', (req, res) => res.render('pages/editarsweet'));
+router.get('/editarsustentavel', (req, res) => res.render('pages/editarsustentavel'));
+router.get('/editarecologico', (req, res) => res.render('pages/editarecologico'));
+router.post('/editarpost', function(req, res){ res.redirect('/blogadm'); });
+router.post('/editarboss', function(req, res){ res.redirect('/blogadm'); });
+router.post('/editargucci', function(req, res){ res.redirect('/blogadm'); });
+router.post('/editarsweet', function(req, res){ res.redirect('/blogadm'); });
+router.post('/editarsustentavel', function(req, res){ res.redirect('/blogadm'); });
+router.post('/editarecologico', function(req, res){ res.redirect('/blogadm'); });
 
 router.get('/avaliacaoadm', (req, res) => res.render('pages/avaliacaoadm'));
 router.get('/editarpost', (req, res) => res.render('pages/editarpost'));

@@ -167,20 +167,26 @@ nav.grid img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0px 60px;
   margin-bottom: 15px;
 }
 
 h3 {
-  font-size: 24px;
-  color: #333;
+  font-size: 40px;
+  color: #797373;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
   margin: 0;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 40px;
 }
 
 .ver-tudo {
-  font-size: 16px;
-  color: #7d2838;
-  text-decoration: none;
+  font-size: 30px;
+  color: #7f7a7b;
+  text-decoration: underline;
+  text-decoration-color: rgb(255, 255, 255);
 }
 
 /*               Carrossel de produtos                  */
@@ -212,51 +218,58 @@ h3 {
   flex: 0 0 160px;
   background-color: #fff;
   border-radius: 15px;
-  padding: 10px;
+  padding: 5px;
   text-align: center;
   position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.150);
   margin-right: 10px;
 }
 
 .product-card img {
-  width: 100%;
+  width: 95%;
   height: 190px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 15px;
+  margin-top: 10px;
   margin-bottom: 8px;
 }
 
 .product-card h2 {
+  font-family: 'Raleway', sans-serif;
   font-size: 14px;
-  margin: 8px 0;
-  color: #333;
+  margin: 0.5rem 0;
+  color: #4e4e4eee;
   text-align: left;
-  padding: 0 5px;
+  padding: 0px 15px;
+  font-weight: 100;
+  letter-spacing: 1px;
   line-height: 1.2;
 }
 
 .price {
+  color: #000000;
+  margin-bottom: 1rem;
   font-size: 16px;
-  color: #000;
-  font-weight: bold;
   text-align: left;
-  padding: 0 5px;
-  margin: 5px 0;
+  padding: 0px 15px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
 }
 
 .Descrição {
+  color: #000000;
+  margin-bottom: 3rem;
   font-size: 12px;
-  color: #666;
   text-align: left;
-  padding: 0 5px;
-  margin: 5px 0 15px 0;
+  padding: 0px 15px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
 }
 
 .favorite {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
@@ -279,8 +292,8 @@ h3 {
 }
 
 .favorite img {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   margin: 0;
 }
 
@@ -290,8 +303,8 @@ h3 {
 
 .cart {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 10px;
+  right: 10px;
   background: transparent;
   border: none;
   width: 40px;
@@ -311,7 +324,7 @@ h3 {
 .cart img {
   width: 30px;
   height: 30px;
-  margin: 20px;
+  margin: 0;
 }
 
 
@@ -568,21 +581,71 @@ input[type="range"]::-webkit-slider-thumb {
 .products-section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    padding: 20px;
+    gap: 2rem;
+    padding: 20px 40px;
 }
 
 @media (min-width: 768px) {
     .products-section {
         grid-template-columns: repeat(3, 1fr);
         flex-grow: 1;
-        padding: 20px;
+        padding: 20px 80px;
+        gap: 2rem;
     }
 }
 
 @media (min-width: 1024px) {
     .products-section {
         grid-template-columns: repeat(4, 1fr);
+        padding: 10px 30px;
+        gap: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .products-section .product-card {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 5px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.150);
+    }
+    
+    .products-section .product-card img {
+        width: 95%;
+        border-radius: 15px;
+        margin-top: 10px;
+    }
+    
+    .products-section .product-card h2 {
+        font-family: 'Raleway', sans-serif;
+        font-size: 18px;
+        margin: 0.5rem 0;
+        color: #4e4e4eee;
+        text-align: left;
+        padding: 0px 20px;
+        font-weight: 100;
+        letter-spacing: 1px;
+    }
+    
+    .products-section .price {
+        color: #000000;
+        margin-bottom: 1rem;
+        font-size: 10px;
+        text-align: left;
+        padding: 0px 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .products-section .Descrição {
+        color: #000000;
+        margin-bottom: 3rem;
+        font-size: 14px;
+        text-align: left;
+        padding: 0px 20px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
     }
 }
 

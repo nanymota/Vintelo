@@ -563,15 +563,8 @@
             <% if (typeof autenticado !== 'undefined' && autenticado) { %>
                 const isFavorited = button.classList.contains('favorited');
                 
-                fetch('/favoritar', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: new URLSearchParams({
-                        id: productId,
-                        sit: isFavorited ? 'desfavoritar' : 'favoritar'
-                    })
+                fetch('/favoritar?id=' + productId, {
+                    method: 'GET'
                 })
                 .then(response => {
                     if (response.ok) {
@@ -580,30 +573,68 @@
                 })
                 .catch(error => console.error('Erro:', error));
             <% } else { %>
-                window.location.href = '/login';
+                window.location.href = '/cadastro';
             <% } %>
         }
+        
+        // Adicionar eventos de clique
+        document.addEventListener('DOMContentLoaded', function() {
+            const favoriteButtons = document.querySelectorAll('.favorite:not([onclick])');
+            favoriteButtons.forEach((button, index) => {
+                button.addEventListener('click', function() {
+                    toggleFavorite(this, index + 1);
+                });
+            });
+            
+            const cartButtons = document.querySelectorAll('.cart:not([onclick])');
+            cartButtons.forEach((button, index) => {
+                button.addEventListener('click', function() {
+                    addToCartButton(this, index + 1);
+                });
+            });
+        });
         
         // Função para adicionar ao carrinho
         function addToCart(productId) {
             <% if (typeof autenticado !== 'undefined' && autenticado) { %>
-                fetch('/addItem', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: new URLSearchParams({
-                        id: productId
-                    })
+                fetch('/addItem?id=' + productId, {
+                    method: 'GET'
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('Produto adicionado ao carrinho!');
+                        // Feedback visual simples
+                        const button = event.target.closest('.cart');
+                        if (button) {
+                            button.style.transform = 'scale(1.3)';
+                            setTimeout(() => {
+                                button.style.transform = 'scale(1)';
+                            }, 200);
+                        }
                     }
                 })
                 .catch(error => console.error('Erro:', error));
             <% } else { %>
-                window.location.href = '/login';
+                window.location.href = '/cadastro';
+            <% } %>
+        }
+        
+        // Função para adicionar ao carrinho com botão
+        function addToCartButton(button, productId) {
+            <% if (typeof autenticado !== 'undefined' && autenticado) { %>
+                fetch('/addItem?id=' + productId, {
+                    method: 'GET'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        button.style.transform = 'scale(1.3)';
+                        setTimeout(() => {
+                            button.style.transform = 'scale(1)';
+                        }, 200);
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            <% } else { %>
+                window.location.href = '/cadastro';
             <% } %>
         }
     </script>

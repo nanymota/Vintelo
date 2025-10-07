@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/editarpost.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <header class="mobile-header">
+        <a href="/blogadm">
+            <img src="imagens/seta.png" alt="Voltar">
+        </a>
+        <h1>EDITAR <span class="highlight">POST</span></h1>
+        <a href="/blogadm">
+            <img src="imagens/carrinho.png" alt="Blog">
+        </a>
+    </header>
+
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Editar Post BOSS</span>
+        </section>
+        <header class="main-header">
+            <a href="/blogadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/blogadm">Blog</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/avaliacaoadm">Avaliações</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar posts...">
+                </form>
+                <ul>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="edit-container">
+        <form class="edit-form" action="/editarboss" method="post" enctype="multipart/form-data">
+            <section class="form-header">
+                <h2>Editar Artigo BOSS</h2>
+                <p>Modifique o conteúdo do seu post</p>
+            </section>
+
+            <section class="form-section">
+                <label for="titulo">Título do Artigo</label>
+                <input type="text" id="titulo" name="titulo" value="BOSS | Milão Verão 2024" required>
+            </section>
+
+            <section class="form-section">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="BOSS" selected>BOSS</option>
+                    <option value="Moda">Moda</option>
+                    <option value="Tendência">Tendência</option>
+                    <option value="Style">Style</option>
+                    <option value="Sustentabilidade">Sustentabilidade</option>
+                    <option value="Gucci">Gucci</option>
+                </select>
+            </section>
+
+            <section class="form-section">
+                <label for="imagem-principal">Imagem Principal</label>
+                <section class="image-upload">
+                    <img src="imagens/boss milão.png" alt="Imagem atual" class="current-image" id="preview-principal">
+                    <input type="file" id="imagem-principal" name="imagem-principal" accept="image/*" onchange="previewImage(this, 'preview-principal')">
+                    <label for="imagem-principal" class="upload-btn">Alterar Imagem</label>
+                </section>
+            </section>
+
+            <section class="form-section">
+                <label for="resumo">Resumo/Descrição</label>
+                <textarea id="resumo" name="resumo" rows="4" required>Uma distopia na qual seres humanos se unem às máquinas para criar uma nova realidade fashion. A coleção BOSS Verão 2024 apresentada em Milão traz uma visão futurística da moda masculina e feminina.</textarea>
+            </section>
+
+            <section class="form-section">
+                <label>Imagens do Conteúdo</label>
+                <section class="content-images">
+                    <section class="image-item">
+                        <img src="imagens/boss milão 2.png" alt="BOSS Look 1" class="content-image" id="preview-1">
+                        <input type="file" id="look1" name="look1" accept="image/*" onchange="previewImage(this, 'preview-1')">
+                        <label for="look1" class="upload-btn">Alterar Look 1</label>
+                    </section>
+                    <section class="image-item">
+                        <img src="imagens/metalizado.png" alt="BOSS Look 2" class="content-image" id="preview-2">
+                        <input type="file" id="look2" name="look2" accept="image/*" onchange="previewImage(this, 'preview-2')">
+                        <label for="look2" class="upload-btn">Alterar Look 2</label>
+                    </section>
+                    <section class="image-item">
+                        <img src="imagens/vestido branco.png" alt="BOSS Look 3" class="content-image" id="preview-3">
+                        <input type="file" id="look3" name="look3" accept="image/*" onchange="previewImage(this, 'preview-3')">
+                        <label for="look3" class="upload-btn">Alterar Look 3</label>
+                    </section>
+                </section>
+            </section>
+
+            <section class="form-section">
+                <label for="subtitulo">Subtítulo</label>
+                <input type="text" id="subtitulo" name="subtitulo" value="FUTURO DA MODA MASCULINA E FEMININA">
+            </section>
+
+            <section class="form-section">
+                <label for="conteudo">Conteúdo Principal</label>
+                <textarea id="conteudo" name="conteudo" rows="8" required>A marca alemã BOSS apresentou em Milão sua coleção Verão 2024, explorando temas futurísticos e a relação entre humanidade e tecnologia. A coleção traz peças que misturam elementos clássicos da alfaiataria com detalhes inovadores e materiais tecnológicos. Os looks apresentam uma paleta de cores neutras com toques de metalizado, criando uma estética moderna e sofisticada. A proposta da marca é vestir o consumidor do futuro, alguém que navega entre o mundo físico e digital com igual desenvoltura.</textarea>
+            </section>
+
+            <section class="form-actions">
+                <button type="button" class="btn-secondary" onclick="window.location.href='/blogadm'">Cancelar</button>
+                <button type="submit" class="btn-primary">Salvar Alterações</button>
+            </section>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <img src="imagens/logo_vintélo_clara 1.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link">
+                    <img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link">
+                    <img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link">
+                    <img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function previewImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(previewId).src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>

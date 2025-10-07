@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="css/editarpost.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <header class="mobile-header">
+        <a href="/blogadm">
+            <img src="imagens/seta.png" alt="Voltar">
+        </a>
+        <h1>EDITAR <span class="highlight">POST</span></h1>
+        <a href="/blogadm">
+            <img src="imagens/carrinho.png" alt="Blog">
+        </a>
+    </header>
+
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Administrativo - Editar Post Estilo Ecológico</span>
+        </section>
+        <header class="main-header">
+            <a href="/blogadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/blogadm">Blog</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/avaliacaoadm">Avaliações</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar posts...">
+                </form>
+                <ul>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="edit-container">
+        <form class="edit-form" action="/editarecologico" method="post" enctype="multipart/form-data">
+            <section class="form-header">
+                <h2>Editar Artigo Estilo Ecológico</h2>
+                <p>Modifique o conteúdo do seu post</p>
+            </section>
+
+            <section class="form-section">
+                <label for="titulo">Título do Artigo</label>
+                <input type="text" id="titulo" name="titulo" value="Estilo Ecológico: Moda Verde em Alta" required>
+            </section>
+
+            <section class="form-section">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="Style" selected>Style</option>
+                    <option value="Sustentabilidade">Sustentabilidade</option>
+                    <option value="Moda">Moda</option>
+                    <option value="Tendência">Tendência</option>
+                    <option value="BOSS">BOSS</option>
+                    <option value="Gucci">Gucci</option>
+                </select>
+            </section>
+
+            <section class="form-section">
+                <label for="imagem-principal">Imagem Principal</label>
+                <section class="image-upload">
+                    <img src="imagens/ecologico.png" alt="Imagem atual" class="current-image" id="preview-principal">
+                    <input type="file" id="imagem-principal" name="imagem-principal" accept="image/*" onchange="previewImage(this, 'preview-principal')">
+                    <label for="imagem-principal" class="upload-btn">Alterar Imagem</label>
+                </section>
+            </section>
+
+            <section class="form-section">
+                <label>Imagens do Conteúdo</label>
+                <section class="content-images">
+                    <section class="image-item">
+                        <img src="imagens/roupas dobradas.png" alt="Fast Fashion" class="content-image" id="preview-1">
+                        <input type="file" id="look1" name="look1" accept="image/*" onchange="previewImage(this, 'preview-1')">
+                        <label for="look1" class="upload-btn">Alterar Imagem 1</label>
+                    </section>
+                    <section class="image-item">
+                        <img src="imagens/moda sustentável.png" alt="Moda Sustentável" class="content-image" id="preview-2">
+                        <input type="file" id="look2" name="look2" accept="image/*" onchange="previewImage(this, 'preview-2')">
+                        <label for="look2" class="upload-btn">Alterar Imagem 2</label>
+                    </section>
+                </section>
+            </section>
+
+            <section class="form-section">
+                <label for="resumo">Resumo/Descrição</label>
+                <textarea id="resumo" name="resumo" rows="4" required>O estilo ecológico combina consciência ambiental com elegância, criando looks únicos que respeitam o planeta.</textarea>
+            </section>
+
+
+
+            <section class="form-section">
+                <label for="subtitulo">Subtítulo</label>
+                <input type="text" id="subtitulo" name="subtitulo" value="NATUREZA E ELEGÂNCIA EM PERFEITA HARMONIA">
+            </section>
+
+            <section class="form-section">
+                <label for="conteudo">Conteúdo Principal</label>
+                <textarea id="conteudo" name="conteudo" rows="8" required>O estilo ecológico não se limita apenas ao uso de materiais sustentáveis, mas abraça uma filosofia completa de vida consciente. Tons terrosos, texturas naturais e silhuetas fluidas caracterizam essa tendência que cresce a cada temporada. Fibras como linho orgânico, algodão certificado, hemp e tencel são protagonistas de looks que transmitem sofisticação sem abrir mão da responsabilidade ambiental. Acessórios feitos de materiais reciclados e calçados veganos completam produções que provam que é possível ser elegante e sustentável ao mesmo tempo.</textarea>
+            </section>
+
+            <section class="form-actions">
+                <button type="button" class="btn-secondary" onclick="window.location.href='/blogadm'">Cancelar</button>
+                <button type="submit" class="btn-primary">Salvar Alterações</button>
+            </section>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <img src="imagens/logo_vintélo_clara 1.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link">
+                    <img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link">
+                    <img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link">
+                    <img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function previewImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    if (preview.tagName === 'IMG') {
+                        preview.src = e.target.result;
+                    } else {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="content-image">`;
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
