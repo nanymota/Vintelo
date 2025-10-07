@@ -2,6 +2,24 @@ const { validationResult } = require("express-validator");
 const usuario = require("./usuarioModel");
 const bcrypt = require("bcryptjs");
 
+carregarDadosUsuario = async (req, res, next) => {
+    if (req.session && req.session.autenticado && req.session.autenticado.id) {
+        try {
+            const userData = await usuario.findId(req.session.autenticado.id);
+            if (userData && userData.length > 0) {
+                const user = userData[0];
+                req.session.autenticado.nome = user.NOME_USUARIO;
+                req.session.autenticado.email = user.EMAIL_USUARIO;
+                req.session.autenticado.imagem = user.IMG_URL;
+                req.session.autenticado.user_usuario = user.USER_USUARIO;
+            }
+        } catch (error) {
+            console.log('Erro ao carregar dados do usuário:', error);
+        }
+    }
+    next();
+}
+
 verificarUsuAutenticado = (req, res, next) => {
     if (req.session.autenticado) {
         var autenticado = req.session.autenticado;
@@ -56,5 +74,6 @@ module.exports = {
     verificarUsuAutenticado,
     limparSessao,
     gravarUsuAutenticado,
-    verificarUsuAutorizado
+    verificarUsuAutorizado,
+    carregarDadosUsuario
 }

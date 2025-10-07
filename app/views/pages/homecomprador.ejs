@@ -65,9 +65,9 @@
             <li>
               <a href="/criarbrecho">
                 <section class="profile-section">
-                  <img src="imagens/imagem sem cadastro.avif" alt="Maria de Lourdes" class="profile-pic">
+                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Perfil" class="profile-pic">
                   <section class="profile-info">
-                    <h2>Maria de Lourdes</h2>
+                    <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
                   </section>
                   <button class="create-btn">Criar brechó</button>
                 </section>

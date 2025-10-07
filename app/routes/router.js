@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 const {
   verificarUsuAutenticado,
   limparSessao,
-  verificarUsuAutorizado
+  verificarUsuAutorizado,
+  carregarDadosUsuario
 } = require("../models/autenticador_middleware");
 
 const usuarioController = require("../controllers/usuarioController");
@@ -196,7 +197,7 @@ router.get('/perfil1', (req, res) => res.render('pages/perfil1'));
 router.get('/perfil2', (req, res) => res.render('pages/perfil2'));
 router.get('/perfil3', (req, res) => res.render('pages/perfil3'));
 
-router.get('/homecomprador', async function(req, res){
+router.get('/homecomprador', carregarDadosUsuario, async function(req, res){
     try {
         const { produtoModel } = require('../models/produtoModel');
         const produtos = await produtoModel.findRecent(8) || [];
@@ -214,7 +215,7 @@ router.get('/homecomprador', async function(req, res){
     }
 });
 
-router.get('/homevendedor', function(req, res){
+router.get('/homevendedor', carregarDadosUsuario, function(req, res){
     const brechoData = req.session.brecho || {
         nome: 'Meu Brechó',
         proprietario: 'Vendedor',
@@ -254,10 +255,10 @@ router.get('/favoritos', (req, res) => res.render('pages/favoritos'));
 router.get('/sacola1', (req, res) => res.render('pages/sacola1'));
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
 
-router.get('/perfilvender', function(req, res){
+router.get('/perfilvender', carregarDadosUsuario, function(req, res){
     const brechoData = {
         nome: (req.session.autenticado && req.session.autenticado.nome) || 'Nome do Brechó',
-        imagem: (req.session.autenticado && req.session.autenticado.imagem_usuario) || null,
+        imagem: (req.session.autenticado && req.session.autenticado.imagem) || null,
         avaliacao: '5.0',
         itens_venda: '0',
         vendidos: '0',
@@ -615,9 +616,17 @@ router.get('/minhascompras', (req, res) => res.render('pages/minhascompras'));
 router.get('/finalizandopagamento', (req, res) => res.render('pages/finalizandopagamento'));
 router.get('/pedidos', (req, res) => res.render('pages/pedidos'));
 router.get('/enviopedido', (req, res) => res.render('pages/enviopedido'));
-router.get('/menu', (req, res) => res.render('pages/menu'));
+router.get('/menu', carregarDadosUsuario, (req, res) => {
+    res.render('pages/menu', {
+        autenticado: req.session.autenticado || null
+    });
+});
 router.get('/minhascomprasdesktop', (req, res) => res.render('pages/minhascomprasdesktop'));
-router.get('/menuvendedor', (req, res) => res.render('pages/menuvendedor'));
+router.get('/menuvendedor', carregarDadosUsuario, (req, res) => {
+    res.render('pages/menuvendedor', {
+        autenticado: req.session.autenticado || null
+    });
+});
 router.get('/informacao', (req, res) => res.render('pages/informacao'));
 router.get('/menufavoritos', (req, res) => res.render('pages/menufavoritos'));
 router.get('/menucompras', (req, res) => res.render('pages/menucompras'));
