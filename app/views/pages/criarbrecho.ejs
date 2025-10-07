@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script src="../../public/script/script.js"></script>
+    <script src="/js/cadastro-ajax.js"></script>
+    <script src="/script/cep.js"></script>
     <link rel="stylesheet" href="css/criarbrecho.css">
 
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
@@ -89,26 +91,23 @@
                     </section>
                 </section>
 
-                <!-- Exibição de erros lá no topo -nany -->
-                <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
-                    <div class="alert alert-danger">
-                        <% listaErros.array().forEach(function(erro) { %>
-                            <p><%= erro.msg %></p>
-                        <% }); %>
-                    </div>
-                <% } %>
-
-                <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
-                    <div class="alert alert-<%= dadosNotificacao.tipo %>">
-                        <strong><%= dadosNotificacao.titulo %></strong>
-                        <p><%= dadosNotificacao.mensagem %></p>
-                    </div>
-                <% } %>
-                <br>
                 <form id="registerForm" action="/criarbrecho" method="post"  enctype="multipart/form-data">
                     <section class="form-group">
                         <label for="nomeusu_usu">Nome do Brechó</label>
-                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
+                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
+                        value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="cnpj_brecho">CNPJ (Opcional)</label>
+                        <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" maxlength="18" 
+                        value="<%= typeof valores !== 'undefined' && valores.cnpj_brecho ? valores.cnpj_brecho : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="razao_social">Razão Social (Opcional)</label>
+                        <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
+                        value="<%= typeof valores !== 'undefined' && valores.razao_social ? valores.razao_social : '' %>">
                     </section>
 
                     <section class="collapsible-section">
@@ -152,7 +151,7 @@
                         <section class="section-content" id="address-info">
                             <section class="form-group">
                                 <label for="cep">CEP</label>
-                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required>
+                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required value="<%= valores?.cep || '' %>">
                             </section>
 
                             <section class="form-group">
@@ -236,25 +235,6 @@
                 content.style.display = 'none';
                 arrow.innerHTML = '▼';
             }
-        }
-
-        function buscarCEP(cep) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('endereco').value = data.logradouro || '';
-                        document.getElementById('bairro').value = data.bairro || '';
-                        document.getElementById('cidade').value = data.localidade || '';
-                        document.getElementById('uf').value = data.uf || '';
-                    } else {
-                        alert('CEP não encontrado!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar CEP:', error);
-                    alert('Erro ao buscar CEP.');
-                });
         }
 
         function validarFormulario() {

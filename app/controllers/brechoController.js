@@ -1,6 +1,5 @@
 const brechoModel = require("../models/brechoModel");
 const usuario = require("../models/usuarioModel");
-const tipoUsuario = require("../models/tipoUsuarioModel");
 const { body, validationResult } = require("express-validator");
 const validator = require('validator');
 const bcrypt = require("bcryptjs");
@@ -25,7 +24,14 @@ const brechoController = {
     regrasValidacaoBrecho: [
         body("cnpj_brecho")
             .optional({ checkFalsy: true })
-            .isLength({ min: 14, max: 18 }).withMessage("CNPJ deve ter 14 dígitos!"),
+            .isLength({ min: 14, max: 18 }).withMessage("CNPJ deve ter 14 dígitos!")
+            .custom(async (value) => {
+                if (value) {
+                    const existe = await brechoModel.findByCnpj(value);
+                    if (existe.length > 0) throw new Error('CNPJ já cadastrado');
+                }
+                return true;
+            }),
         body("razao_social")
             .optional({ checkFalsy: true })
             .isLength({ min: 3, max: 100 }).withMessage("Razão social deve ter de 3 a 100 caracteres!"),
@@ -158,23 +164,21 @@ const brechoController = {
                 valores: sanitizeObject(req.body)
             });
         }
-
-        const tipoVendedor = await tipoUsuario.findByTipo('vendedor');
         
         const dadosUsuario = {
-            USER_USUARIO: req.body.nomeusu_usu.trim(),
+            USER_USUARIO: sanitizeInput(req.body.nomeusu_usu.trim()),
             SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
-            NOME_USUARIO: req.body.nome_usu.trim(),
-            EMAIL_USUARIO: req.body.email_usu.toLowerCase().trim(),
+            NOME_USUARIO: sanitizeInput(req.body.nome_usu.trim()),
+            EMAIL_USUARIO: sanitizeInput(req.body.email_usu.toLowerCase().trim()),
             CELULAR_USUARIO: req.body.fone_usu.replace(/\D/g, ''),
-            LOGRADOURO_USUARIO: req.body.endereco.trim(),
-            NUMERO_USUARIO: req.body.numero.trim(),
-            BAIRRO_USUARIO: req.body.bairro.trim(),
-            CIDADE_USUARIO: req.body.cidade.trim(),
-            UF_USUARIO: req.body.uf.toUpperCase().trim(),
+            LOGRADOURO_USUARIO: sanitizeInput(req.body.endereco.trim()),
+            NUMERO_USUARIO: sanitizeInput(req.body.numero.trim()),
+            BAIRRO_USUARIO: sanitizeInput(req.body.bairro.trim()),
+            CIDADE_USUARIO: sanitizeInput(req.body.cidade.trim()),
+            UF_USUARIO: sanitizeInput(req.body.uf.toUpperCase().trim()),
             CEP_USUARIO: req.body.cep.replace(/\D/g, ''),
-            TIPO_USUARIO: tipoVendedor.length > 0 ? tipoVendedor[0].ID_TIPO_USUARIO : 3,
-            STATUS_USUARIO: 1
+            TIPO_USUARIO: 'b',
+            STATUS_USUARIO: 'a'
         };
 
         try {
@@ -184,7 +188,7 @@ const brechoController = {
                     ID_USUARIO: createUsuario.insertId,
                     CNPJ_BRECHO: null,
                     RAZAO_SOCIAL: null,
-                    NOME_FANTASIA: req.body.nomeusu_usu.trim()
+                    NOME_FANTASIA: sanitizeInput(req.body.nomeusu_usu.trim())
                 };
                 
                 await brechoModel.create(dadosBrecho);
@@ -196,6 +200,17 @@ const brechoController = {
                     nome: dadosUsuario.NOME_USUARIO,
                     email: dadosUsuario.EMAIL_USUARIO
                 };
+                
+                if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+                    return res.json({
+                        success: true,
+                        userData: {
+                            nome: dadosUsuario.NOME_USUARIO,
+                            email: dadosUsuario.EMAIL_USUARIO,
+                            tipo: 'brecho'
+                        }
+                    });
+                }
                 
                 res.redirect('/perfilvender');
             }
@@ -238,6 +253,7 @@ const brechoController = {
         };
 
         const dadosBrecho = {
+            ID_USUARIO: createUsuario.insertId,
             CNPJ_BRECHO: req.body.cnpj || null,
             RAZAO_SOCIAL: req.body.razao_social || null,
             NOME_FANTASIA: req.body.nome_fantasia || null

@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Script similar para criar brechó
+// pro cadastro do brechó
 document.addEventListener('DOMContentLoaded', function() {
     const brechoForm = document.querySelector('form[action="/criarbrecho"]');
     
