@@ -76,7 +76,13 @@ const usuarioController = {
             .isDate().withMessage("Data de nascimento inválida!"),
         body("celular_usuario")
             .notEmpty().withMessage("Telefone é obrigatório!")
-            .isLength({ min: 10, max: 15 }).withMessage("Telefone deve ter entre 10 e 15 dígitos!"),
+            .isLength({ min: 10, max: 15 }).withMessage("Telefone deve ter entre 10 e 15 dígitos!")
+            .custom(async value => {
+                const telefoneExistente = await usuario.findCampoCustom('celular_usuario', value);
+                if (telefoneExistente > 0) {
+                    throw new Error('Telefone já cadastrado!');
+                }
+            }),
         body("cep_usuario")
             .notEmpty().withMessage("CEP é obrigatório!")
             .isPostalCode('BR').withMessage("CEP inválido!"),
@@ -130,7 +136,28 @@ const usuarioController = {
 
 
     cadastrar: async (req, res) => {
+        console.log('Dados recebidos:', req.body);
         const erros = validationResult(req);
+        
+        if (!erros.isEmpty()) {
+            return res.render("pages/cadastro", { 
+                listaErros: erros, 
+                dadosNotificacao: null, 
+                valores: req.body
+            })
+        }
+        
+        if (!req.body.senha_usu || req.body.senha_usu.trim() === '') {
+            return res.render("pages/cadastro", {
+                listaErros: null,
+                dadosNotificacao: {
+                    titulo: "Erro!",
+                    mensagem: "Senha é obrigatória!",
+                    tipo: "error"
+                },
+                valores: req.body
+            });
+        }
         
         var dadosForm = {
             USER_USUARIO: req.body.nomeusu_usu,
@@ -138,27 +165,20 @@ const usuarioController = {
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email_usu,
             CELULAR_USUARIO: req.body.celular_usuario,
-            CEP_USUARIO: req.body.cep_usuario.replace("-", ""),
+            CEP_USUARIO: req.body.cep_usuario ? req.body.cep_usuario.replace(/\D/g, "") : "",
             LOGRADOURO_USUARIO: req.body.logradouro_usuario,
             NUMERO_USUARIO: req.body.numero_usuario,
             BAIRRO_USUARIO: req.body.bairro_usuario,
             CIDADE_USUARIO: req.body.cidade_usuario,
-            UF_USUARIO: req.body.uf_usuario.toUpperCase(),
+            UF_USUARIO: req.body.uf_usuario ? req.body.uf_usuario.toUpperCase() : '',
             TIPO_USUARIO: 'cliente',
             STATUS_USUARIO: 'ativo'
         };
         
-        if (!erros.isEmpty()) {
-            return res.render("pages/login", { 
-                listaErros: erros, 
-                dadosNotificacao: null, 
-                valores: req.body,
-                avisoErro: {}
-            })
-        }
-        
         try {
+            console.log('Dados para criar usuário:', dadosForm);
             let create = await usuario.create(dadosForm);
+            console.log('Resultado da criação:', create);
             if (create && create.insertId) {
                 // Criar registro na tabela CLIENTES (obrigatório)
                 const dadosCliente = {
@@ -167,7 +187,9 @@ const usuarioController = {
                     DATA_NASC: req.body.data_nasc
                 };
                 
+                console.log('Dados para criar cliente:', dadosCliente);
                 await cliente.create(dadosCliente);
+                console.log('Cliente criado com sucesso');
                 
                 req.session.autenticado = {
                     autenticado: dadosForm.NOME_USUARIO,
@@ -189,19 +211,19 @@ const usuarioController = {
                     });
                 }
                 
+                console.log('Redirecionando para homecomprador');
                 res.redirect('/homecomprador');
             }
         } catch (e) {
             console.log(e);
-            res.render("pages/login", {
+            res.render("pages/cadastro", {
                 listaErros: null, 
                 dadosNotificacao: {
                     titulo: "Erro ao cadastrar!", 
                     mensagem: "Verifique os valores digitados!", 
                     tipo: "error"
                 }, 
-                valores: req.body,
-                avisoErro: {}
+                valores: req.body
             })
         }
     },

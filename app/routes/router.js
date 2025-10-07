@@ -169,7 +169,21 @@ router.get("/cadastro", function (req, res) {
   res.render("pages/cadastro", {
     listaErros: null,
     dadosNotificacao: null,
-    valores: { nome_usu: "", nomeusu_usu: "", email_usu: "", senha_usu: "" },
+    valores: {
+      nome_usu: "",
+      nomeusu_usu: "",
+      email_usu: "",
+      senha_usu: "",
+      celular_usuario: "",
+      cpf_cliente: "",
+      data_nasc: "",
+      cep_usuario: "",
+      logradouro_usuario: "",
+      numero_usuario: "",
+      bairro_usuario: "",
+      cidade_usuario: "",
+      uf_usuario: ""
+    },
   });
 });
 
