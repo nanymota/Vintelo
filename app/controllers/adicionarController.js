@@ -35,6 +35,16 @@ const adicionarController = {
         body('estilo_produto')
             .notEmpty()
             .withMessage('Estilo é obrigatório'),
+        
+        body('cor_produto')
+            .notEmpty()
+            .withMessage('Cor é obrigatória'),
+        
+        body('descricao_produto')
+            .notEmpty()
+            .withMessage('Descrição é obrigatória')
+            .isLength({ min: 10 })
+            .withMessage('Descrição deve ter pelo menos 10 caracteres'),
     ],
 
     criarProduto: async (req, res) => {
@@ -51,11 +61,13 @@ const adicionarController = {
             });
         }
 
+
+
         if (!req.files || req.files.length === 0) {
             return res.render('pages/adicionar', {
                 valores: req.body,
                 avisoErro: {
-                    titulo: 'Imagem obrigatória!',
+                    titulo: 'Foto obrigatória!',
                     mensagem: 'Por favor, adicione pelo menos uma foto do produto',
                     tipo: 'error'
                 }
@@ -88,13 +100,15 @@ const adicionarController = {
                 const imagensInseridas = [];
                 
                 try {
-                    // Salvar imagens na tabela IMG_PRODUTOS
-                    for (let file of req.files) {
-                        const imagemResult = await produtoModel.createImage({
-                            ID_PRODUTO: resultado.insertId,
-                            URL_IMG: 'imagem/produtos/' + file.filename
-                        });
-                        imagensInseridas.push(imagemResult.insertId);
+                    // Salvar imagens na tabela IMG_PRODUTOS (se houver)
+                    if (req.files && req.files.length > 0) {
+                        for (let file of req.files) {
+                            const imagemResult = await produtoModel.createImage({
+                                ID_PRODUTO: resultado.insertId,
+                                URL_IMG: 'imagem/produtos/' + file.filename
+                            });
+                            imagensInseridas.push(imagemResult.insertId);
+                        }
                     }
                     
                     res.redirect('/homevendedor?sucesso=produto_enviado');
@@ -114,7 +128,7 @@ const adicionarController = {
             console.log('Erro ao criar produto:', error);
             
             // Limpar arquivos de upload em caso de erro
-            if (req.files) {
+            if (req.files && req.files.length > 0) {
                 const fs = require('fs');
                 req.files.forEach(file => {
                     try {
