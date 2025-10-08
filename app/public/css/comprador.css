@@ -28,6 +28,20 @@
     height: 40px;
   }
   
+  nav.grid .profile-pic,
+  header nav.grid .profile-pic,
+  .grid .profile-pic {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    aspect-ratio: 1/1 !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
+    flex: none !important;
+  }
+  
   /*              tablets e desk           */
   @media (min-width: 768px) {
     header {

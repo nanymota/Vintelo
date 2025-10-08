@@ -197,165 +197,18 @@
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
                 </section>
                 
-                <section class="orders-list">
-                    <section class="order-date-header">15 de Janeiro</section>
-                    <section class="order-card">
-                        <section class="order-content">
-                            <img src="imagens/vestido branco.png" alt="Vestido Branco" class="product-image">
-                            <section class="order-info">
-                                <h3 class="product-title">Vestido Branco Longo</h3>
-                                <p class="order-status delivered">Entregue</p>
-                                <p class="delivery-info">Chegou no dia 17 de Janeiro</p>
-                                <p class="order-total">R$ 35,90</p>
-                                <section class="order-actions">
-                                    <button class="track-btn" onclick="toggleTracking(this)">Ver Rastreamento</button>
-                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
-                                </section>
-                            </section>
-                        </section>
-                        
-                        <section class="order-details" style="display: none;">
-                            <h4>Detalhes do Pedido</h4>
-                            <section class="detail-row">
-                                <span class="detail-label">Número do Pedido:</span>
-                                <span class="detail-value">#VT2024-001</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Valor Total:</span>
-                                <span class="detail-value">R$ 35,90</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Forma de Pagamento:</span>
-                                <span class="detail-value">PIX</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Vendedor:</span>
-                                <span class="detail-value">Brechó da Maria</span>
-                            </section>
-                        </section>
-                        
-                        <section class="tracking-details" style="display: none;">
-                            <section class="tracking-step completed">
-                                <span class="step-icon">✓</span>
-                                <section class="step-info">
-                                    <p class="step-title">Pedido Confirmado</p>
-                                    <p class="step-time">15/01 - 10:30</p>
-                                </section>
-                            </section>
-                            <section class="tracking-step completed">
-                                <span class="step-icon">✓</span>
-                                <section class="step-info">
-                                    <p class="step-title">Saiu para Entrega</p>
-                                    <p class="step-time">17/01 - 08:15</p>
-                                </section>
-                            </section>
-                            <section class="tracking-step completed">
-                                <span class="step-icon">✓</span>
-                                <section class="step-info">
-                                    <p class="step-title">Entregue</p>
-                                    <p class="step-time">17/01 - 15:20</p>
-                                </section>
-                            </section>
-                        </section>
+                <% if (typeof usuario !== 'undefined' && usuario && usuario.compras > 0) { %>
+                    <section class="orders-list">
+                        <p>Seus pedidos aparecerão aqui quando você fizer compras.</p>
                     </section>
-
-                    <section class="order-date-header">10 de Janeiro</section>
-                    <section class="order-card">
-                        <section class="order-content">
-                            <img src="imagens/vestido roxo.png" alt="Vestido Roxo" class="product-image">
-                            <section class="order-info">
-                                <h3 class="product-title">Vestido Roxo com Decote</h3>
-                                <p class="order-status shipped">Em Trânsito</p>
-                                <p class="delivery-info">Chegará hoje antes das 21h</p>
-                                <p class="order-total">R$ 42,50</p>
-                                <section class="order-actions">
-                                    <button class="track-btn" onclick="toggleTracking(this)">Rastrear Pedido</button>
-                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
-                                </section>
-                            </section>
-                        </section>
-                        
-                        <section class="order-details" style="display: none;">
-                            <h4>Detalhes do Pedido</h4>
-                            <section class="detail-row">
-                                <span class="detail-label">Número do Pedido:</span>
-                                <span class="detail-value">#VT2024-002</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Valor Total:</span>
-                                <span class="detail-value">R$ 42,50</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Forma de Pagamento:</span>
-                                <span class="detail-value">Cartão de Crédito</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Vendedor:</span>
-                                <span class="detail-value">Karine Store</span>
-                            </section>
-                        </section>
-                        
-                        <section class="tracking-details" style="display: none;">
-                            <section class="tracking-step completed">
-                                <span class="step-icon">✓</span>
-                                <section class="step-info">
-                                    <p class="step-title">Pedido Confirmado</p>
-                                    <p class="step-time">10/01 - 14:20</p>
-                                </section>
-                            </section>
-                            <section class="tracking-step active">
-                                <span class="step-icon">🚚</span>
-                                <section class="step-info">
-                                    <p class="step-title">Saiu para Entrega</p>
-                                    <p class="step-time">12/01 - 08:15</p>
-                                </section>
-                            </section>
-                            <section class="tracking-step">
-                                <span class="step-icon">○</span>
-                                <section class="step-info">
-                                    <p class="step-title">Entregue</p>
-                                    <p class="step-time">Previsão: 12/01 - 21:00</p>
-                                </section>
-                            </section>
-                        </section>
+                <% } else { %>
+                    <section class="empty-state">
+                        <img src="imagens/icone saco.png" alt="Sem pedidos" class="empty-icon">
+                        <h3 class="empty-title">Nenhum pedido ainda</h3>
+                        <p class="empty-text">Que tal explorar nossa coleção e fazer sua primeira compra?</p>
+                        <a href="/categorias" class="empty-btn">Explorar Produtos</a>
                     </section>
-
-                    <section class="order-date-header">5 de Janeiro</section>
-                    <section class="order-card">
-                        <section class="order-content">
-                            <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto Rosa" class="product-image">
-                            <section class="order-info">
-                                <h3 class="product-title">Conjunto Rosa de Malha</h3>
-                                <p class="order-status processing">Processando</p>
-                                <p class="delivery-info">Aguardando confirmação do vendedor</p>
-                                <p class="order-total">R$ 28,00</p>
-                                <section class="order-actions">
-                                    <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
-                                </section>
-                            </section>
-                        </section>
-                        
-                        <section class="order-details" style="display: none;">
-                            <h4>Detalhes do Pedido</h4>
-                            <section class="detail-row">
-                                <span class="detail-label">Número do Pedido:</span>
-                                <span class="detail-value">#VT2024-003</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Valor Total:</span>
-                                <span class="detail-value">R$ 28,00</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Forma de Pagamento:</span>
-                                <span class="detail-value">PIX</span>
-                            </section>
-                            <section class="detail-row">
-                                <span class="detail-label">Vendedor:</span>
-                                <span class="detail-value">Coisitas Brechó</span>
-                            </section>
-                        </section>
-                    </section>
-                </section>
+                <% } %>
             </section>
 
             <section id="favorites" class="content-section" style="display: none;">
@@ -364,43 +217,30 @@
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
                 </section>
                 
-                <section class="favorites-grid">
-                    <section class="favorite-item">
-                        <section class="favorite-image">
-                            <img src="imagens/vestido branco.png" alt="Vestido Branco">
-                            <button class="remove-favorite" onclick="removeFavorite(1)">❤️</button>
-                        </section>
-                        <section class="favorite-info">
-                            <h3>Vestido Branco Longo</h3>
-                            <p class="favorite-price">R$ 35,90</p>
-                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
-                        </section>
+                <% if (typeof favoritos !== 'undefined' && favoritos && favoritos.length > 0) { %>
+                    <section class="favorites-grid">
+                        <% favoritos.forEach(function(favorito) { %>
+                            <section class="favorite-item">
+                                <section class="favorite-image">
+                                    <img src="<%= favorito.IMG_PRODUTO_1 || 'imagens/produto-default.png' %>" alt="<%= favorito.NOME_PRODUTO %>">
+                                    <button class="remove-favorite" onclick="removeFavorite(<%= favorito.ID_PRODUTO %>)">❤️</button>
+                                </section>
+                                <section class="favorite-info">
+                                    <h3><%= favorito.NOME_PRODUTO %></h3>
+                                    <p class="favorite-price">R$ <%= favorito.PRECO_PRODUTO %></p>
+                                    <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
+                                </section>
+                            </section>
+                        <% }); %>
                     </section>
-
-                    <section class="favorite-item">
-                        <section class="favorite-image">
-                            <img src="imagens/cropped flor.png" alt="Cropped Floral">
-                            <button class="remove-favorite" onclick="removeFavorite(2)">❤️</button>
-                        </section>
-                        <section class="favorite-info">
-                            <h3>Cropped Manga Longa Floral</h3>
-                            <p class="favorite-price">R$ 29,99</p>
-                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
-                        </section>
+                <% } else { %>
+                    <section class="empty-state">
+                        <img src="imagens/icone coraçao.png" alt="Sem favoritos" class="empty-icon">
+                        <h3 class="empty-title">Nenhum favorito ainda</h3>
+                        <p class="empty-text">Explore nossa coleção e favorite suas peças preferidas!</p>
+                        <a href="/categorias" class="empty-btn">Descobrir Peças</a>
                     </section>
-
-                    <section class="favorite-item">
-                        <section class="favorite-image">
-                            <img src="imagens/vestido roxo.png" alt="Vestido Roxo">
-                            <button class="remove-favorite" onclick="removeFavorite(3)">❤️</button>
-                        </section>
-                        <section class="favorite-info">
-                            <h3>Vestido Roxo com Decote</h3>
-                            <p class="favorite-price">R$ 42,50</p>
-                            <button class="add-to-cart-btn">Adicionar ao Carrinho</button>
-                        </section>
-                    </section>
-                </section>
+                <% } %>
             </section>
 
             <section id="addresses" class="content-section" style="display: none;">
@@ -454,7 +294,7 @@
                         
                         <section class="form-group">
                             <label for="address-street">Rua</label>
-                            <input type="text" id="address-street" name="street" placeholder="Nome da rua" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.logradouro) ? usuario.logradouro : '' %>" required>
+                            <input type="text" id="address-street" name="street" placeholder="Nome da rua" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.logradouro) ? usuario.logradouro : '' %>" required>logradouro : '' %>" required>.logradouro) ? usuario.logradouro : '' %>" required>io.logradouro) ? usuario.logradouro : '' %>" required>
                         </section>
                         
                         <section class="form-row">
@@ -506,18 +346,9 @@
                 </section>
                 
                 <section class="payment-methods">
-                    <section class="payment-item">
-                        <section class="payment-info">
-                            <h3>Cartão de Crédito</h3>
-                            <p>**** **** **** 1234</p>
-                            <p>Visa - Vence em 12/2025</p>
-                        </section>
-                        <section class="payment-actions">
-                            <button class="edit-payment-btn" onclick="editPayment(1)">Editar</button>
-                            <button class="delete-payment-btn" onclick="deletePayment(1)">Remover</button>
-                        </section>
+                    <section class="empty-state">
+                        <p>Nenhum método de pagamento cadastrado.</p>
                     </section>
-
                     <button class="add-payment-btn" onclick="addNewPayment()">+ Adicionar Cartão</button>
                 </section>
             </section>
@@ -598,10 +429,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const imagePath = '/' + data.imagePath;
-                        document.getElementById('profile-img').src = imagePath;
+                        document.getElementById('profile-img').src = '/' + data.imagePath;
                         const headerImg = document.querySelector('.maria');
-                        if (headerImg) headerImg.src = imagePath;
+                        if (headerImg) headerImg.src = '/' + data.imagePath;
                     }
                 })
                 .catch(error => {
@@ -619,6 +449,32 @@
             sections.forEach(section => {
                 section.style.display = 'none';
             });
+        }
+        
+        function removeFavorite(produtoId) {
+            fetch('/favoritar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ produto_id: produtoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        }
+        
+        function addNewAddress() {
+            document.getElementById('address-modal').style.display = 'block';
+        }
+        
+        function closeAddressModal() {
+            document.getElementById('address-modal').style.display = 'none';
+        }
+        
+        function addNewPayment() {
+            alert('Funcionalidade de adicionar cartão em desenvolvimento');
         }
     </script>
 </body>

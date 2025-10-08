@@ -33,6 +33,20 @@ header img {
   gap: 40px;
 }
 
+nav.grid .profile-pic,
+header nav.grid .profile-pic,
+.grid .profile-pic {
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  aspect-ratio: 1/1 !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+  flex: none !important;
+}
+
 /*                       modo desktop                              */
 .top-bar {
   background-color: #8c2b44;
