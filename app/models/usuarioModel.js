@@ -7,7 +7,7 @@ const usuarioModel = {
             const [resultados] = await pool.query(
                 "SELECT ID_USUARIO, NOME_USUARIO, USER_USUARIO, EMAIL_USUARIO, " +
                 "CELULAR_USUARIO, TIPO_USUARIO, STATUS_USUARIO " +
-                "FROM USUARIOS WHERE STATUS_USUARIO = 'ativo'"
+                "FROM USUARIOS WHERE STATUS_USUARIO = 'ativo' OR STATUS_USUARIO = 'a'"
             );
             return resultados;
         } catch (error) {
@@ -17,21 +17,23 @@ const usuarioModel = {
     },
     findUserEmail: async (camposForm) => {
         try {
+            console.log('Buscando usuário com:', camposForm.user_usuario);
             const [resultados] = await pool.query (
-                "SELECT * FROM USUARIOS WHERE USER_USUARIO = ? or EMAIL_USUARIO =? ", 
+                "SELECT * FROM USUARIOS WHERE (USER_USUARIO = ? OR EMAIL_USUARIO = ?) AND (STATUS_USUARIO = 'ativo' OR STATUS_USUARIO = 'a')", 
                 [camposForm.user_usuario, camposForm.user_usuario]
             )
+            console.log('Resultados da consulta:', resultados);
             return resultados;
         } catch (error) {
-            console.log(error);
-            return error;
+            console.log('Erro na consulta findUserEmail:', error);
+            return [];
         }
     },
  
     findCampoCustom: async (campo, valor) => {
         try {
             // Validar nome do campo para evitar SQL injection
-            const camposPermitidos = ['email_usuario', 'user_usuario', 'google_id', 'instagram_id'];
+            const camposPermitidos = ['EMAIL_USUARIO', 'USER_USUARIO', 'GOOGLE_ID', 'INSTAGRAM_ID', 'CELULAR_USUARIO', 'email_usuario', 'user_usuario', 'google_id', 'instagram_id', 'celular_usuario'];
             if (!camposPermitidos.includes(campo.toLowerCase())) {
                 throw new Error('Campo não permitido');
             }
@@ -133,6 +135,19 @@ const usuarioModel = {
         try {
             const [resultados] = await pool.query(
                 "UPDATE USUARIOS SET STATUS_USUARIO = 0 WHERE ID_USUARIO = ? ", [id] 
+            )
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+
+    updatePassword: async (id, senhaHash) => {
+        try {
+            const [resultados] = await pool.query(
+                "UPDATE USUARIOS SET SENHA_USUARIO = ? WHERE ID_USUARIO = ?",
+                [senhaHash, id]
             )
             return resultados;
         } catch (error) {

@@ -42,7 +42,7 @@ const usuarioController = {
             .notEmpty().withMessage("Nome de usuário é obrigatório!")
             .isLength({ min: 3, max: 50 }).withMessage("Nome de usuário deve ter de 3 a 50 caracteres!")
             .custom(async value => {
-                const nomeUsu = await usuario.findCampoCustom('user_usuario', value);
+                const nomeUsu = await usuario.findCampoCustom('USER_USUARIO', value);
                 if (nomeUsu > 0) {
                     throw new Error('Nome de usuário em uso!');
                 }
@@ -51,7 +51,7 @@ const usuarioController = {
             .notEmpty().withMessage("E-mail é obrigatório!")
             .isEmail().withMessage("Digite um e-mail válido!")
             .custom(async value => {
-                const emailUsu = await usuario.findCampoCustom('email_usuario', value);
+                const emailUsu = await usuario.findCampoCustom('EMAIL_USUARIO', value);
                 if (emailUsu > 0) {
                     throw new Error('E-mail em uso!');
                 }
@@ -78,7 +78,7 @@ const usuarioController = {
             .notEmpty().withMessage("Telefone é obrigatório!")
             .isLength({ min: 10, max: 15 }).withMessage("Telefone deve ter entre 10 e 15 dígitos!")
             .custom(async value => {
-                const telefoneExistente = await usuario.findCampoCustom('celular_usuario', value);
+                const telefoneExistente = await usuario.findCampoCustom('CELULAR_USUARIO', value);
                 if (telefoneExistente > 0) {
                     throw new Error('Telefone já cadastrado!');
                 }
@@ -161,7 +161,7 @@ const usuarioController = {
         
         var dadosForm = {
             USER_USUARIO: req.body.nomeusu_usu,
-            SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, salt),
+            SENHA_USUARIO: req.body.senha_usu,
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email_usu,
             CELULAR_USUARIO: req.body.celular_usuario,
@@ -171,12 +171,14 @@ const usuarioController = {
             BAIRRO_USUARIO: req.body.bairro_usuario,
             CIDADE_USUARIO: req.body.cidade_usuario,
             UF_USUARIO: req.body.uf_usuario ? req.body.uf_usuario.toUpperCase() : '',
-            TIPO_USUARIO: 'cliente',
-            STATUS_USUARIO: 'ativo'
+            TIPO_USUARIO: 'c',
+            STATUS_USUARIO: 'a'
         };
         
         try {
             console.log('Dados para criar usuário:', dadosForm);
+            console.log('Senha original:', req.body.senha_usu);
+            console.log('Senha criptografada:', dadosForm.SENHA_USUARIO);
             let create = await usuario.create(dadosForm);
             console.log('Resultado da criação:', create);
             if (create && create.insertId) {

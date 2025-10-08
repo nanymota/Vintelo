@@ -23,6 +23,12 @@ app.set('views', path.join(__dirname, 'app/views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware para debug de sessão
+app.use((req, res, next) => {
+    console.log('Sessão atual:', req.session);
+    next();
+});
+
 var rotas = require(path.join(__dirname, 'app/routes/router'));
 app.use("/", rotas);
 

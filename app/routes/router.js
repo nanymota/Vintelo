@@ -23,6 +23,7 @@ const { bannerController } = require("../controllers/bannerController");
 const usuarioModel = require('../models/usuarioModel');
 const tipoUsuarioModel = require('../models/tipoUsuarioModel');
 const cliente = require('../models/clienteModel');
+const pool = require('../config/pool_conexoes');
 
 const uploadFile = require("../util/uploader");
 const uploadProduto = require("../util/uploaderProduto");
@@ -121,6 +122,8 @@ router.get("/login", function (req, res) {
 router.post("/login", async function (req, res) {
     const { email_usu, senha_usu } = req.body;
     
+    console.log('Dados de login recebidos:', { email_usu, senha_usu });
+    
     if (!email_usu || !senha_usu) {
         return res.render('pages/login', {
             listaErros: null,
@@ -132,10 +135,13 @@ router.post("/login", async function (req, res) {
     
     try {
         const usuarios = await usuarioModel.findUserEmail({ user_usuario: email_usu });
+        console.log('Usuários encontrados:', usuarios);
         
         if (usuarios.length > 0) {
             const usuario = usuarios[0];
+            console.log('Verificando senha para usuário:', usuario.NOME_USUARIO);
             const senhaValida = bcrypt.compareSync(senha_usu, usuario.SENHA_USUARIO);
+            console.log('Senha válida:', senhaValida);
             
             if (senhaValida) {
                 req.session.autenticado = {
@@ -146,7 +152,9 @@ router.post("/login", async function (req, res) {
                     email: usuario.EMAIL_USUARIO
                 };
                 
-                return res.redirect(usuario.TIPO_USUARIO == b ? '/homevendedor' : '/homecomprador');
+                console.log('Sessão criada:', req.session.autenticado);
+                console.log('Redirecionando para:', usuario.TIPO_USUARIO == 'brecho' ? '/homevendedor' : '/homecomprador');
+                return res.redirect(usuario.TIPO_USUARIO == 'brecho' ? '/homevendedor' : '/homecomprador');
             }
         }
         
@@ -382,7 +390,7 @@ router.get('/entrar', function(req, res){
 router.post('/entrar', async function(req, res){
     const { email_usu, senha_usu } = req.body;
     
-    console.log('Tentativa de login:', { email_usu, senha_usu });
+    console.log('Tentativa de login na página entrar:', { email_usu, senha_usu });
     
     if (!email_usu || !senha_usu) {
         return res.render('pages/entrar', {
@@ -398,10 +406,13 @@ router.post('/entrar', async function(req, res){
     
     try {
         const usuarios = await usuarioModel.findUserEmail({ user_usuario: email_usu });
+        console.log('Usuários encontrados na página entrar:', usuarios);
         
         if (usuarios.length > 0) {
             const usuario = usuarios[0];
-            const senhaValida = bcrypt.compareSync(senha_usu, usuario.SENHA_USUARIO);
+            console.log('Verificando senha para usuário:', usuario.NOME_USUARIO);
+            const senhaValida = senha_usu === usuario.SENHA_USUARIO;
+            console.log('Senha válida:', senhaValida);
             
             if (senhaValida) {
                 req.session.autenticado = {
@@ -412,7 +423,9 @@ router.post('/entrar', async function(req, res){
                     email: usuario.EMAIL_USUARIO
                 };
                 
-                if (usuario.TIPO_USUARIO == b) {
+                console.log('Sessão criada na página entrar:', req.session.autenticado);
+                
+                if (usuario.TIPO_USUARIO == 'brecho') {
                     req.session.brecho = {
                         nome: 'Meu Brechó',
                         proprietario: usuario.NOME_USUARIO,
@@ -421,9 +434,11 @@ router.post('/entrar', async function(req, res){
                         vendidos: '8',
                         seguidores: '25'
                     };
-                    res.redirect('/homevendedor');
+                    console.log('Redirecionando para /homevendedor');
+                    return res.redirect('/homevendedor');
                 } else {
-                    res.redirect('/homecomprador');
+                    console.log('Redirecionando para /homecomprador');
+                    return res.redirect('/homecomprador');
                 }
             } else {
                 res.render('pages/entrar', {
@@ -812,6 +827,7 @@ router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(r
             };
             
             await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
+            req.session.autenticado.imagem = imagePath;
             
             res.json({
                 success: true,
@@ -822,7 +838,7 @@ router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(r
         }
     } catch (error) {
         console.log('Erro ao salvar foto:', error);
-        res.json({ success: false, error: error.message });
+        res.json({ success: false, error: 'Erro ao fazer upload da foto' });
     }
 });
 
@@ -852,41 +868,39 @@ router.post('/upload-foto', uploadFile('foto'), async function(req, res){
 
 router.post('/perfilcliente', async function(req, res){
     try {
-        console.log('Dados recebidos:', req.body);
-        console.log('Sessão:', req.session.autenticado);
-        
-        const { firstName, lastName, email, phone, 'birth-date': birthDate, bio } = req.body;
+        const { nome, email, telefone, cep, logradouro, numero, bairro, cidade, uf, cpf, data_nasc, bio } = req.body;
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            // Atualizar dados do usuário
             const dadosUsuario = {
-                NOME_USUARIO: `${firstName} ${lastName}`,
+                NOME_USUARIO: nome,
                 EMAIL_USUARIO: email,
-                CELULAR_USUARIO: phone
+                CELULAR_USUARIO: telefone,
+                CEP_USUARIO: cep ? cep.replace(/\D/g, '') : '',
+                LOGRADOURO_USUARIO: logradouro,
+                NUMERO_USUARIO: numero,
+                BAIRRO_USUARIO: bairro,
+                CIDADE_USUARIO: cidade,
+                UF_USUARIO: uf
             };
             
-            // Salvar bio separadamente se existir campo na tabela
             if (bio) {
                 dadosUsuario.DESCRICAO_USUARIO = bio;
             }
             
-
-            
-            console.log('Atualizando usuário:', dadosUsuario);
             await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
             
-            // Se for cliente, atualizar data de nascimento
-            if (birthDate) {
+            // Atualizar dados do cliente
+            if (cpf || data_nasc) {
                 const clienteData = await cliente.findByUserId(req.session.autenticado.id);
                 if (clienteData && clienteData.length > 0) {
-                    const dadosCliente = {
-                        DATA_NASC: birthDate
-                    };
-                    console.log('Atualizando cliente:', dadosCliente);
+                    const dadosCliente = {};
+                    if (cpf) dadosCliente.CPF_CLIENTE = cpf.replace(/\D/g, '');
+                    if (data_nasc) dadosCliente.DATA_NASC = data_nasc;
+                    
                     await cliente.update(dadosCliente, req.session.autenticado.id);
                 }
             }
-            
-            console.log('Dados atualizados com sucesso');
         }
         
         res.redirect('/perfilcliente');
@@ -898,7 +912,7 @@ router.post('/perfilcliente', async function(req, res){
 
 router.get('/perfilcliente', async function(req, res){
     try {
-        console.log('Sessão autenticado:', req.session.autenticado);
+        console.log('Acessando perfil cliente');
         
         let userData = {
             nome: 'Usuário',
@@ -907,9 +921,9 @@ router.get('/perfilcliente', async function(req, res){
             imagem: null,
             user_usuario: 'usuario',
             data_cadastro: 'Janeiro 2024',
-            compras: 12,
-            favoritos: 5,
-            avaliacoes: 3,
+            compras: 0,
+            favoritos: 0,
+            avaliacoes: 0,
             cep: '',
             logradouro: '',
             numero: '',
@@ -921,77 +935,44 @@ router.get('/perfilcliente', async function(req, res){
         };
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            console.log('Buscando dados do usuário ID:', req.session.autenticado.id);
+            console.log('Usuário autenticado, buscando dados');
             const userDetails = await usuarioModel.findId(req.session.autenticado.id);
-            console.log('Dados encontrados:', userDetails);
             
             if (userDetails && userDetails.length > 0) {
                 const user = userDetails[0];
-                userData = {
-                    nome: user.NOME_USUARIO || 'Usuário',
-                    email: user.EMAIL_USUARIO || 'email@exemplo.com',
-                    telefone: user.CELULAR_USUARIO || '(11) 99999-9999',
-                    imagem: user.IMG_URL || null,
-                    user_usuario: user.USER_USUARIO || 'usuario',
-                    tipo_usuario: user.TIPO_USUARIO || 'cliente',
-                    bio: user.DESCRICAO_USUARIO || '',
-                    data_cadastro: 'Janeiro 2024',
-                    compras: 12,
-                    favoritos: 5,
-                    avaliacoes: 3,
-                    cep: user.CEP_USUARIO || '',
-                    logradouro: user.LOGRADOURO_USUARIO || '',
-                    numero: user.NUMERO_USUARIO || '',
-                    bairro: user.BAIRRO_USUARIO || '',
-                    cidade: user.CIDADE_USUARIO || '',
-                    uf: user.UF_USUARIO || '',
-                    cpf: '',
-                    data_nasc: ''
-                };
+                userData.nome = user.NOME_USUARIO || 'Usuário';
+                userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
+                userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
+                userData.imagem = user.IMG_URL || null;
+                userData.user_usuario = user.USER_USUARIO || 'usuario';
+                userData.cep = user.CEP_USUARIO || '';
+                userData.logradouro = user.LOGRADOURO_USUARIO || '';
+                userData.numero = user.NUMERO_USUARIO || '';
+                userData.bairro = user.BAIRRO_USUARIO || '';
+                userData.cidade = user.CIDADE_USUARIO || '';
+                userData.uf = user.UF_USUARIO || '';
                 
-                // Buscar dados específicos do cliente apenas se for tipo 'cliente'
-                if (user.TIPO_USUARIO === 'cliente') {
-                    const clienteData = await cliente.findByUserId(req.session.autenticado.id);
-                    console.log('Dados do cliente:', clienteData);
-                    if (clienteData && clienteData.length > 0) {
-                        userData.cpf = clienteData[0].CPF_CLIENTE || '';
-                        userData.data_nasc = clienteData[0].DATA_NASC || '';
+                // Buscar dados do cliente
+                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
+                if (clienteData && clienteData.length > 0) {
+                    userData.cpf = clienteData[0].CPF_CLIENTE || '';
+                    if (clienteData[0].DATA_NASC) {
+                        const date = new Date(clienteData[0].DATA_NASC);
+                        userData.data_nasc = date.toISOString().split('T')[0];
                     }
                 }
             }
         }
         
-        console.log('userData final:', userData);
+        console.log('Renderizando página');
         res.render('pages/perfilcliente', {
             usuario: userData,
-            favoritos: req.session.favoritos || [],
+            favoritos: [],
             autenticado: req.session ? req.session.autenticado : null
         });
     } catch (error) {
         console.log('Erro ao carregar perfil:', error);
-        res.render('pages/perfilcliente', {
-            usuario: {
-                nome: 'Usuário',
-                email: 'email@exemplo.com',
-                telefone: '(11) 99999-9999',
-                imagem: null,
-                user_usuario: 'usuario',
-                data_cadastro: 'Janeiro 2024',
-                compras: 12,
-                favoritos: 5,
-                avaliacoes: 3,
-                cep: '',
-                logradouro: '',
-                numero: '',
-                bairro: '',
-                cidade: '',
-                uf: '',
-                cpf: '',
-                data_nasc: ''
-            },
-            favoritos: req.session.favoritos || [],
-            autenticado: req.session ? req.session.autenticado : null
-        });
+        res.status(500).send('Erro interno do servidor');
     }
 });
 
@@ -1098,29 +1079,58 @@ router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
 router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
 
 // Rotas de Favoritos
-router.post('/favoritar', verificarUsuAutenticado, function(req, res){
-    const { produto_id, nome, preco, imagem } = req.body;
-    
-    if (!req.session.favoritos) {
-        req.session.favoritos = [];
-    }
-    
-    const jaFavoritado = req.session.favoritos.find(item => item.produto_id === produto_id);
-    
-    if (jaFavoritado) {
-        req.session.favoritos = req.session.favoritos.filter(item => item.produto_id !== produto_id);
-        res.json({ success: true, favorited: false });
-    } else {
-        req.session.favoritos.push({ produto_id, nome, preco, imagem });
-        res.json({ success: true, favorited: true });
+router.post('/favoritar', verificarUsuAutenticado, async function(req, res){
+    try {
+        const { produto_id } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        // Verificar se já está favoritado
+        const [existing] = await pool.query(
+            'SELECT * FROM FAVORITOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            [produto_id, userId]
+        );
+        
+        if (existing.length > 0) {
+            // Se existe, alternar status
+            const newStatus = existing[0].STATUS_FAVORITO === 1 ? 0 : 1;
+            await pool.query(
+                'UPDATE FAVORITOS SET STATUS_FAVORITO = ? WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+                [newStatus, produto_id, userId]
+            );
+            res.json({ success: true, favorited: newStatus === 1 });
+        } else {
+            // Se não existe, criar novo
+            await pool.query(
+                'INSERT INTO FAVORITOS (ID_PRODUTO, ID_USUARIO, STATUS_FAVORITO, DT_INCLUSAO_FAVORITO) VALUES (?, ?, 1, NOW())',
+                [produto_id, userId]
+            );
+            res.json({ success: true, favorited: true });
+        }
+    } catch (error) {
+        console.log('Erro ao favoritar:', error);
+        res.json({ success: false, error: error.message });
     }
 });
 
-router.get('/verificar-favorito/:produto_id', function(req, res){
-    const { produto_id } = req.params;
-    const favoritos = req.session.favoritos || [];
-    const isFavorited = favoritos.some(item => item.produto_id === produto_id);
-    res.json({ favorited: isFavorited });
+router.get('/verificar-favorito/:produto_id', async function(req, res){
+    try {
+        const { produto_id } = req.params;
+        
+        if (!req.session.autenticado) {
+            return res.json({ favorited: false });
+        }
+        
+        const [favorito] = await pool.query(
+            'SELECT STATUS_FAVORITO FROM FAVORITOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            [produto_id, req.session.autenticado.id]
+        );
+        
+        const isFavorited = favorito.length > 0 && favorito[0].STATUS_FAVORITO === 1;
+        res.json({ favorited: isFavorited });
+    } catch (error) {
+        console.log('Erro ao verificar favorito:', error);
+        res.json({ favorited: false });
+    }
 });
 
 module.exports = router;

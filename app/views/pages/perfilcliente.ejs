@@ -177,7 +177,7 @@
                         </section>
                         <section class="form-group">
                             <label for="birth-date">Data de Nascimento</label>
-                            <input type="date" id="birth-date" name="birth-date" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.data_nasc) ? usuario.data_nasc.toISOString().split('T')[0] : '' %>">
+                            <input type="date" id="birth-date" name="birth-date" value="<%= (typeof usuario !== 'undefined' && usuario && usuario.data_nasc) ? usuario.data_nasc : '' %>">
                         </section>
                     </section>
                     
