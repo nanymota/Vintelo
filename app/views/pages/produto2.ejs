@@ -298,16 +298,10 @@
       </footer>
        </section>
     <script>
-        window.isAuthenticated = false; // Definir baseado na sessão
-        
-        function toggleFavorite(button, productId) {
-            if (window.isAuthenticated) {
-                button.classList.toggle('favorited');
-                // Aqui você pode adicionar lógica para salvar no backend
-            } else {
-                window.location.href = '/cadastro';
-            }
-        }
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+    </script>
+    <script src="js/favoritos-global.js"></script>
+    <script>
         
         function adicionarAoCarrinho() {
             const produtoData = {

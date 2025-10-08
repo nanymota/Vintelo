@@ -357,35 +357,10 @@
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-    <script src="/js/menu-auth.js"></script>
     <script>
-        function toggleFavorite(button, productId) {
-            const isFavorited = button.classList.contains('favorited');
-            
-            if (isFavorited) {
-                button.classList.remove('favorited');
-                removeFavorite(productId);
-            } else {
-                button.classList.add('favorited');
-                addFavorite(productId);
-            }
-        }
-        
-        function addFavorite(productId) {
-            fetch('/api/favorites', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId: productId })
-            });
-        }
-        
-        function removeFavorite(productId) {
-            fetch('/api/favorites/' + productId, {
-                method: 'DELETE'
-            });
-        }
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
     </script>
+    <script src="/js/favoritos-global.js"></script>
+    <script src="/js/menu-auth.js"></script>
 </body>
 </html>

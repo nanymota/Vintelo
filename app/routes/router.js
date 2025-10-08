@@ -196,7 +196,9 @@ router.post("/cadastro", usuarioController.regrasValidacaoFormCad, usuarioContro
 router.get('/cadastroadm', function(req, res){ res.render('pages/cadastroadm'); });
 
 router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "pages/restrito"), function (req, res) {
-    res.render("pages/adm", req.session.autenticado);
+    res.render("pages/adm", {
+        autenticado: req.session.autenticado
+    });
 });
 
 // router.post("/create-preference", function (req, res) {
@@ -338,7 +340,13 @@ router.get('/finalizandocompra2', function(req, res){
         autenticado: req.session.autenticado || { autenticado: false }
     });
 });
-router.get('/favoritos', (req, res) => res.render('pages/favoritos'));
+router.get('/favoritos', function(req, res){
+    const favoritos = req.session.favoritos || [];
+    res.render('pages/favoritos', {
+        favoritos: favoritos,
+        autenticado: req.session.autenticado || { autenticado: false }
+    });
+});
 router.get('/sacola1', (req, res) => res.render('pages/sacola1'));
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
 
@@ -770,7 +778,8 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
         
         res.render('pages/informacao', {
             autenticado: req.session ? req.session.autenticado : null,
-            usuario: userData
+            usuario: userData,
+            favoritos: req.session.favoritos || []
         });
     } catch (error) {
         console.log('Erro ao carregar informações:', error);
@@ -785,7 +794,8 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
                 cnpj: '',
                 razao_social: '',
                 nome_fantasia: ''
-            }
+            },
+            favoritos: req.session.favoritos || []
         });
     }
 });
@@ -954,6 +964,7 @@ router.get('/perfilcliente', async function(req, res){
         console.log('userData final:', userData);
         res.render('pages/perfilcliente', {
             usuario: userData,
+            favoritos: req.session.favoritos || [],
             autenticado: req.session ? req.session.autenticado : null
         });
     } catch (error) {
@@ -978,6 +989,7 @@ router.get('/perfilcliente', async function(req, res){
                 cpf: '',
                 data_nasc: ''
             },
+            favoritos: req.session.favoritos || [],
             autenticado: req.session ? req.session.autenticado : null
         });
     }
@@ -994,7 +1006,12 @@ router.get('/homeadm', async (req, res) => {
 });
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
 
-router.get('/denuncias', denunciaController.listarDenuncias);
+router.get('/denuncias', function(req, res) {
+    res.render('pages/denuncias', {
+        denuncias: [],
+        autenticado: req.session.autenticado || null
+    });
+});
 
 router.post('/denuncias/criar', denunciaController.criarDenuncia);
 
@@ -1079,5 +1096,31 @@ router.get('/pagamento-sucesso', pagamentoController.pagamentoSucesso);
 router.get('/pagamento-falha', pagamentoController.pagamentoFalha);
 router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
 router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
+
+// Rotas de Favoritos
+router.post('/favoritar', verificarUsuAutenticado, function(req, res){
+    const { produto_id, nome, preco, imagem } = req.body;
+    
+    if (!req.session.favoritos) {
+        req.session.favoritos = [];
+    }
+    
+    const jaFavoritado = req.session.favoritos.find(item => item.produto_id === produto_id);
+    
+    if (jaFavoritado) {
+        req.session.favoritos = req.session.favoritos.filter(item => item.produto_id !== produto_id);
+        res.json({ success: true, favorited: false });
+    } else {
+        req.session.favoritos.push({ produto_id, nome, preco, imagem });
+        res.json({ success: true, favorited: true });
+    }
+});
+
+router.get('/verificar-favorito/:produto_id', function(req, res){
+    const { produto_id } = req.params;
+    const favoritos = req.session.favoritos || [];
+    const isFavorited = favoritos.some(item => item.produto_id === produto_id);
+    res.json({ favorited: isFavorited });
+});
 
 module.exports = router;

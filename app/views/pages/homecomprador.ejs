@@ -371,8 +371,8 @@
               <nav class="grid-artigos">
                 <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
                 <section class="artigo-texto">
-                  <h3>MODA |</h3>
-                  <h3>METALIZADA |</h3>
+                  <h3 class="vintelo-text">MODA |</h3>
+                  <h3 class="vintelo-text">METALIZADA |</h3>
                   <a href="/artigo" class="ler-agora">Ler agora</a>
                 </section>
               </nav>
@@ -476,13 +476,15 @@
         </section>
         <section class="artigos">
           <br>
-          <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
+          <a href="/bossartigo"><img src="imagens/boss milão.png" class="img-Boss"></a>
           <p class="p-artigos">Confira:</p>
           <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
           <br>
-            <p class="texto-esquerda">
-          <a href="/blogadm" class="link-preto">Editar</a>
-          </p>
+          
+          <a href="/ecologicoartigo"><img src="imagens/lado ecologico.png" class="img-Boss"></a>
+          <p class="p-artigos">Confira:</p>
+          <h3 class="artigo-text">LADO | ECOLÓGICO |</h3>
+          <br>
         </section>
       <!--                               seção artigos ocultos para mobile                                       -->
     <section class="oculto-mobile">
@@ -531,7 +533,7 @@
         </figure>
       </section>
       <footer class="footer-link">
-        <a href="/bloga" class="link">Ler mais &gt;</a>
+        <a href="/blog" class="link">Ler mais &gt;</a>
       </footer>
 
      </section>
@@ -556,10 +558,10 @@
     </footer>
 
 <script>
-    window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado ? 'true' : 'false' %>;
+    window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
 </script>
+<script src="js/favoritos-global.js"></script>
 <script src="script/dinamicahome.js"></script>
-<script src="js/favoritos.js"></script>
 <script src="js/homecomprador.js"></script>
 </body>
 

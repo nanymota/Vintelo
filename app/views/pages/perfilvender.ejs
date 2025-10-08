@@ -78,8 +78,71 @@
             </section>
         </section>
 
-        <section class="store-section">  
-            <section class="product-grid">
+        <section class="container">
+            <section class="oculto-mobile">
+              <section class="filtro">
+                <details open>
+                    <summary>Categorias</summary>
+                    <section class="categories-grid">
+                        <button class="category-btn active" data-category="todos">Todos</button>
+                        <button class="category-btn" data-category="vestidos">Vestidos</button>
+                        <button class="category-btn" data-category="blusas">Blusas</button>
+                        <button class="category-btn" data-category="calcas">Calças</button>
+                        <button class="category-btn" data-category="saias">Saias</button>
+                        <button class="category-btn" data-category="acessorios">Acessórios</button>
+                        <button class="category-btn" data-category="calcados">Calçados</button>
+                        <button class="category-btn" data-category="casacos">Casacos</button>
+                        <button class="category-btn" data-category="conjuntos">Conjuntos</button>
+                        <button class="category-btn" data-category="plus-size">Plus Size</button>
+                    </section>
+                </details>
+                <details open>
+                    <summary>Ordenar por</summary>
+                    <ul>
+                        <li onclick="sortProducts('recent')">Mais recentes</li>
+                        <li onclick="sortProducts('price-low')">Menor preço</li>
+                        <li onclick="sortProducts('price-high')">Maior preço</li>
+                        <li onclick="sortProducts('popular')">Mais populares</li>
+                    </ul>
+                </details>
+                <details open>
+                    <summary>Valor</summary>
+                    <section class="faixa-valor">
+                        <label for="min">Min</label>
+                        <input type="range" id="min" min="0" max="500" value="10" oninput="updatePriceRange()">
+                        <label for="max">Max</label>
+                        <input type="range" id="max" min="0" max="500" value="300" oninput="updatePriceRange()">
+                    </section>
+                    <section class="valores">
+                        <input type="text" id="min-value" placeholder="10" onchange="filterByPrice()">
+                        <input type="text" id="max-value" placeholder="300" onchange="filterByPrice()">
+                    </section>
+                </details>
+                <details open>
+                    <summary>Tamanhos</summary>
+                    <section class="sizes-grid">
+                        <button class="size-btn" data-size="pp">PP</button>
+                        <button class="size-btn" data-size="p">P</button>
+                        <button class="size-btn" data-size="m">M</button>
+                        <button class="size-btn" data-size="g">G</button>
+                        <button class="size-btn" data-size="gg">GG</button>
+                        <button class="size-btn" data-size="xgg">XGG</button>
+                    </section>
+                </details>
+                <details>
+                    <summary>Condição</summary>
+                    <ul>
+                        <li><input type="checkbox" id="novo"> <label for="novo">Novo</label></li>
+                        <li><input type="checkbox" id="seminovo"> <label for="seminovo">Seminovo</label></li>
+                        <li><input type="checkbox" id="usado"> <label for="usado">Usado</label></li>
+                    </ul>
+                </details>
+                <button class="button-filtro" onclick="applyFilters()">APLICAR FILTROS</button>
+                <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
+            </section>
+            </section>
+
+        <section class="products-section">
                 <!-- Adicionar Item -->
                 <section class="add-item">
                       <a href="/adicionar"><img src="imagens/add.png" alt="Adicionar Item" class="img-add"></a> 
@@ -89,55 +152,64 @@
                     <img src="imagens/oculos.png" alt="Óculos de Sol">
                     <h2>Óculos de Sol</h2>
                     <p class="price">R$12,00</p>
-                    <p class="Descrição">ou em 2x de R$6,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$6,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'oculos-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('oculos-1', 'Óculos de Sol', 'R$12,00', 'imagens/oculos.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="acessorios">
                     <img src="imagens/colar.png" alt="Conjunto 3 Colares de Prata">
                     <h2>Conjunto 3 Colares de Prata</h2>
                     <p class="price">R$29,99</p>
-                    <p class="Descrição">ou em 2x de R$15,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$15,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'colar-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('colar-1', 'Conjunto 3 Colares de Prata', 'R$29,99', 'imagens/colar.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="acessorios">
                     <img src="imagens/bolsa.png" alt="Bolsa Preta com Alça Dourada">
                     <h2>Bolsa Preta com Alça Dourada</h2>
                     <p class="price">R$20,00</p>
-                    <p class="Descrição">ou em 2x de R$10,00</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$10,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'bolsa-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('bolsa-1', 'Bolsa Preta com Alça Dourada', 'R$20,00', 'imagens/bolsa.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="acessorios">
                     <img src="imagens/aneis.png" alt="Anel de Prata">
                     <h2>Anel de Prata</h2>
                     <p class="price">R$15,00</p>
-                    <p class="Descrição">ou em 2x de R$7,50</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$7,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'anel-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('anel-1', 'Anel de Prata', 'R$15,00', 'imagens/aneis.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="saias">
                     <img src="imagens/saia rosa brilhante.png" alt="Saia Brilhante">
                     <h2>Saia Brilhante</h2>
                     <p class="price">R$35,00</p>
-                    <p class="Descrição">ou em 2x de R$17,50</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$17,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'saia-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('saia-1', 'Saia Brilhante', 'R$35,00', 'imagens/saia rosa brilhante.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="saias">
                     <img src="imagens/saia marrom de couro.png" alt="Saia De Couro">
                     <h2>Saia De Couro</h2>
                     <p class="price">R$15,00</p>
-                    <p class="Descrição">ou em 2x de R$7,50</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$7,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'saia-2')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('saia-2', 'Saia De Couro', 'R$15,00', 'imagens/saia marrom de couro.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
                 <article class="product-card" data-category="blusas">
                     <img src="imagens/cropped cinza.png" alt="Cropped Bufante">
                     <h2>Cropped Bufante</h2>
                     <p class="price">R$35,00</p>
-                    <p class="Descrição">ou em 2x de R$17,50</p>
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+                    <p class="descricao">ou em 2x de R$17,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 'cropped-1')"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart-btn" onclick="adicionarAoCarrinho('cropped-1', 'Cropped Bufante', 'R$35,00', 'imagens/cropped cinza.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
                 </article>
             </section>
         </section>
 
     </main>
+    
+    <br><br>
 
     <footer class="footer">
         <img src="imagens/logo2.jpeg" alt="Logo" class="footer-image">
@@ -152,5 +224,11 @@
         </section>
         <p class="copyright">© 2024, Vintélo. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+    </script>
+    <script src="/js/favoritos-global.js"></script>
+    <script src="/js/carrinho-global.js"></script>
 </body>
 </html>
