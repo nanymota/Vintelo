@@ -108,6 +108,16 @@ const produtoModel = {
             return error;
         }
     },
+
+    deleteImage: async (id) => {
+        try {
+            const [resultados] = await pool.query("DELETE FROM IMG_PRODUTOS WHERE ID_IMG = ?", [id]);
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
 }
 
 module.exports = { produtoModel };

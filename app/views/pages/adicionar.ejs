@@ -138,9 +138,8 @@
                                 <label for="condicao_produto">Estado da peça</label>
                                 <select id="condicao_produto" name="condicao_produto" required>
                                     <option value="">Selecione o estado</option>
-                                    <option value="novo" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'novo' ? 'selected' : '' %>>Novo com etiqueta</option>
-                                    <option value="sem-uso" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'sem-uso' ? 'selected' : '' %>>Sem uso</option>
-                                    <option value="pouco-uso" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'pouco-uso' ? 'selected' : '' %>>Pouco uso</option>
+                                    <option value="novo" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'novo' ? 'selected' : '' %>>Novo</option>
+                                    <option value="semi-novo" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'semi-novo' ? 'selected' : '' %>>Semi-novo</option>
                                     <option value="usado" <%= typeof valores !== 'undefined' && valores.condicao_produto === 'usado' ? 'selected' : '' %>>Usado</option>
                                 </select>
                             </section>
@@ -148,23 +147,37 @@
                                 <label for="tamanho_produto">Tamanho</label>
                                 <select id="tamanho_produto" name="tamanho_produto" required>
                                     <option value="">Selecione o tamanho</option>
+                                    <option value="XPP" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'XPP' ? 'selected' : '' %>>XPP</option>
                                     <option value="PP" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'PP' ? 'selected' : '' %>>PP</option>
                                     <option value="P" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'P' ? 'selected' : '' %>>P</option>
                                     <option value="M" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'M' ? 'selected' : '' %>>M</option>
                                     <option value="G" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'G' ? 'selected' : '' %>>G</option>
                                     <option value="GG" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'GG' ? 'selected' : '' %>>GG</option>
+                                    <option value="XXG" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'XXG' ? 'selected' : '' %>>XXG</option>
+                                    <option value="U" <%= typeof valores !== 'undefined' && valores.tamanho_produto === 'U' ? 'selected' : '' %>>U</option>
                                 </select>
                             </section>
                         </section>
                         
                         <section class="form-group">
-                            <label for="descricao_produto">Descrição (opcional)</label>
-                            <textarea id="descricao_produto" name="descricao_produto" 
-                                      placeholder="Descreva detalhes sobre a peça, marca, tecido, etc..."><%= typeof valores !== 'undefined' ? valores.descricao_produto || '' : '' %></textarea>
+                            <label for="descricao_produto">Descrição</label>
+                            <textarea id="descricao_produto" name="descricao_produto" placeholder="Descreva detalhes sobre a peça, marca, tecido, etc..."><%= typeof valores !== 'undefined' ? valores.descricao_produto || '' : '' %></textarea>
+                        </section>
+
+                        <section class="form-group">
+                            <label for="estilo_produto">Estilo da peça</label>
+                            <select id="estilo_produto" name="estilo_produto" required>
+                                <option value="">Selecione o estilo</option>
+                                <option value="Casual" <%= typeof valores !== 'undefined' && valores.estilo_produto === 'Casual' ? 'selected' : '' %>>Casual</option>
+                                <option value="Formal" <%= typeof valores !== 'undefined' && valores.estilo_produto === 'Formal' ? 'selected' : '' %>>Formal</option>
+                                <option value="Esportivo" <%= typeof valores !== 'undefined' && valores.estilo_produto === 'Esportivo' ? 'selected' : '' %>>Esportivo</option>
+                                <option value="Festa" <%= typeof valores !== 'undefined' && valores.estilo_produto === 'Festa' ? 'selected' : '' %>>Festa</option>
+                                <option value="Vintage" <%= typeof valores !== 'undefined' && valores.estilo_produto === 'Vintage' ? 'selected' : '' %>>Vintage</option>
+                            </select>
                         </section>
 
                         <button type="submit" class="submit-btn">
-                            Enviar para Curadoria
+                            Cadastrar produto
                         </button>
                     </form>
                 </section>
@@ -189,17 +202,39 @@
     <script>
         function validateForm(form) {
             const fileInputs = form.querySelectorAll('input[name="fotos"]');
-            let hasPhoto = false;
+            let validPhotos = 0;
+            let invalidFiles = [];
+            
             fileInputs.forEach(input => {
                 if (input.files && input.files.length > 0) {
-                    hasPhoto = true;
+                    const file = input.files[0];
+                    
+                    // Valida o arquivo -nany
+                    if (!file.type.startsWith('image/')) {
+                        invalidFiles.push(`${file.name} não é uma imagem válida`);
+                        return;
+                    }
+                    
+                    // Valida o tamanho do arquivo -nany
+                    if (file.size > 5 * 1024 * 1024) {
+                        invalidFiles.push(`${file.name} excede 5MB`);
+                        return;
+                    }
+                    
+                    validPhotos++;
                 }
             });
             
-            if (!hasPhoto) {
-                alert('Por favor, adicione pelo menos uma foto do produto.');
+            if (invalidFiles.length > 0) {
+                alert('Arquivos inválidos:\n' + invalidFiles.join('\n'));
                 return false;
             }
+            
+            if (validPhotos === 0) {
+                alert('Por favor, adicione pelo menos uma foto válida do produto.');
+                return false;
+            }
+            
             return true;
         }
         
