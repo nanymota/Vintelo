@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
     <link rel="stylesheet" href="css/sacola.css">
-    <link rel="stylesheet" href="css/perfis.css">
-
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
 </head>
@@ -69,7 +67,7 @@
 
         
         <!-- Layout com Sidebar (Desktop) -->
-        <section class="content-layout oculto-mobile">
+        <section class="container oculto-mobile">
             <aside class="filtro">
                 <details open>
                     <summary>Categorias</summary>
@@ -131,7 +129,7 @@
                 <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
             </aside>
             
-            <section class="products-section">
+            <section class="product-grid">
                 <% if (typeof favoritos !== 'undefined' && favoritos && favoritos.length > 0) { %>
                     <% favoritos.forEach(function(favorito) { %>
                         <article class="product-card">
@@ -194,10 +192,6 @@
                     </article>
                 <% } %>
             </section>
-
-   </main>
-
-            </main>
         </section>
         
         <!-- Layout Mobile -->

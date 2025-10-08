@@ -1,0 +1,63 @@
+/* Estilos globais para fotos de perfil redondas */
+
+/* Foto de perfil no cabeçalho */
+.maria {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Foto de perfil geral */
+.profile-pic {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Imagens de perfil em listas */
+.profile-image {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Foto de perfil na seção de perfil */
+.profile-photo img {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Container de perfil */
+.profile-container {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+}
+
+.profile-container .profile-pic {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Fotos de usuário em listas */
+.user-item img {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Imagens de perfil em brechós */
+.brechos-grid .profile-image {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Qualquer imagem com atributo alt contendo "perfil" */
+img[alt*="perfil" i],
+img[alt*="Perfil" i] {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
+/* Imagens de usuário específicas */
+img[alt*="Maria" i],
+img[alt*="usuario" i],
+img[alt*="Usuário" i] {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}

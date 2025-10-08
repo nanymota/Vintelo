@@ -62,154 +62,176 @@
         <center><img src="imagens/caminhao compras.png" class="img-responsiva"></center>
         <!-- Informações de lista -->
         <section class="list-info">
-            <p class="favorite-text"> Favorite uma peça</p>
+            <p class="favorite-text">Sua sacola</p>
         </section>
         
-
-        
         <!-- Layout com Sidebar (Desktop) -->
-        <section class="content-layout oculto-mobile">
-            <aside class="sidebar-filters">
-                <section class="filter-group">
-                    <h3>Categoria</h3>
-                    <label><input type="checkbox"> Vestidos</label>
-                    <label><input type="checkbox"> Saias</label>
-                    <label><input type="checkbox"> Blusas</label>
-                    <label><input type="checkbox"> Calças</label>
-                    <label><input type="checkbox"> Outros</label>
-                </section>
-                
-                <section class="filter-group">
-                    <h3>Preço</h3>
-                    <label><input type="checkbox"> Até R$ 30</label>
-                    <label><input type="checkbox"> R$ 30 - R$ 60</label>
-                    <label><input type="checkbox"> R$ 60 - R$ 100</label>
-                    <label><input type="checkbox"> Acima de R$ 100</label>
-                </section>
-                
-                <section class="filter-group">
-                    <h3>Tamanho</h3>
-                    <label><input type="checkbox"> PP</label>
-                    <label><input type="checkbox"> P</label>
-                    <label><input type="checkbox"> M</label>
-                    <label><input type="checkbox"> G</label>
-                    <label><input type="checkbox"> GG</label>
-                </section>
-                
-                <section class="filter-group">
-                    <h3>Cor</h3>
-                    <label><input type="checkbox"> Preto</label>
-                    <label><input type="checkbox"> Branco</label>
-                    <label><input type="checkbox"> Rosa</label>
-                    <label><input type="checkbox"> Marrom</label>
-                    <label><input type="checkbox"> Outros</label>
-                </section>
+        <section class="container oculto-mobile">
+            <aside class="filtro">
+                <details open>
+                    <summary>Categorias</summary>
+                    <section class="categories-grid">
+                        <button class="category-btn active" data-category="todos">Todos</button>
+                        <button class="category-btn" data-category="vestidos">Vestidos</button>
+                        <button class="category-btn" data-category="blusas">Blusas</button>
+                        <button class="category-btn" data-category="calcas">Calças</button>
+                        <button class="category-btn" data-category="saias">Saias</button>
+                        <button class="category-btn" data-category="acessorios">Acessórios</button>
+                        <button class="category-btn" data-category="calcados">Calçados</button>
+                        <button class="category-btn" data-category="casacos">Casacos</button>
+                        <button class="category-btn" data-category="conjuntos">Conjuntos</button>
+                        <button class="category-btn" data-category="plus-size">Plus Size</button>
+                    </section>
+                </details>
+                <details open>
+                    <summary>Ordenar por</summary>
+                    <ul>
+                        <li onclick="sortProducts('recent')">Mais recentes</li>
+                        <li onclick="sortProducts('price-low')">Menor preço</li>
+                        <li onclick="sortProducts('price-high')">Maior preço</li>
+                        <li onclick="sortProducts('popular')">Mais populares</li>
+                    </ul>
+                </details>
+                <details open>
+                    <summary>Valor</summary>
+                    <section class="faixa-valor">
+                        <label for="min">Min</label>
+                        <input type="range" id="min" min="0" max="500" value="10" oninput="updatePriceRange()">
+                        <label for="max">Max</label>
+                        <input type="range" id="max" min="0" max="500" value="300" oninput="updatePriceRange()">
+                    </section>
+                    <section class="valores">
+                        <input type="text" id="min-value" placeholder="10" onchange="filterByPrice()">
+                        <input type="text" id="max-value" placeholder="300" onchange="filterByPrice()">
+                    </section>
+                </details>
+                <details open>
+                    <summary>Tamanhos</summary>
+                    <section class="sizes-grid">
+                        <button class="size-btn" data-size="pp">PP</button>
+                        <button class="size-btn" data-size="p">P</button>
+                        <button class="size-btn" data-size="m">M</button>
+                        <button class="size-btn" data-size="g">G</button>
+                        <button class="size-btn" data-size="gg">GG</button>
+                        <button class="size-btn" data-size="xgg">XGG</button>
+                    </section>
+                </details>
+                <details>
+                    <summary>Condição</summary>
+                    <ul>
+                        <li><input type="checkbox" id="novo"> <label for="novo">Novo</label></li>
+                        <li><input type="checkbox" id="seminovo"> <label for="seminovo">Seminovo</label></li>
+                        <li><input type="checkbox" id="usado"> <label for="usado">Usado</label></li>
+                    </ul>
+                </details>
+                <button class="button-filtro" onclick="applyFilters()">APLICAR FILTROS</button>
+                <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
             </aside>
             
-            <main class="product-list">
-        <article class="product">
-            <img src="imagens/conjunto.png" alt="Saia Branca">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Saia Branca</p>
-            <p>R$25,00</p>
-        </article>
-
-        <article class="product">
-            <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Saia Preta Com Brilho</p>
-            <p>R$30,00</p>
-        </article>
-
-        <article class="product">
-            <img src="imagens/saia marrom.png" alt="Saia Marrom">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Saia De Veludo Marrom</p>
-            <p>R$25,00</p>
-        </article>
-
-        <article class="product">
-            <img src="imagens/calça reta.png" alt="Calça Jeans">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Calça Reta Jeans Clara</p>
-            <p>R$49,99</p>
-        </article>
-
-        <article class="product">
-            <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Conjunto saia preta c/ brilho + Top preto</p>
-            <p>R$57,00</p>
-        </article>
-
-        <article class="product">
-            <img src="imagens/vestido pink.png" alt="Vestido Rosa">
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <p>Vestido rosa longo</p>
-            <p>R$15,00</p>
-        </article>
-        
-        <!-- Botão de Ver Mais Mobile -->
-        <nav class="load-more">
-            <button>Ver mais</button>
-        </nav>
-        </main>
-
-   </main>
-
-            </main>
+            <section class="product-grid">
+                <article class="product-card">
+                    <img src="imagens/conjunto.png" alt="Saia Branca">
+                    <h2>Saia Branca</h2>
+                    <p class="price">R$25,00</p>
+                    <p class="descricao">ou em 2x de R$12,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 1)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+                <article class="product-card">
+                    <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
+                    <h2>Saia Preta Com Brilho</h2>
+                    <p class="price">R$30,00</p>
+                    <p class="descricao">ou em 2x de R$15,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 2)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+                <article class="product-card">
+                    <img src="imagens/saia marrom.png" alt="Saia Marrom">
+                    <h2>Saia De Veludo Marrom</h2>
+                    <p class="price">R$25,00</p>
+                    <p class="descricao">ou em 2x de R$12,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 3)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+                <article class="product-card">
+                    <img src="imagens/calça reta.png" alt="Calça Jeans">
+                    <h2>Calça Reta Jeans Clara</h2>
+                    <p class="price">R$49,99</p>
+                    <p class="descricao">ou em 2x de R$25,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 4)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+                <article class="product-card">
+                    <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
+                    <h2>Conjunto saia preta c/ brilho + Top preto</h2>
+                    <p class="price">R$57,00</p>
+                    <p class="descricao">ou em 3x de R$19,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 5)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+                <article class="product-card">
+                    <img src="imagens/vestido pink.png" alt="Vestido Rosa">
+                    <h2>Vestido rosa longo</h2>
+                    <p class="price">R$15,00</p>
+                    <p class="descricao">ou em 2x de R$7,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 6)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+            </section>
         </section>
         
         <!-- Layout Mobile -->
         <section class="oculto-desktop">
-            <main class="product-list">
-                <article class="product">
+            <section class="product-grid">
+                <article class="product-card">
                     <img src="imagens/conjunto.png" alt="Saia Branca">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Saia Branca</p>
-                    <p>R$25,00</p>
+                    <h2>Saia Branca</h2>
+                    <p class="price">R$25,00</p>
+                    <p class="descricao">ou em 2x de R$12,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 1)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-
-                <article class="product">
+                <article class="product-card">
                     <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Saia Preta Com Brilho</p>
-                    <p>R$30,00</p>
+                    <h2>Saia Preta Com Brilho</h2>
+                    <p class="price">R$30,00</p>
+                    <p class="descricao">ou em 2x de R$15,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 2)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-
-                <article class="product">
+                <article class="product-card">
                     <img src="imagens/saia marrom.png" alt="Saia Marrom">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Saia De Veludo Marrom</p>
-                    <p>R$25,00</p>
+                    <h2>Saia De Veludo Marrom</h2>
+                    <p class="price">R$25,00</p>
+                    <p class="descricao">ou em 2x de R$12,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 3)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-
-                <article class="product">
+                <article class="product-card">
                     <img src="imagens/calça reta.png" alt="Calça Jeans">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Calça Reta Jeans Clara</p>
-                    <p>R$49,99</p>
+                    <h2>Calça Reta Jeans Clara</h2>
+                    <p class="price">R$49,99</p>
+                    <p class="descricao">ou em 2x de R$25,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 4)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-
-                <article class="product">
+                <article class="product-card">
                     <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Conjunto saia preta c/ brilho + Top preto</p>
-                    <p>R$57,00</p>
+                    <h2>Conjunto saia preta c/ brilho + Top preto</h2>
+                    <p class="price">R$57,00</p>
+                    <p class="descricao">ou em 3x de R$19,00</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 5)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-
-                <article class="product">
+                <article class="product-card">
                     <img src="imagens/vestido pink.png" alt="Vestido Rosa">
-                    <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-                    <p>Vestido rosa longo</p>
-                    <p>R$15,00</p>
+                    <h2>Vestido rosa longo</h2>
+                    <p class="price">R$15,00</p>
+                    <p class="descricao">ou em 2x de R$7,50</p>
+                    <button class="favorite" onclick="toggleFavorite(this, 6)"><img src="imagens/coraçao de fav2.png"></button>
+                    <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-                
-                <!-- Botão de Ver Mais Mobile -->
-                <nav class="load-more">
-                    <button>Ver mais</button>
-                </nav>
-            </main>
+            </section>
         </section>
    </main>
    
