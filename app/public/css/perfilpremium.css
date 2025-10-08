@@ -488,8 +488,8 @@ body {
 .user-item img {
     width: 45px;
     height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
+    border-radius: 50% !important;
+    object-fit: cover !important;
 }
 
 .user-info {

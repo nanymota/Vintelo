@@ -1,14 +1,32 @@
-// Função para favoritar produtos
 function toggleFavorite(button, productId) {
-    if (window.isAuthenticated) {
-        const isFavorited = button.classList.contains('favorited');
-        
-        fetch('/favoritar?id=' + productId, {
+    if (typeof window.isAuthenticated !== 'undefined' && window.isAuthenticated) {
+        fetch('/favoritar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ produto_id: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.classList.toggle('favorited');
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    } else {
+        window.location.href = '/cadastro';
+    }
+}
+
+function addToCart(productId) {
+    if (typeof window.isAuthenticated !== 'undefined' && window.isAuthenticated) {
+        fetch('/addItem?id=' + productId, {
             method: 'GET'
         })
         .then(response => {
             if (response.ok) {
-                button.classList.toggle('favorited');
+                console.log('Produto adicionado ao carrinho');
             }
         })
         .catch(error => console.error('Erro:', error));
@@ -28,49 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartButtons = document.querySelectorAll('.cart:not([onclick])');
     cartButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
-            addToCartButton(this, index + 1);
+            addToCart(index + 1);
         });
     });
 });
-
-// Função para adicionar ao carrinho
-function addToCart(productId) {
-    if (window.isAuthenticated) {
-        fetch('/addItem?id=' + productId, {
-            method: 'GET'
-        })
-        .then(response => {
-            if (response.ok) {
-                const button = event.target.closest('.cart');
-                if (button) {
-                    button.style.transform = 'scale(1.3)';
-                    setTimeout(() => {
-                        button.style.transform = 'scale(1)';
-                    }, 200);
-                }
-            }
-        })
-        .catch(error => console.error('Erro:', error));
-    } else {
-        window.location.href = '/cadastro';
-    }
-}
-
-function addToCartButton(button, productId) {
-    if (window.isAuthenticated) {
-        fetch('/addItem?id=' + productId, {
-            method: 'GET'
-        })
-        .then(response => {
-            if (response.ok) {
-                button.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    button.style.transform = 'scale(1)';
-                }, 200);
-            }
-        })
-        .catch(error => console.error('Erro:', error));
-    } else {
-        window.location.href = '/cadastro';
-    }
-}

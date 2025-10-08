@@ -264,5 +264,10 @@
          <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
       </footer>
        </section>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+    </script>
+    <script src="/js/favoritos-global.js"></script>
 </body>
 </html>

@@ -82,6 +82,48 @@ nav a {
 
 .maria {
   width: 60px;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+/* Estilos globais para fotos de perfil redondas */
+.profile-pic {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.profile-image {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.profile-container {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+.profile-container .profile-pic {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.user-item img {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.brechos-grid .profile-image {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+img[alt*="perfil" i],
+img[alt*="Perfil" i],
+img[alt*="Maria" i],
+img[alt*="usuario" i],
+img[alt*="Usuário" i] {
+  border-radius: 50% !important;
+  object-fit: cover !important;
 }
 
 @media (max-width: 992px) {

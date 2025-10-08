@@ -320,9 +320,9 @@
                 
                 // Upload da foto
                 const formData = new FormData();
-                formData.append('foto', file);
+                formData.append('profile-photo', file);
                 
-                fetch('/upload-foto', {
+                fetch('/perfilcliente/foto', {
                     method: 'POST',
                     body: formData
                 })

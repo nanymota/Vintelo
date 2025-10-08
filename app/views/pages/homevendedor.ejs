@@ -113,7 +113,9 @@
         </nav>
         <img src="imagens/logo.png" class="logo">
         <a href="/menuvendedor">
-          <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/carrinho.png' %>" alt="Menu" />
+          <div class="profile-container">
+            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/carrinho.png' %>" alt="Menu" class="profile-pic" />
+          </div>
         </a>
       </nav>
     </header>
