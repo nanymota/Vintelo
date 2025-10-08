@@ -69,6 +69,23 @@ nav a {
 
 .maria{
      width: 40px;
+     border-radius: 50%;
+     object-fit: cover;
+}
+
+.profile-container {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.profile-container .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 main {
@@ -103,6 +120,7 @@ main {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .user-info h2 {
@@ -347,8 +365,24 @@ p {
     margin-top: 20px;
 }
 
-/* Responsividade Mobile */
+/* Classes de responsividade */
+.oculto-mobile {
+    display: block;
+}
+
+.oculto-desktop {
+    display: none;
+}
+
 @media (max-width: 767px) {
+    .oculto-mobile {
+        display: none;
+    }
+    
+    .oculto-desktop {
+        display: block;
+    }
+    
     .mobile-only {
         display: block;
     }

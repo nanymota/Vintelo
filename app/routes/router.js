@@ -348,12 +348,31 @@ router.get('/finalizandocompra2', function(req, res){
         autenticado: req.session.autenticado || { autenticado: false }
     });
 });
-router.get('/favoritos', function(req, res){
-    const favoritos = req.session.favoritos || [];
-    res.render('pages/favoritos', {
-        favoritos: favoritos,
-        autenticado: req.session.autenticado || { autenticado: false }
-    });
+router.get('/favoritos', async function(req, res){
+    try {
+        let favoritosList = [];
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const [favoritos] = await pool.query(`
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO_PRODUTO, p.IMG_PRODUTO_1 
+                FROM FAVORITOS f 
+                JOIN PRODUTOS p ON f.ID_PRODUTO = p.ID_PRODUTO 
+                WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 1
+            `, [req.session.autenticado.id]);
+            favoritosList = favoritos;
+        }
+        
+        res.render('pages/favoritos', {
+            favoritos: favoritosList,
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    } catch (error) {
+        console.log('Erro ao buscar favoritos:', error);
+        res.render('pages/favoritos', {
+            favoritos: [],
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    }
 });
 router.get('/sacola1', (req, res) => res.render('pages/sacola1'));
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
