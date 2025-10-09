@@ -482,12 +482,13 @@ body {
     
     .desktop-filters {
         display: block;
-        width: 250px;
-        padding: 20px;
-        background: white;
+        width: 280px;
+        padding: 25px;
+        background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+        border: 1px solid #e0e0e0;
         border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         height: fit-content;
         position: sticky;
         top: 20px;
@@ -495,8 +496,9 @@ body {
     
     .desktop-filters h3 {
         color: #7D2838;
-        margin-bottom: 15px;
-        font-size: 1.1rem;
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: 600;
     }
     
     .order-section {
@@ -517,49 +519,92 @@ body {
     }
     
     details {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
     
     summary {
         font-weight: 600;
         cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
         color: #7D2838;
-        padding: 8px 0;
-        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+        border-bottom: 2px solid #f0f0f0;
+        transition: color 0.3s ease;
+    }
+    
+    summary:hover {
+        color: #a64d61;
     }
     
     .desktop-filters ul {
         list-style: none;
-        margin-top: 8px;
+        margin-top: 10px;
     }
     
     .desktop-filters li {
-        padding: 5px 0;
+        padding: 8px 0;
+        color: #666;
+        font-size: 14px;
+        cursor: pointer;
+        transition: color 0.3s ease;
         display: flex;
         align-items: center;
         gap: 8px;
     }
     
+    .desktop-filters li:hover {
+        color: #7D2838;
+    }
+    
     .desktop-filters label {
-        color: #666;
-        font-size: 14px;
         cursor: pointer;
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .desktop-filters input[type="checkbox"] {
+        margin-right: 8px;
+        accent-color: #7D2838;
     }
     
     .button-filtro {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         margin-top: 15px;
-        background-color: #7D2838;
+        background: linear-gradient(135deg, #7D2838, #a64d61);
         color: white;
         border: none;
-        border-radius: 20px;
-        font-size: 14px;
+        border-radius: 25px;
+        font-size: 16px;
         cursor: pointer;
         font-weight: 600;
+        transition: all 0.3s ease;
     }
     
     .button-filtro:hover {
-        background-color: #a64d61;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(125, 40, 56, 0.3);
+    }
+    
+    .clear-filters {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #f8f9fa;
+        color: #666;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .clear-filters:hover {
+        background-color: #e9ecef;
+        color: #333;
     }
 }

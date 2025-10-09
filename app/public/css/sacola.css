@@ -130,6 +130,11 @@ main {
   margin: 0 auto;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .img-responsiva {
   width: 180px;
   height: auto;
@@ -165,6 +170,12 @@ main {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 0;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0px 15px;
   }
 }
 
@@ -245,9 +256,9 @@ main {
 /* Seção de Produtos */
 .product-card {
     background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     transition: all 0.3s ease;
 }
@@ -268,10 +279,10 @@ main {
 
 .product-card img {
     width: 100%;
-    height: 180px;
+    height: 140px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
 }
 
 @media (min-width: 768px) {
@@ -287,11 +298,12 @@ main {
 }
 
 .product-card h2 {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.3;
+    text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -303,8 +315,9 @@ main {
 .product-card .price {
     color: #7D2838;
     font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 4px;
+    text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -315,8 +328,9 @@ main {
 
 .product-card .descricao {
     color: #666;
-    font-size: 12px;
-    margin-bottom: 10px;
+    font-size: 10px;
+    margin-bottom: 8px;
+    text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -327,19 +341,25 @@ main {
 
 .product-card .favorite {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     background: rgba(255, 255, 255, 0.9);
     border: none;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     z-index: 2;
+    flex-shrink: 0;
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 28px;
+    max-height: 28px;
+    aspect-ratio: 1;
 }
 
 .product-card .favorite:hover {
@@ -348,19 +368,20 @@ main {
 }
 
 .product-card .favorite img {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     margin: 0;
+    object-fit: contain;
 }
 
 .product-card .cart {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
+    bottom: 10px;
+    right: 10px;
     background: transparent;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -374,8 +395,8 @@ main {
 }
 
 .product-card .cart .img-sacola {
-    width: 34px;
-    height: 34px;
+    width: 26px;
+    height: 26px;
     margin: 0;
 }
 
@@ -386,7 +407,9 @@ main {
   padding: 40px 0;
   text-align: center;
   margin-top: 60px;
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
 }
 
 .footer .footer-image {

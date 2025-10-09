@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
     <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/sacola.css">
 
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
 </head>
 <body>
+    <!-- Cabeçalho Desktop -->
+    <section class="oculto-mobile">
     <header>
         <section class="top-bar">
             <p>10% OFF na primeira compra</p>
@@ -30,31 +33,44 @@
                     <input type="text" placeholder="Buscar...">
                 </form>
                 <ul>
-                    <li><a href="#" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                    <li><a href="#" ></a><img src="imagens/maria.png" class="maria"> </li>
-                    <li><a href="#" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                    <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
+                    <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
                 </ul>
             </section>
         </section>
     </header>
+    </section>
+
+    <!-- Cabeçalho Mobile -->
+    <section class="oculto-desktop">
+    <header>
+        <nav class="grid">
+          <a href="/">
+            <img src="imagens/seta.png" alt="Seta Voltar">
+          </a>
+          <img src="imagens/logo.png" alt="Logo">
+          <a href="/cadastro">
+              <img src="imagens/icone sem cadastro.png" alt="Perfil">
+          </a>
+        </nav>
+      </header>
+    </section>
     
     <main>
         <aside class="user-sidebar">
             <section class="user-info">
-                <img src="imagens/maria.png" alt="Foto de perfil de Maria de Lourdes">
-                <h2>Maria de Lourdes</h2>
-                <p>maria.lourdes@exemplo.com</p>
+                <img src="imagens/icone sem cadastro.png" alt="Usuário não logado">
+                <h2>Visitante</h2>
+                <p>Faça login para acessar sua conta</p>
             </section>
             <nav class="user-menu">
-                <a href="#">Geral</a>
+                <a href="/cadastro">Fazer Login</a>
                 <a href="/criarbrecho">Criar Brechó</a>
-                <a href="#">Informação da conta</a>
+                <a href="/cadastro">Criar Conta</a>
                 <a href="/sacola1">Sacola</a>
-                <a href="/menucompras">Minhas compras</a>
-                <a href="#">Meus cartões</a>
-                <a href="/menufavoritos">Favoritos</a>
+                <a href="/favoritos">Favoritos</a>
                 <a href="/blog">Blog</a>
-                <a href="#">Sair</a>
             </nav>
         </aside>
 
@@ -62,46 +78,61 @@
             <section class="orders">
                 <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
         <!-- Informações de lista -->
-        <section class="list-info">
-            <p class="favorite"> Favorite uma peça</p>
-        </section>
-    <main class="product-list">
-        <article class="product">
+    <section class="product-grid">
+        <article class="product-card">
             <img src="imagens/conjunto.png" alt="Saia Branca">
-            <p>Saia Branca</p>
-            <p>R$25,00</p>
+            <h2>Saia Branca</h2>
+            <p class="price">R$25,00</p>
+            <p class="descricao">ou em 2x de R$12,50</p>
+            <button class="favorite" onclick="toggleFavorite(this, 1)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
 
-        <article class="product">
+        <article class="product-card">
             <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
-            <p>Saia Preta Com Brilho</p>
-            <p>R$30,00</p>
+            <h2>Saia Preta Com Brilho</h2>
+            <p class="price">R$30,00</p>
+            <p class="descricao">ou em 2x de R$15,00</p>
+            <button class="favorite" onclick="toggleFavorite(this, 2)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
 
-        <article class="product">
+        <article class="product-card">
             <img src="imagens/saia marrom.png" alt="Saia Marrom">
-            <p>Saia De Veludo Marrom</p>
-            <p>R$25,00</p>
+            <h2>Saia De Veludo Marrom</h2>
+            <p class="price">R$25,00</p>
+            <p class="descricao">ou em 2x de R$12,50</p>
+            <button class="favorite" onclick="toggleFavorite(this, 3)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
 
-        <article class="product">
+        <article class="product-card">
             <img src="imagens/calça reta.png" alt="Calça Jeans">
-            <p>Calça Reta Jeans Clara</p>
-            <p>R$49,99</p>
+            <h2>Calça Reta Jeans Clara</h2>
+            <p class="price">R$49,99</p>
+            <p class="descricao">ou em 2x de R$25,00</p>
+            <button class="favorite" onclick="toggleFavorite(this, 4)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
 
-        <article class="product">
+        <article class="product-card">
             <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
-            <p>Conjunto saia preta c/ brilho + Top preto</p>
-            <p>R$57,00</p>
+            <h2>Conjunto saia preta c/ brilho + Top preto</h2>
+            <p class="price">R$57,00</p>
+            <p class="descricao">ou em 3x de R$19,00</p>
+            <button class="favorite" onclick="toggleFavorite(this, 5)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
 
-        <article class="product">
+        <article class="product-card">
             <img src="imagens/vestido pink.png" alt="Vestido Rosa">
-            <p>Vestido rosa longo</p>
-            <p>R$15,00</p>
+            <h2>Vestido rosa longo</h2>
+            <p class="price">R$15,00</p>
+            <p class="descricao">ou em 2x de R$7,50</p>
+            <button class="favorite" onclick="toggleFavorite(this, 6)"><img src="imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
         </article>
-    </main>
+    </section>
 
     <!-- Botão de Ver Mais -->
     <nav class="load-more">
@@ -111,5 +142,9 @@
             </section>
         </section>
     </main>
+    <script>
+        window.isAuthenticated = false;
+    </script>
+    <script src="/js/favoritos-global.js"></script>
 </body>
 </html>
