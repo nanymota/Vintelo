@@ -454,10 +454,10 @@ diff@^4.0.1:
   resolved "https://registry.npmjs.org/diff/-/diff-4.0.2.tgz"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
-dotenv@^17.2.2:
-  version "17.2.2"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-17.2.2.tgz"
-  integrity sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==
+dotenv@^17.2.3:
+  version "17.2.3"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz"
+  integrity sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
 
 dunder-proto@^1.0.1:
   version "1.0.1"
@@ -550,6 +550,11 @@ expand-template@^2.0.3:
   version "2.0.3"
   resolved "https://registry.npmjs.org/expand-template/-/expand-template-2.0.3.tgz"
   integrity sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==
+
+expess@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.npmjs.org/expess/-/expess-0.0.1-security.tgz"
+  integrity sha512-UgnpgjCF7WMTdWyLWzivOSkeQ4utbiv25q0cof6UIcI3K83fHcrjlvvRuK60BAxhP/i3BpVvfQffiOWr7M1zHQ==
 
 express-session@^1.18.2:
   version "1.18.2"
@@ -1221,10 +1226,10 @@ multer@^2.0.2:
     type-is "^1.6.18"
     xtend "^4.0.2"
 
-mysql2@^3.14.5:
-  version "3.14.5"
-  resolved "https://registry.npmjs.org/mysql2/-/mysql2-3.14.5.tgz"
-  integrity sha512-40hDf8LPUsuuJ2hFq+UgOuPwt2IFLIRDvMv6ez9hKbXeYuZPxDDwiJW7KdknvOsQqKznaKczOT1kELgFkhDvFg==
+mysql2@^3.15.2:
+  version "3.15.2"
+  resolved "https://registry.npmjs.org/mysql2/-/mysql2-3.15.2.tgz"
+  integrity sha512-kFm5+jbwR5mC+lo+3Cy46eHiykWSpUtTLOH3GE+AR7GeLq8PgfJcvpMiyVWk9/O53DjQsqm6a3VOOfq7gYWFRg==
   dependencies:
     aws-ssl-profiles "^1.1.1"
     denque "^2.1.0"

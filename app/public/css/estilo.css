@@ -153,9 +153,8 @@ img[alt*="Usuário" i] {
   background-color: rgb(255, 252, 252);
   position: fixed;
   left: -90%;
-  top: 0;
+  top: -20px;
   transition: left cubic-bezier(1, 0, 0, 1) .8s;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: start;
@@ -231,7 +230,7 @@ img[alt*="Usuário" i] {
 
 #menu-hamburguer:checked ~ label .hamburguer {
   transform: rotate(45deg);
-  background: transparent;
+  background: white;
 }
 
 #menu-hamburguer:checked ~ label .hamburguer:before {
@@ -273,6 +272,7 @@ img[alt*="Usuário" i] {
   margin-bottom: 1rem;
   font-size: 2.5rem;
   color: #000000;
+  font-family: 'Raleway', sans-serif;
 }
 
 .sidebar-menu li img {
@@ -308,6 +308,7 @@ img[alt*="Usuário" i] {
   font-weight: bold;
   color: #333;
   text-align: left;
+  font-family: 'Raleway', sans-serif;
 }
 
 .create-btn {
@@ -315,10 +316,11 @@ img[alt*="Usuário" i] {
   color: #fff;
   padding:1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 15px;
   font-size: 1.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 30px;
 }
 
 .create-btn:hover {
