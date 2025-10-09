@@ -33,7 +33,7 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+          <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" class="maria"></a></li>
           <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
           <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
@@ -58,7 +58,7 @@
             <li>
               <a href="/menuvendedor">
                 <section class="profile-section">
-                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Perfil" class="profile-pic">
+                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Perfil" class="profile-pic">
                   <section class="profile-info">
                     <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Vendedor' %></h2>
                   </section>
@@ -114,7 +114,7 @@
         <img src="imagens/logo.png" class="logo">
         <a href="/menuvendedor">
           <div class="profile-container">
-            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/carrinho.png' %>" alt="Menu" class="profile-pic" />
+            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Menu" class="profile-pic" />
           </div>
         </a>
       </nav>

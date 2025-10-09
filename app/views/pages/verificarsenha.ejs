@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Vintélo - Verificar Código</title>
+    <link rel="stylesheet" href="css/esqueceusenha.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav class="grid">
+            <a href="/esqueceusenha">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+            <img src="imagens/foto-branca.png" alt="Descrição da Imagem">
+        </nav>
+    </header>
+
+    <main>
+        <section class="welcome-section">
+            <img src="imagens/imagem da senha.png" class="img-responsiva" alt="Verificar Código">
+            <h2>Verificar Código</h2>
+            <p>Digite o código de 6 dígitos enviado para seu e-mail.</p>
+        </section>
+
+        <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+            <section class="notificacao <%= dadosNotificacao.tipo %>">
+                <p><%= dadosNotificacao.mensagem %></p>
+            </section>
+        <% } %>
+
+        <form method="POST" action="/verificarsenha" id="verificarForm">
+            <input type="hidden" name="email_usu" value="<%= typeof email_usu !== 'undefined' ? email_usu : '' %>">
+            
+            <section class="form-group">
+                <label for="codigo">Código de Verificação</label>
+                <input 
+                    type="text" 
+                    id="codigo" 
+                    name="codigo" 
+                    class="<%= typeof avisoErro !== 'undefined' && avisoErro.codigo ? 'erro' : '' %>"
+                    placeholder="Digite o código de 6 dígitos"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                    required
+                >
+                <% if (typeof avisoErro !== 'undefined' && avisoErro.codigo) { %>
+                    <span class="erro-msg"><%= avisoErro.codigo %></span>
+                <% } %>
+                <small class="codigo-dica">Código enviado para <%= typeof email_usu !== 'undefined' ? email_usu : 'seu e-mail' %></small>
+            </section>
+
+            <button type="submit" class="submit-btn">Verificar Código</button>
+        </form>
+
+        <section class="links">
+            <a href="/esqueceusenha">Solicitar Novo Código</a>
+            <a href="/login">Voltar ao Login</a>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const codigoInput = document.getElementById('codigo');
+            
+            // Permitir apenas números
+            codigoInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '');
+            });
+            
+            // Auto-submit quando 6 dígitos forem digitados
+            codigoInput.addEventListener('input', function(e) {
+                if (this.value.length === 6) {
+                    document.getElementById('verificarForm').submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
