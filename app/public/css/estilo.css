@@ -2101,12 +2101,11 @@ h1 {
 @media (max-width: 991px) {
   .titulo-brecho-section .garimpe-text,
   .titulo-artigo-section .garimpe-text {
-    margin-left: 0;
   }
   
   .titulo-brecho-section .vintelo-text,
   .titulo-artigo-section .vintelo-text {
-    margin-left: 0;
+   
   }
 }
 
