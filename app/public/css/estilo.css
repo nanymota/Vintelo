@@ -641,13 +641,14 @@ h3 {
 
 
 .ver{
-  font-size: 30px;
+  font-size: 40px;
   color: #7f7a7b;
   display: block;       
   text-align: right;    
   margin-right: -400px;
   text-decoration: underline;
   text-decoration-color: rgb(255, 255, 255);
+  font-family: 'Raleway', sans-serif;
 }
 
 
@@ -917,7 +918,7 @@ h3 {
 
 .product-card h2 {
   font-family: 'Raleway', sans-serif;
-  font-size: 24px;
+  font-size: 30px;
   margin: 0.4rem 0;
   color: #4e4e4eee;
   text-align: left;
@@ -928,17 +929,18 @@ h3 {
 .Descrição{
   color: #000000;
   margin-bottom: 0.8rem;
-  font-size: 20px;
+  font-size: 21px;
   text-align: left;
   padding: 0px 15px;
   font-family: Arial, sans-serif;
   font-weight: bold;
+  margin-top: 0px;
 }
 
 .price {
   color: #000000;
   margin-bottom: 0.8rem;
-  font-size: 30px;
+  font-size: 35px;
   text-align: left;
   padding: 0px 15px;
   font-family: Arial, sans-serif;
@@ -1286,7 +1288,7 @@ h3 {
   display: block;
   margin: 50px;
   width: 90%;
-   margin-top: 270px;
+   margin-top: 200px;
 }
 
  @media  (max-width: 768px)  {
@@ -1533,13 +1535,13 @@ h1 {
 .artigos{
   padding: 100px;
   background-color: #d9d9d996;
-  border-radius: 10px;
 }
 
 .p-artigos {
-  color: #666;
-  font-size: 40px;
+  color: #000000;
+  font-size: 50px;
   text-align: left;
+  font-family: 'Raleway', sans-serif;
 }
 
 .titulo-artigos{
@@ -1569,7 +1571,8 @@ h1 {
   color: rgb(0, 0, 0); 
   text-decoration: none;
   text-align: left;
-  font-size: 40px; 
+  font-size: 40px;
+  font-family: 'Raleway', sans-serif; 
 }
 
 /*                                                ocultação do blog                                                 */
@@ -1995,12 +1998,12 @@ h1 {
 .garimpe-text {
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  font-size: 24px;
-  letter-spacing: 3px;
+  font-size: 34px;
+  letter-spacing: 8px;
   color: #7d2838; 
   margin-left: 90px;
   display: inline-block;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .vintelo-text {
@@ -2027,15 +2030,15 @@ h1 {
   }
   
   .titulo-artigo-section {
-    padding: 20px;
+    padding: 0px;
   }
 }
 
 .titulo-brecho-section .garimpe-text {
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  font-size: 24px;
-  letter-spacing: 3px;
+  font-size: 30px;
+  letter-spacing: 8px;
   color: #7d2838;
   margin-left: 90px;
   display: inline-block;
@@ -2056,20 +2059,20 @@ h1 {
 .titulo-artigo-section .garimpe-text {
   font-family: 'Raleway', sans-serif;
   font-weight: 300;
-  font-size: 30px;
-  letter-spacing: 4px;
+  font-size: 35px;
+  letter-spacing: 8px;
   color: #7d2838;
-  margin-left: 90px;
+  margin-left: -450px;
   display: inline-block;
 }
 
 .titulo-artigo-section .vintelo-text {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
-  font-size: 60px;
+  font-size: 90px;
   color: #7d2838;
   line-height: 1.2;
-  margin-left: 100px;
+  margin-left: -400px;
   display: inline-block;
 }
 
