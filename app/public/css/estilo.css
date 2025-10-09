@@ -928,7 +928,7 @@ h3 {
 .Descrição{
   color: #000000;
   margin-bottom: 0.8rem;
-  font-size: 16px;
+  font-size: 20px;
   text-align: left;
   padding: 0px 15px;
   font-family: Arial, sans-serif;
@@ -2101,12 +2101,11 @@ h1 {
 @media (max-width: 991px) {
   .titulo-brecho-section .garimpe-text,
   .titulo-artigo-section .garimpe-text {
-    margin-left: 0;
   }
   
   .titulo-brecho-section .vintelo-text,
   .titulo-artigo-section .vintelo-text {
-    margin-left: 0;
+   
   }
 }
 

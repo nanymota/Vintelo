@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const path = require('path');
 
 const {
   verificarUsuAutenticado,
@@ -683,16 +685,7 @@ router.post('/esqueceusenha', async function(req, res){
             
             console.log('Código de recuperação:', codigo, 'para:', email_usu);
             
-            res.render('pages/esqueceusenha', {
-                etapa: 'codigo',
-                email_usu: email_usu,
-                dadosNotificacao: {
-                    mensagem: 'Código de verificação enviado para seu e-mail!',
-                    tipo: 'success'
-                },
-                valores: {},
-                avisoErro: {}
-            });
+            res.redirect(`/verificarsenha?email=${encodeURIComponent(email_usu)}`);
         } else {
             res.render('pages/esqueceusenha', {
                 etapa: 'email',
@@ -868,6 +861,69 @@ router.post('/esqueceusenha/redefinir', async function(req, res){
     }
 })
 
+router.get('/verificarsenha', function(req, res){
+    res.render('pages/verificarsenha', {
+        email_usu: req.query.email || '',
+        dadosNotificacao: req.query.email ? {
+            mensagem: 'Código de verificação enviado para seu e-mail!',
+            tipo: 'success'
+        } : null,
+        avisoErro: {}
+    });
+});
+
+router.post('/verificarsenha', function(req, res){
+    const { email_usu, codigo } = req.body;
+    
+    if (!req.session.codigoRecuperacao) {
+        return res.render('pages/verificarsenha', {
+            email_usu: email_usu,
+            dadosNotificacao: {
+                mensagem: 'Sessão expirada. Solicite um novo código.',
+                tipo: 'error'
+            },
+            avisoErro: {}
+        });
+    }
+    
+    const { email: emailSessao, codigo: codigoSessao, expira } = req.session.codigoRecuperacao;
+    
+    if (Date.now() > expira) {
+        delete req.session.codigoRecuperacao;
+        return res.render('pages/verificarsenha', {
+            email_usu: email_usu,
+            dadosNotificacao: {
+                mensagem: 'Código expirado. Solicite um novo código.',
+                tipo: 'error'
+            },
+            avisoErro: {}
+        });
+    }
+    
+    if (email_usu !== emailSessao || codigo !== codigoSessao) {
+        return res.render('pages/verificarsenha', {
+            email_usu: email_usu,
+            dadosNotificacao: {
+                mensagem: 'Código inválido',
+                tipo: 'error'
+            },
+            avisoErro: { codigo: 'Código incorreto' }
+        });
+    }
+    
+    res.render('pages/esqueceusenha', {
+        etapa: 'senha',
+        email_usu: email_usu,
+        codigo: codigo,
+        dadosNotificacao: {
+            mensagem: 'Código verificado! Defina sua nova senha.',
+            tipo: 'success'
+        },
+        valores: {},
+        avisoErro: {}
+    });
+})
+
 router.get('/estatistica', carregarDadosUsuario, (req, res) => res.render('pages/estatistica', { autenticado: req.session.autenticado || null }));
 router.get('/estatistica-mobile', (req, res) => res.render('pages/estatistica-mobile'));
 router.get('/estatistica-desktop', (req, res) => res.render('pages/estatistica-desktop'));
@@ -876,7 +932,35 @@ router.get('/categorias', carregarDadosUsuario, categoriaController.mostrarCateg
 router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProdutos);
 
 router.get('/editarbanners', bannerController.mostrarFormulario);
-router.post('/editarbanners', uploadFile('banners'), bannerController.atualizarBanners);
+router.post('/editarbanners', 
+    multer({
+        storage: multer.diskStorage({
+            destination: './app/public/imagem/banners/',
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+            }
+        }),
+        limits: { fileSize: 10 * 1024 * 1024 },
+        fileFilter: (req, file, cb) => {
+            const allowedExtensions = /jpeg|jpg|png/;
+            const extname = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
+            const mimetype = allowedExtensions.test(file.mimetype);
+            if (extname && mimetype) {
+                cb(null, true);
+            } else {
+                cb(new Error('Apenas arquivos de imagem são permitidos!'));
+            }
+        }
+    }).fields([
+        { name: 'banner_desk_1', maxCount: 1 },
+        { name: 'banner_desk_2', maxCount: 1 },
+        { name: 'banner_desk_3', maxCount: 1 },
+        { name: 'banner_mobile_1', maxCount: 1 },
+        { name: 'banner_mobile_2', maxCount: 1 },
+        { name: 'banner_mobile_3', maxCount: 1 }
+    ]), 
+    bannerController.atualizarBanners);
 router.get('/minhascompras', (req, res) => res.render('pages/minhascompras'));
 router.get('/finalizandopagamento', function(req, res){
     const carrinho = req.session.carrinho || [];

@@ -48,6 +48,13 @@ body {
     gap: 30px;
 }
 
+.maria {
+    width: 60px;
+    height: 60px;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+  }
+
 .main-header nav a {
     text-decoration: none;
     color: #333;

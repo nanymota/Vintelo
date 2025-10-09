@@ -191,13 +191,11 @@ p {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 35px;
+    font-family: 'Raleway', sans-serif;
+    margin-left: 50px;
   }
 
-  .notificaçao{
-    font-size: 50px;
-    color: #333;
-  }
   
   input[type="checkbox"] {
     display: none;
@@ -205,11 +203,11 @@ p {
   
   .toggle {
     width: 80px;
-    height: 50px;
+    height: 45px;
     background-color: #ccc;
-    border-radius: 20px;
+    border-radius: 35px;
     position: relative;
-    margin-right: 10px;
+    margin-right: 20px;
     cursor: pointer;
   }
   
@@ -217,16 +215,16 @@ p {
     content: "";
     position: absolute;
     top: 2px;
-    left: 2px;
-    width: 36px;
-    height: 36px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
     background-color: #fff;
     border-radius: 50%;
     transition: all 0.3s ease;
   }
   
   input[type="checkbox"]:checked + .toggle {
-    background-color: green;
+    background-color: #64dd64;
   }
   
   input[type="checkbox"]:checked + .toggle:before {

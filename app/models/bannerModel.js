@@ -43,29 +43,33 @@ const bannerModel = {
 
     updateOrCreate: async (url_imagem, posicao, ordem, id_adm) => {
         try {
-            // Primeiro tenta atualizar
+            console.log('updateOrCreate chamado:', { url_imagem, posicao, ordem, id_adm });
+            
+            // Busca banner específico por posição e ordem
             const [existing] = await pool.query(
-                "SELECT ID_BANNER FROM BANNERS WHERE POSICAO = ? ORDER BY ID_BANNER LIMIT ?, 1",
-                [posicao, ordem - 1]
+                "SELECT ID_BANNER FROM BANNERS WHERE POSICAO = ? AND ID_BANNER = ?",
+                [posicao, ordem]
             );
             
             if (existing.length > 0) {
                 // Atualiza existente
+                console.log('Atualizando banner existente:', existing[0].ID_BANNER);
                 const [resultados] = await pool.query(
                     "UPDATE BANNERS SET URL_IMAGEM = ? WHERE ID_BANNER = ?",
                     [url_imagem, existing[0].ID_BANNER]
                 );
                 return resultados;
             } else {
-                // Cria novo
+                // Cria novo com ID específico
+                console.log('Criando novo banner com ID:', ordem);
                 const [resultados] = await pool.query(
-                    "INSERT INTO BANNERS (URL_IMAGEM, POSICAO, ID_ADM) VALUES (?, ?, ?)",
-                    [url_imagem, posicao, id_adm || 1]
+                    "INSERT INTO BANNERS (ID_BANNER, URL_IMAGEM, POSICAO, ID_ADM) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE URL_IMAGEM = VALUES(URL_IMAGEM)",
+                    [ordem, url_imagem, posicao, id_adm || 1]
                 );
                 return resultados;
             }
         } catch (error) {
-            console.log(error);
+            console.log('Erro no updateOrCreate:', error);
             return error;
         }
     }
