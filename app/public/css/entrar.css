@@ -228,7 +228,7 @@ input[type="checkbox"]:checked + .toggle:before {
   }
   
   .toggle {
-    width: 75px;
+    width: 80px;
     height: 45px;
     background-color: #ccc;
     border-radius: 35px;
@@ -241,9 +241,9 @@ input[type="checkbox"]:checked + .toggle:before {
     content: "";
     position: absolute;
     top: 2px;
-    left: 2px;
-    width: 26px;
-    height: 26px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
     background-color: #fff;
     border-radius: 50%;
     transition: all 0.3s ease;
