@@ -1,3 +1,78 @@
+/* Top bar styling - Desktop only */
+.oculto-mobile .top-bar {
+    background-color: #7D2838;
+    text-align: center;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    z-index: 10;
+}
+
+/* Main header styling - Desktop only */
+.oculto-mobile .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #fff;
+}
+
+.img-logo {
+    width: 120px;
+    height: auto;
+}
+
+.main-header nav {
+    display: flex;
+    gap: 30px;
+}
+
+.main-header nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.main-header nav a:hover {
+    color: #7D2838;
+}
+
+.search-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-profile input {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    width: 200px;
+}
+
+.search-profile ul {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+}
+
+.img-tamanho {
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease;
+}
+
+.img-tamanho:hover {
+    transform: scale(1.1);
+}
+
+/* Success container */
 .success-container {
     max-width: 600px;
     margin: 50px auto;
@@ -37,23 +112,31 @@
 
 .order-details {
     background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 30px 0;
     text-align: left;
+    border: 1px solid #e9ecef;
 }
 
 .order-details h3 {
     color: #7D2838;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #7D2838;
+    padding-bottom: 10px;
 }
 
 .order-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 16px;
 }
 
 .order-item:last-child {
@@ -64,9 +147,11 @@
 
 .btn-group {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     justify-content: center;
-    margin-top: 30px;
+    align-items: center;
+    margin-top: 40px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -100,13 +185,149 @@
     color: white;
 }
 
+/* Footer styling - Desktop only */
+.oculto-mobile .footer {
+    background-color: #7D2838;
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+}
+
+.footer-image {
+    height: 80px;
+    margin-bottom: 30px;
+}
+
+.social-media {
+    margin-bottom: 30px;
+}
+
+.p-footer {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.social-link img {
+    height: 40px;
+    transition: transform 0.3s ease;
+    border-radius: 50%;
+}
+
+.social-link img:hover {
+    transform: scale(1.3);
+}
+
+.copyright {
+    font-size: 0.9rem;
+    margin-top: 20px;
+    text-align: center;
+    color: #ccc;
+}
+
+/* Visibility classes */
+.oculto-mobile {
+    display: block;
+}
+
+.oculto-desktop {
+    display: none;
+}
+
+/* Mobile header styling */
+.oculto-desktop header {
+    background-color: #fff;
+    padding: 15px;
+}
+
+.oculto-desktop .grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.oculto-desktop .grid img {
+    height: 35px;
+}
+
 @media (max-width: 768px) {
+    .oculto-mobile {
+        display: none;
+    }
+    
+    .oculto-desktop {
+        display: block;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    main {
+        padding: 0 10px;
+    }
+    
     .success-container {
-        margin: 20px;
-        padding: 20px;
+        margin: 20px 10px;
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+    
+    .success-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+    
+    .success-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+    
+    .success-message {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .order-details {
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .order-details h3 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .order-item {
+        font-size: 14px;
+        padding: 8px 0;
     }
     
     .btn-group {
         flex-direction: column;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
     }
 }
