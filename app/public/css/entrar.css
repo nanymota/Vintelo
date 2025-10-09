@@ -228,12 +228,12 @@ input[type="checkbox"]:checked + .toggle:before {
   }
   
   .toggle {
-    width: 70px;
-    height: 50px;
+    width: 75px;
+    height: 45px;
     background-color: #ccc;
-    border-radius: 20px;
+    border-radius: 35px;
     position: relative;
-    margin-right: 10px;
+    margin-right: 20px;
     cursor: pointer;
   }
   
@@ -250,7 +250,7 @@ input[type="checkbox"]:checked + .toggle:before {
   }
   
   input[type="checkbox"]:checked + .toggle {
-    background-color: green;
+    background-color: #64dd64;
   }
   
   input[type="checkbox"]:checked + .toggle:before {
