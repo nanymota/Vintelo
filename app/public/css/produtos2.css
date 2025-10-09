@@ -26,8 +26,8 @@
   }
   
   .imagem-produto img {
-    width: 100%;
-    max-width: 500px;
+    width: 110%;
+    max-width: 550px;
     border-radius: 10px;
   }
   
@@ -256,9 +256,9 @@
   
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
-    gap: 3rem;
-    padding: 20px 80px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    padding: 20px 150px;
   }
   
   .product-card {
@@ -354,6 +354,20 @@
     .btn-sacola {
         font-size: 14px;
         padding: 10px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 20px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.5rem;
+        padding: 20px 200px;
     }
   }
 
