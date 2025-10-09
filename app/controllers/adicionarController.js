@@ -68,19 +68,8 @@ const adicionarController = {
 
 
 
-        // Verificar se há arquivos (pode ser req.files ou req.file)
+        // Verificar se há arquivos (opcional)
         const arquivos = req.files || (req.file ? [req.file] : []);
-        
-        if (!arquivos || arquivos.length === 0) {
-            return res.render('pages/adicionar', {
-                valores: req.body,
-                avisoErro: {
-                    titulo: 'Foto obrigatória!',
-                    mensagem: 'Por favor, adicione pelo menos uma foto do produto',
-                    tipo: 'error'
-                }
-            });
-        }
 
         const { nome_produto, preco_produto, categoria_produto, cor_produto, condicao_produto, tamanho_produto, descricao_produto, estilo_produto} = req.body;
         
@@ -108,13 +97,15 @@ const adicionarController = {
                 const imagensInseridas = [];
                 
                 try {
-                    // Salvar imagens na tabela IMG_PRODUTOS
-                    for (let file of arquivos) {
-                        const imagemResult = await produtoModel.createImage({
-                            ID_PRODUTO: resultado.insertId,
-                            URL_IMG: 'imagem/produtos/' + file.filename
-                        });
-                        imagensInseridas.push(imagemResult.insertId);
+                    // Salvar imagens na tabela IMG_PRODUTOS (se houver)
+                    if (arquivos && arquivos.length > 0) {
+                        for (let file of arquivos) {
+                            const imagemResult = await produtoModel.createImage({
+                                ID_PRODUTO: resultado.insertId,
+                                URL_IMG: 'imagem/produtos/' + file.filename
+                            });
+                            imagensInseridas.push(imagemResult.insertId);
+                        }
                     }
                     
                     res.redirect('/perfilvender?sucesso=produto_cadastrado');

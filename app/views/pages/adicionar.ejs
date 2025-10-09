@@ -91,6 +91,12 @@
                 <!-- Formulário -->
                 <section class="form-section">
                     <form class="item-form" method="POST" action="/adicionar" enctype="multipart/form-data" onsubmit="return validatePhoto(this)">
+                        <!-- Inputs de foto movidos para dentro do form -->
+                        <input type="file" id="main-photo-input" name="fotos" accept="image/*" style="display: none;" multiple>
+                        <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
+                        <input type="file" id="thumb-input-2" name="fotos" accept="image/*" style="display: none;">
+                        <input type="file" id="thumb-input-3" name="fotos" accept="image/*" style="display: none;">
+                        <input type="file" id="thumb-input-4" name="fotos" accept="image/*" style="display: none;">
                         <section class="form-row">
                             <section class="form-group">
                                 <label for="nome_produto">Nome da peça</label>
