@@ -69,6 +69,7 @@ nav a {
 
 .maria{
      width: 40px;
+     height: 40px;
      border-radius: 50%;
      object-fit: cover;
 }
@@ -158,9 +159,12 @@ main {
 .empty-box {
     background-color: #f1f1f1;
     text-align: center;
-    padding: 40px;
+    padding: 80px 60px;
     border-radius: 10px;
     color: #aaa;
+    min-height: 400px;
+    width: 100%;
+    margin: 20px 0;
 }
 
 .empty-box img {

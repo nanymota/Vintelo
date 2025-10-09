@@ -38,7 +38,11 @@
             <section class="user-actions">
                 <input type="text" placeholder="Buscar..." class="search-box">
                 <a href="/carrinho"><img src="imagens/icone saco.png" alt="Sacola"></a>
-                <a href="/cadastro"><img src="imagens/icone sem cadastro.png" alt="Perfil"></a>
+                <% if (autenticado && autenticado.autenticado) { %>
+                    <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></a>
+                <% } else { %>
+                    <a href="/cadastro"><img src="imagens/icone sem cadastro.png" alt="Perfil"></a>
+                <% } %>
                 <a href="/favoritos"><img src="imagens/icone coraçao.png" alt="Favoritos"></a>
             </section>
         </nav>

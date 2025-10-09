@@ -31,9 +31,13 @@
                       <input type="text" placeholder="Buscar...">
                   </form>
                   <ul>
-                      <li><a href="#" ></a><img src="imagens/maria.png" class="maria"> </li>
-                      <li><a href="#" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                      <li><a href="#" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                      <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                      <% if (autenticado && autenticado.autenticado) { %>
+                          <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
+                      <% } else { %>
+                          <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                      <% } %>
+                      <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
                   </ul>
               </section>
           </section>
@@ -48,9 +52,15 @@
             <img src="imagens/seta.png" alt="Seta Voltar">
           </a>
           <img src="imagens/logo.png" alt="Logo">
-          <a href="/cadastro">
-            <img src="imagens/icone sem cadastro.png" alt="Carrinho">
-          </a>
+          <% if (autenticado && autenticado.autenticado) { %>
+              <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
+                  <img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+              </a>
+          <% } else { %>
+              <a href="/cadastro">
+                  <img src="imagens/icone sem cadastro.png" alt="Perfil">
+              </a>
+          <% } %>
         </nav>
       </header>
     </section>

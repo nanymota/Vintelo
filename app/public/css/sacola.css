@@ -383,9 +383,10 @@ main {
 .footer {
   background-color: #7D2838;
   color: #fff;
-  padding: 40px 20px;
+  padding: 40px 0;
   text-align: center;
   margin-top: 60px;
+  width: 100%;
 }
 
 .footer .footer-image {

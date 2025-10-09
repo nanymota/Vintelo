@@ -30,9 +30,13 @@
                     <input type="text" placeholder="Buscar...">
                 </form>
                 <ul>
-                    <li><a href="#" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                    <li><a href="#" ></a><img src="imagens/maria.png" class="maria"> </li>
-                    <li><a href="#" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                    <% if (autenticado && autenticado.autenticado) { %>
+                        <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+                    <% } else { %>
+                        <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <% } %>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
                 </ul>
             </section>
         </section>
@@ -41,9 +45,9 @@
     <main>
         <aside class="user-sidebar">
             <section class="user-info">
-                <img src="imagens/maria.png" alt="Foto de perfil de Maria de Lourdes">
-                <h2>Maria de Lourdes</h2>
-                <p>maria.lourdes@exemplo.com</p>
+                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Foto de perfil">
+                <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
+                <p><%= autenticado && autenticado.email ? autenticado.email : 'email@exemplo.com' %></p>
             </section>
             <nav class="user-menu">
                 <a href="#">Geral</a>
@@ -61,45 +65,10 @@
         <section class="user-content">
             <main class="main">
             <section class="order-section">
-              <section class="order-date">15 de Agosto</section>
-              <section class="order-card">
-                <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-image">
-                <section class="order-info">
-                  <h2 class="product-title">Vestido Branco Longo</h2>
-                  <p class="status in-progress">A caminho</p>
-                  <p class="delivery-info">Chegará hoje antes das 21h</p>
+                <section class="empty-box">
+                  <img src="imagens/caminhao compras.png" alt="Nenhuma compra">
+                  <p>Você ainda não fez nenhuma compra</p>
                 </section>
-              </section>
-        
-              <section class="order-date">24 de Julho</section>
-              <section class="order-card">
-                <img src="imagens/vestido roxo2.png" alt="Vestido Magenta com Decote" class="product-image">
-                <section class="order-info">
-                  <h2 class="product-title">Vestido Magenta com Decote</h2>
-                  <p class="status canceled">Pedido cancelado</p>
-                  <p class="delivery-info">Reembolsamos seu dinheiro na conta em que você pagou via PIX</p>
-                </section>
-              </section>
-        
-              <section class="order-date">11 de Junho</section>
-              <section class="order-card">
-                <img src="imagens/regata branca.png" alt="Regata Branca" class="product-image">
-                <section class="order-info">
-                  <h2 class="product-title">Regata Branca</h2>
-                  <p class="status delivered">Entregue</p>
-                  <p class="delivery-info">Chegou no dia 13 de julho</p>
-                </section>
-              </section>
-        
-              <section class="order-date">05 de Maio</section>
-              <section class="order-card">
-                <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto Rosa de Malha" class="product-image">
-                <section class="order-info">
-                  <h2 class="product-title">Conjunto Rosa de Malha</h2>
-                  <p class="status delivered">Entregue</p>
-                  <p class="delivery-info">Chegou no dia 13 de maio</p>
-                </section>
-              </section>
             </section>
           </section>
             </section>

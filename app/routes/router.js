@@ -68,7 +68,7 @@ router.post(
   }
 );
 
-router.get("/", async function (req, res) {
+router.get("/", carregarDadosUsuario, async function (req, res) {
   try {
     const { bannerModel } = require('../models/bannerModel');
     const banners = await bannerModel.findByPosition('Home');
@@ -312,7 +312,7 @@ router.post('/adicionar',
     adicionarController.criarProduto
 );
 
-router.get('/blog', (req, res) => res.render('pages/blog'));
+router.get('/blog', carregarDadosUsuario, (req, res) => res.render('pages/blog', { autenticado: req.session.autenticado || null }));
 router.get('/artigo', (req, res) => res.render('pages/artigo'));
 router.get('/bossartigo', (req, res) => res.render('pages/bossartigo'));
 router.get('/gucciartigo', (req, res) => res.render('pages/gucciartigo'));
@@ -348,7 +348,7 @@ router.get('/finalizandocompra2', function(req, res){
         autenticado: req.session.autenticado || { autenticado: false }
     });
 });
-router.get('/favoritos', async function(req, res){
+router.get('/favoritos', carregarDadosUsuario, async function(req, res){
     try {
         let favoritosList = [];
         
@@ -374,7 +374,7 @@ router.get('/favoritos', async function(req, res){
         });
     }
 });
-router.get('/sacola1', (req, res) => res.render('pages/sacola1'));
+router.get('/sacola1', carregarDadosUsuario, (req, res) => res.render('pages/sacola1', { autenticado: req.session.autenticado || null }));
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
 
 router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
@@ -445,7 +445,91 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
     }
 })
 
-router.get('/criarbrecho', brechoController.mostrarFormulario);
+router.get('/perfilvendedor', carregarDadosUsuario, async function(req, res){
+    try {
+        let userData = {
+            nome: 'Usuário',
+            email: 'email@exemplo.com',
+            telefone: '',
+            imagem: null,
+            user_usuario: 'usuario',
+            cep: '',
+            logradouro: '',
+            numero: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
+            cnpj: '',
+            razao_social: '',
+            nome_fantasia: '',
+            descricao: ''
+        };
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            try {
+                const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+                if (userDetails && userDetails.length > 0) {
+                    const user = userDetails[0];
+                    userData.nome = user.NOME_USUARIO || 'Usuário';
+                    userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
+                    userData.telefone = user.CELULAR_USUARIO || '';
+                    userData.imagem = user.IMG_URL || null;
+                    userData.user_usuario = user.USER_USUARIO || 'usuario';
+                    userData.cep = user.CEP_USUARIO || '';
+                    userData.logradouro = user.LOGRADOURO_USUARIO || '';
+                    userData.numero = user.NUMERO_USUARIO || '';
+                    userData.bairro = user.BAIRRO_USUARIO || '';
+                    userData.cidade = user.CIDADE_USUARIO || '';
+                    userData.uf = user.UF_USUARIO || '';
+                    userData.descricao = user.DESCRICAO_USUARIO || '';
+                }
+                
+                // Buscar dados do brechó se existir
+                const [brechos] = await pool.query(
+                    'SELECT * FROM BRECHOS WHERE ID_USUARIO = ?',
+                    [req.session.autenticado.id]
+                );
+                if (brechos.length > 0) {
+                    const brecho = brechos[0];
+                    userData.cnpj = brecho.CNPJ_BRECHO || '';
+                    userData.razao_social = brecho.RAZAO_SOCIAL || '';
+                    userData.nome_fantasia = brecho.NOME_FANTASIA || '';
+                }
+            } catch (error) {
+                console.log('Erro ao buscar dados do usuário:', error);
+            }
+        }
+        
+        res.render('pages/perfilvendedor', {
+            autenticado: req.session.autenticado || null,
+            usuario: userData
+        });
+    } catch (error) {
+        console.log('Erro ao carregar perfilvendedor:', error);
+        res.render('pages/perfilvendedor', {
+            autenticado: req.session.autenticado || null,
+            usuario: {
+                nome: 'Usuário',
+                email: 'email@exemplo.com',
+                telefone: '',
+                imagem: null,
+                user_usuario: 'usuario',
+                cep: '',
+                logradouro: '',
+                numero: '',
+                bairro: '',
+                cidade: '',
+                uf: '',
+                cnpj: '',
+                razao_social: '',
+                nome_fantasia: '',
+                descricao: ''
+            }
+        });
+    }
+});
+
+router.get('/criarbrecho', carregarDadosUsuario, brechoController.mostrarFormulario);
 
 router.post('/criarbrecho', 
     brechoController.regrasValidacaoUsuario,
@@ -784,11 +868,11 @@ router.post('/esqueceusenha/redefinir', async function(req, res){
     }
 })
 
-router.get('/estatistica', (req, res) => res.render('pages/estatistica'));
+router.get('/estatistica', carregarDadosUsuario, (req, res) => res.render('pages/estatistica', { autenticado: req.session.autenticado || null }));
 router.get('/estatistica-mobile', (req, res) => res.render('pages/estatistica-mobile'));
 router.get('/estatistica-desktop', (req, res) => res.render('pages/estatistica-desktop'));
 
-router.get('/categorias', categoriaController.mostrarCategorias);
+router.get('/categorias', carregarDadosUsuario, categoriaController.mostrarCategorias);
 router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProdutos);
 
 router.get('/editarbanners', bannerController.mostrarFormulario);
@@ -837,6 +921,12 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
             compras: 0,
             favoritos: 0,
             avaliacoes: 0,
+            cep: '',
+            logradouro: '',
+            numero: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
             cnpj: '',
             razao_social: '',
             nome_fantasia: ''
@@ -853,6 +943,30 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
                 userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
                 userData.imagem = user.IMG_URL || null;
                 userData.user_usuario = user.USER_USUARIO || 'usuario';
+                userData.cep = user.CEP_USUARIO || '';
+                userData.logradouro = user.LOGRADOURO_USUARIO || '';
+                userData.numero = user.NUMERO_USUARIO || '';
+                userData.bairro = user.BAIRRO_USUARIO || '';
+                userData.cidade = user.CIDADE_USUARIO || '';
+                userData.uf = user.UF_USUARIO || '';
+                
+                // Buscar dados do brechó se for vendedor
+                if (user.TIPO_USUARIO === 'b') {
+                    try {
+                        const [brechos] = await pool.query(
+                            'SELECT * FROM BRECHOS WHERE ID_USUARIO = ?',
+                            [req.session.autenticado.id]
+                        );
+                        if (brechos.length > 0) {
+                            const brecho = brechos[0];
+                            userData.cnpj = brecho.CNPJ_BRECHO || '';
+                            userData.razao_social = brecho.RAZAO_SOCIAL || '';
+                            userData.nome_fantasia = brecho.NOME_FANTASIA || '';
+                        }
+                    } catch (error) {
+                        console.log('Erro ao buscar dados do brechó:', error);
+                    }
+                }
                 
                 // Buscar favoritos reais do banco
                 try {
@@ -892,8 +1006,13 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
     }
 });
 router.get('/menufavoritos', (req, res) => res.render('pages/menufavoritos'));
-router.get('/menucompras', (req, res) => res.render('pages/menucompras'));
-router.get('/planos', (req, res) => res.render('pages/planos'));
+router.get('/menucompras', carregarDadosUsuario, (req, res) => {
+    res.render('pages/menucompras', {
+        autenticado: req.session.autenticado || null,
+        pedidos: []
+    });
+});
+router.get('/planos', carregarDadosUsuario, (req, res) => res.render('pages/planos', { autenticado: req.session.autenticado || null }));
 
 router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(req, res){
     try {
