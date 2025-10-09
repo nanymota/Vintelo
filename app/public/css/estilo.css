@@ -82,6 +82,7 @@ nav a {
 
 .maria {
   width: 60px;
+  height: 60px;
   border-radius: 50% !important;
   object-fit: cover !important;
 }
@@ -105,6 +106,8 @@ nav a {
 .profile-container .profile-pic {
   border-radius: 50% !important;
   object-fit: cover !important;
+  height: 120px;
+  width: 120px;
 }
 
 .user-item img {

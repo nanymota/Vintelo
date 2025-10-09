@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo - Perfil do Brechó</title>
+    <link rel="stylesheet" href="css/informacao.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Desktop -->
+    <section class="desktop-header">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <header class="main-header">
+            <a href="/homevendedor">
+                <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
+            </a>
+            <nav>
+                <a href="/adicionar">Vender</a>
+                <a href="/estatistica">Estatísticas</a>
+                <a href="/premium">Premium</a>
+                <a href="/categorias">Categorias</a>
+                <a href="/blog">Blog</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <!-- Header Mobile -->
+    <section class="mobile-header">
+        <header>
+            <nav class="grid">
+                <a href="/homevendedor">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Vintélo">
+                <a href="/menuvendedor">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu">
+                </a>
+            </nav>
+        </header>
+    </section>
+
+    <main>
+        <section class="container">
+            <h1>Perfil do Brechó</h1>
+            
+            <section class="profile-wrapper">
+                <!-- Sidebar de Navegação -->
+                <aside class="profile-sidebar">
+                    <section class="profile-info">
+                        <section class="photo-upload-container">
+                            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Logo do brechó" class="profile-image" id="profileImage">
+                            <section class="photo-upload-overlay">
+                                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                                <button type="button" class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
+                                    +
+                                </button>
+                            </section>
+                        </section>
+                        <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Meu Brechó' %></h2>
+                        <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'brecho' %></p>
+                        <section class="brecho-stats">
+                            <section class="stat">
+                                <span class="stat-number">0</span>
+                                <span class="stat-label">Produtos</span>
+                            </section>
+                            <section class="stat">
+                                <span class="stat-number">0</span>
+                                <span class="stat-label">Vendidos</span>
+                            </section>
+                            <section class="stat">
+                                <span class="stat-number">0</span>
+                                <span class="stat-label">Seguidores</span>
+                            </section>
+                        </section>
+                    </section>
+                    <nav class="profile-menu">
+                        <a href="#" class="active" data-section="dados-brecho">Dados do Brechó</a>
+                        <a href="#" data-section="endereco">Endereço</a>
+                        <a href="#" data-section="configuracoes">Configurações</a>
+                        <a href="#" data-section="produtos">Produtos</a>
+                        <a href="/estatistica">Estatísticas</a>
+                    </nav>
+                </aside>
+
+                <!-- Conteúdo Principal -->
+                <section class="profile-content">
+                    <form class="info-form" id="brechoForm" enctype="multipart/form-data">
+                        <!-- Dados do Brechó -->
+                        <section class="form-section active" id="dados-brecho">
+                            <h3>Dados do Brechó</h3>
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="nome_brecho">Nome do Brechó</label>
+                                    <input type="text" id="nome_brecho" name="nome_brecho" value="<%= usuario ? usuario.nome : '' %>" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="email_brecho">E-mail</label>
+                                    <input type="email" id="email_brecho" name="email_brecho" value="<%= usuario ? usuario.email : '' %>" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="telefone_brecho">Telefone</label>
+                                    <input type="tel" id="telefone_brecho" name="telefone_brecho" value="<%= usuario ? usuario.telefone : '' %>" placeholder="(11) 99999-9999" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="cnpj_brecho">CNPJ (Opcional)</label>
+                                    <input type="text" id="cnpj_brecho" name="cnpj_brecho" value="<%= usuario ? usuario.cnpj : '' %>" maxlength="18" placeholder="00.000.000/0000-00">
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="razao_social">Razão Social (Opcional)</label>
+                                    <input type="text" id="razao_social" name="razao_social" value="<%= usuario ? usuario.razao_social : '' %>" maxlength="100">
+                                </section>
+                                <section class="form-group">
+                                    <label for="nome_fantasia">Nome Fantasia (Opcional)</label>
+                                    <input type="text" id="nome_fantasia" name="nome_fantasia" value="<%= usuario ? usuario.nome_fantasia : '' %>" maxlength="100">
+                                </section>
+                            </section>
+                            
+                            <section class="form-group">
+                                <label for="descricao_brecho">Descrição do Brechó</label>
+                                <textarea id="descricao_brecho" name="descricao_brecho" rows="4" placeholder="Conte um pouco sobre seu brechó, estilo das peças, público-alvo..."><%= usuario ? usuario.descricao : '' %></textarea>
+                            </section>
+                        </section>
+
+                        <!-- Endereço -->
+                        <section class="form-section" id="endereco">
+                            <h3>Endereço</h3>
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" id="cep" name="cep" value="<%= usuario ? usuario.cep : '' %>" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="numero">Número</label>
+                                    <input type="text" id="numero" name="numero" value="<%= usuario ? usuario.numero : '' %>" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-group">
+                                <label for="logradouro">Logradouro</label>
+                                <input type="text" id="logradouro" name="logradouro" value="<%= usuario ? usuario.logradouro : '' %>" required>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" id="bairro" name="bairro" value="<%= usuario ? usuario.bairro : '' %>" required>
+                                </section>
+                                <section class="form-group">
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" id="cidade" name="cidade" value="<%= usuario ? usuario.cidade : '' %>" required>
+                                </section>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="estado">Estado</label>
+                                    <select id="estado" name="estado" required>
+                                        <option value="">Selecione</option>
+                                        <option value="SP" <%= usuario && usuario.uf === 'SP' ? 'selected' : '' %>>São Paulo</option>
+                                        <option value="RJ" <%= usuario && usuario.uf === 'RJ' ? 'selected' : '' %>>Rio de Janeiro</option>
+                                        <option value="MG" <%= usuario && usuario.uf === 'MG' ? 'selected' : '' %>>Minas Gerais</option>
+                                        <option value="RS" <%= usuario && usuario.uf === 'RS' ? 'selected' : '' %>>Rio Grande do Sul</option>
+                                        <option value="PR" <%= usuario && usuario.uf === 'PR' ? 'selected' : '' %>>Paraná</option>
+                                        <option value="SC" <%= usuario && usuario.uf === 'SC' ? 'selected' : '' %>>Santa Catarina</option>
+                                    </select>
+                                </section>
+                                <section class="form-group">
+                                    <label for="complemento">Complemento</label>
+                                    <input type="text" id="complemento" name="complemento" value="">
+                                </section>
+                            </section>
+                        </section>
+
+                        <!-- Configurações -->
+                        <section class="form-section" id="configuracoes">
+                            <h3>Configurações do Brechó</h3>
+                            
+                            <section class="form-group">
+                                <label for="categoria_principal">Categoria Principal</label>
+                                <select id="categoria_principal" name="categoria_principal">
+                                    <option value="">Selecione</option>
+                                    <option value="vestidos">Vestidos</option>
+                                    <option value="blusas">Blusas</option>
+                                    <option value="saias">Saias</option>
+                                    <option value="calcas">Calças</option>
+                                    <option value="acessorios">Acessórios</option>
+                                    <option value="calcados">Calçados</option>
+                                    <option value="diversos">Diversos</option>
+                                </select>
+                            </section>
+                            
+                            <section class="form-row">
+                                <section class="form-group">
+                                    <label for="faixa_preco">Faixa de Preço Principal</label>
+                                    <select id="faixa_preco" name="faixa_preco">
+                                        <option value="">Selecione</option>
+                                        <option value="ate-50">Até R$ 50</option>
+                                        <option value="50-100">R$ 50 - R$ 100</option>
+                                        <option value="100-200">R$ 100 - R$ 200</option>
+                                        <option value="acima-200">Acima de R$ 200</option>
+                                    </select>
+                                </section>
+                                <section class="form-group">
+                                    <label for="publico_alvo">Público Alvo</label>
+                                    <select id="publico_alvo" name="publico_alvo">
+                                        <option value="">Selecione</option>
+                                        <option value="feminino">Feminino</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="unissex">Unissex</option>
+                                        <option value="infantil">Infantil</option>
+                                    </select>
+                                </section>
+                            </section>
+                            
+                            <section class="notification-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Receber notificações de novos pedidos
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Permitir avaliações de clientes
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    Brechó visível na busca pública
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    Aceitar produtos por consignação
+                                </label>
+                            </section>
+                        </section>
+
+                        <!-- Produtos -->
+                        <section class="form-section" id="produtos">
+                            <h3>Meus Produtos</h3>
+                            <section class="products-summary">
+                                <section class="summary-card">
+                                    <h4>0</h4>
+                                    <p>Produtos Ativos</p>
+                                </section>
+                                <section class="summary-card">
+                                    <h4>0</h4>
+                                    <p>Em Análise</p>
+                                </section>
+                                <section class="summary-card">
+                                    <h4>0</h4>
+                                    <p>Vendidos</p>
+                                </section>
+                            </section>
+                            <section class="action-buttons">
+                                <a href="/adicionar" class="btn-primary">Adicionar Produto</a>
+                                <a href="/estatistica" class="btn-secondary">Ver Estatísticas</a>
+                            </section>
+                        </section>
+
+                        <section class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">Cancelar</button>
+                            <button type="submit" class="btn-primary">Salvar Alterações</button>
+                        </section>
+                    </form>
+                </section>
+            </section>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="imagens/logo.png" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p class="p-footer">Siga-nos nas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+                <li><a href="#" class="social-link"><img src="imagens/TikTok.png" alt="TikTok"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Navegação entre seções
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuLinks = document.querySelectorAll('.profile-menu a[data-section]');
+            const formSections = document.querySelectorAll('.form-section');
+
+            function showSection(sectionId) {
+                formSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                menuLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+
+                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+
+            // Mostrar primeira seção por padrão
+            showSection('dados-brecho');
+        });
+        
+        // Função para resetar formulário
+        function resetForm() {
+            if (confirm('Tem certeza que deseja cancelar as alterações?')) {
+                document.getElementById('brechoForm').reset();
+            }
+        }
+    </script>
+    <script>
+        // Upload de foto do brechó
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload da foto
+                const formData = new FormData();
+                formData.append('brecho-photo', file);
+                
+                fetch('/perfilvendedor/foto', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Logo do brechó enviada com sucesso');
+                    } else {
+                        alert('Erro ao enviar logo');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao enviar logo');
+                });
+            }
+        });
+        
+        // Formatação de CEP
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('input', function() {
+                this.value = formatCEP(this.value);
+            });
+            
+            cepInput.addEventListener('blur', function() {
+                if (this.value.length === 9) {
+                    buscarCEP(this.value);
+                }
+            });
+        }
+        
+        function formatCEP(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{5})(\d)/, '$1-$2')
+                .replace(/(-\d{3})\d+?$/, '$1');
+        }
+        
+        function buscarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            
+            if (cep.length === 8) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            document.getElementById('logradouro').value = data.logradouro || '';
+                            document.getElementById('bairro').value = data.bairro || '';
+                            document.getElementById('cidade').value = data.localidade || '';
+                            document.getElementById('estado').value = data.uf || '';
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Erro ao buscar CEP:', error);
+                    });
+            }
+        }
+        
+        // Formatação de CNPJ
+        document.getElementById('cnpj_brecho').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1/$2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        // Formatação de telefone
+        document.getElementById('telefone_brecho').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{4,5})(\d{4})$/, '$1-$2');
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
