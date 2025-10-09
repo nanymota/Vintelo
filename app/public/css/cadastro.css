@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: #1c1c1c;
 }
 
 body {
@@ -57,24 +58,29 @@ header .grid {
   position:inherit; 
   top: 50%; 
   left: 50%; 
-  transform: translate( 2%, -90%);
+  transform: translate( 6%, -66%);
   text-align: center;
   color: rgb(0, 0, 0);
   padding: 20px; 
   width: 325px;
   height: 200px;
   background: rgb(255, 255, 255); 
-  border-radius: 40px;
+  border-radius: 25px;
 }
 
 .content h1 {
   margin: 0;
-  font-size: 20px; 
+  font-size: 24px; 
+  font-family: 'Playfair Display', serif;
+  color: #474747;
+  margin-bottom: 11px;
 }
 
 .content p {
   font-size: 17px;
-  color: #333;
+  color: #888;
+  font-size: 14px;
+  margin-top: -1px;
 }
 
 .buttons {
