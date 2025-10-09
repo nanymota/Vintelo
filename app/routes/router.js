@@ -154,7 +154,7 @@ router.post("/login", async function (req, res) {
                 
                 console.log('Sessão criada:', req.session.autenticado);
                 console.log('Redirecionando para:', usuario.TIPO_USUARIO == 'brecho' ? '/homevendedor' : '/homecomprador');
-                return res.redirect(usuario.TIPO_USUARIO == 'brecho' ? '/homevendedor' : '/homecomprador');
+                return res.redirect(usuario.TIPO_USUARIO == 'b' ? '/homevendedor' : '/homecomprador');
             }
         }
         
@@ -496,7 +496,7 @@ router.post('/entrar', async function(req, res){
                 
                 console.log('Sessão criada na página entrar:', req.session.autenticado);
                 
-                if (usuario.TIPO_USUARIO == 'brecho') {
+                if (usuario.TIPO_USUARIO == 'b') {
                     req.session.brecho = {
                         nome: 'Meu Brechó',
                         proprietario: usuario.NOME_USUARIO,

@@ -5,19 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <script src="../../public/script/script.js"></script>
-    <script src="/js/cadastro-ajax.js"></script>
-    <script src="/script/cep.js"></script>
     <link rel="stylesheet" href="css/criarbrecho.css">
-
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-
 </head>
 
 <body>
-
     <section class="oculto-desktop">
         <header>
             <nav class="grid">
@@ -25,76 +17,23 @@
                     <img src="imagens/seta.png" alt="Seta Voltar">
                 </a>
                 <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
-                    <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
+                <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
             </nav>
         </header>
     </section>
 
     <main>
         <section class="container">
-            <aside class="image-section">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-            </aside>
-
             <section class="form-section">
                 <center>
                     <h2>Crie seu brechó</h2>
                 </center>
                 <p>Insira os dados do seu brechó</p>
 
-                <section class="profile-section">
-                    <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
-                    <section class="oculto-desktop">
-                        <button class="edit-icon" onclick="document.getElementById('profile-photo-input').click()">✎</button>
-                        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
-                    </section>
-                </section>
-
-                <form id="registerForm" action="/criarbrecho" method="post"  enctype="multipart/form-data">
+                <form id="registerForm" action="/criarbrecho" method="post">
                     <section class="form-group">
                         <label for="nomeusu_usu">Nome do Brechó</label>
-                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
+                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" required
                         value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
                     </section>
 
@@ -110,133 +49,77 @@
                         value="<%= typeof valores !== 'undefined' && valores.razao_social ? valores.razao_social : '' %>">
                     </section>
 
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('personal-info')">
-                            <h3>Informações Pessoais</h3>
-                            <span class="arrow" id="personal-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="personal-info">
-                            <section class="form-group">
-                                <label for="email_usu">Endereço de email</label>
-                                <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="nome_usu">Nome Completo</label>
-                                <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="senha_usu">Senha</label>
-                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="confirmar_senha">Confirmar Senha</label>
-                                <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha...">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="fone_usu">Contato</label>
-                                <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
-                            </section>
-                        </section>
+                    <section class="form-group">
+                        <label for="email_usu">Endereço de email</label>
+                        <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" required
+                        value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
                     </section>
 
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('address-info')">
-                            <h3>Endereço</h3>
-                            <span class="arrow" id="address-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="address-info">
-                            <section class="form-group">
-                                <label for="cep">CEP</label>
-                                <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required value="<%= valores?.cep || '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="endereco">Endereço</label>
-                                <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="numero">Número</label>
-                                <input type="text" id="numero" name="numero" placeholder="123" required value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="bairro">Bairro</label>
-                                <input type="text" id="bairro" name="bairro" placeholder="Bairro" required value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="cidade">Cidade</label>
-                                <input type="text" id="cidade" name="cidade" placeholder="Cidade" required value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="uf">UF</label>
-                                <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
-                            </section>
-                        </section>
-                    </section>
-                    <br>
-
-                    <section class="section">
-                        <h3>Onde deseja receber?</h3>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/itau.png" alt="itau" class="icon">
-                            <span>Itaú</span>
-                            <img src="imagens/erro.png" alt="Erro" class="error-icon">
-                        </section>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/santander.png" alt="Santander" class="icon">
-                            <span>Santander</span>
-                            <img src="imagens/check.png" alt="Check" class="check-icon">
-                        </section>
-                        <section class="item payment-option" onclick="selectPayment(this)">
-                            <img src="imagens/nubank.png" alt="Boleto" class="icon">
-                            <span>Nubank</span>
-                            <img src="imagens/check.png" alt="Check" class="check-icon">
-                        </section>
+                    <section class="form-group">
+                        <label for="nome_usu">Nome Completo</label>
+                        <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" required
+                        value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
                     </section>
 
-                    <section class="oculto-desktop">
-                        <button type="submit" class="create-button">Criar brechó</button>
+                    <section class="form-group">
+                        <label for="senha_usu">Senha</label>
+                        <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
                     </section>
-                    <br>
-                    <section class="oculto-mobile">
-                        <button type="submit" id="btn-submit" class="create-button">Criar brechó</button>
+
+                    <section class="form-group">
+                        <label for="confirmar_senha">Confirmar Senha</label>
+                        <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha..." required>
                     </section>
+
+                    <section class="form-group">
+                        <label for="fone_usu">Contato</label>
+                        <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" required
+                        value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required 
+                        value="<%= typeof valores !== 'undefined' && valores.cep ? valores.cep : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required 
+                        value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="numero">Número</label>
+                        <input type="text" id="numero" name="numero" placeholder="123" required 
+                        value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" id="bairro" name="bairro" placeholder="Bairro" required 
+                        value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" placeholder="Cidade" required 
+                        value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
+                    </section>
+
+                    <section class="form-group">
+                        <label for="uf">UF</label>
+                        <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required 
+                        value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
+                    </section>
+
+                    <button type="submit" class="create-button">Criar brechó</button>
                 </form>
             </section>
         </section>
     </main>
 
     <script>
-        function handleProfilePhotoUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profile-img').src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function toggleSection(sectionId) {
-            const content = document.getElementById(sectionId);
-            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
-            
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'block';
-                arrow.innerHTML = '▲';
-            } else {
-                content.style.display = 'none';
-                arrow.innerHTML = '▼';
-            }
-        }
-
         function validarFormulario() {
             const senha = document.getElementById('senha_usu').value;
             const confirmarSenha = document.getElementById('confirmar_senha').value;
@@ -246,14 +129,8 @@
                 return false;
             }
             
-            if (senha.length < 8) {
-                alert('A senha deve ter pelo menos 8 caracteres!');
-                return false;
-            }
-            
-            const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-            if (!regexSenha.test(senha)) {
-                alert('A senha deve conter ao menos: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial!');
+            if (senha.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres!');
                 return false;
             }
             
@@ -261,9 +138,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('personal-info').style.display = 'none';
-            document.getElementById('address-info').style.display = 'none';
-            
             const cepInput = document.getElementById('cep');
             if (cepInput) {
                 cepInput.addEventListener('input', function(e) {
@@ -272,13 +146,6 @@
                         value = value.replace(/^(\d{5})(\d)/, '$1-$2');
                     }
                     e.target.value = value;
-                });
-                
-                cepInput.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCEP(cep);
-                    }
                 });
             }
             

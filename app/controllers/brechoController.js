@@ -26,18 +26,18 @@ const brechoController = {
             .optional({ checkFalsy: true })
             .isLength({ min: 14, max: 18 }).withMessage("CNPJ deve ter 14 dígitos!")
             .custom(async (value) => {
-                if (value) {
-                    const existe = await brechoModel.findByCnpj(value);
-                    if (existe.length > 0) throw new Error('CNPJ já cadastrado');
+                if (value && value.trim()) {
+                    const cnpjLimpo = value.replace(/\D/g, '');
+                    if (cnpjLimpo.length === 14) {
+                        const existe = await brechoModel.findByCnpj(cnpjLimpo);
+                        if (existe.length > 0) throw new Error('CNPJ já cadastrado');
+                    }
                 }
                 return true;
             }),
         body("razao_social")
             .optional({ checkFalsy: true })
-            .isLength({ min: 3, max: 100 }).withMessage("Razão social deve ter de 3 a 100 caracteres!"),
-        body("nome_fantasia")
-            .optional({ checkFalsy: true })
-            .isLength({ min: 3, max: 100 }).withMessage("Nome fantasia deve ter de 3 a 100 caracteres!")
+            .isLength({ min: 3, max: 100 }).withMessage("Razão social deve ter de 3 a 100 caracteres!")
     ],
 
     regrasValidacaoUsuario: [
@@ -58,9 +58,7 @@ const brechoController = {
         body("nome_usu")
             .isLength({ min: 3, max: 100 }).withMessage("Nome completo deve ter de 3 a 100 caracteres!"),
         body("senha_usu")
-            .isLength({ min: 8 }).withMessage("Senha deve ter no mínimo 8 caracteres!")
-            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
-            .withMessage("Senha deve conter: maiúscula, minúscula, número e caractere especial"),
+            .isLength({ min: 6 }).withMessage("Senha deve ter no mínimo 6 caracteres!"),
         body("confirmar_senha")
             .custom((value, { req }) => {
                 if (value !== req.body.senha_usu) {
@@ -88,6 +86,7 @@ const brechoController = {
             .isLength({ min: 2, max: 2 }).withMessage("UF deve ter 2 caracteres!")
             .isAlpha().withMessage("UF deve conter apenas letras"),
         body("numero")
+            .trim()
             .notEmpty().withMessage("Número é obrigatório!")
             .isLength({ min: 1, max: 10 }).withMessage("Número deve ter de 1 a 10 caracteres!")
     ],
@@ -155,9 +154,14 @@ const brechoController = {
     },
 
     criarBrecho: async (req, res) => {
+        console.log('=== INÍCIO CRIAR BRECHÓ ===');
+        console.log('Dados recebidos:', req.body);
+        
         const erros = validationResult(req);
+        console.log('Erros de validação:', erros.array());
         
         if (!erros.isEmpty()) {
+            console.log('Retornando com erros de validação');
             return res.render("pages/criarbrecho", {
                 listaErros: erros,
                 dadosNotificacao: null,
@@ -166,32 +170,39 @@ const brechoController = {
         }
         
         const dadosUsuario = {
-            USER_USUARIO: sanitizeInput(req.body.nomeusu_usu.trim()),
+            USER_USUARIO: req.body.nomeusu_usu.trim(),
             SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
-            NOME_USUARIO: sanitizeInput(req.body.nome_usu.trim()),
-            EMAIL_USUARIO: sanitizeInput(req.body.email_usu.toLowerCase().trim()),
+            NOME_USUARIO: req.body.nome_usu.trim(),
+            EMAIL_USUARIO: req.body.email_usu.toLowerCase().trim(),
             CELULAR_USUARIO: req.body.fone_usu.replace(/\D/g, ''),
-            LOGRADOURO_USUARIO: sanitizeInput(req.body.endereco.trim()),
-            NUMERO_USUARIO: sanitizeInput(req.body.numero.trim()),
-            BAIRRO_USUARIO: sanitizeInput(req.body.bairro.trim()),
-            CIDADE_USUARIO: sanitizeInput(req.body.cidade.trim()),
-            UF_USUARIO: sanitizeInput(req.body.uf.toUpperCase().trim()),
+            LOGRADOURO_USUARIO: req.body.endereco.trim(),
+            NUMERO_USUARIO: req.body.numero.trim(),
+            BAIRRO_USUARIO: req.body.bairro.trim(),
+            CIDADE_USUARIO: req.body.cidade.trim(),
+            UF_USUARIO: req.body.uf.toUpperCase().trim(),
             CEP_USUARIO: req.body.cep.replace(/\D/g, ''),
             TIPO_USUARIO: 'b',
             STATUS_USUARIO: 'a'
         };
 
         try {
+            console.log('Criando usuário com dados:', dadosUsuario);
             const createUsuario = await usuario.create(dadosUsuario);
+            console.log('Resultado criação usuário:', createUsuario);
+            
             if (createUsuario && createUsuario.insertId) {
+                console.log('Usuário criado com ID:', createUsuario.insertId);
+                
                 const dadosBrecho = {
                     ID_USUARIO: createUsuario.insertId,
-                    CNPJ_BRECHO: null,
-                    RAZAO_SOCIAL: null,
+                    CNPJ_BRECHO: req.body.cnpj_brecho ? req.body.cnpj_brecho.replace(/\D/g, '') : '',
+                    RAZAO_SOCIAL: req.body.razao_social ? sanitizeInput(req.body.razao_social.trim()) : sanitizeInput(req.body.nomeusu_usu.trim()),
                     NOME_FANTASIA: sanitizeInput(req.body.nomeusu_usu.trim())
                 };
                 
-                await brechoModel.create(dadosBrecho);
+                console.log('Criando brechó com dados:', dadosBrecho);
+                const createBrecho = await brechoModel.create(dadosBrecho);
+                console.log('Resultado criação brechó:', createBrecho);
                 
                 req.session.autenticado = {
                     autenticado: dadosUsuario.NOME_USUARIO,
@@ -201,18 +212,13 @@ const brechoController = {
                     email: dadosUsuario.EMAIL_USUARIO
                 };
                 
-                if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-                    return res.json({
-                        success: true,
-                        userData: {
-                            nome: dadosUsuario.NOME_USUARIO,
-                            email: dadosUsuario.EMAIL_USUARIO,
-                            tipo: 'brecho'
-                        }
-                    });
-                }
+                console.log('Sessão criada:', req.session.autenticado);
                 
-                res.redirect('/perfilvender');
+                console.log('Redirecionando para /homevendedor');
+                res.redirect('/homevendedor');
+            } else {
+                console.log('Falha na criação do usuário - sem insertId');
+                throw new Error('Falha ao criar usuário');
             }
         } catch (error) {
             console.error('Erro ao criar brechó:', {
