@@ -354,10 +354,10 @@ router.get('/favoritos', carregarDadosUsuario, async function(req, res){
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
             const [favoritos] = await pool.query(`
-                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO_PRODUTO, p.IMG_PRODUTO_1 
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO 
                 FROM FAVORITOS f 
-                JOIN PRODUTOS p ON f.ID_PRODUTO = p.ID_PRODUTO 
-                WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 1
+                JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
+                WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 'favoritado' AND f.TIPO_ITEM = 'produto'
             `, [req.session.autenticado.id]);
             favoritosList = favoritos;
         }
@@ -971,7 +971,7 @@ router.get('/informacao', carregarDadosUsuario, async (req, res) => {
                 // Buscar favoritos reais do banco
                 try {
                     const [favoritos] = await pool.query(
-                        'SELECT * FROM FAVORITOS WHERE ID_USUARIO = ? AND STATUS_FAVORITO = 1',
+                        'SELECT * FROM FAVORITOS WHERE ID_USUARIO = ? AND STATUS_FAVORITO = "favoritado"',
                         [req.session.autenticado.id]
                     );
                     favoritosList = favoritos;
@@ -1294,22 +1294,22 @@ router.post('/favoritar', verificarUsuAutenticado, async function(req, res){
         
         // Verificar se já está favoritado
         const [existing] = await pool.query(
-            'SELECT * FROM FAVORITOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            'SELECT * FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "produto"',
             [produto_id, userId]
         );
         
         if (existing.length > 0) {
             // Se existe, alternar status
-            const newStatus = existing[0].STATUS_FAVORITO === 1 ? 0 : 1;
+            const newStatus = existing[0].STATUS_FAVORITO === 'favoritado' ? 'nulo' : 'favoritado';
             await pool.query(
-                'UPDATE FAVORITOS SET STATUS_FAVORITO = ? WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+                'UPDATE FAVORITOS SET STATUS_FAVORITO = ? WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "produto"',
                 [newStatus, produto_id, userId]
             );
-            res.json({ success: true, favorited: newStatus === 1 });
+            res.json({ success: true, favorited: newStatus === 'favoritado' });
         } else {
             // Se não existe, criar novo
             await pool.query(
-                'INSERT INTO FAVORITOS (ID_PRODUTO, ID_USUARIO, STATUS_FAVORITO, DT_INCLUSAO_FAVORITO) VALUES (?, ?, 1, NOW())',
+                'INSERT INTO FAVORITOS (ID_ITEM, ID_USUARIO, STATUS_FAVORITO, TIPO_ITEM, DATA_FAVORITO) VALUES (?, ?, "favoritado", "produto", NOW())',
                 [produto_id, userId]
             );
             res.json({ success: true, favorited: true });
@@ -1329,15 +1329,62 @@ router.get('/verificar-favorito/:produto_id', async function(req, res){
         }
         
         const [favorito] = await pool.query(
-            'SELECT STATUS_FAVORITO FROM FAVORITOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            'SELECT STATUS_FAVORITO FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "produto"',
             [produto_id, req.session.autenticado.id]
         );
         
-        const isFavorited = favorito.length > 0 && favorito[0].STATUS_FAVORITO === 1;
+        const isFavorited = favorito.length > 0 && favorito[0].STATUS_FAVORITO === 'favoritado';
         res.json({ favorited: isFavorited });
     } catch (error) {
         console.log('Erro ao verificar favorito:', error);
+        // Se for erro de conexão, retornar resposta padrão sem tentar novamente
+        if (error.code === 'ER_USER_LIMIT_REACHED' || error.code === 'ER_CON_COUNT_ERROR') {
+            return res.json({ favorited: false });
+        }
         res.json({ favorited: false });
+    }
+});
+
+// Rota para visualizar produto individual
+router.get('/produto/:id', async function(req, res){
+    try {
+        const { id } = req.params;
+        
+        // Buscar dados do produto
+        const [produtos] = await pool.query(
+            `SELECT p.*, u.NOME_USUARIO as VENDEDOR 
+             FROM PRODUTOS p 
+             JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+             WHERE p.ID_PRODUTO = ?`,
+            [id]
+        );
+        
+        if (produtos.length === 0) {
+            return res.status(404).render('pages/erro', {
+                mensagem: 'Produto não encontrado',
+                autenticado: req.session.autenticado || null
+            });
+        }
+        
+        // Buscar imagens do produto
+        const [imagens] = await pool.query(
+            'SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?',
+            [id]
+        );
+        
+        const produto = produtos[0];
+        produto.imagens = imagens;
+        
+        res.render('pages/produto', {
+            produto: produto,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar produto:', error);
+        res.status(500).render('pages/erro', {
+            mensagem: 'Erro interno do servidor',
+            autenticado: req.session.autenticado || null
+        });
     }
 });
 

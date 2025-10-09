@@ -69,7 +69,7 @@ const produtoModel = {
 
     delete: async (id) => {
         try {
-            const [resultados] = await pool.query("UPDATE PRODUTOS SET STATUS_PRODUTOS = 0 WHERE ID_PRODUTO = ?", [id]);
+            const [resultados] = await pool.query("UPDATE PRODUTOS SET STATUS_PRODUTO = 'i' WHERE ID_PRODUTO = ?", [id]);
             return resultados;
         } catch (error) {
             console.log(error);
@@ -82,11 +82,12 @@ const produtoModel = {
             const [resultados] = await pool.query(
                 `SELECT p.ID_PRODUTO as ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, 
                  p.TIPO_PRODUTO, p.TAMANHO_PRODUTO, p.COR_PRODUTO, p.CONDICAO_PRODUTO,
+                 p.ESTAMPA_PRODUTO, p.QUANTIDADE_ESTOQUE, p.OUTROS,
                  i.URL_IMG, u.NOME_USUARIO as VENDEDOR
                  FROM PRODUTOS p 
                  LEFT JOIN IMG_PRODUTOS i ON p.ID_PRODUTO = i.ID_PRODUTO
                  LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
-                 WHERE p.STATUS_PRODUTO = 'disponivel'
+                 WHERE p.STATUS_PRODUTO = 'd'
                  GROUP BY p.ID_PRODUTO
                  ORDER BY p.DATA_CADASTRO DESC 
                  LIMIT ?`, 
