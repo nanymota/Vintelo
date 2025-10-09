@@ -304,7 +304,7 @@ router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
 });
 
 
-router.get('/adicionar', adicionarController.mostrarFormulario);
+router.get('/adicionar', verificarUsuAutenticado, adicionarController.mostrarFormulario);
 
 router.post('/adicionar', 
     uploadProduto.array('fotos', 5),
