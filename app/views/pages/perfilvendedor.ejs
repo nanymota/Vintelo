@@ -46,7 +46,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menuvendedor">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Menu">
                 </a>
             </nav>
         </header>
@@ -360,9 +360,9 @@
                 
                 // Upload da foto
                 const formData = new FormData();
-                formData.append('brecho-photo', file);
+                formData.append('foto', file);
                 
-                fetch('/perfilvendedor/foto', {
+                fetch('/upload-foto', {
                     method: 'POST',
                     body: formData
                 })

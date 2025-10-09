@@ -10,107 +10,122 @@
 </head>
 
 <body>
-    <section class="oculto-desktop">
-        <header>
-            <nav class="grid">
+    <header>
+        <nav class="grid">
+            <a href="/homecomprador">
+                <img src="imagens/seta.png" alt="Seta Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
+            <img src="imagens/quadrado.png" class="img-branca">
+        </nav>
+    </header>
+    
+    <main class="login-container">
+        <aside class="image-section">
+            <section class="seta">
                 <a href="/homecomprador">
-                    <img src="imagens/seta.png" alt="Seta Voltar">
+                    <img src="imagens/seta.png">
                 </a>
-                <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
-                <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
-            </nav>
-        </header>
-    </section>
-
-    <main>
-        <section class="container">
-            <section class="form-section">
-                <center>
-                    <h2>Crie seu brechó</h2>
-                </center>
+            </section>
+            <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
+            <section class="content">
+                <h1>Crie seu brechó</h1>
+                <p>Transforme suas peças em oportunidades de negócio.</p>
+                <br>
+                <section class="buttons">
+                    <a href="/cadastro" class="button">Comprar</a>
+                    <a href="/entrar" class="button">Entrar</a>
+                </section>
+                <br>
+                <p>Já tem uma conta? <a href="/entrar"> Entrar</a></p>
+            </section>
+        </aside>
+        
+        <section class="form-section">
+            <section class="form-container">
+                <h2>Crie seu brechó</h2>
                 <p>Insira os dados do seu brechó</p>
 
                 <form id="registerForm" action="/criarbrecho" method="post">
-                    <section class="form-group">
-                        <label for="nomeusu_usu">Nome do Brechó</label>
-                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" required
-                        value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
+                    <!-- Seção Informações do Brechó -->
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('brecho-info')">
+                            <h4>Informações do Brechó</h4>
+                            <span class="arrow" id="brecho-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="brecho-info">
+                            <label for="nomeusu_usu">Nome do Brechó</label>
+                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" required
+                            value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
+
+                            <label for="cnpj_brecho">CNPJ (Opcional)</label>
+                            <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" maxlength="18" 
+                            value="<%= typeof valores !== 'undefined' && valores.cnpj_brecho ? valores.cnpj_brecho : '' %>">
+
+                            <label for="razao_social">Razão Social (Opcional)</label>
+                            <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
+                            value="<%= typeof valores !== 'undefined' && valores.razao_social ? valores.razao_social : '' %>">
+
+                            <label for="email_usu">Endereço de email</label>
+                            <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" required
+                            value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
+
+                            <label for="nome_usu">Nome Completo</label>
+                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" required
+                            value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
+
+                            <label for="fone_usu">Contato</label>
+                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" required
+                            value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
+                        </section>
                     </section>
 
-                    <section class="form-group">
-                        <label for="cnpj_brecho">CNPJ (Opcional)</label>
-                        <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" maxlength="18" 
-                        value="<%= typeof valores !== 'undefined' && valores.cnpj_brecho ? valores.cnpj_brecho : '' %>">
+                    <!-- Seção Segurança -->
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('security-info')">
+                            <h4>Segurança</h4>
+                            <span class="arrow" id="security-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="security-info">
+                            <label for="senha_usu">Senha</label>
+                            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
+
+                            <label for="confirmar_senha">Confirmar Senha</label>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha..." required>
+                        </section>
                     </section>
 
-                    <section class="form-group">
-                        <label for="razao_social">Razão Social (Opcional)</label>
-                        <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
-                        value="<%= typeof valores !== 'undefined' && valores.razao_social ? valores.razao_social : '' %>">
-                    </section>
+                    <!-- Seção Endereço -->
+                    <section class="collapsible-section">
+                        <section class="section-header" onclick="toggleSection('address-info')">
+                            <h4>Endereço</h4>
+                            <span class="arrow" id="address-arrow">▼</span>
+                        </section>
+                        <section class="section-content" id="address-info">
+                            <label for="cep">CEP</label>
+                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required 
+                            value="<%= typeof valores !== 'undefined' && valores.cep ? valores.cep : '' %>">
 
-                    <section class="form-group">
-                        <label for="email_usu">Endereço de email</label>
-                        <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" required
-                        value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
-                    </section>
+                            <label for="endereco">Endereço</label>
+                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required 
+                            value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
 
-                    <section class="form-group">
-                        <label for="nome_usu">Nome Completo</label>
-                        <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" required
-                        value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
-                    </section>
+                            <label for="numero">Número</label>
+                            <input type="text" id="numero" name="numero" placeholder="123" required 
+                            value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
 
-                    <section class="form-group">
-                        <label for="senha_usu">Senha</label>
-                        <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
-                    </section>
+                            <label for="bairro">Bairro</label>
+                            <input type="text" id="bairro" name="bairro" placeholder="Bairro" required 
+                            value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
 
-                    <section class="form-group">
-                        <label for="confirmar_senha">Confirmar Senha</label>
-                        <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha..." required>
-                    </section>
+                            <label for="cidade">Cidade</label>
+                            <input type="text" id="cidade" name="cidade" placeholder="Cidade" required 
+                            value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
 
-                    <section class="form-group">
-                        <label for="fone_usu">Contato</label>
-                        <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" required
-                        value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="cep">CEP</label>
-                        <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required 
-                        value="<%= typeof valores !== 'undefined' && valores.cep ? valores.cep : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="endereco">Endereço</label>
-                        <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required 
-                        value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="numero">Número</label>
-                        <input type="text" id="numero" name="numero" placeholder="123" required 
-                        value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" id="bairro" name="bairro" placeholder="Bairro" required 
-                        value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="cidade">Cidade</label>
-                        <input type="text" id="cidade" name="cidade" placeholder="Cidade" required 
-                        value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
-                    </section>
-
-                    <section class="form-group">
-                        <label for="uf">UF</label>
-                        <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required 
-                        value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
+                            <label for="uf">UF</label>
+                            <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required 
+                            value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
+                        </section>
                     </section>
 
                     <button type="submit" class="create-button">Criar brechó</button>
@@ -120,6 +135,19 @@
     </main>
 
     <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.innerHTML = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.innerHTML = '▼';
+            }
+        }
+
         function validarFormulario() {
             const senha = document.getElementById('senha_usu').value;
             const confirmarSenha = document.getElementById('confirmar_senha').value;
@@ -138,6 +166,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar seções abertas
+            document.getElementById('brecho-info').style.display = 'block';
+            document.getElementById('security-info').style.display = 'block';
+            document.getElementById('address-info').style.display = 'block';
+            document.getElementById('brecho-arrow').innerHTML = '▲';
+            document.getElementById('security-arrow').innerHTML = '▲';
+            document.getElementById('address-arrow').innerHTML = '▲';
+            
             const cepInput = document.getElementById('cep');
             if (cepInput) {
                 cepInput.addEventListener('input', function(e) {
@@ -146,6 +182,13 @@
                         value = value.replace(/^(\d{5})(\d)/, '$1-$2');
                     }
                     e.target.value = value;
+                });
+                
+                cepInput.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        buscarCEP(cep);
+                    }
                 });
             }
             
@@ -169,6 +212,22 @@
                 });
             }
         });
+        
+        function buscarCEP(cep) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro || '';
+                        document.getElementById('bairro').value = data.bairro || '';
+                        document.getElementById('cidade').value = data.localidade || '';
+                        document.getElementById('uf').value = data.uf || '';
+                    }
+                })
+                .catch(error => {
+                    console.log('Erro ao buscar CEP:', error);
+                });
+        }
     </script>
    
 </body>
