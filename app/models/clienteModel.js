@@ -7,7 +7,7 @@ const clienteModel = {
                 "SELECT c.ID_USUARIO, c.DATA_NASC, c.CPF_CLIENTE, " +
                 "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO " +
                 "FROM CLIENTES c INNER JOIN USUARIOS u ON c.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE u.STATUS_USUARIO = 'ativo' OR u.STATUS_USUARIO = 'a' OR u.STATUS_USUARIO = 1"
+                "WHERE u.STATUS_USUARIO = 'a'"
             );
             return resultados;
         } catch (error) {
@@ -22,7 +22,7 @@ const clienteModel = {
                 "SELECT c.ID_USUARIO, c.DATA_NASC, c.CPF_CLIENTE, " +
                 "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO " +
                 "FROM CLIENTES c INNER JOIN USUARIOS u ON c.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE c.ID_USUARIO = ? AND (u.STATUS_USUARIO = 'ativo' OR u.STATUS_USUARIO = 'a' OR u.STATUS_USUARIO = 1)",
+                "WHERE c.ID_USUARIO = ? AND u.STATUS_USUARIO = 'a'",
                 [id]
             );
             return resultados;

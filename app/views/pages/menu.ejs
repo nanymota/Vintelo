@@ -50,7 +50,7 @@
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menu">
                     <div class="profile-container">
-                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Menu" class="profile-pic">
+                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="profile-pic">
                     </div>
                 </a>
             </nav>
@@ -60,7 +60,7 @@
     <main>
         <aside class="user-sidebar">
             <section class="user-info">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Foto de perfil">
+                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil">
                 <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Usuário' %></h2>
                 <p><%= autenticado && autenticado.email ? autenticado.email : 'email@exemplo.com' %></p>
             </section>

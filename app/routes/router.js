@@ -136,33 +136,25 @@ router.post("/login", async function (req, res) {
     }
     
     try {
-        const usuarios = await usuarioModel.findUserEmail({ user_usuario: email_usu });
-        console.log('Usuários encontrados:', usuarios);
+        const resultado = await usuarioController.autenticarUsuario(email_usu, senha_usu);
         
-        if (usuarios.length > 0) {
-            const usuario = usuarios[0];
-            console.log('Verificando senha para usuário:', usuario.NOME_USUARIO);
-            const senhaValida = bcrypt.compareSync(senha_usu, usuario.SENHA_USUARIO);
-            console.log('Senha válida:', senhaValida);
+        if (resultado.success) {
+            const usuario = resultado.usuario;
+            req.session.autenticado = {
+                autenticado: usuario.NOME_USUARIO,
+                id: usuario.ID_USUARIO,
+                tipo: usuario.TIPO_USUARIO,
+                nome: usuario.NOME_USUARIO,
+                email: usuario.EMAIL_USUARIO
+            };
             
-            if (senhaValida) {
-                req.session.autenticado = {
-                    autenticado: usuario.NOME_USUARIO,
-                    id: usuario.ID_USUARIO,
-                    tipo: usuario.TIPO_USUARIO,
-                    nome: usuario.NOME_USUARIO,
-                    email: usuario.EMAIL_USUARIO
-                };
-                
-                console.log('Sessão criada:', req.session.autenticado);
-                console.log('Redirecionando para:', usuario.TIPO_USUARIO == 'brecho' ? '/homevendedor' : '/homecomprador');
-                return res.redirect(usuario.TIPO_USUARIO == 'b' ? '/homevendedor' : '/homecomprador');
-            }
+            console.log('Sessão criada:', req.session.autenticado);
+            return res.redirect(usuario.TIPO_USUARIO == 'b' ? '/homevendedor' : '/homecomprador');
         }
         
         res.render('pages/login', {
             listaErros: null,
-            dadosNotificacao: { titulo: 'Falha ao logar!', mensagem: usuarios.length > 0 ? 'Senha inválida!' : 'Usuário não encontrado!', tipo: 'error' },
+            dadosNotificacao: { titulo: 'Falha ao logar!', mensagem: 'Usuário ou senha inválidos!', tipo: 'error' },
             valores: req.body,
             avisoErro: {}
         });
@@ -231,16 +223,118 @@ router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "page
 //     .catch(console.log)
 // });
 
+// Rota para visualizar produto individual (deve vir antes das rotas estáticas)
+router.get('/produto/:id', carregarDadosUsuario, async function(req, res){
+    try {
+        const { id } = req.params;
+        
+        // Buscar dados do produto
+        const [produtos] = await pool.query(
+            `SELECT p.*, u.NOME_USUARIO as VENDEDOR 
+             FROM PRODUTOS p 
+             JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+             WHERE p.ID_PRODUTO = ? AND p.STATUS_PRODUTO = 'd'`,
+            [id]
+        );
+        
+        if (produtos.length === 0) {
+            return res.render('pages/produto', {
+                produto: null,
+                autenticado: req.session.autenticado || null
+            });
+        }
+        
+        // Buscar imagens do produto
+        const [imagens] = await pool.query(
+            'SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?',
+            [id]
+        );
+        
+        console.log('Produto encontrado:', produtos[0]);
+        console.log('Imagens encontradas:', imagens);
+        
+        const produto = produtos[0];
+        produto.imagens = imagens;
+        
+        res.render('pages/produto', {
+            produto: produto,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar produto:', error);
+        res.render('pages/produto', {
+            produto: null,
+            autenticado: req.session.autenticado || null
+        });
+    }
+});
+
 router.get('/produto1', (req, res) => res.render('pages/produto1'));
 router.get('/produto2', (req, res) => res.render('pages/produto2'));
 router.get('/produto3', (req, res) => res.render('pages/produto3'));
 router.get('/produto4', (req, res) => res.render('pages/produto4'));
 
-router.get('/carrinho', function(req, res){
-    res.render('pages/carrinho', {
-        carrinho: req.session.carrinho || [],
-        autenticado: req.session.autenticado || { autenticado: false }
-    });
+router.get('/carrinho', async function(req, res){
+    try {
+        let carrinho = [];
+        let subtotal = 0;
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const [itensSacola] = await pool.query(`
+                SELECT 
+                    is.QUANTIDADE,
+                    is.VALOR_TOTAL,
+                    p.ID_PRODUTO,
+                    p.NOME_PRODUTO,
+                    p.PRECO,
+                    p.TAMANHO_PRODUTO,
+                    p.COR_PRODUTO,
+                    p.ESTILO_PRODUTO,
+                    p.ESTAMPA_PRODUTO,
+                    img.URL_IMG
+                FROM ITENS_SACOLA is
+                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE s.ID_USUARIO = ?
+                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
+            `, [req.session.autenticado.id]);
+            
+            carrinho = itensSacola.map(item => ({
+                produto_id: item.ID_PRODUTO,
+                nome: item.NOME_PRODUTO,
+                preco: parseFloat(item.PRECO),
+                quantidade: item.QUANTIDADE,
+                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+                cor: item.COR_PRODUTO,
+                estilo: item.ESTILO_PRODUTO,
+                estampa: item.ESTAMPA_PRODUTO,
+                tamanho: item.TAMANHO_PRODUTO
+            }));
+            
+            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        }
+        
+        const frete = subtotal > 0 ? 10 : 0;
+        const total = subtotal + frete;
+        
+        res.render('pages/carrinho', {
+            carrinho: carrinho,
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2),
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    } catch (error) {
+        console.log('Erro ao carregar carrinho:', error);
+        res.render('pages/carrinho', {
+            carrinho: [],
+            subtotal: '0,00',
+            frete: '0,00',
+            total: '0,00',
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    }
 });
 
 router.get('/perfil1', (req, res) => res.render('pages/perfil1'));
@@ -331,24 +425,203 @@ router.get('/pedidoconf', function(req, res){
     });
 });
 router.get('/finalizandocompra1', (req, res) => res.render('pages/finalizandocompra1'));
-router.get('/finalizandocompra2', function(req, res){
-    const carrinho = req.session.carrinho || [];
-    let subtotal = 0;
-    
-    carrinho.forEach(item => {
-        subtotal += (item.preco * item.quantidade);
-    });
-    
-    const frete = subtotal > 0 ? 10 : 0;
-    const total = subtotal + frete;
-    
-    res.render('pages/finalizandocompra2', {
-        carrinho: carrinho,
-        subtotal: subtotal.toFixed(2),
-        frete: frete.toFixed(2),
-        total: total.toFixed(2),
-        autenticado: req.session.autenticado || { autenticado: false }
-    });
+router.get('/finalizandocompra', (req, res) => res.redirect('/finalizandocompra2'));
+
+router.get('/finalizandopagamento', async function(req, res){
+    try {
+        let carrinho = [];
+        let subtotal = 0;
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const [itensSacola] = await pool.query(`
+                SELECT 
+                    is.QUANTIDADE,
+                    is.VALOR_TOTAL,
+                    p.ID_PRODUTO,
+                    p.NOME_PRODUTO,
+                    p.PRECO,
+                    p.TAMANHO_PRODUTO,
+                    p.COR_PRODUTO,
+                    p.ESTILO_PRODUTO,
+                    p.ESTAMPA_PRODUTO,
+                    img.URL_IMG
+                FROM ITENS_SACOLA is
+                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE s.ID_USUARIO = ?
+                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
+            `, [req.session.autenticado.id]);
+            
+            carrinho = itensSacola.map(item => ({
+                id: item.ID_PRODUTO,
+                nome: item.NOME_PRODUTO,
+                preco: parseFloat(item.PRECO),
+                quantidade: item.QUANTIDADE,
+                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+                cor: item.COR_PRODUTO,
+                estilo: item.ESTILO_PRODUTO,
+                estampa: item.ESTAMPA_PRODUTO,
+                tamanho: item.TAMANHO_PRODUTO
+            }));
+            
+            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        }
+        
+        const frete = subtotal > 0 ? 10 : 0;
+        const total = subtotal + frete;
+        
+        res.render('pages/finalizandopagamento', {
+            carrinho: carrinho,
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2),
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    } catch (error) {
+        console.log('Erro ao carregar finalizandopagamento:', error);
+        res.render('pages/finalizandopagamento', {
+            carrinho: [],
+            subtotal: '0,00',
+            frete: '0,00',
+            total: '0,00',
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    }
+});
+// Rota para atualizar quantidade na sacola
+router.post('/atualizar-quantidade-sacola', verificarUsuAutenticado, async function(req, res){
+    try {
+        const { produto_id, quantidade } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        if (quantidade <= 0) {
+            return res.json({ success: false, message: 'Quantidade deve ser maior que zero' });
+        }
+        
+        // Buscar preço do produto
+        const [produto] = await pool.query('SELECT PRECO FROM PRODUTOS WHERE ID_PRODUTO = ?', [produto_id]);
+        if (produto.length === 0) {
+            return res.json({ success: false, message: 'Produto não encontrado' });
+        }
+        
+        const preco = parseFloat(produto[0].PRECO);
+        const valorTotal = preco * quantidade;
+        
+        // Atualizar quantidade na sacola
+        await pool.query(`
+            UPDATE ITENS_SACOLA is
+            JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+            SET is.QUANTIDADE = ?, is.VALOR_TOTAL = ?
+            WHERE s.ID_USUARIO = ? AND is.ID_PRODUTO = ?
+        `, [quantidade, valorTotal, userId, produto_id]);
+        
+        res.json({ success: true, message: 'Quantidade atualizada' });
+    } catch (error) {
+        console.log('Erro ao atualizar quantidade:', error);
+        res.json({ success: false, message: 'Erro interno' });
+    }
+});
+
+// Rota para remover item da sacola
+router.post('/remover-item-sacola', verificarUsuAutenticado, async function(req, res){
+    try {
+        const { produto_id } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        await pool.query(`
+            DELETE is FROM ITENS_SACOLA is
+            JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+            WHERE s.ID_USUARIO = ? AND is.ID_PRODUTO = ?
+        `, [userId, produto_id]);
+        
+        res.json({ success: true, message: 'Item removido' });
+    } catch (error) {
+        console.log('Erro ao remover item:', error);
+        res.json({ success: false, message: 'Erro interno' });
+    }
+});
+
+router.get('/finalizandocompra2', async function(req, res){
+    try {
+        console.log('=== FINALIZANDO COMPRA 2 ===');
+        console.log('Sessão completa:', req.session);
+        console.log('Usuário autenticado:', req.session?.autenticado);
+        
+        let carrinho = [];
+        let subtotal = 0;
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            console.log('Buscando itens da sacola para usuário:', req.session.autenticado.id);
+            
+            // Primeiro verificar se existe sacola
+            const [sacolaExiste] = await pool.query('SELECT ID_SACOLA FROM SACOLA WHERE ID_USUARIO = ?', [req.session.autenticado.id]);
+            console.log('Sacola existe:', sacolaExiste);
+            
+            const [itensSacola] = await pool.query(`
+                SELECT 
+                    is.QUANTIDADE,
+                    is.VALOR_TOTAL,
+                    p.ID_PRODUTO,
+                    p.NOME_PRODUTO,
+                    p.PRECO,
+                    p.TAMANHO_PRODUTO,
+                    p.COR_PRODUTO,
+                    p.ESTILO_PRODUTO,
+                    p.ESTAMPA_PRODUTO,
+                    img.URL_IMG
+                FROM ITENS_SACOLA is
+                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE s.ID_USUARIO = ?
+                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
+            `, [req.session.autenticado.id]);
+            console.log('Itens encontrados na sacola:', itensSacola.length);
+            console.log('Dados dos itens:', JSON.stringify(itensSacola, null, 2));
+            
+            carrinho = itensSacola.map(item => ({
+                produto_id: item.ID_PRODUTO,
+                nome: item.NOME_PRODUTO,
+                preco: parseFloat(item.PRECO),
+                quantidade: item.QUANTIDADE,
+                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+                cor: item.COR_PRODUTO,
+                estilo: item.ESTILO_PRODUTO,
+                estampa: item.ESTAMPA_PRODUTO,
+                tamanho: item.TAMANHO_PRODUTO
+            }));
+            console.log('Carrinho mapeado:', carrinho);
+            
+            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        }
+        
+        const frete = subtotal > 0 ? 10 : 0;
+        const total = subtotal + frete;
+        
+        console.log('Dados finais enviados para o template:');
+        console.log('- Carrinho:', JSON.stringify(carrinho, null, 2));
+        console.log('- Subtotal:', subtotal.toFixed(2));
+        console.log('- Frete:', frete.toFixed(2));
+        console.log('- Total:', total.toFixed(2));
+        
+        res.render('pages/finalizandocompra2', {
+            carrinho: carrinho,
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2),
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    } catch (error) {
+        console.log('Erro ao carregar finalizandocompra2:', error);
+        res.render('pages/finalizandocompra2', {
+            carrinho: [],
+            subtotal: '0,00',
+            frete: '0,00',
+            total: '0,00',
+            autenticado: req.session.autenticado || { autenticado: false }
+        });
+    }
 });
 router.get('/favoritos', carregarDadosUsuario, async function(req, res){
     try {
@@ -376,7 +649,68 @@ router.get('/favoritos', carregarDadosUsuario, async function(req, res){
         });
     }
 });
-router.get('/sacola1', carregarDadosUsuario, (req, res) => res.render('pages/sacola1', { autenticado: req.session.autenticado || null }));
+router.get('/sacola1', carregarDadosUsuario, async function(req, res){
+    try {
+        let carrinho = [];
+        let subtotal = 0;
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const [itensSacola] = await pool.query(`
+                SELECT 
+                    is.QUANTIDADE,
+                    is.VALOR_TOTAL,
+                    p.ID_PRODUTO,
+                    p.NOME_PRODUTO,
+                    p.PRECO,
+                    p.TAMANHO_PRODUTO,
+                    p.COR_PRODUTO,
+                    p.ESTILO_PRODUTO,
+                    p.ESTAMPA_PRODUTO,
+                    img.URL_IMG
+                FROM ITENS_SACOLA is
+                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE s.ID_USUARIO = ?
+                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
+            `, [req.session.autenticado.id]);
+            
+            carrinho = itensSacola.map(item => ({
+                produto_id: item.ID_PRODUTO,
+                nome: item.NOME_PRODUTO,
+                preco: parseFloat(item.PRECO),
+                quantidade: item.QUANTIDADE,
+                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+                cor: item.COR_PRODUTO,
+                estilo: item.ESTILO_PRODUTO,
+                estampa: item.ESTAMPA_PRODUTO,
+                tamanho: item.TAMANHO_PRODUTO
+            }));
+            
+            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        }
+        
+        const frete = subtotal > 0 ? 10 : 0;
+        const total = subtotal + frete;
+        
+        res.render('pages/sacola1', {
+            carrinho: carrinho,
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2),
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar sacola1:', error);
+        res.render('pages/sacola1', {
+            carrinho: [],
+            subtotal: '0,00',
+            frete: '0,00',
+            total: '0,00',
+            autenticado: req.session.autenticado || null
+        });
+    }
+});
 router.get('/avaliasao', (req, res) => res.render('pages/avaliasao'));
 
 router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
@@ -562,58 +896,41 @@ router.post('/entrar', async function(req, res){
     }
     
     try {
-        const usuarios = await usuarioModel.findUserEmail({ user_usuario: email_usu });
-        console.log('Usuários encontrados na página entrar:', usuarios);
+        const resultado = await usuarioController.autenticarUsuario(email_usu, senha_usu);
         
-        if (usuarios.length > 0) {
-            const usuario = usuarios[0];
-            console.log('Verificando senha para usuário:', usuario.NOME_USUARIO);
-            const senhaValida = senha_usu === usuario.SENHA_USUARIO;
-            console.log('Senha válida:', senhaValida);
+        if (resultado.success) {
+            const usuario = resultado.usuario;
+            req.session.autenticado = {
+                autenticado: usuario.NOME_USUARIO,
+                id: usuario.ID_USUARIO,
+                tipo: usuario.TIPO_USUARIO,
+                nome: usuario.NOME_USUARIO,
+                email: usuario.EMAIL_USUARIO
+            };
             
-            if (senhaValida) {
-                req.session.autenticado = {
-                    autenticado: usuario.NOME_USUARIO,
-                    id: usuario.ID_USUARIO,
-                    tipo: usuario.TIPO_USUARIO,
-                    nome: usuario.NOME_USUARIO,
-                    email: usuario.EMAIL_USUARIO
+            console.log('Sessão criada na página entrar:', req.session.autenticado);
+            
+            if (usuario.TIPO_USUARIO == 'b') {
+                req.session.brecho = {
+                    nome: 'Meu Brechó',
+                    proprietario: usuario.NOME_USUARIO,
+                    avaliacao: '4.5',
+                    itens_venda: '15',
+                    vendidos: '8',
+                    seguidores: '25'
                 };
-                
-                console.log('Sessão criada na página entrar:', req.session.autenticado);
-                
-                if (usuario.TIPO_USUARIO == 'b') {
-                    req.session.brecho = {
-                        nome: 'Meu Brechó',
-                        proprietario: usuario.NOME_USUARIO,
-                        avaliacao: '4.5',
-                        itens_venda: '15',
-                        vendidos: '8',
-                        seguidores: '25'
-                    };
-                    console.log('Redirecionando para /homevendedor');
-                    return res.redirect('/homevendedor');
-                } else {
-                    console.log('Redirecionando para /homecomprador');
-                    return res.redirect('/homecomprador');
-                }
+                console.log('Redirecionando para /homevendedor');
+                return res.redirect('/homevendedor');
             } else {
-                res.render('pages/entrar', {
-                    listaErros: null,
-                    dadosNotificacao: {
-                        titulo: 'Falha ao logar!',
-                        mensagem: 'Senha inválida!',
-                        tipo: 'error'
-                    },
-                    valores: req.body
-                });
+                console.log('Redirecionando para /homecomprador');
+                return res.redirect('/homecomprador');
             }
         } else {
             res.render('pages/entrar', {
                 listaErros: null,
                 dadosNotificacao: {
                     titulo: 'Falha ao logar!',
-                    mensagem: 'Usuário não encontrado!',
+                    mensagem: 'Usuário ou senha inválidos!',
                     tipo: 'error'
                 },
                 valores: req.body
@@ -1370,6 +1687,89 @@ router.get('/pagamento-falha', pagamentoController.pagamentoFalha);
 router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
 router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
 
+// Rota para adicionar à sacola
+router.post('/adicionar-sacola', verificarUsuAutenticado, async function(req, res){
+    console.log('=== ADICIONAR À SACOLA ===');
+    console.log('Body recebido:', req.body);
+    console.log('Usuário autenticado:', req.session.autenticado);
+    console.log('Headers:', req.headers);
+    
+    try {
+        const { produto_id } = req.body;
+        
+        if (!produto_id) {
+            console.log('Produto ID não fornecido');
+            return res.json({ success: false, message: 'ID do produto é obrigatório' });
+        }
+        
+        const userId = req.session.autenticado.id;
+        console.log('User ID:', userId, 'Produto ID:', produto_id);
+        
+        // Buscar preço do produto primeiro
+        const [produto] = await pool.query(
+            'SELECT PRECO FROM PRODUTOS WHERE ID_PRODUTO = ?',
+            [produto_id]
+        );
+        
+        if (produto.length === 0) {
+            console.log('Produto não encontrado no banco');
+            return res.json({ success: false, message: 'Produto não encontrado' });
+        }
+        
+        const precoProduto = parseFloat(produto[0].PRECO);
+        console.log('Preço do produto:', precoProduto);
+        
+        // Verificar se o usuário já tem uma sacola
+        let [sacola] = await pool.query(
+            'SELECT ID_SACOLA FROM SACOLA WHERE ID_USUARIO = ?',
+            [userId]
+        );
+        
+        let sacolaId;
+        if (sacola.length === 0) {
+            console.log('Criando nova sacola para o usuário');
+            const [novaSacola] = await pool.query(
+                'INSERT INTO SACOLA (ID_USUARIO) VALUES (?)',
+                [userId]
+            );
+            sacolaId = novaSacola.insertId;
+        } else {
+            sacolaId = sacola[0].ID_SACOLA;
+        }
+        
+        console.log('Sacola ID:', sacolaId);
+        
+        // Verificar se o item já existe na sacola
+        const [itemExistente] = await pool.query(
+            'SELECT * FROM ITENS_SACOLA WHERE ID_SACOLA = ? AND ID_PRODUTO = ?',
+            [sacolaId, produto_id]
+        );
+        
+        if (itemExistente.length > 0) {
+            console.log('Item já existe, atualizando quantidade');
+            const novaQuantidade = itemExistente[0].QUANTIDADE + 1;
+            const novoValorTotal = precoProduto * novaQuantidade;
+            
+            await pool.query(
+                'UPDATE ITENS_SACOLA SET QUANTIDADE = ?, VALOR_TOTAL = ? WHERE ID_SACOLA = ? AND ID_PRODUTO = ?',
+                [novaQuantidade, novoValorTotal, sacolaId, produto_id]
+            );
+        } else {
+            console.log('Adicionando novo item à sacola');
+            await pool.query(
+                'INSERT INTO ITENS_SACOLA (ID_SACOLA, ID_PRODUTO, QUANTIDADE, VALOR_TOTAL) VALUES (?, ?, 1, ?)',
+                [sacolaId, produto_id, precoProduto]
+            );
+        }
+        
+        console.log('Produto adicionado com sucesso!');
+        res.json({ success: true, message: 'Produto adicionado à sacola com sucesso!' });
+    } catch (error) {
+        console.log('ERRO COMPLETO ao adicionar à sacola:', error);
+        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + error.message });
+    }
+});
+
 // Rotas de Favoritos
 router.post('/favoritar', verificarUsuAutenticado, async function(req, res){
     try {
@@ -1429,47 +1829,6 @@ router.get('/verificar-favorito/:produto_id', async function(req, res){
     }
 });
 
-// Rota para visualizar produto individual
-router.get('/produto/:id', async function(req, res){
-    try {
-        const { id } = req.params;
-        
-        // Buscar dados do produto
-        const [produtos] = await pool.query(
-            `SELECT p.*, u.NOME_USUARIO as VENDEDOR 
-             FROM PRODUTOS p 
-             JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
-             WHERE p.ID_PRODUTO = ?`,
-            [id]
-        );
-        
-        if (produtos.length === 0) {
-            return res.status(404).render('pages/erro', {
-                mensagem: 'Produto não encontrado',
-                autenticado: req.session.autenticado || null
-            });
-        }
-        
-        // Buscar imagens do produto
-        const [imagens] = await pool.query(
-            'SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?',
-            [id]
-        );
-        
-        const produto = produtos[0];
-        produto.imagens = imagens;
-        
-        res.render('pages/produto', {
-            produto: produto,
-            autenticado: req.session.autenticado || null
-        });
-    } catch (error) {
-        console.log('Erro ao carregar produto:', error);
-        res.status(500).render('pages/erro', {
-            mensagem: 'Erro interno do servidor',
-            autenticado: req.session.autenticado || null
-        });
-    }
-});
+
 
 module.exports = router;

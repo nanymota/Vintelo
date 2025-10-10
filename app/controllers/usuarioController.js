@@ -16,7 +16,7 @@ const usuarioController = {
         body("nomeusu_usu")
             .isLength({ min: 8, max: 45 }).withMessage("Nome de usuário deve ter de 8 a 45 caracteres!")
             .custom(async value => {
-                const nomeUsu = await usuario.findCampoCustom({ 'user_usuario': value });
+                const nomeUsu = await usuario.findCampoCustom('USER_USUARIO', value);
                 if (nomeUsu > 0) {
                     throw new Error('Nome de usuário em uso!');
                 }
@@ -24,7 +24,7 @@ const usuarioController = {
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!")
             .custom(async value => {
-                const nomeUsu = await usuario.findCampoCustom({ 'email_usuario': value });
+                const nomeUsu = await usuario.findCampoCustom('EMAIL_USUARIO', value);
                 if (nomeUsu > 0) {
                     throw new Error('E-mail em uso!');
                 }
@@ -119,6 +119,29 @@ const usuarioController = {
             .isNumeric().withMessage("Digite um número para o endereço!"),
     ],
 
+    autenticarUsuario: async (email_usu, senha_usu) => {
+        try {
+            const usuarios = await usuario.findUserEmail({ user_usuario: email_usu });
+            
+            if (usuarios.length > 0) {
+                const usuarioEncontrado = usuarios[0];
+                const senhaValida = bcrypt.compareSync(senha_usu, usuarioEncontrado.SENHA_USUARIO);
+                
+                if (senhaValida) {
+                    return {
+                        success: true,
+                        usuario: usuarioEncontrado
+                    };
+                }
+            }
+            
+            return { success: false };
+        } catch (error) {
+            console.log('Erro na autenticação:', error);
+            return { success: false };
+        }
+    },
+
     logar: (req, res) => {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
@@ -161,7 +184,7 @@ const usuarioController = {
         
         var dadosForm = {
             USER_USUARIO: req.body.nomeusu_usu,
-            SENHA_USUARIO: req.body.senha_usu,
+            SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email_usu,
             CELULAR_USUARIO: req.body.celular_usuario,
@@ -194,11 +217,11 @@ const usuarioController = {
                 console.log('Cliente criado com sucesso');
                 
                 req.session.autenticado = {
-                    autenticado: dadosForm.NOME_USUARIO,
                     id: create.insertId,
-                    tipo: dadosForm.TIPO_USUARIO,
                     nome: dadosForm.NOME_USUARIO,
-                    email: dadosForm.EMAIL_USUARIO
+                    username: dadosForm.USER_USUARIO,
+                    tipo: dadosForm.TIPO_USUARIO,
+                    imagem: null
                 };
                 
                 // Se for requisição AJAX, retornar JSON

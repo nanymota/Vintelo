@@ -38,7 +38,7 @@
             <% if (typeof autenticado !== 'undefined' && autenticado) { %>
               <a href="/perfilcliente"><img src="<%= autenticado.imagem || 'imagens/imagem sem cadastro.avif' %>" class="maria"></a>
             <% } else { %>
-              <a href="/menu"><img src="imagem/perfil/perfil vintelo.png" class="maria"></a>
+              <a href="/menu"><img src="/imagens/icone sem cadastro.png" class="maria"></a>
             <% } %>
           </li>
           <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
@@ -65,7 +65,7 @@
             <li>
               <a href="/criarbrecho">
                 <section class="profile-section">
-                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Perfil" class="profile-pic">
+                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic">
                   <section class="profile-info">
                     <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
                   </section>
@@ -109,7 +109,7 @@
         <img src="imagens/logo.png" class="logo">
         <a href="/menu">
           <div class="profile-container">
-            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="Foto de Maria" class="profile-pic" />
+            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-pic" />
           </div>
         </a>
       </nav>
@@ -212,8 +212,8 @@
                 <img src="<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
               </a>
               <h2><%= produto.NOME_PRODUTO %></h2>
-              <p class="price">R$<%= produto.PRECO_PRODUTO.toFixed(2).replace('.', ',') %></p>
-              <p class="Descrição">ou em 2x de R$<%= (produto.PRECO_PRODUTO / 2).toFixed(2).replace('.', ',') %></p>
+              <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+              <p class="Descrição">ou em 2x de R$<%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
               <p class="vendedor">Por: <%= produto.VENDEDOR %></p>
               
               <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)">

@@ -44,7 +44,7 @@ const brechoController = {
         body("nomeusu_usu")
             .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!")
             .custom(async (value) => {
-                const existe = await usuario.findCampoCustom('user_usuario', value);
+                const existe = await usuario.findCampoCustom('USER USUARIO', value);
                 if (existe > 0) throw new Error('Nome de usuário já existe');
                 return true;
             }),
@@ -96,8 +96,21 @@ const brechoController = {
             const results = await brechoModel.findId(req.session.autenticado.id);
             const brecho = results.length > 0 ? results[0] : null;
             
+            // Buscar produtos do usuário
+            const pool = require('../config/pool_conexoes');
+            const [produtos] = await pool.query(
+                `SELECT p.*, i.URL_IMG, u.NOME_USUARIO as VENDEDOR 
+                 FROM PRODUTOS p 
+                 LEFT JOIN IMG_PRODUTOS i ON p.ID_PRODUTO = i.ID_PRODUTO 
+                 JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+                 WHERE p.ID_USUARIO = ? AND p.STATUS_PRODUTO = 'd'
+                 ORDER BY p.DATA_CADASTRO DESC`,
+                [req.session.autenticado.id]
+            );
+            
             res.render("pages/perfilvender", {
                 brecho: brecho,
+                produtos: produtos || [],
                 dadosNotificacao: null
             });
         } catch (error) {
@@ -108,6 +121,7 @@ const brechoController = {
             });
             res.render("pages/perfilvender", {
                 brecho: null,
+                produtos: [],
                 dadosNotificacao: {
                     titulo: sanitizeInput("Erro!"),
                     mensagem: sanitizeInput("Erro interno do servidor"),
@@ -205,12 +219,14 @@ const brechoController = {
                 console.log('Resultado criação brechó:', createBrecho);
                 
                 req.session.autenticado = {
-                    autenticado: dadosUsuario.NOME_USUARIO,
                     id: createUsuario.insertId,
-                    tipo: dadosUsuario.TIPO_USUARIO,
                     nome: dadosUsuario.NOME_USUARIO,
-                    email: dadosUsuario.EMAIL_USUARIO
+                    email: dadosUsuario.EMAIL_USUARIO,
+                    username: dadosUsuario.USER_USUARIO,
+                    tipo: dadosUsuario.TIPO_USUARIO,
+                    imagem: null
                 };
+
                 
                 console.log('Sessão criada:', req.session.autenticado);
                 
@@ -299,7 +315,7 @@ const brechoController = {
     excluirBrecho: async (req, res) => {
         try {
             await brechoModel.delete(req.session.autenticado.id);
-            await usuario.update({ STATUS_USUARIO: 0 }, req.session.autenticado.id);
+            await usuario.update({ STATUS_USUARIO: 'i' }, req.session.autenticado.id);
             
             req.session.destroy();
             res.redirect('/homevendedor');

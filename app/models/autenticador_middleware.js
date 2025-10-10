@@ -22,13 +22,11 @@ carregarDadosUsuario = async (req, res, next) => {
 }
 
 verificarUsuAutenticado = (req, res, next) => {
-    if (req.session.autenticado) {
-        var autenticado = req.session.autenticado;
+    if (req.session && req.session.autenticado && req.session.autenticado.id) {
+        next();
     } else {
-        var autenticado = { autenticado: null, id: null, tipo: null };
+        return res.status(401).json({ success: false, message: 'Usuário não autenticado' });
     }
-    req.session.autenticado = autenticado;
-    next();
 }
 
 limparSessao = (req, res, next) => {
@@ -47,7 +45,7 @@ gravarUsuAutenticado = async (req, res, next) => {
         var results = await usuario.findUserEmail(dadosForm);
         var total = Object.keys(results).length;
         if (total == 1) {
-            if (bcrypt.compareSync(dadosForm.SENHA_USUARIO, results[0].SENHA_USUARO)) {
+            if (bcrypt.compareSync(dadosForm.SENHA_USUARIO, results[0].SENHA_USUARIO)) {
                 var autenticado = {
                     autenticado: results[0].USER_USUARIO,
                     id: results[0].ID_USUARIO,

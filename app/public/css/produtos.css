@@ -1,4 +1,4 @@
-/*                                        Reset básico                                                              */
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
@@ -6,13 +6,13 @@
 }
 
 body {
-    font-family: Prata, Montserrat;
+    font-family: 'Prata', 'Montserrat', Arial, sans-serif;
     background-color: #fdfdfd;
     color: #333;
     line-height: 1.6;
 }
 
-/*                                     cabeçalho  do  menu                                               */
+/* Cabeçalho do menu */
 .top-bar {
   background-color: #8c2b44;
   text-align: center;
@@ -79,7 +79,7 @@ nav a {
   height: auto;
   position: fixed;
 }
-/*                                      Cabeçalho                                                 */
+/* Cabeçalho mobile */
 header {
     background-color: #fff;
     padding: 15px 20px;
@@ -99,7 +99,7 @@ header img {
     height: 40px;
 }
 
-/*                              Main                                                   */
+/* Conteúdo principal */
 .main-image {
   width: 100%;
 }
@@ -177,71 +177,59 @@ width: 100%;
 height: 100%; 
 }
 
-.img-responsiva{
+.img-responsiva {
     align-self: center;
 }
 
 
 
-    /*                                              responsivivdade                                                       */
-
-    @media (max-width: 768px) {
-    .submit-btn .link-branco  {
+/* Responsividade */
+@media (max-width: 768px) {
+    .submit-btn .link-branco {
         display: block;
-      }
     }
-  @media (min-width: 992px) {
-    .submit-btn .link-branco  {
-      display: none;
-    }
-    .oculto-mobile{
-      margin: 0;
-    }
-   }
     
-  
-    .oculto-desktop{
-      margin: 0;
+    .oculto-mobile {
+        display: none;
     }
-  
-  
-    @media (min-width: 768px) {
-      .container {
+    
+    .oculto-desktop {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .container {
         max-width: 600px;
-      }
+    }
     
-      .confirmation-section .illustration img {
+    .confirmation-section .illustration img {
         width: 150px;
-      }
+    }
     
-      .view-orders-button, .continue-shopping-button {
+    .view-orders-button, .continue-shopping-button {
         font-size: 18px;
         padding: 18px;
-      }
+    }
+}
+
+@media (min-width: 992px) {
+    .submit-btn .link-branco {
+        display: none;
     }
     
-    @media (max-width: 768px){
-      .oculto-mobile {
-        display: none
-      }
+    .oculto-mobile {
+        display: block;
+        margin: 0;
     }
-  
-    @media (min-width: 992px){
-      .oculto-mobile {
-        display: block
-      }
+    
+    .oculto-desktop {
+        display: none;
     }
-  
-    @media (max-width: 768px){
-      .oculto-desktop {
-        display: block
-      }
-    }
-  
-    @media (min-width: 992px){
-      .oculto-desktop {
-        display: none
-      }
-    }
+}
+
+.oculto-desktop {
+    margin: 0;
+}
   
   

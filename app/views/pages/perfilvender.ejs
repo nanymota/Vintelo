@@ -33,7 +33,7 @@
                     </form>
                     <ul>
                         <li><a href="#" ></a><img src="imagens/icone saco.png" class="img-tamanho"> </li>
-                        <li><a href="/menuvendedor" ><img src="<%= brecho && brecho.imagem ? brecho.imagem : 'imagem/perfil/perfil vintelo.png' %>" class="img-tamanho"></a></li>
+                        <li><a href="/menuvendedor" ><img src="<%= brecho && brecho.imagem ? brecho.imagem : '/imagens/icone sem cadastro.png' %>" class="img-tamanho"></a></li>
                         <li><a href="#" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
                     </ul>
                 </section>
@@ -58,7 +58,7 @@
     <main>
         <section class="header-container">
             <section class="profile-section">
-                <img src="<%= brecho && brecho.imagem ? brecho.imagem : 'imagem/perfil/perfil vintelo.png' %>" alt="<%= brecho ? brecho.nome : 'Loja' %>" class="profile-img">
+                <img src="<%= brecho && brecho.imagem ? brecho.imagem : '/imagens/icone sem cadastro.png' %>" alt="<%= brecho ? brecho.nome : 'Loja' %>" class="profile-img">
                 <section class="profile-info">
                     <h1><%= brecho ? brecho.nome : 'Nome do Brechó' %></h1>
                     <span class="rating"><%= brecho && brecho.avaliacao ? brecho.avaliacao : '0.0' %> ★★★★★</span>
@@ -147,63 +147,25 @@
                 <section class="add-item">
                       <a href="/adicionar"><img src="imagens/add.png" alt="Adicionar Item" class="img-add"></a> 
                         <p class="titulo-add">Adicionar Item à loja</p>
-            </section>
-                <article class="product-card" data-category="acessorios">
-                    <img src="imagens/oculos.png" alt="Óculos de Sol">
-                    <h2>Óculos de Sol</h2>
-                    <p class="price">R$12,00</p>
-                    <p class="descricao">ou em 2x de R$6,00</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'oculos-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('oculos-1', 'Óculos de Sol', 'R$12,00', 'imagens/oculos.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="acessorios">
-                    <img src="imagens/colar.png" alt="Conjunto 3 Colares de Prata">
-                    <h2>Conjunto 3 Colares de Prata</h2>
-                    <p class="price">R$29,99</p>
-                    <p class="descricao">ou em 2x de R$15,00</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'colar-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('colar-1', 'Conjunto 3 Colares de Prata', 'R$29,99', 'imagens/colar.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="acessorios">
-                    <img src="imagens/bolsa.png" alt="Bolsa Preta com Alça Dourada">
-                    <h2>Bolsa Preta com Alça Dourada</h2>
-                    <p class="price">R$20,00</p>
-                    <p class="descricao">ou em 2x de R$10,00</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'bolsa-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('bolsa-1', 'Bolsa Preta com Alça Dourada', 'R$20,00', 'imagens/bolsa.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="acessorios">
-                    <img src="imagens/aneis.png" alt="Anel de Prata">
-                    <h2>Anel de Prata</h2>
-                    <p class="price">R$15,00</p>
-                    <p class="descricao">ou em 2x de R$7,50</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'anel-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('anel-1', 'Anel de Prata', 'R$15,00', 'imagens/aneis.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="saias">
-                    <img src="imagens/saia rosa brilhante.png" alt="Saia Brilhante">
-                    <h2>Saia Brilhante</h2>
-                    <p class="price">R$35,00</p>
-                    <p class="descricao">ou em 2x de R$17,50</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'saia-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('saia-1', 'Saia Brilhante', 'R$35,00', 'imagens/saia rosa brilhante.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="saias">
-                    <img src="imagens/saia marrom de couro.png" alt="Saia De Couro">
-                    <h2>Saia De Couro</h2>
-                    <p class="price">R$15,00</p>
-                    <p class="descricao">ou em 2x de R$7,50</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'saia-2')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('saia-2', 'Saia De Couro', 'R$15,00', 'imagens/saia marrom de couro.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
-                <article class="product-card" data-category="blusas">
-                    <img src="imagens/cropped cinza.png" alt="Cropped Bufante">
-                    <h2>Cropped Bufante</h2>
-                    <p class="price">R$35,00</p>
-                    <p class="descricao">ou em 2x de R$17,50</p>
-                    <button class="favorite" onclick="toggleFavorite(this, 'cropped-1')"><img src="imagens/coraçao de fav2.png"></button>
-                    <button class="cart-btn" onclick="adicionarAoCarrinho('cropped-1', 'Cropped Bufante', 'R$35,00', 'imagens/cropped cinza.png')"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
-                </article>
+                </section>
+                
+                <!-- Produtos Dinâmicos -->
+                <% if (typeof produtos !== 'undefined' && produtos.length > 0) { %>
+                  <% produtos.forEach(function(produto) { %>
+                    <article class="product-card" data-category="<%= produto.TIPO_PRODUTO ? produto.TIPO_PRODUTO.toLowerCase() : 'outros' %>">
+                        <a href="/produto/<%= produto.ID_PRODUTO %>">
+                            <img src="<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
+                        </a>
+                        <h2><%= produto.NOME_PRODUTO %></h2>
+                        <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+                        <p class="descricao">ou em 2x de R$<%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
+                        <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                        <button class="cart-btn" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
+                    </article>
+                  <% }); %>
+                <% } else { %>
+                  <p class="no-products">Nenhum produto cadastrado ainda. <a href="/adicionar">Adicione seu primeiro produto!</a></p>
+                <% } %>
             </section>
         </section>
 
