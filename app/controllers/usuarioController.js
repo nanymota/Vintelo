@@ -121,18 +121,38 @@ const usuarioController = {
 
     autenticarUsuario: async (email_usu, senha_usu) => {
         try {
+            console.log('Buscando usuário com:', email_usu);
             const usuarios = await usuario.findUserEmail({ user_usuario: email_usu });
+            console.log('Resultados da consulta:', usuarios);
             
             if (usuarios.length > 0) {
                 const usuarioEncontrado = usuarios[0];
-                const senhaValida = bcrypt.compareSync(senha_usu, usuarioEncontrado.SENHA_USUARIO);
+                console.log('Senha do banco:', usuarioEncontrado.SENHA_USUARIO);
+                console.log('Senha informada:', senha_usu);
+                
+                // Verificar se a senha no banco está criptografada (começa com $2a$ ou $2b$)
+                let senhaValida = false;
+                if (usuarioEncontrado.SENHA_USUARIO.startsWith('$2a$') || usuarioEncontrado.SENHA_USUARIO.startsWith('$2b$')) {
+                    // Senha criptografada - usar bcrypt
+                    senhaValida = bcrypt.compareSync(senha_usu, usuarioEncontrado.SENHA_USUARIO);
+                    console.log('Comparação bcrypt:', senhaValida);
+                } else {
+                    // Senha em texto puro - comparação direta
+                    senhaValida = senha_usu === usuarioEncontrado.SENHA_USUARIO;
+                    console.log('Comparação texto puro:', senhaValida);
+                }
                 
                 if (senhaValida) {
+                    console.log('Autenticação bem-sucedida');
                     return {
                         success: true,
                         usuario: usuarioEncontrado
                     };
+                } else {
+                    console.log('Senha inválida');
                 }
+            } else {
+                console.log('Usuário não encontrado');
             }
             
             return { success: false };
@@ -217,25 +237,14 @@ const usuarioController = {
                 console.log('Cliente criado com sucesso');
                 
                 req.session.autenticado = {
+                    autenticado: dadosForm.NOME_USUARIO,
                     id: create.insertId,
                     nome: dadosForm.NOME_USUARIO,
-                    username: dadosForm.USER_USUARIO,
-                    tipo: dadosForm.TIPO_USUARIO,
-                    imagem: null
+                    email: dadosForm.EMAIL_USUARIO,
+                    tipo: dadosForm.TIPO_USUARIO
                 };
                 
-                // Se for requisição AJAX, retornar JSON
-                if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-                    return res.json({
-                        success: true,
-                        userData: {
-                            nome: dadosForm.NOME_USUARIO,
-                            email: dadosForm.EMAIL_USUARIO,
-                            imagem: null
-                        }
-                    });
-                }
-                
+                console.log('Usuário cadastrado e logado:', req.session.autenticado);
                 console.log('Redirecionando para homecomprador');
                 res.redirect('/homecomprador');
             }

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vintélo - Finalizar Compra</title>
+  <link rel="stylesheet" href="css/finalizandocompra.css">
+  <link rel="stylesheet" href="css/finalizando2.css">
+  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+  <!-- Mobile Version -->
+  <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <a href="/homecomprador">
+          <img src="imagens/seta.png" alt="Voltar">
+        </a>
+        <h1>Sacola</h1>
+        <img src="imagens/foto-branca.png" alt="Menu">
+      </nav>
+    </header>
+
+    <main>
+      <!-- Products Section -->
+      <section class="product-section">
+        <% if (carrinho && carrinho.length > 0) { %>
+          <% carrinho.forEach((item) => { %>
+            <article class="product-card1">
+              <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
+              <section class="product-info">
+                <h3><%= item.nome %></h3>
+                <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
+                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                <p class="preco">R$<%= item.preco.toFixed(2) %></p>
+                <section class="quantity-control">
+                  <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
+                  <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
+                  <button class="qty-btn" onclick="increaseQuantity('<%= item.produto_id %>')">+</button>
+                </section>
+              </section>
+              <button class="remove-item" onclick="removeItem('<%= item.produto_id %>')">
+                <img src="imagens/lixeira.png" class="lixeira">
+              </button>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+            <article class="product-card1">
+              <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>" class="product-img">
+              <section class="product-info">
+                <h3><%= produtoExemplo.nome %></h3>
+                <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                <p class="preco">R$<%= produtoExemplo.preco %></p>
+                <section class="quantity-control">
+                  <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
+                  <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
+                  <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
+                </section>
+              </section>
+              <button class="remove-item" onclick="removeItem('<%= produtoExemplo.id %>')">
+                <img src="imagens/lixeira.png" class="lixeira">
+              </button>
+            </article>
+          <% } %>
+        <% } %>
+      </section>
+
+      <!-- Order Info -->
+      <section class="order-info">
+        <h4>Informações do pedido</h4>
+        <section class="order-details">
+          <p>Subtotal</p><p id="subtotal">R$<%= subtotal || '0,00' %></p>
+          <p>Frete</p><p id="shipping-cost">R$<%= frete || '0,00' %></p>
+          <p>Desconto</p><p id="discount">R$0,00</p>
+          <p><strong>Total</strong></p><p><strong id="total">R$<%= total || '0,00' %></strong></p>
+        </section>
+      </section>
+
+      <!-- Discount Section -->
+      <section class="discount-section">
+        <h4>Inserir cupom de desconto</h4>
+        <form class="discount-input">
+          <input type="text" placeholder="Digite o cupom">
+          <button class="apply-button">Inserir</button>
+        </form>
+      </section>
+
+      <!-- Suggestions -->
+      <section class="suggestions-section">
+        <h4>Adicione mais à sacola</h4>
+        <ul class="product-list">
+          <li class="product-suggestion">
+            <img src="imagens/conjunto.png" alt="Saia Branca">
+            <p>Saia Branca</p>
+            <p>R$25,00</p>
+            <button class="adicionar-compra">Adicionar</button>
+          </li>
+          <li class="product-suggestion">
+            <img src="imagens/saia preta.png" alt="Saia Preta">
+            <p>Saia Preta</p>
+            <p>R$30,00</p>
+            <button class="adicionar-compra">Adicionar</button>
+          </li>
+        </ul>
+        <a href="/favoritos" class="link-branco"><p class="favorites-link">Conferir peças favoritas ></p></a>
+      </section>
+
+      <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+    </main>
+  </section>
+
+  <!-- Desktop Version -->
+  <section class="oculto-mobile">
+    <header>
+      <section class="top-bar">
+        <p>10% OFF na primeira compra</p>
+      </section>
+      <section class="main-header">
+        <img src="imagens/logo.png" class="img-logo">
+        <nav>
+          <a href="/categorias">Vestidos</a>
+          <a href="/categorias">Saias</a>
+          <a href="/categorias">Blusas</a>
+          <a href="/categorias">Calças</a>
+          <a href="/categorias">Outros</a>
+        </nav>
+        <section class="search-profile">
+          <form>
+            <input type="text" placeholder="Buscar...">
+          </form>
+          <ul>
+            <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
+            <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="img-tamanho"></a></li>
+            <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
+          </ul>
+        </section>
+      </section>
+    </header>
+
+    <section class="sacola-container">
+      <h1 class="adicionar">Sacola</h1>
+      <section class="sacola-content">
+        <% if (carrinho && carrinho.length > 0) { %>
+          <% carrinho.forEach((item) => { %>
+            <section class="produto-card">
+              <img src="<%= item.imagem %>" alt="<%= item.nome %>">
+              <section class="produto-info">
+                <h2><%= item.nome %></h2>
+                <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
+                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                <p class="preco">R$<%= item.preco.toFixed(2) %></p>
+              </section>
+              <button class="remove-btn" onclick="removeItem('<%= item.produto_id %>')">
+                <img src="imagens/lixeira.png" class="lixeira2">
+              </button>
+            </section>
+          <% }) %>
+        <% } else { %>
+          <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+            <section class="produto-card">
+              <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>">
+              <section class="produto-info">
+                <h2><%= produtoExemplo.nome %></h2>
+                <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                <p class="preco">R$<%= produtoExemplo.preco %></p>
+              </section>
+              <button class="remove-btn" onclick="removeItem('<%= produtoExemplo.id %>')">
+                <img src="imagens/lixeira.png" class="lixeira2">
+              </button>
+            </section>
+          <% } %>
+        <% } %>
+
+        <section class="pedido-info">
+          <h2>Informações do pedido</h2>
+          <section class="pedido-detalhes">
+            <section class="detalhe">
+              <span>Subtotal</span>
+              <span>R$ <%= subtotal || '0,00' %></span>
+            </section>
+            <section class="detalhe">
+              <span>Frete</span>
+              <span>R$ <%= frete || '0,00' %></span>
+            </section>
+            <section class="detalhe">
+              <span>Desconto</span>
+              <span>R$ 0,00</span>
+            </section>
+            <section class="detalhe total">
+              <span>Total</span>
+              <span>R$ <%= total || '0,00' %></span>
+            </section>
+          </section>
+          <section class="cupom">
+            <input type="text" placeholder="Inserir cupom de desconto">
+            <button>Inserir</button>
+          </section>
+          <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+        </section>
+      </section>
+    </section>
+
+    <!-- Product Suggestions -->
+    <section class="produtos-ocultos">
+      <h1 class="adicionar">Adicione mais à sacola</h1>
+      <section class="product-grid">
+        <article class="product-card">
+          <img src="imagens/oculos.png" alt="Óculos de sol">
+          <h2>Óculos de sol</h2>
+          <p class="price">R$12,00</p>
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+        </article>
+        <article class="product-card">
+          <img src="imagens/colar.png" alt="Conjunto 3 colares">
+          <h2>Conjunto 3 colares de prata</h2>
+          <p class="price">R$29,99</p>
+          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+        </article>
+      </section>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+  </section>
+
+  <script>
+    function increaseQuantity(productId) {
+      const qtyElement = document.getElementById('qty-' + productId);
+      if (qtyElement) {
+        let currentQty = parseInt(qtyElement.textContent);
+        qtyElement.textContent = currentQty + 1;
+        updateCartTotal();
+      }
+    }
+
+    function decreaseQuantity(productId) {
+      const qtyElement = document.getElementById('qty-' + productId);
+      if (qtyElement) {
+        let currentQty = parseInt(qtyElement.textContent);
+        if (currentQty > 1) {
+          qtyElement.textContent = currentQty - 1;
+          updateCartTotal();
+        }
+      }
+    }
+
+    function removeItem(productId) {
+      if (confirm('Deseja remover este item da sacola?')) {
+        fetch('/remover-item-sacola', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ produto_id: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Erro ao remover item: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao remover item');
+        });
+      }
+    }
+
+    function updateCartTotal() {
+      // Implementar cálculo do total do carrinho
+      console.log('Atualizando total do carrinho...');
+    }
+  </script>
+</body>
+</html>

@@ -85,24 +85,50 @@
             </article>
         <% }) %>
     <% } else { %>
-        <article class="product-card1">
-            <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
-            <section class="product-info">
-                <h3>Vestido Branco</h3>
-                <p>Cor:Branco</p>
-                <p>Estilo:Sensual</p>
-                <p>Estampa:Simples</p>
-                <p>R$49,90</p>
-                <section class="quantity-control">
-                    <button class="qty-btn" onclick="decreaseQuantity('produto2')">-</button>
-                    <span class="quantity" id="qty-produto2">1</span>
-                    <button class="qty-btn" onclick="increaseQuantity('produto2')">+</button>
+        <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+            <article class="product-card1">
+                <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>" class="product-img">
+                <section class="product-info">
+                    <h3><%= produtoExemplo.nome %></h3>
+                    <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                    <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                    <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                    <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                    <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                    <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                    <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                    <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                    <p class="preco">R$<%= produtoExemplo.preco %></p>
+                    <section class="quantity-control">
+                        <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
+                        <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
+                        <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
+                    </section>
                 </section>
-            </section>
-            <button class="remove-item" onclick="removeItem('produto2')">
-                <img src="imagens/lixeira.png" class="lixeira">
-            </button>
-        </article>
+                <button class="remove-item" onclick="removeItem('<%= produtoExemplo.id %>')">
+                    <img src="imagens/lixeira.png" class="lixeira">
+                </button>
+            </article>
+        <% } else { %>
+            <article class="product-card1">
+                <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
+                <section class="product-info">
+                    <h3>Vestido Branco</h3>
+                    <p>Cor:Branco</p>
+                    <p>Estilo:Sensual</p>
+                    <p>Estampa:Simples</p>
+                    <p>R$49,90</p>
+                    <section class="quantity-control">
+                        <button class="qty-btn" onclick="decreaseQuantity('produto2')">-</button>
+                        <span class="quantity" id="qty-produto2">1</span>
+                        <button class="qty-btn" onclick="increaseQuantity('produto2')">+</button>
+                    </section>
+                </section>
+                <button class="remove-item" onclick="removeItem('produto2')">
+                    <img src="imagens/lixeira.png" class="lixeira">
+                </button>
+            </article>
+        <% } %>
     <% } %>
   </section>
 
@@ -217,24 +243,50 @@
                     </section>
                 <% }) %>
             <% } else { %>
-                <section class="produto-card">
-                    <img src="imagens/vestido branco.png" alt="Vestido branco com decote">
-                    <section class="produto-info">
-                        <h2>Vestido branco com decote</h2>
-                        <p>Cor: Branco</p>
-                        <p>Estilo: Sensual</p>
-                        <p>Estampa: Simples</p>
-                        <p>R$49,90</p>
-                        <section class="quantity-control-desktop">
-                            <button class="qty-btn" onclick="decreaseQuantity(2)">-</button>
-                            <span class="quantity" id="qty-2">1</span>
-                            <button class="qty-btn" onclick="increaseQuantity(2)">+</button>
+                <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+                    <section class="produto-card">
+                        <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>">
+                        <section class="produto-info">
+                            <h2><%= produtoExemplo.nome %></h2>
+                            <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                            <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                            <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                            <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                            <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                            <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                            <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                            <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                            <p class="preco">R$<%= produtoExemplo.preco %></p>
+                            <section class="quantity-control-desktop">
+                                <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
+                                <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
+                                <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
+                            </section>
                         </section>
+                        <button class="remove-btn" onclick="removeItem('<%= produtoExemplo.id %>')">
+                            <img src="imagens/lixeira.png" class="lixeira2">
+                        </button>
                     </section>
-                    <button class="remove-btn" onclick="removeItem(2)">
-                        <img src="imagens/lixeira.png" class="lixeira2">
-                    </button>
-                </section>
+                <% } else { %>
+                    <section class="produto-card">
+                        <img src="imagens/vestido branco.png" alt="Vestido branco com decote">
+                        <section class="produto-info">
+                            <h2>Vestido branco com decote</h2>
+                            <p>Cor: Branco</p>
+                            <p>Estilo: Sensual</p>
+                            <p>Estampa: Simples</p>
+                            <p>R$49,90</p>
+                            <section class="quantity-control-desktop">
+                                <button class="qty-btn" onclick="decreaseQuantity(2)">-</button>
+                                <span class="quantity" id="qty-2">1</span>
+                                <button class="qty-btn" onclick="increaseQuantity(2)">+</button>
+                            </section>
+                        </section>
+                        <button class="remove-btn" onclick="removeItem(2)">
+                            <img src="imagens/lixeira.png" class="lixeira2">
+                        </button>
+                    </section>
+                <% } %>
             <% } %>
             <section class="pedido-info">
                 <!-- Cálculo de Frete Desktop -->
@@ -608,6 +660,34 @@ function finalizarCompra() {
         border-radius: 12px;
         object-fit: cover;
     }
+}
+
+/* Estilos para sacola vazia */
+.empty-cart, .empty-cart-desktop {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-cart p, .empty-cart-desktop p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.continue-shopping {
+    background: #7D2838;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.continue-shopping:hover {
+    background: #5a1e2a;
 }
 </style>
 

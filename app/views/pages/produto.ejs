@@ -6,6 +6,27 @@
     <title><%= produto ? produto.NOME_PRODUTO : 'Produto' %> - Vintélo</title>
     <link rel="stylesheet" href="/css/produtos.css">
     <link rel="stylesheet" href="/css/produtos2.css">
+    <style>
+        .text-left {
+            text-align: left !important;
+        }
+        .text-left h1, .text-left h3, .text-left p {
+            text-align: left !important;
+        }
+        .main-image {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .imagem-produto img {
+            width: 110%;
+            max-width: 550px;
+            border-radius: 10px;
+        }
+    </style>
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
@@ -66,18 +87,18 @@
                 </center>
             <% } %>
             
-            <section class="produto-container">
-                <h1><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
+            <section class="produto-container text-left">
+                <h1 class="text-left"><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
                 <% if (produto) { %>
-                    <section class="preco">
+                    <section class="preco text-left">
                         <p>R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
                         <span>2x R$<%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></span>
                     </section>
-                    <section class="tamanho-disponivel">
+                    <section class="tamanho-disponivel text-left">
                         <h1>Tamanho Disponível</h1>
                         <section class="tamanho"><%= produto.TAMANHO_PRODUTO || 'U' %></section>
                     </section>
-                    <section class="descricao">
+                    <section class="descricao text-left">
                         <h1>Descrição</h1>
                         <p><strong>Cor:</strong> <%= produto.COR_PRODUTO || 'Não informado' %></p>
                         <p><strong>Estilo:</strong> <%= produto.ESTILO_PRODUTO || 'Não informado' %></p>
@@ -89,7 +110,7 @@
                 <% } %>
             </section>
 
-            <section class="tamanhos-alternativos">
+            <section class="tamanhos-alternativos text-left">
                 <p>Seu tamanho não está disponível? Encontre peças similares:</p>
                 <section class="opcoes-tamanho">
                     <span>PP</span>
@@ -121,20 +142,20 @@
                     <a href="/categorias"><%= produto ? produto.TIPO_PRODUTO : 'Produto' %></a>
                 </nav>
 
-                <h1 class="titulo-produto"><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
+                <h1 class="titulo-produto text-left"><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
 
                 <% if (produto) { %>
-                    <section class="preco-produto">
+                    <section class="preco-produto text-left">
                         <span>R$ <%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></span>
                         <p>ou em 2x de R$ <%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
                     </section>
 
-                    <section class="tamanho-disponivel">
+                    <section class="tamanho-disponivel text-left">
                         <h3>Tamanho disponível</h3>
                         <button class="btn-tamanho"><%= produto.TAMANHO_PRODUTO || 'U' %></button>
                     </section>
 
-                    <section class="descricao-produto">
+                    <section class="descricao-produto text-left">
                         <h3>Descrição</h3>
                         <ul>
                             <li>Cor: <%= produto.COR_PRODUTO || 'Não informado' %></li>
@@ -148,7 +169,7 @@
                     <button class="btn-sacola" onclick="addToCart()">Adicionar à sacola</button>
                 <% } %>
 
-                <section class="tamanhos-alternativos">
+                <section class="tamanhos-alternativos text-left">
                     <p class="detalhe"><b>Seu tamanho não está disponível? Encontre peças similares:</b></p>
                     <section class="opcoes-tamanho">
                         <span>PP</span>
@@ -183,66 +204,13 @@
         </footer>
     </section>
 
-    <style>
-        /* Ajustes para imagem do produto */
-        .imagem-produto img {
-            max-width: 400px;
-            max-height: 500px;
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        
-        @media (max-width: 768px) {
-            .main-image {
-                max-width: 100%;
-                height: auto;
-                object-fit: contain;
-            }
-        }
-    </style>
-
     <script>
+        // Variáveis globais para o JavaScript
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado ? 'true' : 'false' %>;
-        
-        function addToCart() {
-            if (!window.isAuthenticated || window.isAuthenticated === 'false') {
-                alert('Você precisa estar logado para adicionar produtos à sacola!');
-                window.location.href = '/login';
-                return;
-            }
-            
-            <% if (produto) { %>
-            fetch('/adicionar-sacola', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ produto_id: '<%= produto.ID_PRODUTO %>' })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na requisição: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Resposta do servidor:', data);
-                if (data.success) {
-                    window.location.href = '/finalizandocompra2';
-                } else {
-                    alert('Erro: ' + (data.message || 'Erro desconhecido'));
-                }
-            })
-            .catch(error => {
-                console.error('Erro completo:', error);
-                alert('Erro ao conectar com o servidor!');
-            });
-            <% } else { %>
-            alert('Produto não encontrado!');
-            <% } %>
-        }
+        <% if (produto) { %>
+        window.produtoId = '<%= produto.ID_PRODUTO %>';
+        <% } %>
     </script>
+    <script src="/js/produto.js"></script>
 </body>
 </html>
