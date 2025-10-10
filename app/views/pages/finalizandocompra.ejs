@@ -6,6 +6,26 @@
   <title>Vintélo - Finalizar Compra</title>
   <link rel="stylesheet" href="css/finalizandocompra.css">
   <link rel="stylesheet" href="css/finalizando2.css">
+  <style>
+    .text-left {
+      text-align: left !important;
+    }
+    .text-left h1, .text-left h3, .text-left p {
+      text-align: left !important;
+    }
+    .produto-container {
+      padding: 10px;
+    }
+    .preco p {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+    }
+    .preco span {
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
@@ -13,7 +33,7 @@
   <section class="oculto-desktop">
     <header>
       <nav class="grid">
-        <a href="/homecomprador">
+        <a href="/produto">
           <img src="imagens/seta.png" alt="Voltar">
         </a>
         <h1>Sacola</h1>
@@ -28,17 +48,13 @@
           <% carrinho.forEach((item) => { %>
             <article class="product-card1">
               <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
-              <section class="product-info">
-                <h3><%= item.nome %></h3>
+              <section class="produto-container text-left">
+                <h1 class="text-left"><%= item.nome || 'Produto não encontrado' %></h1>
+                <section class="preco text-left">
+                  <p>R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
+                  <span>2x R$<%= (parseFloat(item.preco || 0) / 2).toFixed(2).replace('.', ',') %></span>
+                </section>
                 <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
-                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
-                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
-                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
-                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
-                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
-                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
-                <p class="preco">R$<%= item.preco.toFixed(2) %></p>
                 <section class="quantity-control">
                   <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
                   <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
@@ -50,32 +66,6 @@
               </button>
             </article>
           <% }) %>
-        <% } else { %>
-          <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
-            <article class="product-card1">
-              <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>" class="product-img">
-              <section class="product-info">
-                <h3><%= produtoExemplo.nome %></h3>
-                <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
-                <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
-                <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
-                <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
-                <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
-                <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
-                <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
-                <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
-                <p class="preco">R$<%= produtoExemplo.preco %></p>
-                <section class="quantity-control">
-                  <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
-                  <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
-                  <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
-                </section>
-              </section>
-              <button class="remove-item" onclick="removeItem('<%= produtoExemplo.id %>')">
-                <img src="imagens/lixeira.png" class="lixeira">
-              </button>
-            </article>
-          <% } %>
         <% } %>
       </section>
 
@@ -158,44 +148,19 @@
           <% carrinho.forEach((item) => { %>
             <section class="produto-card">
               <img src="<%= item.imagem %>" alt="<%= item.nome %>">
-              <section class="produto-info">
-                <h2><%= item.nome %></h2>
+              <section class="produto-container text-left">
+                <h1 class="text-left"><%= item.nome || 'Produto não encontrado' %></h1>
+                <section class="preco text-left">
+                  <p>R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
+                  <span>2x R$<%= (parseFloat(item.preco || 0) / 2).toFixed(2).replace('.', ',') %></span>
+                </section>
                 <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
-                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
-                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
-                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
-                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
-                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
-                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
-                <p class="preco">R$<%= item.preco.toFixed(2) %></p>
               </section>
               <button class="remove-btn" onclick="removeItem('<%= item.produto_id %>')">
                 <img src="imagens/lixeira.png" class="lixeira2">
               </button>
             </section>
           <% }) %>
-        <% } else { %>
-          <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
-            <section class="produto-card">
-              <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>">
-              <section class="produto-info">
-                <h2><%= produtoExemplo.nome %></h2>
-                <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
-                <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
-                <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
-                <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
-                <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
-                <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
-                <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
-                <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
-                <p class="preco">R$<%= produtoExemplo.preco %></p>
-              </section>
-              <button class="remove-btn" onclick="removeItem('<%= produtoExemplo.id %>')">
-                <img src="imagens/lixeira.png" class="lixeira2">
-              </button>
-            </section>
-          <% } %>
         <% } %>
 
         <section class="pedido-info">
@@ -269,7 +234,6 @@
       if (qtyElement) {
         let currentQty = parseInt(qtyElement.textContent);
         qtyElement.textContent = currentQty + 1;
-        updateCartTotal();
       }
     }
 
@@ -279,38 +243,14 @@
         let currentQty = parseInt(qtyElement.textContent);
         if (currentQty > 1) {
           qtyElement.textContent = currentQty - 1;
-          updateCartTotal();
         }
       }
     }
 
     function removeItem(productId) {
       if (confirm('Deseja remover este item da sacola?')) {
-        fetch('/remover-item-sacola', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ produto_id: productId })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            location.reload();
-          } else {
-            alert('Erro ao remover item: ' + data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Erro:', error);
-          alert('Erro ao remover item');
-        });
+        location.reload();
       }
-    }
-
-    function updateCartTotal() {
-      // Implementar cálculo do total do carrinho
-      console.log('Atualizando total do carrinho...');
     }
   </script>
 </body>

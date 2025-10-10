@@ -428,178 +428,29 @@ router.get('/finalizandocompra1', (req, res) => res.render('pages/finalizandocom
 
 router.get('/finalizandocompra', async function(req, res){
     try {
-        console.log('=== FINALIZANDO COMPRA ===');
-        console.log('Sessão completa:', req.session);
-        console.log('Usuário autenticado:', req.session?.autenticado);
-        
         let carrinho = [];
         let subtotal = 0;
-        let produtoExemplo = null;
         
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            console.log('Buscando itens da sacola para usuário:', req.session.autenticado.id);
-            const [itensSacola] = await pool.query(`
-                SELECT DISTINCT
-                    is.QUANTIDADE,
-                    is.VALOR_TOTAL,
-                    p.ID_PRODUTO,
-                    p.NOME_PRODUTO,
-                    p.PRECO,
-                    p.TAMANHO_PRODUTO,
-                    p.COR_PRODUTO,
-                    p.ESTILO_PRODUTO,
-                    p.ESTAMPA_PRODUTO,
-                    p.DESCRICAO_PRODUTO,
-                    p.CATEGORIA_PRODUTO,
-                    p.MARCA_PRODUTO,
-                    p.CONDICAO_PRODUTO,
-                    (SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = p.ID_PRODUTO LIMIT 1) as URL_IMG,
-                    u.NOME_USUARIO as VENDEDOR
-                FROM ITENS_SACOLA is
-                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
-                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
-                LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
-                WHERE s.ID_USUARIO = ?
-                ORDER BY is.ID_ITEM_SACOLA DESC
-            `, [req.session.autenticado.id]);
-            console.log('Itens encontrados na sacola:', itensSacola.length);
-            console.log('Dados dos itens:', JSON.stringify(itensSacola, null, 2));
-            
-            carrinho = itensSacola.map(item => ({
-                produto_id: item.ID_PRODUTO,
-                nome: item.NOME_PRODUTO,
-                preco: parseFloat(item.PRECO),
-                quantidade: item.QUANTIDADE,
-                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
-                cor: item.COR_PRODUTO,
-                estilo: item.ESTILO_PRODUTO,
-                estampa: item.ESTAMPA_PRODUTO,
-                tamanho: item.TAMANHO_PRODUTO,
-                descricao: item.DESCRICAO_PRODUTO,
-                categoria: item.CATEGORIA_PRODUTO,
-                marca: item.MARCA_PRODUTO,
-                condicao: item.CONDICAO_PRODUTO,
-                vendedor: item.VENDEDOR
-            }));
-            console.log('Carrinho mapeado:', carrinho);
-            
-            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
-        }
+        // Buscar produtos do banco usando a mesma consulta da homecomprador
+        const { produtoModel } = require('../models/produtoModel');
+        const produtos = await produtoModel.findRecent(3) || [];
         
-        console.log('Carrinho final tem', carrinho.length, 'itens');
+        carrinho = produtos.map(item => ({
+            produto_id: item.ID_PRODUTO,
+            nome: item.NOME_PRODUTO,
+            preco: parseFloat(item.PRECO),
+            quantidade: 1,
+            imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+            descricao: item.TIPO_PRODUTO || 'Produto de qualidade'
+        }));
         
-        // Se não há itens na sacola, buscar um produto exemplo do banco
-        if (carrinho.length === 0) {
-            console.log('Carrinho vazio, buscando produto exemplo...');
-            try {
-                const [produtosBanco] = await pool.query(`
-                    SELECT 
-                        p.ID_PRODUTO,
-                        p.NOME_PRODUTO,
-                        p.PRECO,
-                        p.COR_PRODUTO,
-                        p.ESTILO_PRODUTO,
-                        p.ESTAMPA_PRODUTO,
-                        p.DESCRICAO_PRODUTO,
-                        p.TAMANHO_PRODUTO,
-                        p.MARCA_PRODUTO,
-                        p.CONDICAO_PRODUTO,
-                        (SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = p.ID_PRODUTO LIMIT 1) as URL_IMG,
-                        u.NOME_USUARIO as VENDEDOR
-                    FROM PRODUTOS p
-                    LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
-                    WHERE p.STATUS_PRODUTO = 'd'
-                    ORDER BY p.ID_PRODUTO DESC
-                    LIMIT 1
-                `);
-                
-                console.log('Produtos encontrados no banco:', produtosBanco.length);
-                if (produtosBanco.length > 0) {
-                    const produto = produtosBanco[0];
-                    produtoExemplo = {
-                        id: produto.ID_PRODUTO,
-                        nome: produto.NOME_PRODUTO,
-                        preco: parseFloat(produto.PRECO).toFixed(2),
-                        cor: produto.COR_PRODUTO,
-                        estilo: produto.ESTILO_PRODUTO,
-                        estampa: produto.ESTAMPA_PRODUTO,
-                        descricao: produto.DESCRICAO_PRODUTO,
-                        tamanho: produto.TAMANHO_PRODUTO,
-                        marca: produto.MARCA_PRODUTO,
-                        condicao: produto.CONDICAO_PRODUTO,
-                        vendedor: produto.VENDEDOR,
-                        imagem: produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png'
-                    };
-                    subtotal = parseFloat(produto.PRECO);
-                    console.log('Produto exemplo criado:', produtoExemplo.nome);
-                }
-            } catch (error) {
-                console.log('Erro ao buscar produto exemplo:', error);
-            }
-        }
-        
-        // Se carrinho vazio e não tem produto exemplo, buscar qualquer produto
-        if (carrinho.length === 0 && !produtoExemplo) {
-            try {
-                console.log('Segunda tentativa: buscando qualquer produto...');
-                const [produtoTeste] = await pool.query(`
-                    SELECT 
-                        p.ID_PRODUTO,
-                        p.NOME_PRODUTO,
-                        p.PRECO,
-                        p.COR_PRODUTO,
-                        p.ESTILO_PRODUTO,
-                        p.ESTAMPA_PRODUTO,
-                        p.DESCRICAO_PRODUTO,
-                        p.TAMANHO_PRODUTO,
-                        p.MARCA_PRODUTO,
-                        p.CONDICAO_PRODUTO,
-                        (SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = p.ID_PRODUTO LIMIT 1) as URL_IMG,
-                        u.NOME_USUARIO as VENDEDOR
-                    FROM PRODUTOS p
-                    LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
-                    ORDER BY p.ID_PRODUTO DESC
-                    LIMIT 1
-                `);
-                
-                console.log('Segunda tentativa - produtos encontrados:', produtoTeste.length);
-                if (produtoTeste.length > 0) {
-                    const produto = produtoTeste[0];
-                    produtoExemplo = {
-                        id: produto.ID_PRODUTO,
-                        nome: produto.NOME_PRODUTO,
-                        preco: parseFloat(produto.PRECO || 0).toFixed(2),
-                        cor: produto.COR_PRODUTO,
-                        estilo: produto.ESTILO_PRODUTO,
-                        estampa: produto.ESTAMPA_PRODUTO,
-                        descricao: produto.DESCRICAO_PRODUTO,
-                        tamanho: produto.TAMANHO_PRODUTO,
-                        marca: produto.MARCA_PRODUTO,
-                        condicao: produto.CONDICAO_PRODUTO,
-                        vendedor: produto.VENDEDOR,
-                        imagem: produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png'
-                    };
-                    subtotal = parseFloat(produto.PRECO || 0);
-                    console.log('Produto exemplo criado (segunda tentativa):', produtoExemplo.nome);
-                }
-            } catch (error) {
-                console.log('Erro na segunda tentativa:', error);
-            }
-        }
+        subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
         
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
-        console.log('Dados finais enviados para o template:');
-        console.log('- Carrinho:', JSON.stringify(carrinho, null, 2));
-        console.log('- Produto Exemplo:', produtoExemplo);
-        console.log('- Subtotal:', subtotal.toFixed(2));
-        console.log('- Frete:', frete.toFixed(2));
-        console.log('- Total:', total.toFixed(2));
-        
         res.render('pages/finalizandocompra', {
             carrinho: carrinho,
-            produtoExemplo: produtoExemplo,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
@@ -607,56 +458,11 @@ router.get('/finalizandocompra', async function(req, res){
         });
     } catch (error) {
         console.log('Erro ao carregar finalizandocompra:', error);
-        // Mesmo com erro, tentar buscar um produto
-        let produtoErro = null;
-        try {
-            const [produtoFallback] = await pool.query(`
-                SELECT 
-                    p.ID_PRODUTO,
-                    p.NOME_PRODUTO,
-                    p.PRECO,
-                    p.COR_PRODUTO,
-                    p.ESTILO_PRODUTO,
-                    p.ESTAMPA_PRODUTO,
-                    p.DESCRICAO_PRODUTO,
-                    p.TAMANHO_PRODUTO,
-                    p.MARCA_PRODUTO,
-                    p.CONDICAO_PRODUTO,
-                    img.URL_IMG,
-                    u.NOME_USUARIO as VENDEDOR
-                FROM PRODUTOS p
-                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
-                LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
-                LIMIT 1
-            `);
-            
-            if (produtoFallback.length > 0) {
-                const produto = produtoFallback[0];
-                produtoErro = {
-                    id: produto.ID_PRODUTO,
-                    nome: produto.NOME_PRODUTO,
-                    preco: parseFloat(produto.PRECO || 0).toFixed(2),
-                    cor: produto.COR_PRODUTO,
-                    estilo: produto.ESTILO_PRODUTO,
-                    estampa: produto.ESTAMPA_PRODUTO,
-                    descricao: produto.DESCRICAO_PRODUTO,
-                    tamanho: produto.TAMANHO_PRODUTO,
-                    marca: produto.MARCA_PRODUTO,
-                    condicao: produto.CONDICAO_PRODUTO,
-                    vendedor: produto.VENDEDOR,
-                    imagem: produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png'
-                };
-            }
-        } catch (e) {
-            console.log('Erro no fallback:', e);
-        }
-        
         res.render('pages/finalizandocompra', {
             carrinho: [],
-            produtoExemplo: produtoErro,
-            subtotal: produtoErro ? parseFloat(produtoErro.preco).toFixed(2) : '0,00',
-            frete: produtoErro ? '10,00' : '0,00',
-            total: produtoErro ? (parseFloat(produtoErro.preco) + 10).toFixed(2) : '0,00',
+            subtotal: '0,00',
+            frete: '0,00',
+            total: '0,00',
             autenticado: req.session.autenticado || { autenticado: false }
         });
     }
