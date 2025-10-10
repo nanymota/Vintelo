@@ -45,7 +45,9 @@
       <!-- Products Section -->
       <section class="product-section">
         <% if (carrinho && carrinho.length > 0) { %>
-          <% carrinho.forEach((item) => { %>
+          <% const uniqueItems = carrinho.filter((item, index, self) => 
+               index === self.findIndex(i => i.produto_id === item.produto_id)); %>
+          <% uniqueItems.forEach((item) => { %>
             <article class="product-card1">
               <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
               <section class="produto-container text-left">
@@ -145,7 +147,9 @@
       <h1 class="adicionar">Sacola</h1>
       <section class="sacola-content">
         <% if (carrinho && carrinho.length > 0) { %>
-          <% carrinho.forEach((item) => { %>
+          <% const uniqueItems = carrinho.filter((item, index, self) => 
+               index === self.findIndex(i => i.produto_id === item.produto_id)); %>
+          <% uniqueItems.forEach((item) => { %>
             <section class="produto-card">
               <img src="<%= item.imagem %>" alt="<%= item.nome %>">
               <section class="produto-container text-left">
