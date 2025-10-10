@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= produto ? produto.NOME_PRODUTO : 'Produto' %> - Vintélo</title>
+    <link rel="stylesheet" href="/css/produtos.css">
+    <link rel="stylesheet" href="/css/produtos2.css">
+    <style>
+        .text-left {
+            text-align: left !important;
+        }
+        .text-left h1, .text-left h3, .text-left p {
+            text-align: left !important;
+        }
+        .main-image {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .imagem-produto img {
+            width: 110%;
+            max-width: 550px;
+            border-radius: 10px;
+        }
+    </style>
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <section class="oculto-mobile">
+        <section class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </section>
+        <header>
+            <section class="main-header">
+                <a href="/homecomprador">
+                <img src="/imagens/logo.png" class="img-logo">
+                </a>
+                <nav>
+                    <a href="/categorias">Vestidos</a>
+                    <a href="/categorias">Saias</a>
+                    <a href="/categorias">Blusas</a>
+                    <a href="/categorias">Calças</a>
+                    <a href="/categorias">Outros</a>
+                </nav>
+                <section class="search-profile">
+                    <form>
+                        <input type="text" placeholder="Buscar...">
+                    </form>
+                    <ul>
+                        <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
+                        <li><a href="/perfilcliente"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+                        <li><a href="/favoritos"><img src="/imagens/icone coraçao.png" class="img-tamanho"></a></li>
+                    </ul>
+                </section>
+            </section>
+        </header>
+    </section>
+    
+    <section class="oculto-desktop">
+        <header>
+            <nav class="grid">
+                <a href="/homecomprador">
+                    <img src="/imagens/seta.png">
+                </a>
+                <img src="/imagens/logo.png">
+                <img src="/imagens/foto-branca.png" alt="Descrição da Imagem" />
+            </nav>
+        </header>
+        <% if (produto && produto.imagens && produto.imagens.length > 0) { %>
+            <img src="/<%= produto.imagens[0].URL_IMG %>" alt="<%= produto.NOME_PRODUTO %>" class="main-image">
+        <% } else { %>
+            <img src="/imagens/produto-default.png" alt="Produto" class="main-image">
+        <% } %>
+    </section>
+
+    <section class="product-view">
+        <main>
+            <% if (produto && produto.imagens && produto.imagens.length > 1) { %>
+                <center>
+                    <% produto.imagens.slice(0, 4).forEach(function(imagem) { %>
+                        <img src="/<%= imagem.URL_IMG %>" alt="<%= produto.NOME_PRODUTO %>" style="width: 80px; height: 80px; margin: 5px;">
+                    <% }); %>
+                </center>
+            <% } %>
+            
+            <section class="produto-container text-left">
+                <h1 class="text-left"><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
+                <% if (produto) { %>
+                    <section class="preco text-left">
+                        <p>R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+                        <span>2x R$<%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></span>
+                    </section>
+                    <section class="tamanho-disponivel text-left">
+                        <h1>Tamanho Disponível</h1>
+                        <section class="tamanho"><%= produto.TAMANHO_PRODUTO || 'U' %></section>
+                    </section>
+                    <section class="descricao text-left">
+                        <h1>Descrição</h1>
+                        <p><strong>Cor:</strong> <%= produto.COR_PRODUTO || 'Não informado' %></p>
+                        <p><strong>Estilo:</strong> <%= produto.ESTILO_PRODUTO || 'Não informado' %></p>
+                        <p><strong>Estampa:</strong> <%= produto.ESTAMPA_PRODUTO || 'Simples' %></p>
+                        <p><strong>Detalhes:</strong> <%= produto.DETALHES_PRODUTO || 'Não informado' %></p>
+                        <p><strong>Condições:</strong> <%= produto.CONDICAO_PRODUTO || 'Não informado' %></p>
+                        <p><strong>Vendedor:</strong> <%= produto.VENDEDOR || 'Vintélo' %></p>
+                    </section>
+                <% } %>
+            </section>
+
+            <section class="tamanhos-alternativos text-left">
+                <p>Seu tamanho não está disponível? Encontre peças similares:</p>
+                <section class="opcoes-tamanho">
+                    <span>PP</span>
+                    <span>P</span>
+                    <span>M</span>
+                    <span>G</span>
+                    <span>GG</span>
+                    <span>EG</span>
+                    <span>EGG</span>
+                </section>
+            </section>
+        </main>
+    </section>
+
+    <section class="produtos-ocultos">
+        <main class="produto-container">
+            <section class="imagem-produto">
+                <% if (produto && produto.imagens && produto.imagens.length > 0) { %>
+                    <img src="/<%= produto.imagens[0].URL_IMG %>" alt="<%= produto.NOME_PRODUTO %>">
+                <% } else { %>
+                    <img src="/imagens/produto-default.png" alt="Produto">
+                <% } %>
+            </section>
+
+            <section class="info-produto">
+                <nav class="breadcrumb">
+                    <a href="/homecomprador">Home</a> >
+                    <a href="/categorias">Categorias</a> >
+                    <a href="/categorias"><%= produto ? produto.TIPO_PRODUTO : 'Produto' %></a>
+                </nav>
+
+                <h1 class="titulo-produto text-left"><%= produto ? produto.NOME_PRODUTO : 'Produto não encontrado' %></h1>
+
+                <% if (produto) { %>
+                    <section class="preco-produto text-left">
+                        <span>R$ <%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></span>
+                        <p>ou em 2x de R$ <%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
+                    </section>
+
+                    <section class="tamanho-disponivel text-left">
+                        <h3>Tamanho disponível</h3>
+                        <button class="btn-tamanho"><%= produto.TAMANHO_PRODUTO || 'U' %></button>
+                    </section>
+
+                    <section class="descricao-produto text-left">
+                        <h3>Descrição</h3>
+                        <ul>
+                            <li>Cor: <%= produto.COR_PRODUTO || 'Não informado' %></li>
+                            <li>Estilo: <%= produto.ESTILO_PRODUTO || 'Não informado' %></li>
+                            <li>Estampa: <%= produto.ESTAMPA_PRODUTO || 'Simples' %></li>
+                            <li>Detalhes: <%= produto.DETALHES_PRODUTO || 'Não informado' %></li>
+                            <li>Condições: <%= produto.CONDICAO_PRODUTO || 'Não informado' %></li>
+                        </ul>
+                    </section>
+
+                    <button class="btn-sacola" onclick="addToCart()">Adicionar à sacola</button>
+                <% } %>
+
+                <section class="tamanhos-alternativos text-left">
+                    <p class="detalhe"><b>Seu tamanho não está disponível? Encontre peças similares:</b></p>
+                    <section class="opcoes-tamanho">
+                        <span>PP</span>
+                        <span>P</span>
+                        <span>M</span>
+                        <span>G</span>
+                        <span>GG</span>
+                        <span>EG</span>
+                        <span>EGG</span>
+                    </section>
+                </section>
+            </section>
+        </main>
+    </section>
+
+    <% if (produto) { %>
+        <button type="submit" class="submit-btn" onclick="addToCart()">Adicionar à Sacola</button>
+    <% } %>
+
+    <section class="oculto-mobile">
+        <footer class="footer">
+            <img src="/imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+            <section class="social-media">
+                <p class="p-footer">Siga nossas redes sociais</p>
+                <ul class="social-links">
+                    <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="/imagens/Facebook.png" alt="Facebook"></a></li>
+                    <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="/imagens/Pinterest.png" alt="Pinterest"></a></li>
+                    <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="/imagens/Instagram.png" alt="Instagram"></a></li>
+                </ul>
+            </section>
+            <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+        </footer>
+    </section>
+
+    <script>
+        // Variáveis globais para o JavaScript
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado ? 'true' : 'false' %>;
+        <% if (produto) { %>
+        window.produtoId = '<%= produto.ID_PRODUTO %>';
+        <% } %>
+    </script>
+    <script src="/js/produto.js"></script>
+</body>
+</html>

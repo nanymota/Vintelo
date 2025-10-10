@@ -16,7 +16,7 @@ const usuarioController = {
         body("nomeusu_usu")
             .isLength({ min: 8, max: 45 }).withMessage("Nome de usuário deve ter de 8 a 45 caracteres!")
             .custom(async value => {
-                const nomeUsu = await usuario.findCampoCustom({ 'user_usuario': value });
+                const nomeUsu = await usuario.findCampoCustom('USER_USUARIO', value);
                 if (nomeUsu > 0) {
                     throw new Error('Nome de usuário em uso!');
                 }
@@ -24,7 +24,7 @@ const usuarioController = {
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!")
             .custom(async value => {
-                const nomeUsu = await usuario.findCampoCustom({ 'email_usuario': value });
+                const nomeUsu = await usuario.findCampoCustom('EMAIL_USUARIO', value);
                 if (nomeUsu > 0) {
                     throw new Error('E-mail em uso!');
                 }
@@ -119,6 +119,49 @@ const usuarioController = {
             .isNumeric().withMessage("Digite um número para o endereço!"),
     ],
 
+    autenticarUsuario: async (email_usu, senha_usu) => {
+        try {
+            console.log('Buscando usuário com:', email_usu);
+            const usuarios = await usuario.findUserEmail({ user_usuario: email_usu });
+            console.log('Resultados da consulta:', usuarios);
+            
+            if (usuarios.length > 0) {
+                const usuarioEncontrado = usuarios[0];
+                console.log('Senha do banco:', usuarioEncontrado.SENHA_USUARIO);
+                console.log('Senha informada:', senha_usu);
+                
+                // Verificar se a senha no banco está criptografada (começa com $2a$ ou $2b$)
+                let senhaValida = false;
+                if (usuarioEncontrado.SENHA_USUARIO.startsWith('$2a$') || usuarioEncontrado.SENHA_USUARIO.startsWith('$2b$')) {
+                    // Senha criptografada - usar bcrypt
+                    senhaValida = bcrypt.compareSync(senha_usu, usuarioEncontrado.SENHA_USUARIO);
+                    console.log('Comparação bcrypt:', senhaValida);
+                } else {
+                    // Senha em texto puro - comparação direta
+                    senhaValida = senha_usu === usuarioEncontrado.SENHA_USUARIO;
+                    console.log('Comparação texto puro:', senhaValida);
+                }
+                
+                if (senhaValida) {
+                    console.log('Autenticação bem-sucedida');
+                    return {
+                        success: true,
+                        usuario: usuarioEncontrado
+                    };
+                } else {
+                    console.log('Senha inválida');
+                }
+            } else {
+                console.log('Usuário não encontrado');
+            }
+            
+            return { success: false };
+        } catch (error) {
+            console.log('Erro na autenticação:', error);
+            return { success: false };
+        }
+    },
+
     logar: (req, res) => {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
@@ -161,7 +204,7 @@ const usuarioController = {
         
         var dadosForm = {
             USER_USUARIO: req.body.nomeusu_usu,
-            SENHA_USUARIO: req.body.senha_usu,
+            SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email_usu,
             CELULAR_USUARIO: req.body.celular_usuario,
@@ -196,23 +239,12 @@ const usuarioController = {
                 req.session.autenticado = {
                     autenticado: dadosForm.NOME_USUARIO,
                     id: create.insertId,
-                    tipo: dadosForm.TIPO_USUARIO,
                     nome: dadosForm.NOME_USUARIO,
-                    email: dadosForm.EMAIL_USUARIO
+                    email: dadosForm.EMAIL_USUARIO,
+                    tipo: dadosForm.TIPO_USUARIO
                 };
                 
-                // Se for requisição AJAX, retornar JSON
-                if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-                    return res.json({
-                        success: true,
-                        userData: {
-                            nome: dadosForm.NOME_USUARIO,
-                            email: dadosForm.EMAIL_USUARIO,
-                            imagem: null
-                        }
-                    });
-                }
-                
+                console.log('Usuário cadastrado e logado:', req.session.autenticado);
                 console.log('Redirecionando para homecomprador');
                 res.redirect('/homecomprador');
             }

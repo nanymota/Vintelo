@@ -61,28 +61,28 @@
                 <section class="photo-section">
                     <section class="main-photo">
                         <img id="main-photo" src="imagens/add foto.png" alt="Foto principal">
-                        <label for="main-photo-input" class="photo-btn">
+                        <label for="main-photo-external" class="photo-btn">
                             <span>+</span>
                         </label>
-                        <input type="file" id="main-photo-input" name="fotos" accept="image/*" style="display: none;">
+                        <input type="file" id="main-photo-external" name="fotos-preview" accept="image/*" style="display: none;">
                     </section>
                     
                     <section class="photo-thumbnails">
                         <section class="thumbnail-slot">
-                            <label for="thumb-input-1" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-1" name="fotos" accept="image/*" style="display: none;">
+                            <label for="thumb-external-1" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-external-1" name="fotos-preview" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
-                            <label for="thumb-input-2" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-2" name="fotos" accept="image/*" style="display: none;">
+                            <label for="thumb-external-2" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-external-2" name="fotos-preview" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
-                            <label for="thumb-input-3" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-3" name="fotos" accept="image/*" style="display: none;">
+                            <label for="thumb-external-3" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-external-3" name="fotos-preview" accept="image/*" style="display: none;">
                         </section>
                         <section class="thumbnail-slot">
-                            <label for="thumb-input-4" class="add-photo-btn">+</label>
-                            <input type="file" id="thumb-input-4" name="fotos" accept="image/*" style="display: none;">
+                            <label for="thumb-external-4" class="add-photo-btn">+</label>
+                            <input type="file" id="thumb-external-4" name="fotos-preview" accept="image/*" style="display: none;">
                         </section>
                     </section>
                     <p class="photo-instructions">Clique para adicionar fotos da galeria</p>
@@ -162,6 +162,37 @@
                             <label for="descricao_produto">Descrição</label>
                             <textarea id="descricao_produto" name="descricao_produto" placeholder="Descreva detalhes sobre a peça, marca, tecido, etc..." required><%= typeof valores !== 'undefined' ? valores.descricao_produto || '' : '' %></textarea>
                         </section>
+                        
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="estampa_produto">Estampa</label>
+                                <input type="text" id="estampa_produto" name="estampa_produto" 
+                                       value="<%= typeof valores !== 'undefined' ? valores.estampa_produto || '' : '' %>" 
+                                       placeholder="Ex: Floral, Listras, Lisa...">
+                            </section>
+                            <section class="form-group">
+                                <label for="quantidade_estoque">Quantidade</label>
+                                <input type="number" id="quantidade_estoque" name="quantidade_estoque" 
+                                       value="<%= typeof valores !== 'undefined' ? valores.quantidade_estoque || '1' : '1' %>" 
+                                       min="1" required>
+                            </section>
+                        </section>
+                        
+
+                        <section class="form-row">
+                            <section class="form-group">
+                                <label for="status_produto">Status</label>
+                                <select id="status_produto" name="status_produto" required>
+                                    <option value="d" <%= typeof valores !== 'undefined' && valores.status_produto === 'd' ? 'selected' : '' %>>Disponível</option>
+                                    <option value="i" <%= typeof valores !== 'undefined' && valores.status_produto === 'i' ? 'selected' : '' %>>Indisponível</option>
+                                </select>
+                            </section>
+                        </section>
+                        
+                        <section class="form-group">
+                            <label for="outros">Outros Detalhes (Opcional)</label>
+                            <textarea id="outros" name="outros" placeholder="Informações complementares sobre o produto..."><%= typeof valores !== 'undefined' ? valores.outros || '' : '' %></textarea>
+                        </section>
 
                         <section class="form-group">
                             <label for="estilo_produto">Estilo da peça</label>
@@ -227,54 +258,69 @@
             input.value = 'R$ ' + valor;
         }
         
-        // Preview das imagens
-        document.addEventListener('DOMContentLoaded', function() {
-            // Formatar preço
-            const precoInputs = document.querySelectorAll('input[name="preco_produto"]');
-            precoInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    formatarPreco(this);
-                });
-            });
-            
-            const inputs = document.querySelectorAll('input[type="file"]');
-            
-            inputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const file = this.files[0];
-                    if (!file) return;
-                    
-
-                    
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        let img;
-                        if (input.id === 'main-photo-input') {
-                            img = document.getElementById('main-photo');
-                        } else {
-                            const index = input.id.replace('thumb-input-', '');
-                            img = document.getElementById('thumb-' + index);
-                            if (!img) {
-                                // Criar img se não existir
-                                img = document.createElement('img');
-                                img.id = 'thumb-' + index;
-                                img.style.width = '100%';
-                                img.style.height = '100%';
-                                img.style.objectFit = 'cover';
-                                input.parentNode.appendChild(img);
-                                // Esconder botão +
-                                const btn = input.parentNode.querySelector('.add-photo-btn');
-                                if (btn) btn.style.display = 'none';
-                            }
-                        }
-                        if (img) {
-                            img.src = e.target.result;
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
+// Preview das imagens
+document.addEventListener('DOMContentLoaded', function() {
+    // Formatar preço
+    const precoInputs = document.querySelectorAll('input[name="preco_produto"]');
+    precoInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            formatarPreco(this);
         });
+    });
+    
+    // Escutar apenas inputs EXTERNOS para preview e sincronização
+    const externalInputs = document.querySelectorAll('.photo-section input[type="file"]');
+    
+    externalInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+            
+            // 1. FAZER PREVIEW
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let img;
+                if (input.id === 'main-photo-external') {
+                    img = document.getElementById('main-photo');
+                } else {
+                    const index = input.id.replace('thumb-external-', '');
+                    img = document.getElementById('thumb-' + index);
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.id = 'thumb-' + index;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        input.parentNode.appendChild(img);
+                        const btn = input.parentNode.querySelector('.add-photo-btn');
+                        if (btn) btn.style.display = 'none';
+                    }
+                }
+                if (img) {
+                    img.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+            
+            // 2. SINCRONIZAR COM INPUT INTERNO
+            let internalInputId;
+            if (input.id === 'main-photo-external') {
+                internalInputId = 'main-photo-input';
+            } else {
+                const index = input.id.replace('thumb-external-', '');
+                internalInputId = 'thumb-input-' + index;
+            }
+            
+            const internalInput = document.getElementById(internalInputId);
+            if (internalInput) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                internalInput.files = dataTransfer.files;
+            }
+        });
+    });
+});
+
     </script>
 </body>
 </html>

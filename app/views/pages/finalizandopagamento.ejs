@@ -60,7 +60,12 @@
                         <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="cart-item-img">
                         <section class="cart-item-info">
                             <h2><%= item.nome %></h2>
+                            <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                            <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                            <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                            <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
                             <p>Quantidade: <%= item.quantidade %></p>
+                            <p>Preço unitário: R$ <%= item.preco.toFixed(2) %></p>
                             <p>Total</p>
                             <span>R$ <%= (item.preco * item.quantidade).toFixed(2) %></span>
                         </section>
@@ -69,6 +74,9 @@
                     <img src="imagens/vestido branco.png" alt="Vestido branco com decote" class="cart-item-img">
                     <section class="cart-item-info">
                         <h2>Vestido branco com decote</h2>
+                        <p>Cor: Branco</p>
+                        <p>Estilo: Sensual</p>
+                        <p>Estampa: Simples</p>
                         <p>Total</p>
                         <span>R$ <%= total || '59,99' %></span>
                     </section>
@@ -149,31 +157,30 @@
 
   <section class="products">
     <h3>Resumo do pedido</h3>
-    <script>
-      let carrinho = [
-        { produto: "Produto A", qtd: 2, preco: 49.90 },
-        { produto: "Produto B", qtd: 1, preco: 89.90 },
-        { produto: "Produto C", qtd: 3, preco: 19.90 }
-      ];
-
-      let total = 0;
-      carrinho.forEach(item => {
-        total += item.qtd * item.preco;
-        document.write(`
-          <section class="item">
-            <span class="price">R$ ${item.preco.toFixed(2)}</span>
-            <span class="name">${item.produto}</span>
-            <span class="quantity">Qtd: ${item.qtd}</span>
-          </section>
-        `);
-      });
-
-      document.write(`
-        <section class="total">
-          <span>Total: R$ ${total.toFixed(2)}</span>
+    <% if (carrinho && carrinho.length > 0) { %>
+        <% carrinho.forEach(item => { %>
+            <section class="item">
+                <span class="price">R$ <%= item.preco.toFixed(2) %></span>
+                <span class="name"><%= item.nome %></span>
+                <span class="quantity">Qtd: <%= item.quantidade %></span>
+            </section>
+        <% }) %>
+    <% } else { %>
+        <section class="item">
+            <span class="price">R$ 49.90</span>
+            <span class="name">Vestido branco com decote</span>
+            <span class="quantity">Qtd: 1</span>
         </section>
-      `);
-    </script>
+    <% } %>
+    <section class="total">
+        <span>Subtotal: R$ <%= subtotal || '49,90' %></span>
+    </section>
+    <section class="total">
+        <span>Frete: R$ <%= frete || '10,00' %></span>
+    </section>
+    <section class="total">
+        <span>Total: R$ <%= total || '59,90' %></span>
+    </section>
   </section>
 </section>
             

@@ -10,8 +10,7 @@ const brechoModel = {
                  u.IMG_URL, u.DESCRICAO_USUARIO
                  FROM BRECHOS b 
                  INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO 
-                 WHERE u.STATUS_USUARIO = a`,
-                [1]
+                 WHERE u.STATUS_USUARIO = 'a'`
             );
             return resultados;
         } catch (error) {
@@ -26,8 +25,8 @@ const brechoModel = {
                 "SELECT b.ID_USUARIO, b.CNPJ_BRECHO, b.RAZAO_SOCIAL, b.NOME_FANTASIA, " +
                 "u.NOME_USUARIO, u.EMAIL_USUARIO, u.CELULAR_USUARIO, u.CEP_USUARIO " +
                 "FROM BRECHOS b INNER JOIN USUARIOS u ON b.ID_USUARIO = u.ID_USUARIO " +
-                "WHERE b.ID_USUARIO = ? AND u.STATUS_USUARIO = ? ",
-                [id, 1]
+                "WHERE b.ID_USUARIO = ? AND u.STATUS_USUARIO = 'a'",
+                [id]
             );
             return resultados;
         } catch (error) {
@@ -122,7 +121,7 @@ const brechoModel = {
     delete: async (id) => {
         try {
             const [resultados] = await pool.query(
-                "UPDATE USUARIOS SET STATUS_USUARIO = 'inativo' WHERE ID_USUARIO = ?",
+                "UPDATE USUARIOS SET STATUS_USUARIO = 'i' WHERE ID_USUARIO = ?",
                 [id]
             );
             return resultados;

@@ -64,8 +64,15 @@
                 <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
                 <section class="product-info">
                     <h3><%= item.nome %></h3>
-                    <p>Tamanho: <%= item.tamanho %></p>
-                    <p>R$<%= item.preco.toFixed(2) %></p>
+                    <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
+                    <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                    <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                    <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                    <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                    <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                    <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                    <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                    <p class="preco">R$<%= item.preco.toFixed(2) %></p>
                     <section class="quantity-control">
                         <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
                         <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
@@ -78,24 +85,50 @@
             </article>
         <% }) %>
     <% } else { %>
-        <article class="product-card1">
-            <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
-            <section class="product-info">
-                <h3>Vestido Branco</h3>
-                <p>Cor:Branco</p>
-                <p>Estilo:Sensual</p>
-                <p>Estampa:Simples</p>
-                <p>R$49,90</p>
-                <section class="quantity-control">
-                    <button class="qty-btn" onclick="decreaseQuantity('produto2')">-</button>
-                    <span class="quantity" id="qty-produto2">1</span>
-                    <button class="qty-btn" onclick="increaseQuantity('produto2')">+</button>
+        <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+            <article class="product-card1">
+                <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>" class="product-img">
+                <section class="product-info">
+                    <h3><%= produtoExemplo.nome %></h3>
+                    <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                    <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                    <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                    <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                    <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                    <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                    <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                    <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                    <p class="preco">R$<%= produtoExemplo.preco %></p>
+                    <section class="quantity-control">
+                        <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
+                        <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
+                        <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
+                    </section>
                 </section>
-            </section>
-            <button class="remove-item" onclick="removeItem('produto2')">
-                <img src="imagens/lixeira.png" class="lixeira">
-            </button>
-        </article>
+                <button class="remove-item" onclick="removeItem('<%= produtoExemplo.id %>')">
+                    <img src="imagens/lixeira.png" class="lixeira">
+                </button>
+            </article>
+        <% } else { %>
+            <article class="product-card1">
+                <img src="imagens/vestido branco.png" alt="Vestido Branco Longo" class="product-img">
+                <section class="product-info">
+                    <h3>Vestido Branco</h3>
+                    <p>Cor:Branco</p>
+                    <p>Estilo:Sensual</p>
+                    <p>Estampa:Simples</p>
+                    <p>R$49,90</p>
+                    <section class="quantity-control">
+                        <button class="qty-btn" onclick="decreaseQuantity('produto2')">-</button>
+                        <span class="quantity" id="qty-produto2">1</span>
+                        <button class="qty-btn" onclick="increaseQuantity('produto2')">+</button>
+                    </section>
+                </section>
+                <button class="remove-item" onclick="removeItem('produto2')">
+                    <img src="imagens/lixeira.png" class="lixeira">
+                </button>
+            </article>
+        <% } %>
     <% } %>
   </section>
 
@@ -183,22 +216,78 @@
       <section class="sacola-container">
         <h1 class="adicionar">Sacola</h1>
         <section class="sacola-content">
-            <section class="produto-card">
-                <img src="imagens/vestido branco.png" alt="Vestido branco com decote">
-                <section class="produto-info">
-                    <h2>Vestido branco com decote</h2>
-                    <p>R$49,90</p>
-                    <!-- Controle de quantidade desktop -->
-                    <section class="quantity-control-desktop">
-                      <button class="qty-btn" onclick="decreaseQuantity(2)">-</button>
-                      <span class="quantity" id="qty-2">1</span>
-                      <button class="qty-btn" onclick="increaseQuantity(2)">+</button>
+            <% if (carrinho && carrinho.length > 0) { %>
+                <% carrinho.forEach((item, index) => { %>
+                    <section class="produto-card">
+                        <img src="<%= item.imagem %>" alt="<%= item.nome %>">
+                        <section class="produto-info">
+                            <h2><%= item.nome %></h2>
+                            <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
+                            <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                            <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                            <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                            <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                            <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                            <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                            <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                            <p class="preco">R$<%= item.preco.toFixed(2) %></p>
+                            <section class="quantity-control-desktop">
+                                <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
+                                <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
+                                <button class="qty-btn" onclick="increaseQuantity('<%= item.produto_id %>')">+</button>
+                            </section>
+                        </section>
+                        <button class="remove-btn" onclick="removeItem('<%= item.produto_id %>')">
+                            <img src="imagens/lixeira.png" class="lixeira2">
+                        </button>
                     </section>
-                </section>
-                <button class="remove-btn" onclick="removeItem(2)">
-                  <img src="imagens/lixeira.png" class="lixeira2">
-                </button>
-              </section>
+                <% }) %>
+            <% } else { %>
+                <% if (typeof produtoExemplo !== 'undefined' && produtoExemplo) { %>
+                    <section class="produto-card">
+                        <img src="<%= produtoExemplo.imagem %>" alt="<%= produtoExemplo.nome %>">
+                        <section class="produto-info">
+                            <h2><%= produtoExemplo.nome %></h2>
+                            <% if (produtoExemplo.descricao) { %><p class="descricao"><%= produtoExemplo.descricao %></p><% } %>
+                            <% if (produtoExemplo.cor) { %><p>Cor: <%= produtoExemplo.cor %></p><% } %>
+                            <% if (produtoExemplo.estilo) { %><p>Estilo: <%= produtoExemplo.estilo %></p><% } %>
+                            <% if (produtoExemplo.estampa) { %><p>Estampa: <%= produtoExemplo.estampa %></p><% } %>
+                            <% if (produtoExemplo.tamanho) { %><p>Tamanho: <%= produtoExemplo.tamanho %></p><% } %>
+                            <% if (produtoExemplo.marca) { %><p>Marca: <%= produtoExemplo.marca %></p><% } %>
+                            <% if (produtoExemplo.condicao) { %><p>Condição: <%= produtoExemplo.condicao %></p><% } %>
+                            <% if (produtoExemplo.vendedor) { %><p>Vendedor: <%= produtoExemplo.vendedor %></p><% } %>
+                            <p class="preco">R$<%= produtoExemplo.preco %></p>
+                            <section class="quantity-control-desktop">
+                                <button class="qty-btn" onclick="decreaseQuantity('<%= produtoExemplo.id %>')">-</button>
+                                <span class="quantity" id="qty-<%= produtoExemplo.id %>">1</span>
+                                <button class="qty-btn" onclick="increaseQuantity('<%= produtoExemplo.id %>')">+</button>
+                            </section>
+                        </section>
+                        <button class="remove-btn" onclick="removeItem('<%= produtoExemplo.id %>')">
+                            <img src="imagens/lixeira.png" class="lixeira2">
+                        </button>
+                    </section>
+                <% } else { %>
+                    <section class="produto-card">
+                        <img src="imagens/vestido branco.png" alt="Vestido branco com decote">
+                        <section class="produto-info">
+                            <h2>Vestido branco com decote</h2>
+                            <p>Cor: Branco</p>
+                            <p>Estilo: Sensual</p>
+                            <p>Estampa: Simples</p>
+                            <p>R$49,90</p>
+                            <section class="quantity-control-desktop">
+                                <button class="qty-btn" onclick="decreaseQuantity(2)">-</button>
+                                <span class="quantity" id="qty-2">1</span>
+                                <button class="qty-btn" onclick="increaseQuantity(2)">+</button>
+                            </section>
+                        </section>
+                        <button class="remove-btn" onclick="removeItem(2)">
+                            <img src="imagens/lixeira.png" class="lixeira2">
+                        </button>
+                    </section>
+                <% } %>
+            <% } %>
             <section class="pedido-info">
                 <!-- Cálculo de Frete Desktop -->
                 <section class="shipping-desktop">
@@ -217,11 +306,11 @@
                 <section class="pedido-detalhes">
                     <section class="detalhe">
                         <span>Subtotal</span>
-                        <span id="subtotal-desktop">R$ 49,90</span>
+                        <span id="subtotal-desktop">R$ <%= subtotal || '49,90' %></span>
                     </section>
                     <section class="detalhe">
                         <span>Frete</span>
-                        <span id="shipping-cost-desktop">R$ 10,00</span>
+                        <span id="shipping-cost-desktop">R$ <%= frete || '10,00' %></span>
                     </section>
                     <section class="detalhe">
                         <span>Desconto</span>
@@ -229,7 +318,7 @@
                     </section>
                     <section class="detalhe total">
                         <span>Total</span>
-                        <span id="total-desktop">R$ 59,90</span>
+                        <span id="total-desktop">R$ <%= total || '59,90' %></span>
                     </section>
                 </section>
                 <section class="cupom">
@@ -317,7 +406,7 @@ function increaseQuantity(produtoId) {
     const currentQuantity = parseInt(quantityElement.textContent);
     const newQuantity = currentQuantity + 1;
     
-    fetch('/atualizar-quantidade', {
+    fetch('/atualizar-quantidade-sacola', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
@@ -339,7 +428,7 @@ function decreaseQuantity(produtoId) {
     if (currentQuantity > 1) {
         const newQuantity = currentQuantity - 1;
         
-        fetch('/atualizar-quantidade', {
+        fetch('/atualizar-quantidade-sacola', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
@@ -358,7 +447,7 @@ function decreaseQuantity(produtoId) {
 // Função para remover item
 function removeItem(produtoId) {
     if (confirm('Deseja remover este item da sacola?')) {
-        fetch('/remover-item', {
+        fetch('/remover-item-sacola', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ produto_id: produtoId })
@@ -408,32 +497,10 @@ function updateShippingDesktop(cost) {
 
 // Atualizar totais
 function updateTotals() {
-    // Recalcular baseado nos elementos da página
-    let subtotal = 0;
-    const quantityElements = document.querySelectorAll('.quantity');
-    
-    quantityElements.forEach(element => {
-        const quantity = parseInt(element.textContent);
-        subtotal += itemPrice * quantity;
-    });
-    
-    const total = subtotal + shippingCost - discount;
-    
-    // Mobile
-    if (document.getElementById('subtotal')) {
-        document.getElementById('subtotal').textContent = 'R$' + subtotal.toFixed(2);
-        document.getElementById('shipping-cost').textContent = 'R$' + shippingCost.toFixed(2);
-        document.getElementById('discount').textContent = 'R$' + discount.toFixed(2);
-        document.getElementById('total').textContent = 'R$' + total.toFixed(2);
-    }
-    
-    // Desktop
-    if (document.getElementById('subtotal-desktop')) {
-        document.getElementById('subtotal-desktop').textContent = 'R$ ' + subtotal.toFixed(2);
-        document.getElementById('shipping-cost-desktop').textContent = 'R$ ' + shippingCost.toFixed(2);
-        document.getElementById('discount-desktop').textContent = 'R$ ' + discount.toFixed(2);
-        document.getElementById('total-desktop').textContent = 'R$ ' + total.toFixed(2);
-    }
+    // Recarregar a página para obter valores atualizados do backend
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 }
 
 // Sistema de notificações
@@ -584,7 +651,133 @@ function finalizarCompra() {
     border: none;
     cursor: pointer;
 }
+
+/* Ajustes para imagem desktop */
+@media (min-width: 768px) {
+    .produto-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+}
+
+/* Estilos para sacola vazia */
+.empty-cart, .empty-cart-desktop {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-cart p, .empty-cart-desktop p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.continue-shopping {
+    background: #7D2838;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.continue-shopping:hover {
+    background: #5a1e2a;
+}
 </style>
+
+<script>
+// Funções de quantidade
+function increaseQuantity(produtoId) {
+    const quantityElement = document.getElementById('qty-' + produtoId);
+    const currentQuantity = parseInt(quantityElement.textContent);
+    const newQuantity = currentQuantity + 1;
+    
+    fetch('/atualizar-quantidade-sacola', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            quantityElement.textContent = newQuantity;
+            showNotification('Quantidade aumentada!');
+            setTimeout(() => location.reload(), 1000);
+        }
+    });
+}
+
+function decreaseQuantity(produtoId) {
+    const quantityElement = document.getElementById('qty-' + produtoId);
+    const currentQuantity = parseInt(quantityElement.textContent);
+    
+    if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        
+        fetch('/atualizar-quantidade-sacola', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                quantityElement.textContent = newQuantity;
+                showNotification('Quantidade diminuída!');
+                setTimeout(() => location.reload(), 1000);
+            }
+        });
+    }
+}
+
+function removeItem(produtoId) {
+    if (confirm('Deseja remover este item da sacola?')) {
+        fetch('/remover-item-sacola', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produto_id: produtoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Item removido da sacola!');
+                setTimeout(() => location.reload(), 1000);
+            }
+        });
+    }
+}
+
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notification-text');
+    
+    if (notification && notificationText) {
+        notificationText.textContent = message;
+        notification.style.display = 'block';
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            closeNotification();
+        }, 3000);
+    }
+}
+
+function closeNotification() {
+    const notification = document.getElementById('notification');
+    if (notification) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 300);
+    }
+}
+</script>
 
 </body>
 </html>

@@ -45,6 +45,11 @@ const adicionarController = {
             .withMessage('Descrição é obrigatória')
             .isLength({ min: 10 })
             .withMessage('Descrição deve ter pelo menos 10 caracteres'),
+        
+
+        body('quantidade_estoque')
+            .isInt({ min: 1 })
+            .withMessage('Quantidade deve ser um número inteiro maior que 0'),
     ],
 
     criarProduto: async (req, res) => {
@@ -52,6 +57,33 @@ const adicionarController = {
         console.log('req.files:', req.files);
         console.log('req.file:', req.file);
         console.log('req.body:', req.body);
+        
+        // Debug do diretório
+        const path = require('path');
+        const fs = require('fs');
+        const uploadDir = path.join(__dirname, '../public/imagem/produtos/');
+        console.log('Diretório de upload:', uploadDir);
+        console.log('Diretório existe?', fs.existsSync(uploadDir));
+        
+        if (req.files && req.files.length > 0) {
+            req.files.forEach((file, index) => {
+                console.log(`Arquivo ${index}:`, {
+                    filename: file.filename,
+                    path: file.path,
+                    size: file.size,
+                    mimetype: file.mimetype,
+                    destination: file.destination
+                });
+                console.log('Arquivo existe no disco?', fs.existsSync(file.path));
+                
+                // Verificar se o diretório do arquivo existe
+                const fileDir = path.dirname(file.path);
+                console.log('Diretório do arquivo:', fileDir);
+                console.log('Diretório do arquivo existe?', fs.existsSync(fileDir));
+            });
+        } else {
+            console.log('Nenhum arquivo foi enviado!');
+        }
         
         const erros = validationResult(req);
         
@@ -71,7 +103,7 @@ const adicionarController = {
         // Verificar se há arquivos (opcional)
         const arquivos = req.files || (req.file ? [req.file] : []);
 
-        const { nome_produto, preco_produto, categoria_produto, cor_produto, condicao_produto, tamanho_produto, descricao_produto, estilo_produto} = req.body;
+        const { nome_produto, preco_produto, categoria_produto, cor_produto, condicao_produto, tamanho_produto, descricao_produto, estilo_produto, estampa_produto, quantidade_estoque, outros, status_produto} = req.body;
         
         try {
             // Converter preço
@@ -86,10 +118,15 @@ const adicionarController = {
                 CONDICAO_PRODUTO: condicao_produto,
                 TAMANHO_PRODUTO: tamanho_produto,
                 ESTILO_PRODUTO: estilo_produto,
-                OUTROS: descricao_produto || null,
-                STATUS_PRODUTO: 'd',
+                ESTAMPA_PRODUTO: estampa_produto || null,
+                DETALHES_PRODUTO: (descricao_produto && descricao_produto.trim()) ? descricao_produto.trim() : 'Produto sem detalhes específicos',
+                STATUS_PRODUTO: status_produto || 'd',
+                QUANTIDADE_ESTOQUE: parseInt(quantidade_estoque) || 1,
+                OUTROS: outros || null,
                 ID_USUARIO: req.session.autenticado ? req.session.autenticado.id : null
             };
+            
+            console.log('dadosProduto:', dadosProduto);
             
             const resultado = await produtoModel.create(dadosProduto);
             
@@ -127,9 +164,15 @@ const adicionarController = {
             // Limpar arquivos de upload em caso de erro
             if (arquivos && arquivos.length > 0) {
                 const fs = require('fs');
+                const path = require('path');
                 arquivos.forEach(file => {
                     try {
-                        fs.unlinkSync(file.path);
+                        // Usar o caminho completo do arquivo
+                        const filePath = file.path || path.join(__dirname, '../public/imagem/produtos/', file.filename);
+                        if (fs.existsSync(filePath)) {
+                            fs.unlinkSync(filePath);
+                            console.log('Arquivo deletado:', filePath);
+                        }
                     } catch (unlinkError) {
                         console.log('Erro ao deletar arquivo:', unlinkError);
                     }
