@@ -428,42 +428,72 @@ router.get('/finalizandocompra1', (req, res) => res.render('pages/finalizandocom
 
 router.get('/finalizandocompra', async function(req, res){
     try {
-        let carrinho = [];
+        let produto = null;
         let subtotal = 0;
+        const produtoId = req.query.produto;
         
-        // Buscar produtos do banco usando a mesma consulta da homecomprador
-        const { produtoModel } = require('../models/produtoModel');
-        const produtos = await produtoModel.findRecent(3) || [];
+        if (!req.session || !req.session.autenticado) {
+            return res.redirect('/login');
+        }
         
-        carrinho = produtos.map(item => ({
-            produto_id: item.ID_PRODUTO,
-            nome: item.NOME_PRODUTO,
-            preco: parseFloat(item.PRECO),
-            quantidade: 1,
-            imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
-            descricao: item.TIPO_PRODUTO || 'Produto de qualidade'
-        }));
-        
-        subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        if (produtoId) {
+            const [produtos] = await pool.query(`
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.DESCRICAO_PRODUTO,
+                       p.TAMANHO_PRODUTO, p.COR_PRODUTO, p.ESTILO_PRODUTO, p.ESTAMPA_PRODUTO,
+                       p.CATEGORIA_PRODUTO, p.MARCA_PRODUTO, p.CONDICAO_PRODUTO,
+                       u.NOME_USUARIO as VENDEDOR
+                FROM PRODUTOS p 
+                JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+                WHERE p.ID_PRODUTO = ? AND p.STATUS_PRODUTO = 'd'
+            `, [produtoId]);
+            
+            if (produtos.length > 0) {
+                const [imagens] = await pool.query(
+                    'SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = ? ORDER BY ID_IMG LIMIT 1',
+                    [produtoId]
+                );
+                
+                produto = {
+                    produto_id: produtos[0].ID_PRODUTO,
+                    nome: produtos[0].NOME_PRODUTO,
+                    preco: parseFloat(produtos[0].PRECO),
+                    quantidade: 1,
+                    imagem: imagens[0]?.URL_IMG ? '/' + imagens[0].URL_IMG : '/imagens/produto-default.png',
+                    cor: produtos[0].COR_PRODUTO,
+                    estilo: produtos[0].ESTILO_PRODUTO,
+                    estampa: produtos[0].ESTAMPA_PRODUTO,
+                    tamanho: produtos[0].TAMANHO_PRODUTO,
+                    descricao: produtos[0].DESCRICAO_PRODUTO,
+                    categoria: produtos[0].CATEGORIA_PRODUTO,
+                    marca: produtos[0].MARCA_PRODUTO,
+                    condicao: produtos[0].CONDICAO_PRODUTO,
+                    vendedor: produtos[0].VENDEDOR
+                };
+                
+                subtotal = produto.preco;
+            }
+        }
         
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
         res.render('pages/finalizandocompra', {
-            carrinho: carrinho,
+            carrinho: produto ? [produto] : [],
+            produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     } catch (error) {
         console.log('Erro ao carregar finalizandocompra:', error);
         res.render('pages/finalizandocompra', {
             carrinho: [],
+            produto: null,
             subtotal: '0,00',
             frete: '0,00',
             total: '0,00',
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado || null
         });
     }
 });

@@ -4,9 +4,9 @@
 
 <head>
   <title>Vintélo</title>
-  <link rel="stylesheet" href="css/estilo.css">
-  <link rel="stylesheet" href="css/estilo2.css">
-  <link rel="stylesheet" href="css/profile-sections.css">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <link rel="stylesheet" href="/css/estilo2.css">
+  <link rel="stylesheet" href="/css/profile-sections.css">
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 
@@ -20,7 +20,7 @@
   <section class="oculto-mobile">
     <header class="main-header">
       <a href="/homecomprador">
-        <img src="imagens/logo.png" class="img-logo">
+        <img src="/imagens/logo.png" class="img-logo">
       </a>
       <nav>
         <a href="/categorias">Vestidos</a>
@@ -36,13 +36,13 @@
         <ul>
           <li>
             <% if (typeof autenticado !== 'undefined' && autenticado) { %>
-              <a href="/perfilcliente"><img src="<%= autenticado.imagem || 'imagens/imagem sem cadastro.avif' %>" class="maria"></a>
+              <a href="/perfilcliente"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a>
             <% } else { %>
               <a href="/menu"><img src="/imagens/icone sem cadastro.png" class="maria"></a>
             <% } %>
           </li>
-          <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
-          <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+          <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
+          <li><a href="/favoritos"><img src="/imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
       </section>
     </header>
@@ -65,7 +65,7 @@
             <li>
               <a href="/criarbrecho">
                 <section class="profile-section">
-                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic">
+                  <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic">
                   <section class="profile-info">
                     <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
                   </section>
@@ -106,10 +106,10 @@
               </ul>
             </aside>
         </nav>
-        <img src="imagens/logo.png" class="logo">
+        <img src="/imagens/logo.png" class="logo">
         <a href="/menu">
           <div class="profile-container">
-            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-pic" />
+            <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-pic" />
           </div>
         </a>
       </nav>

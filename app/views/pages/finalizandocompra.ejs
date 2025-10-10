@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vintélo - Finalizar Compra</title>
-  <link rel="stylesheet" href="css/finalizandocompra.css">
-  <link rel="stylesheet" href="css/finalizando2.css">
+  <link rel="stylesheet" href="/css/finalizandocompra.css">
+  <link rel="stylesheet" href="/css/finalizando2.css">
   <style>
     .text-left {
       text-align: left !important;
@@ -33,11 +33,15 @@
   <section class="oculto-desktop">
     <header>
       <nav class="grid">
-        <a href="/produto">
-          <img src="imagens/seta.png" alt="Voltar">
+        <a href="/homecomprador">
+          <img src="/imagens/seta.png" alt="Voltar">
         </a>
-        <h1>Sacola</h1>
-        <img src="imagens/foto-branca.png" alt="Menu">
+        <h1>Finalizar Compra</h1>
+        <% if (autenticado && autenticado.imagem) { %>
+          <img src="/<%= autenticado.imagem %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+        <% } else { %>
+          <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+        <% } %>
       </nav>
     </header>
 
@@ -48,15 +52,19 @@
           <% const uniqueItems = carrinho.filter((item, index, self) => 
                index === self.findIndex(i => i.produto_id === item.produto_id)); %>
           <% uniqueItems.forEach((item) => { %>
-            <article class="product-card1">
+            <article class="product-card1" data-product-id="<%= item.produto_id %>">
               <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
-              <section class="produto-container text-left">
-                <h1 class="text-left"><%= item.nome || 'Produto não encontrado' %></h1>
-                <section class="preco text-left">
-                  <p>R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
-                  <span>2x R$<%= (parseFloat(item.preco || 0) / 2).toFixed(2).replace('.', ',') %></span>
-                </section>
+              <section class="produto-info">
+                <h3><%= item.nome %></h3>
                 <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
+                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
+                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                <p class="preco">R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
                 <section class="quantity-control">
                   <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
                   <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
@@ -64,7 +72,7 @@
                 </section>
               </section>
               <button class="remove-item" onclick="removeItem('<%= item.produto_id %>')">
-                <img src="imagens/lixeira.png" class="lixeira">
+                <img src="/imagens/lixeira.png" class="lixeira">
               </button>
             </article>
           <% }) %>
@@ -96,13 +104,13 @@
         <h4>Adicione mais à sacola</h4>
         <ul class="product-list">
           <li class="product-suggestion">
-            <img src="imagens/conjunto.png" alt="Saia Branca">
+            <img src="/imagens/conjunto.png" alt="Saia Branca">
             <p>Saia Branca</p>
             <p>R$25,00</p>
             <button class="adicionar-compra">Adicionar</button>
           </li>
           <li class="product-suggestion">
-            <img src="imagens/saia preta.png" alt="Saia Preta">
+            <img src="/imagens/saia preta.png" alt="Saia Preta">
             <p>Saia Preta</p>
             <p>R$30,00</p>
             <button class="adicionar-compra">Adicionar</button>
@@ -122,7 +130,9 @@
         <p>10% OFF na primeira compra</p>
       </section>
       <section class="main-header">
-        <img src="imagens/logo.png" class="img-logo">
+        <a href="/homecomprador">
+          <img src="/imagens/logo.png" class="img-logo">
+        </a>
         <nav>
           <a href="/categorias">Vestidos</a>
           <a href="/categorias">Saias</a>
@@ -144,28 +154,38 @@
     </header>
 
     <section class="sacola-container">
-      <h1 class="adicionar">Sacola</h1>
+      <h1 class="adicionar">Finalizar Compra</h1>
       <section class="sacola-content">
         <% if (carrinho && carrinho.length > 0) { %>
           <% const uniqueItems = carrinho.filter((item, index, self) => 
                index === self.findIndex(i => i.produto_id === item.produto_id)); %>
           <% uniqueItems.forEach((item) => { %>
-            <section class="produto-card">
-              <img src="<%= item.imagem %>" alt="<%= item.nome %>">
-              <section class="produto-container text-left">
-                <h1 class="text-left"><%= item.nome || 'Produto não encontrado' %></h1>
-                <section class="preco text-left">
-                  <p>R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
-                  <span>2x R$<%= (parseFloat(item.preco || 0) / 2).toFixed(2).replace('.', ',') %></span>
+            <section class="produto-card" data-product-id="<%= item.produto_id %>">
+              <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="produto-img-desktop">
+              <section class="produto-info-desktop">
+                <h2><%= item.nome || 'Produto não encontrado' %></h2>
+                <p class="preco-desktop">R$ <%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
+                <% if (item.cor) { %><p class="detalhe">Cor: <%= item.cor %></p><% } %>
+                <% if (item.tamanho) { %><p class="detalhe">Tamanho: <%= item.tamanho %></p><% } %>
+                <% if (item.estilo) { %><p class="detalhe">Estilo: <%= item.estilo %></p><% } %>
+                <% if (item.condicao) { %><p class="detalhe">Condição: <%= item.condicao %></p><% } %>
+                <% if (item.vendedor) { %><p class="detalhe">Vendedor: <%= item.vendedor %></p><% } %>
+                <section class="quantity-controls-desktop">
+                  <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
+                  <span class="qty-display" id="qty-desktop-<%= item.produto_id %>"><%= item.quantidade %></span>
+                  <button class="qty-btn" onclick="increaseQuantity('<%= item.produto_id %>')">+</button>
                 </section>
-                <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
               </section>
               <button class="remove-btn" onclick="removeItem('<%= item.produto_id %>')">
-                <img src="imagens/lixeira.png" class="lixeira2">
+                <img src="/imagens/lixeira.png" class="lixeira2">
               </button>
             </section>
           <% }) %>
+        <% } else { %>
+          <p>Nenhum produto selecionado. <a href="/homecomprador">Escolher produto</a></p>
         <% } %>
+        
+
 
         <section class="pedido-info">
           <h2>Informações do pedido</h2>
@@ -201,31 +221,31 @@
       <h1 class="adicionar">Adicione mais à sacola</h1>
       <section class="product-grid">
         <article class="product-card">
-          <img src="imagens/oculos.png" alt="Óculos de sol">
+          <img src="/imagens/oculos.png" alt="Óculos de sol">
           <h2>Óculos de sol</h2>
           <p class="price">R$12,00</p>
-          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
         </article>
         <article class="product-card">
-          <img src="imagens/colar.png" alt="Conjunto 3 colares">
+          <img src="/imagens/colar.png" alt="Conjunto 3 colares">
           <h2>Conjunto 3 colares de prata</h2>
           <p class="price">R$29,99</p>
-          <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-          <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+          <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
+          <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
         </article>
       </section>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-      <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
+      <img src="/imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
       <section class="social-media">
         <p class="p-footer">Siga nossas redes sociais</p>
         <ul class="social-links">
-          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
-          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="/imagens/Facebook.png" alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="/imagens/Pinterest.png" alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="/imagens/Instagram.png" alt="Instagram"></a></li>
         </ul>
       </section>
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>

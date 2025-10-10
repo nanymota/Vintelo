@@ -15,16 +15,20 @@
         }
         .main-image {
             width: 100%;
-            max-width: 350px;
-            height: auto;
-            object-fit: contain;
+            max-width: 100%;
+            height: 450px;
+            object-fit: cover;
             display: block;
             margin: 0 auto;
+            border-radius: 0;
         }
         .imagem-produto img {
-            width: 110%;
-            max-width: 550px;
-            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
     </style>
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
@@ -52,7 +56,7 @@
                     </form>
                     <ul>
                         <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
-                        <li><a href="/perfilcliente"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+                        <li><a href="/perfilcliente"><img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a></li>
                         <li><a href="/favoritos"><img src="/imagens/icone coraçao.png" class="img-tamanho"></a></li>
                     </ul>
                 </section>
@@ -110,16 +114,18 @@
                 <% } %>
             </section>
 
-            <section class="tamanhos-alternativos text-left">
+            <section class="tamanhos-alternativos text-left oculto-desktop">
                 <p>Seu tamanho não está disponível? Encontre peças similares:</p>
-                <section class="opcoes-tamanho">
-                    <span>PP</span>
-                    <span>P</span>
-                    <span>M</span>
-                    <span>G</span>
-                    <span>GG</span>
-                    <span>EG</span>
-                    <span>EGG</span>
+                <section class="carousel-container">
+                    <section class="opcoes-tamanho-carousel">
+                        <span>PP</span>
+                        <span>P</span>
+                        <span>M</span>
+                        <span>G</span>
+                        <span>GG</span>
+                        <span>EG</span>
+                        <span>EGG</span>
+                    </section>
                 </section>
             </section>
         </main>
@@ -166,7 +172,7 @@
                         </ul>
                     </section>
 
-                    <button class="btn-sacola" onclick="addToCart()">Adicionar à sacola</button>
+
                 <% } %>
 
                 <section class="tamanhos-alternativos text-left">
@@ -180,13 +186,17 @@
                         <span>EG</span>
                         <span>EGG</span>
                     </section>
+                    <button class="btn-comprar-desktop" onclick="comprarAgora('<%= produto.ID_PRODUTO %>')">Comprar Agora</button>
                 </section>
             </section>
         </main>
     </section>
 
     <% if (produto) { %>
-        <button type="submit" class="submit-btn" onclick="addToCart()">Adicionar à Sacola</button>
+        <button type="submit" class="submit-btn" onclick="comprarAgora('<%= produto.ID_PRODUTO %>')">Comprar Agora</button>
+        <button class="floating-cart" onclick="addToCart('<%= produto.ID_PRODUTO %>')">
+            <img src="/imagens/icone saco.png" alt="Adicionar à sacola">
+        </button>
     <% } %>
 
     <section class="oculto-mobile">
