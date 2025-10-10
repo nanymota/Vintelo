@@ -72,8 +72,8 @@
     transform: scale(1.1);
 }
 
-/* Success container */
-.success-container {
+/* Status containers */
+.status-container, .status-container-desktop {
     max-width: 600px;
     margin: 50px auto;
     padding: 40px;
@@ -83,17 +83,45 @@
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
 }
 
-.success-icon {
+.status-container.error, .status-container-desktop.error {
+    border-left: 5px solid #dc3545;
+}
+
+.status-container.pending, .status-container-desktop.pending {
+    border-left: 5px solid #ffc107;
+}
+
+.status-container:not(.error):not(.pending), .status-container-desktop:not(.error):not(.pending) {
+    border-left: 5px solid #28a745;
+}
+
+.status-icon, .status-icon-desktop {
     width: 80px;
     height: 80px;
-    background: #28a745;
-    border-radius: 50%;
     margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 40px;
+    display: block;
+}
+
+.status-container h2, .status-container-desktop h1 {
+    color: #7D2838;
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.status-container.error h2, .status-container-desktop.error h1 {
+    color: #dc3545;
+}
+
+.status-container.pending h2, .status-container-desktop.pending h1 {
+    color: #ffc107;
+}
+
+.status-container p, .status-container-desktop p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.6;
 }
 
 .success-title {
@@ -145,13 +173,48 @@
     color: #7D2838;
 }
 
-.btn-group {
+.actions, .actions-desktop {
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
     margin-top: 40px;
     flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #7D2838;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5a1e2a;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #7D2838;
+    border: 2px solid #7D2838;
+}
+
+.btn-secondary:hover {
+    background: #7D2838;
+    color: white;
+    text-decoration: none;
 }
 
 .btn {
@@ -280,27 +343,26 @@
         padding: 0 10px;
     }
     
-    .success-container {
+    .status-container {
         margin: 20px 10px;
         padding: 20px 15px;
         border-radius: 10px;
     }
     
-    .success-icon {
+    .status-icon {
         width: 60px;
         height: 60px;
-        font-size: 30px;
         margin-bottom: 15px;
     }
     
-    .success-title {
+    .status-container h2 {
         font-size: 22px;
         margin-bottom: 10px;
     }
     
-    .success-message {
+    .status-container p {
         font-size: 14px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
     
     .order-details {
@@ -318,13 +380,13 @@
         padding: 8px 0;
     }
     
-    .btn-group {
+    .actions {
         flex-direction: column;
         gap: 15px;
         margin-top: 25px;
     }
     
-    .btn {
+    .btn-primary, .btn-secondary {
         padding: 12px 20px;
         font-size: 14px;
         width: 100%;

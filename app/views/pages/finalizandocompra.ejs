@@ -127,7 +127,11 @@
         <a href="/favoritos" class="link-branco"><p class="favorites-link">Conferir peças favoritas ></p></a>
       </section>
 
-      <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+      <% if (produto && produto.produto_id) { %>
+        <a href="/finalizandopagamento?produto=<%= produto.produto_id %>"><button class="finalizar-compra">Finalizar Compra</button></a>
+      <% } else { %>
+        <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+      <% } %>
     </main>
   </section>
 
@@ -237,7 +241,11 @@
             <input type="text" placeholder="Inserir cupom de desconto">
             <button>Inserir</button>
           </section>
-          <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+          <% if (produto && produto.produto_id) { %>
+            <a href="/finalizandopagamento?produto=<%= produto.produto_id %>"><button class="finalizar-compra">Finalizar Compra</button></a>
+          <% } else { %>
+            <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+          <% } %>
         </section>
       </section>
     </section>

@@ -55,28 +55,25 @@
         <main class="main-mobile">
         <section class="content">
             <section class="cart">
-                <% if (carrinho && carrinho.length > 0) { %>
-                    <% carrinho.forEach(item => { %>
-                        <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="cart-item-img">
-                        <section class="cart-item-info">
-                            <h2><%= item.nome %></h2>
-                            <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
-                            <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
-                            <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
-                            <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                            <p>Quantidade: <%= item.quantidade %></p>
-                            <p>Preço unitário: R$ <%= item.preco.toFixed(2) %></p>
-                            <p>Total</p>
-                            <span>R$ <%= (item.preco * item.quantidade).toFixed(2) %></span>
-                        </section>
-                    <% }) %>
-                <% } else { %>
-                    <img src="imagens/vestido branco.png" alt="Vestido branco com decote" class="cart-item-img">
+                <% if (produto) { %>
+                    <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" class="cart-item-img">
                     <section class="cart-item-info">
-                        <h2>Vestido branco com decote</h2>
-                        <p>Cor: Branco</p>
-                        <p>Estilo: Sensual</p>
-                        <p>Estampa: Simples</p>
+                        <h2><%= produto.nome %></h2>
+                        <% if (produto.descricao) { %><p><%= produto.descricao %></p><% } %>
+                        <% if (produto.cor) { %><p>Cor: <%= produto.cor %></p><% } %>
+                        <% if (produto.estilo) { %><p>Estilo: <%= produto.estilo %></p><% } %>
+                        <% if (produto.estampa) { %><p>Estampa: <%= produto.estampa %></p><% } %>
+                        <% if (produto.tamanho) { %><p>Tamanho: <%= produto.tamanho %></p><% } %>
+                        <% if (produto.vendedor) { %><p>Vendedor: <%= produto.vendedor %></p><% } %>
+                        <p>Quantidade: <%= produto.quantidade %></p>
+                        <p>Preço unitário: R$ <%= produto.preco.toFixed(2) %></p>
+                        <p>Total</p>
+                        <span>R$ <%= (produto.preco * produto.quantidade).toFixed(2) %></span>
+                    </section>
+                <% } else { %>
+                    <img src="imagens/vestido branco.png" alt="Produto" class="cart-item-img">
+                    <section class="cart-item-info">
+                        <h2>Produto</h2>
                         <p>Total</p>
                         <span>R$ <%= total || '59,99' %></span>
                     </section>
@@ -157,18 +154,16 @@
 
   <section class="products">
     <h3>Resumo do pedido</h3>
-    <% if (carrinho && carrinho.length > 0) { %>
-        <% carrinho.forEach(item => { %>
-            <section class="item">
-                <span class="price">R$ <%= item.preco.toFixed(2) %></span>
-                <span class="name"><%= item.nome %></span>
-                <span class="quantity">Qtd: <%= item.quantidade %></span>
-            </section>
-        <% }) %>
+    <% if (produto) { %>
+        <section class="item">
+            <span class="price">R$ <%= produto.preco.toFixed(2) %></span>
+            <span class="name"><%= produto.nome %></span>
+            <span class="quantity">Qtd: <%= produto.quantidade %></span>
+        </section>
     <% } else { %>
         <section class="item">
             <span class="price">R$ 49.90</span>
-            <span class="name">Vestido branco com decote</span>
+            <span class="name">Produto</span>
             <span class="quantity">Qtd: 1</span>
         </section>
     <% } %>
@@ -189,11 +184,15 @@
               <span>R$<%= total || '59,99' %></span>
             </section>
             <section class="oculto-mobile">
+              <!-- Container para o botão do Mercado Pago -->
+              <section id="walletBrick_container"></section>
               <button class="finalize-button" onclick="processarPagamento()">Finalizar compra</button>
             </section>
           </section>
           </section>
           <section class="oculto-desktop">
+            <!-- Container para o botão do Mercado Pago -->
+            <section id="walletBrick_container_mobile"></section>
             <button class="finalize-button" onclick="processarPagamento()">Finalizar compra</button>
           </main>
           </section>
@@ -214,57 +213,9 @@
     </footer>
   </section>
 
-    <script src="js/script.js"></script>
-    <script>
-        function processarPagamento() {
-            // Calcular valor total baseado no carrinho
-            const totalElement = document.querySelector('.total span:last-child');
-            const valorTotal = totalElement ? parseFloat(totalElement.textContent.replace('R$', '').replace(',', '.')) : 59.99;
-            
-            const formData = {
-                valor: valorTotal,
-                descricao: 'Compra Vintélo',
-                metodo_pagamento: getSelectedPaymentMethod()
-            };
-            
-            fetch('/processar-pagamento', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.payment_url) {
-                    // Redirecionar para o Mercado Pago
-                    window.location.href = data.payment_url;
-                } else {
-                    alert('Erro ao processar pagamento. Tente novamente.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao processar pagamento. Tente novamente.');
-            });
-        }
-        
-        function getSelectedPaymentMethod() {
-            const selected = document.querySelector('.payment-option .check-icon:not([style*="display: none"])');
-            if (selected) {
-                const parent = selected.closest('.payment-option');
-                const method = parent.querySelector('span').textContent;
-                return method;
-            }
-            return 'PIX';
-        }
-        
-        function selectPayment(element) {
-            // Remover seleção anterior
-            document.querySelectorAll('.payment-option .check-icon').forEach(icon => {
-                icon.style.display = 'none';
-            });
-            document.querySelectorAll('.payment-option .error-icon').forEach(icon => {
+    <!-- SDK do Mercado Pago -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="/js/pagamento.js"></script>orAll('.payment-option .error-icon').forEach(icon => {
                 icon.style.display = 'block';
             });
             

@@ -2,33 +2,36 @@ const { MercadoPagoConfig, Preference } = require('mercadopago');
 
 // Configurar Mercado Pago
 const client = new MercadoPagoConfig({
-    accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || 'TEST-YOUR-ACCESS-TOKEN'
+    accessToken: process.env.accessToken
 });
 
 const processarPagamento = async (req, res) => {
     try {
         const { valor, descricao, metodo_pagamento } = req.body;
         
+        console.log('Dados recebidos:', { valor, descricao, metodo_pagamento });
+        console.log('Valor parseado:', parseFloat(valor));
+        
         const preference = {
             items: [
                 {
-                    title: descricao,
-                    unit_price: parseFloat(valor),
+                    title: descricao || 'Compra Vintélo',
+                    unit_price: Number(parseFloat(valor).toFixed(2)),
                     quantity: 1,
                 }
             ],
             back_urls: {
-                success: `${req.protocol}://${req.get('host')}/pagamento-sucesso`,
-                failure: `${req.protocol}://${req.get('host')}/pagamento-falha`,
-                pending: `${req.protocol}://${req.get('host')}/pagamento-pendente`
+                success: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-sucesso`,
+                failure: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`,
+                pending: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`
             },
-            auto_return: 'approved',
-            external_reference: `vintelo-${Date.now()}`,
-            notification_url: `${req.protocol}://${req.get('host')}/webhook-mercadopago`
+            external_reference: `vintelo-${Date.now()}`
         };
 
         const preference_client = new Preference(client);
         const response = await preference_client.create({ body: preference });
+        
+        console.log('Preference ID criado:', response.id);
         
         res.json({
             success: true,
@@ -46,15 +49,54 @@ const processarPagamento = async (req, res) => {
 };
 
 const pagamentoSucesso = (req, res) => {
-    res.redirect('/confirmar-pedido?payment_method=Mercado Pago');
+    const { payment_id, status, external_reference, merchant_order_id } = req.query;
+    
+    console.log('Pagamento aprovado:', {
+        payment_id,
+        status,
+        external_reference,
+        merchant_order_id
+    });
+    
+    res.render('pages/pagamentoSucesso', {
+        autenticado: req.session.autenticado || null,
+        payment_id,
+        external_reference
+    });
 };
 
 const pagamentoFalha = (req, res) => {
-    res.redirect('/finalizandopagamento?error=payment_failed');
+    const { payment_id, status, external_reference, merchant_order_id } = req.query;
+    
+    console.log('Pagamento recusado:', {
+        payment_id,
+        status,
+        external_reference,
+        merchant_order_id
+    });
+    
+    res.render('pages/pagamentoFalha', {
+        autenticado: req.session.autenticado || null,
+        payment_id,
+        external_reference
+    });
 };
 
 const pagamentoPendente = (req, res) => {
-    res.redirect('/pedidoconf?status=pending');
+    const { payment_id, status, external_reference, merchant_order_id } = req.query;
+    
+    console.log('Pagamento pendente:', {
+        payment_id,
+        status,
+        external_reference,
+        merchant_order_id
+    });
+    
+    res.render('pages/pagamentoPendente', {
+        autenticado: req.session.autenticado || null,
+        payment_id,
+        external_reference
+    });
 };
 
 const webhookMercadoPago = async (req, res) => {

@@ -660,65 +660,64 @@ router.get('/finalizandocompra2', async function(req, res){
     }
 });
 
-router.get('/finalizandopagamento', async function(req, res){
+router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req, res){
     try {
-        let carrinho = [];
+        let produto = null;
         let subtotal = 0;
+        const produtoId = req.query.produto;
         
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            const [itensSacola] = await pool.query(`
-                SELECT 
-                    is.QUANTIDADE,
-                    is.VALOR_TOTAL,
-                    p.ID_PRODUTO,
-                    p.NOME_PRODUTO,
-                    p.PRECO,
-                    p.TAMANHO_PRODUTO,
-                    p.COR_PRODUTO,
-                    p.ESTILO_PRODUTO,
-                    p.ESTAMPA_PRODUTO,
-                    img.URL_IMG
-                FROM ITENS_SACOLA is
-                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
-                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
-                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
-                WHERE s.ID_USUARIO = ?
-                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
-            `, [req.session.autenticado.id]);
+        if (produtoId) {
+            const [produtos] = await pool.query(`
+                SELECT p.*, u.NOME_USUARIO as VENDEDOR
+                FROM PRODUTOS p 
+                JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+                WHERE p.ID_PRODUTO = ? AND p.STATUS_PRODUTO = 'd'
+            `, [produtoId]);
             
-            carrinho = itensSacola.map(item => ({
-                id: item.ID_PRODUTO,
-                nome: item.NOME_PRODUTO,
-                preco: parseFloat(item.PRECO),
-                quantidade: item.QUANTIDADE,
-                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
-                cor: item.COR_PRODUTO,
-                estilo: item.ESTILO_PRODUTO,
-                estampa: item.ESTAMPA_PRODUTO,
-                tamanho: item.TAMANHO_PRODUTO
-            }));
-            
-            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+            if (produtos.length > 0) {
+                const [imagens] = await pool.query(
+                    'SELECT URL_IMG FROM IMG_PRODUTOS WHERE ID_PRODUTO = ? ORDER BY ID_IMG LIMIT 1',
+                    [produtoId]
+                );
+                
+                produto = {
+                    produto_id: produtos[0].ID_PRODUTO,
+                    nome: produtos[0].NOME_PRODUTO,
+                    preco: parseFloat(produtos[0].PRECO),
+                    quantidade: 1,
+                    imagem: imagens[0]?.URL_IMG ? '/' + imagens[0].URL_IMG : '/imagens/produto-default.png',
+                    cor: produtos[0].COR_PRODUTO,
+                    estilo: produtos[0].ESTILO_PRODUTO,
+                    estampa: produtos[0].ESTAMPA_PRODUTO,
+                    tamanho: produtos[0].TAMANHO_PRODUTO,
+                    descricao: produtos[0].DETALHES_PRODUTO || produtos[0].DESCRICAO_PRODUTO,
+                    categoria: produtos[0].TIPO_PRODUTO,
+                    condicao: produtos[0].CONDICAO_PRODUTO,
+                    vendedor: produtos[0].VENDEDOR
+                };
+                
+                subtotal = produto.preco;
+            }
         }
         
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
         res.render('pages/finalizandopagamento', {
-            carrinho: carrinho,
+            produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     } catch (error) {
         console.log('Erro ao carregar finalizandopagamento:', error);
         res.render('pages/finalizandopagamento', {
-            carrinho: [],
+            produto: null,
             subtotal: '0,00',
             frete: '0,00',
             total: '0,00',
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado || null
         });
     }
 });
@@ -1571,25 +1570,6 @@ router.post('/editarbanners',
     ]), 
     bannerController.atualizarBanners);
 router.get('/minhascompras', (req, res) => res.render('pages/minhascompras'));
-router.get('/finalizandopagamento', function(req, res){
-    const carrinho = req.session.carrinho || [];
-    let subtotal = 0;
-    
-    carrinho.forEach(item => {
-        subtotal += (item.preco * item.quantidade);
-    });
-    
-    const frete = subtotal > 0 ? 10 : 0;
-    const total = subtotal + frete;
-    
-    res.render('pages/finalizandopagamento', {
-        carrinho: carrinho,
-        subtotal: subtotal.toFixed(2),
-        frete: frete.toFixed(2),
-        total: total.toFixed(2),
-        autenticado: req.session.autenticado || { autenticado: false }
-    });
-});
 router.get('/pedidos', (req, res) => res.render('pages/pedidos'));
 router.get('/enviopedido', (req, res) => res.render('pages/enviopedido'));
 router.get('/menu', carregarDadosUsuario, (req, res) => {
@@ -1977,6 +1957,7 @@ router.post('/processar-pagamento', pagamentoController.processarPagamento);
 router.get('/pagamento-sucesso', pagamentoController.pagamentoSucesso);
 router.get('/pagamento-falha', pagamentoController.pagamentoFalha);
 router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
+
 router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
 
 // Rota para adicionar à sacola

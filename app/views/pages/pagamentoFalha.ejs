@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vintélo - Pagamento Recusado</title>
+  <link rel="stylesheet" href="/css/pedidoconf.css">
+  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+  <!-- Mobile Version -->
+  <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <a href="/homecomprador">
+          <img src="/imagens/seta.png" alt="Voltar">
+        </a>
+        <h1>Pagamento Recusado</h1>
+        <% if (autenticado && autenticado.imagem) { %>
+          <a href="/perfilcliente">
+            <img src="/<%= autenticado.imagem %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          </a>
+        <% } else { %>
+          <a href="/perfilcliente">
+            <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          </a>
+        <% } %>
+      </nav>
+    </header>
+
+    <main>
+      <section class="status-container error">
+        <img src="/imagens/erro.png" alt="Erro" class="status-icon">
+        <h2>Pagamento Recusado</h2>
+        <p>Não foi possível processar seu pagamento.</p>
+        <% if (payment_id) { %>
+          <p><strong>ID do Pagamento:</strong> <%= payment_id %></p>
+        <% } %>
+        <% if (external_reference) { %>
+          <p><strong>Referência:</strong> <%= external_reference %></p>
+        <% } %>
+        <p>Verifique os dados do cartão ou tente outro método de pagamento.</p>
+        
+        <section class="actions">
+          <a href="/finalizandopagamento" class="btn-primary">Tentar Novamente</a>
+          <a href="/homecomprador" class="btn-secondary">Voltar às Compras</a>
+        </section>
+      </section>
+    </main>
+  </section>
+
+  <!-- Desktop Version -->
+  <section class="oculto-mobile">
+    <header>
+      <section class="top-bar">
+        <p>10% OFF na primeira compra</p>
+      </section>
+      <section class="main-header">
+        <a href="/homecomprador">
+          <img src="/imagens/logo.png" class="img-logo">
+        </a>
+        <nav>
+          <a href="/categorias">Vestidos</a>
+          <a href="/categorias">Saias</a>
+          <a href="/categorias">Blusas</a>
+          <a href="/categorias">Calças</a>
+          <a href="/categorias">Outros</a>
+        </nav>
+        <section class="search-profile">
+          <form>
+            <input type="text" placeholder="Buscar...">
+          </form>
+          <ul>
+            <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
+            <li><a href="/perfilcliente">
+              <% if (autenticado && autenticado.imagem) { %>
+                <img src="/<%= autenticado.imagem %>" class="maria">
+              <% } else { %>
+                <img src="imagens/icone sem cadastro.png" class="img-tamanho">
+              <% } %>
+            </a></li>
+            <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
+          </ul>
+        </section>
+      </section>
+    </header>
+
+    <section class="status-container-desktop error">
+      <img src="/imagens/erro.png" alt="Erro" class="status-icon-desktop">
+      <h1>Pagamento Recusado</h1>
+      <p>Não foi possível processar seu pagamento.</p>
+      <% if (payment_id) { %>
+        <p><strong>ID do Pagamento:</strong> <%= payment_id %></p>
+      <% } %>
+      <% if (external_reference) { %>
+        <p><strong>Referência:</strong> <%= external_reference %></p>
+      <% } %>
+      <p>Verifique os dados do cartão ou tente outro método de pagamento.</p>
+      
+      <section class="actions-desktop">
+        <a href="/finalizandopagamento" class="btn-primary">Tentar Novamente</a>
+        <a href="/homecomprador" class="btn-secondary">Voltar às Compras</a>
+      </section>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <img src="/imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="/imagens/Facebook.png" alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="/imagens/Pinterest.png" alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="/imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+  </section>
+</body>
+</html>
