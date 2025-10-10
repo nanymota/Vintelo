@@ -3,54 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Brechó - Vintélo</title>
+    <title>Vintélo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="script/script.js"></script>
+    <script src="script/cep.js"></script>
     <link rel="stylesheet" href="css/cadastro.css">
+    <link rel="stylesheet" href="css/criarbrecho.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-    <style>
-        .create-button {
-            background: #722f37 !important;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        .create-button:hover {
-            background: #5a252b !important;
-        }
-
-        /* Mobile - apenas formulário */
-        @media (max-width: 767px) {
-            .image-section {
-                display: none !important;
-            }
-            .form-section {
-                width: 100% !important;
-                padding: 20px;
-            }
-            .login-container {
-                display: block !important;
-            }
-        }
-    </style>
+    
 </head>
 <body>
-    <!-- Header Mobile -->
+
     <header>
         <nav class="grid">
             <a href="/homecomprador">
                 <img src="imagens/seta.png" alt="Seta Voltar">
             </a>
             <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
-            <img src="imagens/quadrado.png" class="img-branca">
+            <img src="imagens/foto-branca.png" class="img-branca">
         </nav>
     </header>
-
     <main class="login-container">
-        <!-- Desktop - Lado Esquerdo -->
         <aside class="image-section">
             <section class="seta">
                 <a href="/homecomprador">
@@ -70,116 +44,143 @@
                 <p>Já tem uma conta? <a href="/entrar"> Entrar</a></p>
             </section>
         </aside>
-
-        <!-- Formulário -->
         <section class="form-section">
             <section class="form-container">
                 <h2>Crie seu brechó</h2>
                 <p>Insira os dados do seu brechó</p>
-
-                <!-- Notificações -->
-                <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
-                    <aside class="alert alert-<%= dadosNotificacao.tipo %>" role="alert">
-                        <strong><%= dadosNotificacao.titulo || '' %></strong>
-                        <%= dadosNotificacao.mensagem %>
-                    </aside>
-                <% } %>
                 
-                <!-- Erros de validação -->
-                <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
-                    <aside class="alert alert-error" role="alert">
-                        <ul>
-                            <% listaErros.errors.forEach(function(erro) { %>
-                                <li><%= erro.msg %></li>
-                            <% }); %>
-                        </ul>
-                    </aside>
-                <% } %>
+                <div class="photo-upload">
+                    <label for="foto_perfil">Foto de Perfil</label>
+                    <div class="photo-container">
+                        <div class="photo-preview" id="photo-preview" onclick="document.getElementById('foto_perfil').click()">
+                            <span class="photo-placeholder">+</span>
+                        </div>
+                        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*" style="display: none;">
+                        <button type="button" class="photo-btn" onclick="document.getElementById('foto_perfil').click()">Escolher Foto</button>
+                    </div>
+                </div>
+                
+                <section class="login-register">
+                    <section class="login">
+                        <h3>Entrar</h3>
+                        <form id="loginForm" action="/login" method="post" >
+                            <label for="email_login">Email ou nome de usuário</label>
+                            <input type="text" id="email_login" name="email_usu" placeholder="Digite aqui...">
 
-                <form id="registerForm" action="/criarbrecho" method="post">
-                    <!-- Informações do Brechó -->
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('brecho-info')">
-                            <h4>Informações do Brechó</h4>
-                            <span class="arrow" id="brecho-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="brecho-info">
-                            <label for="nomeusu_usu">Nome do Brechó</label>
-                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" required
-                            value="<%= typeof valores !== 'undefined' && valores.nomeusu_usu ? valores.nomeusu_usu : '' %>">
+                            <label for="senha_login">Senha</label>
+                            <input type="password" id="senha_login" name="senha_usu" placeholder="Digite aqui...">
 
-                            <label for="cnpj_brecho">CNPJ (Opcional)</label>
-                            <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" maxlength="18" 
-                            value="<%= typeof valores !== 'undefined' && valores.cnpj_brecho ? valores.cnpj_brecho : '' %>">
-
-                            <label for="razao_social">Razão Social (Opcional)</label>
-                            <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
-                            value="<%= typeof valores !== 'undefined' && valores.razao_social ? valores.razao_social : '' %>">
-
-                            <label for="email_usu">Email</label>
-                            <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" required
-                            value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>">
-
-                            <label for="nome_usu">Nome Completo</label>
-                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome" required
-                            value="<%= typeof valores !== 'undefined' && valores.nome_usu ? valores.nome_usu : '' %>">
-
-                            <label for="fone_usu">Contato</label>
-                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****" required
-                            value="<%= typeof valores !== 'undefined' && valores.fone_usu ? valores.fone_usu : '' %>">
-                        </section>
+                            <button class="submit-btn">Entrar</button>
+                        </form>
                     </section>
 
-                    <!-- Segurança -->
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('security-info')">
-                            <h4>Segurança</h4>
-                            <span class="arrow" id="security-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="security-info">
-                            <label for="senha_usu">Senha</label>
-                            <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha..." required>
+                    <section class="register">
+                        
+                        <!-- Notificações -->
+                        <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+                            <aside class="alert alert-<%= dadosNotificacao.tipo %>" role="alert">
+                                <strong><%= dadosNotificacao.titulo || '' %></strong>
+                                <%= dadosNotificacao.mensagem %>
+                            </aside>
+                        <% } %>
+                        
+                        <!-- Erros de validação -->
+                        <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
+                            <aside class="alert alert-error" role="alert">
+                                <ul>
+                                    <% listaErros.errors.forEach(function(erro) { %>
+                                        <li><%= erro.msg %></li>
+                                    <% }); %>
+                                </ul>
+                            </aside>
+                        <% } %>
+                        
+                        <form id="registerForm" action="/criarbrecho" method="post">
+                            <!-- Seção Informações do Brechó -->
+                            <section class="collapsible-section">
+                                <section class="section-header" onclick="toggleSection('brecho-info')">
+                                    <h4>Informações do Brechó</h4>
+                                    <span class="arrow" id="brecho-arrow">▼</span>
+                                </section>
+                                <section class="section-content" id="brecho-info">
+                                    <label for="nomeusu_usu">Nome do Brechó</label>
+                                    <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.nomeusu_usu || '' %>" required>
 
-                            <label for="confirmar_senha">Confirmar Senha</label>
-                            <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha..." required>
-                        </section>
+                                    <label for="cnpj_brecho">CNPJ (Opcional)</label>
+                                    <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.cnpj_brecho || '' %>">
+
+                                    <label for="razao_social">Razão Social (Opcional)</label>
+                                    <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.razao_social || '' %>">
+
+                                    <label for="email_usu">Endereço de email</label>
+                                    <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
+
+                                    <label for="nome_usu">Nome Completo</label>
+                                    <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome completo" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.nome_usu || '' %>" required>
+
+                                    <label for="fone_usu">Contato</label>
+                                    <input type="tel" id="fone_usu" name="fone_usu" placeholder="11999999999" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.fone_usu || '' %>" maxlength="11" required>
+                                </section>
+                            </section>
+
+                            <!-- Seção Segurança -->
+                            <section class="collapsible-section">
+                                <section class="section-header" onclick="toggleSection('security-info')">
+                                    <h4>Segurança</h4>
+                                    <span class="arrow" id="security-arrow">▼</span>
+                                </section>
+                                <section class="section-content" id="security-info">
+                                    <label for="senha_usu">Senha</label>
+                                    <input type="password" id="senha_usu" name="senha_usu" placeholder="Mínimo 8 caracteres" required>
+                                    
+                                    <label for="confirmar_senha">Confirmar Senha</label>
+                                    <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
+                                </section>
+                            </section>
+
+                            <!-- Seção Endereço -->
+                            <section class="collapsible-section">
+                                <section class="section-header" onclick="toggleSection('address-info')">
+                                    <h4>Endereço</h4>
+                                    <span class="arrow" id="address-arrow">▼</span>
+                                </section>
+                                <section class="section-content" id="address-info">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.cep || '' %>" required>
+
+                                    <label for="endereco">Endereço</label>
+                                    <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." 
+                                        value="<%= typeof valores !== 'undefined' && valores?.endereco || '' %>" required>
+
+                                    <label for="numero">Número</label>
+                                    <input type="text" id="numero" name="numero" placeholder="123" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.numero || '' %>" maxlength="4" required>
+
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" id="bairro" name="bairro" placeholder="Bairro" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.bairro || '' %>" required>
+
+                                    <label for="cidade">Cidade</label>
+                                    <input type="text" id="cidade" name="cidade" placeholder="Cidade" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.cidade || '' %>" required>
+
+                                    <label for="uf">UF</label>
+                                    <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.uf || '' %>" required>
+                                </section>
+                            </section>
+
+                            <button type="submit" name="submit" id="submit" class="submit-btn">Criar brechó</button>
+                        </form>
                     </section>
-
-                    <!-- Endereço -->
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('address-info')">
-                            <h4>Endereço</h4>
-                            <span class="arrow" id="address-arrow">▼</span>
-                        </section>
-                        <section class="section-content" id="address-info">
-                            <label for="cep">CEP</label>
-                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required 
-                            value="<%= typeof valores !== 'undefined' && valores.cep ? valores.cep : '' %>">
-
-                            <label for="endereco">Endereço</label>
-                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." required 
-                            value="<%= typeof valores !== 'undefined' && valores.endereco ? valores.endereco : '' %>">
-
-                            <label for="numero">Número</label>
-                            <input type="text" id="numero" name="numero" placeholder="123" required 
-                            value="<%= typeof valores !== 'undefined' && valores.numero ? valores.numero : '' %>">
-
-                            <label for="bairro">Bairro</label>
-                            <input type="text" id="bairro" name="bairro" placeholder="Bairro" required 
-                            value="<%= typeof valores !== 'undefined' && valores.bairro ? valores.bairro : '' %>">
-
-                            <label for="cidade">Cidade</label>
-                            <input type="text" id="cidade" name="cidade" placeholder="Cidade" required 
-                            value="<%= typeof valores !== 'undefined' && valores.cidade ? valores.cidade : '' %>">
-
-                            <label for="uf">UF</label>
-                            <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" required 
-                            value="<%= typeof valores !== 'undefined' && valores.uf ? valores.uf : '' %>">
-                        </section>
-                    </section>
-
-                    <button type="submit" class="create-button">Criar brechó</button>
-                </form>
+                </section>
             </section>
         </section>
     </main>
@@ -198,25 +199,7 @@
             }
         }
 
-        function validarFormulario() {
-            const senha = document.getElementById('senha_usu').value;
-            const confirmarSenha = document.getElementById('confirmar_senha').value;
-            
-            if (senha !== confirmarSenha) {
-                alert('As senhas não coincidem!');
-                return false;
-            }
-            
-            if (senha.length < 6) {
-                alert('A senha deve ter pelo menos 6 caracteres!');
-                return false;
-            }
-            
-            return true;
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar seções abertas
             document.getElementById('brecho-info').style.display = 'block';
             document.getElementById('security-info').style.display = 'block';
             document.getElementById('address-info').style.display = 'block';
@@ -224,15 +207,10 @@
             document.getElementById('security-arrow').innerHTML = '▲';
             document.getElementById('address-arrow').innerHTML = '▲';
             
-            // Formatação do CEP
             const cepInput = document.getElementById('cep');
             if (cepInput) {
-                cepInput.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 5) {
-                        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
-                    }
-                    e.target.value = value;
+                cepInput.addEventListener('input', function() {
+                    this.value = formatCEP(this.value);
                 });
                 
                 cepInput.addEventListener('blur', function() {
@@ -243,28 +221,219 @@
                 });
             }
             
-            // Formatação do telefone
-            const telefoneInput = document.getElementById('fone_usu');
-            if (telefoneInput) {
-                telefoneInput.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length <= 11) {
-                        value = value.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
-                    }
-                    e.target.value = value;
+            const cnpjInput = document.getElementById('cnpj_brecho');
+            if (cnpjInput) {
+                cnpjInput.addEventListener('input', function() {
+                    this.value = formatCNPJ(this.value);
                 });
             }
             
-            // Validação do formulário
+            const telefoneInput = document.getElementById('fone_usu');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/\D/g, '').substring(0, 11);
+                });
+            }
+            
             const form = document.getElementById('registerForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
-                    if (!validarFormulario()) {
+                    const senha = document.getElementById('senha_usu').value;
+                    const confirmarSenha = document.getElementById('confirmar_senha').value;
+                    
+                    if (senha !== confirmarSenha) {
+                        alert('As senhas não coincidem!');
                         e.preventDefault();
+                        return false;
+                    }
+                    
+                    if (senha.length < 6) {
+                        alert('A senha deve ter pelo menos 6 caracteres!');
+                        e.preventDefault();
+                        return false;
                     }
                 });
             }
         });
+        
+        function formatCEP(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{5})(\d)/, '$1-$2')
+                .replace(/(-\d{3})\d+?$/, '$1');
+        }
+        
+        function formatCNPJ(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{2})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1/$2')
+                .replace(/(\d{4})(\d)/, '$1-$2')
+                .replace(/(-\d{2})\d+?$/, '$1');
+        }
+        
+        function buscarCEP(cep) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro || '';
+                        document.getElementById('bairro').value = data.bairro || '';
+                        document.getElementById('cidade').value = data.localidade || '';
+                        document.getElementById('uf').value = data.uf || '';
+                    }
+                })
+                .catch(error => {
+                    console.log('Erro ao buscar CEP:', error);
+                });
+        }
+    </script>
+</body>
+</html>input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" maxlength="9" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.cep_usuario || '' %>" required>
+
+                                    <label for="logradouro_usuario">Endereço</label>
+                                    <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida..." 
+                                        value="<%= typeof valores !== 'undefined' && valores?.logradouro_usuario || '' %>" required>
+
+                                    <label for="numero_usuario">Número</label>
+                                    <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.numero_usuario || '' %>" maxlength="4" required>
+
+                                    <label for="bairro_usuario">Bairro</label>
+                                    <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Bairro" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.bairro_usuario || '' %>" required>
+
+                                    <label for="cidade_usuario">Cidade</label>
+                                    <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Cidade" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.cidade_usuario || '' %>" required>
+
+                                    <label for="uf_usuario">UF</label>
+                                    <input type="text" id="uf_usuario" name="uf_usuario" placeholder="SP" maxlength="2" 
+                                        value="<%= typeof valores !== 'undefined' && valores?.uf_usuario || '' %>" required>
+                                </section>
+                            </section>
+
+                            <button type="submit" name="submit" id="submit" class="submit-btn">Criar brechó</button>
+                        </form>
+                    </section>
+                </section>
+            </section>
+            
+
+        </section>
+    </main>
+
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.innerHTML = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.innerHTML = '▼';
+            }
+        }
+
+        // Inicializar seções abertas e configurar validações
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('brecho-info').style.display = 'block';
+            document.getElementById('security-info').style.display = 'block';
+            document.getElementById('address-info').style.display = 'block';
+            document.getElementById('brecho-arrow').innerHTML = '▲';
+            document.getElementById('security-arrow').innerHTML = '▲';
+            document.getElementById('address-arrow').innerHTML = '▲';
+            
+            // Formatação do CEP
+            const cepInput = document.getElementById('cep');
+            if (cepInput) {
+                cepInput.addEventListener('input', function() {
+                    this.value = formatCEP(this.value);
+                });
+                
+                cepInput.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        buscarCEP(cep);
+                    }
+                });
+            }
+            
+            // Formatação do CNPJ
+            const cnpjInput = document.getElementById('cnpj_brecho');
+            if (cnpjInput) {
+                cnpjInput.addEventListener('input', function() {
+                    this.value = formatCNPJ(this.value);
+                });
+            }
+            
+            // Telefone apenas números
+            const telefoneInput = document.getElementById('fone_usu');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/\D/g, '').substring(0, 11);
+                });
+            }
+            
+            // Preview da foto
+            const fotoInput = document.getElementById('foto_perfil');
+            if (fotoInput) {
+                fotoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    const preview = document.getElementById('photo-preview');
+                    
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // Validação de senha
+            const form = document.getElementById('registerForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const senha = document.getElementById('senha_usu').value;
+                    const confirmarSenha = document.getElementById('confirmar_senha').value;
+                    
+                    if (senha !== confirmarSenha) {
+                        alert('As senhas não coincidem!');
+                        e.preventDefault();
+                        return false;
+                    }
+                    
+                    if (senha.length < 6) {
+                        alert('A senha deve ter pelo menos 6 caracteres!');
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+        });
+        
+        function formatCEP(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{5})(\d)/, '$1-$2')
+                .replace(/(-\d{3})\d+?$/, '$1');
+        }
+        
+        function formatCNPJ(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{2})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1/$2')
+                .replace(/(\d{4})(\d)/, '$1-$2')
+                .replace(/(-\d{2})\d+?$/, '$1');
+        }
         
         function buscarCEP(cep) {
             fetch(`https://viacep.com.br/ws/${cep}/json/`)
