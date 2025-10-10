@@ -183,6 +183,26 @@
         </footer>
     </section>
 
+    <style>
+        /* Ajustes para imagem do produto */
+        .imagem-produto img {
+            max-width: 400px;
+            max-height: 500px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-image {
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    </style>
+
     <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado ? 'true' : 'false' %>;
         

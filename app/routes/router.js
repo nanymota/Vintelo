@@ -569,11 +569,17 @@ router.get('/finalizandocompra2', async function(req, res){
                     p.COR_PRODUTO,
                     p.ESTILO_PRODUTO,
                     p.ESTAMPA_PRODUTO,
-                    img.URL_IMG
+                    p.DESCRICAO_PRODUTO,
+                    p.CATEGORIA_PRODUTO,
+                    p.MARCA_PRODUTO,
+                    p.CONDICAO_PRODUTO,
+                    img.URL_IMG,
+                    u.NOME_USUARIO as VENDEDOR
                 FROM ITENS_SACOLA is
                 JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
                 JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
                 LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
                 WHERE s.ID_USUARIO = ?
                 GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
             `, [req.session.autenticado.id]);
@@ -589,7 +595,12 @@ router.get('/finalizandocompra2', async function(req, res){
                 cor: item.COR_PRODUTO,
                 estilo: item.ESTILO_PRODUTO,
                 estampa: item.ESTAMPA_PRODUTO,
-                tamanho: item.TAMANHO_PRODUTO
+                tamanho: item.TAMANHO_PRODUTO,
+                descricao: item.DESCRICAO_PRODUTO,
+                categoria: item.CATEGORIA_PRODUTO,
+                marca: item.MARCA_PRODUTO,
+                condicao: item.CONDICAO_PRODUTO,
+                vendedor: item.VENDEDOR
             }));
             console.log('Carrinho mapeado:', carrinho);
             

@@ -64,11 +64,15 @@
                 <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
                 <section class="product-info">
                     <h3><%= item.nome %></h3>
+                    <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
                     <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
                     <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
                     <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
                     <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                    <p>R$<%= item.preco.toFixed(2) %></p>
+                    <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                    <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                    <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                    <p class="preco">R$<%= item.preco.toFixed(2) %></p>
                     <section class="quantity-control">
                         <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
                         <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
@@ -192,11 +196,15 @@
                         <img src="<%= item.imagem %>" alt="<%= item.nome %>">
                         <section class="produto-info">
                             <h2><%= item.nome %></h2>
+                            <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
                             <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
                             <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
                             <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
                             <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                            <p>R$<%= item.preco.toFixed(2) %></p>
+                            <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
+                            <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
+                            <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
+                            <p class="preco">R$<%= item.preco.toFixed(2) %></p>
                             <section class="quantity-control-desktop">
                                 <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
                                 <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
@@ -590,6 +598,16 @@ function finalizarCompra() {
     background: none;
     border: none;
     cursor: pointer;
+}
+
+/* Ajustes para imagem desktop */
+@media (min-width: 768px) {
+    .produto-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
 }
 </style>
 
