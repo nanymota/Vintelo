@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border: none;
 }
 
 body {
@@ -38,14 +39,15 @@ main {
 }
 
 main h2 {
-  font-size: 250%;
+  font-size: 60px;
   color: #333;
   margin-bottom: 15px;
 }
 
 main p {
-  font-size: 35px;
+  font-size: 40px;
   color: #6666669c;
+  font-family: 'Raleway', sans-serif;
 }
 
 /*                 Formulário             */
@@ -95,7 +97,9 @@ p {
   color: #888;
   margin: 20px 0;
   position: relative;
+  font-family: 'Raleway', sans-serif;
 }
+
 .divider::before, .divider::after {
   content: '';
   width: 25%;
@@ -115,10 +119,12 @@ p {
   text-align: left;
 }
 .form-group label {
-  font-size: 20px;
-  color: #333;
+  font-size: 40px;
+  color: #7c7c7c;
   margin-bottom: 5px;
   display: block;
+  font-family: 'Raleway', sans-serif;
+
  
 }
 .form-group input {
@@ -127,8 +133,11 @@ p {
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 200%;
-  color: #333;
+  color: #7c7c7c;
+  font-family: 'Raleway', sans-serif;
 }
+
+
 .password-strength {
   font-size: 25px;
   color: green;
