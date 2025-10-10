@@ -274,47 +274,41 @@ router.get('/produto2', (req, res) => res.render('pages/produto2'));
 router.get('/produto3', (req, res) => res.render('pages/produto3'));
 router.get('/produto4', (req, res) => res.render('pages/produto4'));
 
-router.get('/carrinho', async function(req, res){
+router.get('/carrinho', verificarUsuAutenticado, async function(req, res){
     try {
-        let carrinho = [];
-        let subtotal = 0;
+        const [itensSacola] = await pool.query(`
+            SELECT 
+                is.QUANTIDADE,
+                is.VALOR_TOTAL,
+                p.ID_PRODUTO,
+                p.NOME_PRODUTO,
+                p.PRECO,
+                p.TAMANHO_PRODUTO,
+                p.COR_PRODUTO,
+                p.ESTILO_PRODUTO,
+                p.ESTAMPA_PRODUTO,
+                img.URL_IMG
+            FROM ITENS_SACOLA is
+            JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+            JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            WHERE s.ID_USUARIO = ?
+            GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
+        `, [req.session.autenticado.id]);
         
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            const [itensSacola] = await pool.query(`
-                SELECT 
-                    is.QUANTIDADE,
-                    is.VALOR_TOTAL,
-                    p.ID_PRODUTO,
-                    p.NOME_PRODUTO,
-                    p.PRECO,
-                    p.TAMANHO_PRODUTO,
-                    p.COR_PRODUTO,
-                    p.ESTILO_PRODUTO,
-                    p.ESTAMPA_PRODUTO,
-                    img.URL_IMG
-                FROM ITENS_SACOLA is
-                JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
-                JOIN PRODUTOS p ON is.ID_PRODUTO = p.ID_PRODUTO
-                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
-                WHERE s.ID_USUARIO = ?
-                GROUP BY is.ID_ITEM_SACOLA, p.ID_PRODUTO
-            `, [req.session.autenticado.id]);
-            
-            carrinho = itensSacola.map(item => ({
-                produto_id: item.ID_PRODUTO,
-                nome: item.NOME_PRODUTO,
-                preco: parseFloat(item.PRECO),
-                quantidade: item.QUANTIDADE,
-                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
-                cor: item.COR_PRODUTO,
-                estilo: item.ESTILO_PRODUTO,
-                estampa: item.ESTAMPA_PRODUTO,
-                tamanho: item.TAMANHO_PRODUTO
-            }));
-            
-            subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
-        }
+        const carrinho = itensSacola.map(item => ({
+            produto_id: item.ID_PRODUTO,
+            nome: item.NOME_PRODUTO,
+            preco: parseFloat(item.PRECO),
+            quantidade: item.QUANTIDADE,
+            imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+            cor: item.COR_PRODUTO,
+            estilo: item.ESTILO_PRODUTO,
+            estampa: item.ESTAMPA_PRODUTO,
+            tamanho: item.TAMANHO_PRODUTO
+        }));
         
+        const subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
@@ -323,16 +317,15 @@ router.get('/carrinho', async function(req, res){
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     } catch (error) {
-        console.log('Erro ao carregar carrinho:', error);
         res.render('pages/carrinho', {
             carrinho: [],
             subtotal: '0,00',
             frete: '0,00',
             total: '0,00',
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     }
 });
@@ -408,7 +401,7 @@ router.post('/adicionar',
     adicionarController.criarProduto
 );
 
-router.get('/blog', carregarDadosUsuario, (req, res) => res.render('pages/blog', { autenticado: req.session.autenticado || null }));
+router.get('/blog', verificarUsuAutenticado, carregarDadosUsuario, (req, res) => res.render('pages/blog', { autenticado: req.session.autenticado }));
 router.get('/artigo', (req, res) => res.render('pages/artigo'));
 router.get('/bossartigo', (req, res) => res.render('pages/bossartigo'));
 router.get('/gucciartigo', (req, res) => res.render('pages/gucciartigo'));
@@ -426,26 +419,30 @@ router.get('/pedidoconf', function(req, res){
 });
 router.get('/finalizandocompra1', (req, res) => res.render('pages/finalizandocompra1'));
 
-router.get('/finalizandocompra', async function(req, res){
+router.get('/finalizandocompra', verificarUsuAutenticado, async function(req, res){
     try {
         let produto = null;
         let subtotal = 0;
         const produtoId = req.query.produto;
         
-        if (!req.session || !req.session.autenticado) {
-            return res.redirect('/login');
-        }
-        
         if (produtoId) {
+            console.log('=== FINALIZANDO COMPRA - BUSCANDO PRODUTO ===');
+            console.log('Produto ID recebido:', produtoId);
+            
             const [produtos] = await pool.query(`
-                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.DESCRICAO_PRODUTO,
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.DETALHES_PRODUTO,
                        p.TAMANHO_PRODUTO, p.COR_PRODUTO, p.ESTILO_PRODUTO, p.ESTAMPA_PRODUTO,
-                       p.CATEGORIA_PRODUTO, p.MARCA_PRODUTO, p.CONDICAO_PRODUTO,
+                       p.TIPO_PRODUTO, p.CONDICAO_PRODUTO,
                        u.NOME_USUARIO as VENDEDOR
                 FROM PRODUTOS p 
                 JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
                 WHERE p.ID_PRODUTO = ? AND p.STATUS_PRODUTO = 'd'
             `, [produtoId]);
+            
+            console.log('Produtos encontrados:', produtos.length);
+            if (produtos.length > 0) {
+                console.log('Dados do produto:', JSON.stringify(produtos[0], null, 2));
+            }
             
             if (produtos.length > 0) {
                 const [imagens] = await pool.query(
@@ -463,12 +460,14 @@ router.get('/finalizandocompra', async function(req, res){
                     estilo: produtos[0].ESTILO_PRODUTO,
                     estampa: produtos[0].ESTAMPA_PRODUTO,
                     tamanho: produtos[0].TAMANHO_PRODUTO,
-                    descricao: produtos[0].DESCRICAO_PRODUTO,
-                    categoria: produtos[0].CATEGORIA_PRODUTO,
-                    marca: produtos[0].MARCA_PRODUTO,
+                    descricao: produtos[0].DETALHES_PRODUTO,
+                    categoria: produtos[0].TIPO_PRODUTO,
                     condicao: produtos[0].CONDICAO_PRODUTO,
                     vendedor: produtos[0].VENDEDOR
                 };
+                
+                console.log('Produto mapeado para template:', JSON.stringify(produto, null, 2));
+                subtotal = produto.preco;
                 
                 subtotal = produto.preco;
             }
@@ -477,9 +476,27 @@ router.get('/finalizandocompra', async function(req, res){
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
+        // Buscar produtos sugeridos
+        const [produtosSugeridos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, img.URL_IMG
+            FROM PRODUTOS p
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            WHERE p.STATUS_PRODUTO = 'd' AND p.ID_PRODUTO != ?
+            ORDER BY RAND()
+            LIMIT 4
+        `, [produtoId || 0]);
+        
+        const sugestoes = produtosSugeridos.map(item => ({
+            ID_PRODUTO: item.ID_PRODUTO,
+            NOME_PRODUTO: item.NOME_PRODUTO,
+            PRECO: item.PRECO,
+            imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png'
+        }));
+        
         res.render('pages/finalizandocompra', {
             carrinho: produto ? [produto] : [],
             produto: produto,
+            produtosSugeridos: sugestoes,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
@@ -902,29 +919,25 @@ router.get('/finalizandocompra2', async function(req, res){
         });
     }
 });
-router.get('/favoritos', carregarDadosUsuario, async function(req, res){
+router.get('/favoritos', verificarUsuAutenticado, carregarDadosUsuario, async function(req, res){
     try {
         let favoritosList = [];
-        
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            const [favoritos] = await pool.query(`
-                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO 
-                FROM FAVORITOS f 
-                JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
-                WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 'favoritado' AND f.TIPO_ITEM = 'produto'
-            `, [req.session.autenticado.id]);
-            favoritosList = favoritos;
-        }
+        const [favoritos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO 
+            FROM FAVORITOS f 
+            JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
+            WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 'favoritado' AND f.TIPO_ITEM = 'produto'
+        `, [req.session.autenticado.id]);
+        favoritosList = favoritos;
         
         res.render('pages/favoritos', {
             favoritos: favoritosList,
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     } catch (error) {
-        console.log('Erro ao buscar favoritos:', error);
         res.render('pages/favoritos', {
             favoritos: [],
-            autenticado: req.session.autenticado || { autenticado: false }
+            autenticado: req.session.autenticado
         });
     }
 });

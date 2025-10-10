@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
+ 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,206 +9,156 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script src="../../public/script/script.js"></script>
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-
+    <link rel="stylesheet" href="css/cadastro.css">
 </head>
-
+ 
 <body>
-
-    <section class="oculto-desktop">
-        <header>
-            <nav class="grid">
-                <a href="/homecomprador">
-                    <img src="imagens/seta.png" alt="Seta Voltar">
-                </a>
-                <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
-                    <img src="imagens/foto-branca.png" alt="carrinho" class="carrinho">
-            </nav>
-        </header>
+    <!-- Espaço rosa mobile -->
+    <section class="mobile-top-space">
+        <img src="imagens/logo.png" alt="Vintélo" class="mobile-logo">
     </section>
-
+   
     <main>
         <section class="container">
             <aside class="image-section">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
                 <img src="imagens/maniquim.png" alt="Mannequin" class="mannequin">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
             </aside>
-
+ 
             <section class="form-section">
-                <center>
-                    <h2>Bem-Vindo Administrador</h2>
-                </center>
-                <p>Insira os dados do perfil de Administrador</p>
-
-                <section class="profile-section">
-                    <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
-                    <section class="oculto-desktop">
-                        <button class="edit-icon" onclick="document.getElementById('profile-photo-input').click()">✎</button>
-                        <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
-                    </section>
+                <h2>Área do Administrador</h2>
+                <p>Faça login ou cadastre um novo administrador</p>
+ 
+                <!-- Abas -->
+                <section class="tabs">
+                    <button type="button" class="tab-button active" onclick="showTab('login')">Login</button>
+                    <button type="button" class="tab-button" onclick="showTab('cadastro')">Cadastro</button>
                 </section>
-
-                <br>
-                <form id="registerForm" action="/cadastroadm" method="post"  enctype="multipart/form-data">
-                    <section class="form-group">
-                        <label for="nomeusu_usu">Nome do Administrador</label>
-                        <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó">
-                    </section>
-
-                    <!-- Seção Informações Pessoais -->
-                    <section class="collapsible-section">
-                        <section class="section-header" onclick="toggleSection('personal-info')">
-                            <h3>Informações Pessoais</h3>
-                            <span class="arrow" id="personal-arrow">▼</span>
+ 
+                <!-- Formulário de Login -->
+                <section id="login-form" class="tab-content active">
+                    <form action="/login-admin" method="post">
+                        <section class="form-group">
+                            <label for="email_login">Email</label>
+                            <input type="email" id="email_login" name="email_usu" placeholder="Digite seu email" required>
                         </section>
-                        <section class="section-content" id="personal-info">
-                            <section class="form-group">
-                                <label for="email_usu">Endereço de email</label>
-                                <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="nome_usu">Nome Completo</label>
-                                <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="senha_usu">Senha</label>
-                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="senha_usu">Confirmar Senha</label>
-                                <input type="password" id="senha_usu" name="senha_usu" placeholder="Digite sua senha...">
-                            </section>
-
-                            <section class="form-group">
-                                <label for="fone_usu">Contato</label>
-                                <input type="tel" id="fone_usu" name="fone_usu" placeholder="(**) *****-****">
-                            </section>
+                        <section class="form-group">
+                            <label for="senha_login">Senha</label>
+                            <input type="password" id="senha_login" name="senha_usu" placeholder="Digite sua senha" required>
                         </section>
-                    </section>
-                    <br>
-                    <section class="oculto-desktop">
                         <button type="submit" class="create-button">Entrar</button>
+                    </form>
+                </section>
+ 
+                <!-- Formulário de Cadastro -->
+                <section id="cadastro-form" class="tab-content">
+                    <section class="profile-section">
+                        <img id="profile-img" src="imagens/imagem sem cadastro.avif" alt="Foto do Perfil" class="profile-img">
+                        <section class="oculto-desktop">
+                            <button type="button" class="edit-icon" onclick="document.getElementById('profile-photo-input').click()">✎</button>
+                            <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(this)">
+                        </section>
                     </section>
-                    <br>
-                    <section class="oculto-mobile">
-                        <button type="submit" id="btn-submit" class="create-button">Entrar</button>
-                    </section>
-                </form>
+ 
+                    <form id="registerForm" action="/cadastroadm" method="post" enctype="multipart/form-data">
+                        <section class="form-group">
+                            <label for="user_usuario">Nome de Usuário</label>
+                            <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="nome_usuario">Nome Completo</label>
+                            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="email_usuario">Email</label>
+                            <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="celular_usuario">Celular</label>
+                            <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" maxlength="15" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="cpf_adm">CPF</label>
+                            <input type="text" id="cpf_adm" name="cpf_adm" placeholder="000.000.000-00" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="senha_usuario">Senha</label>
+                            <input type="password" id="senha_usuario" name="senha_usuario" placeholder="Digite sua senha" required>
+                        </section>
+ 
+                        <section class="form-group">
+                            <label for="confirmar_senha">Confirmar Senha</label>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
+                        </section>
+ 
+                        <!-- Seção Endereço -->
+                        <section class="collapsible-section">
+                            <section class="section-header" onclick="toggleSection('address-info')">
+                                <h3>Endereço</h3>
+                                <span class="arrow" id="address-arrow">▼</span>
+                            </section>
+                            <section class="section-content" id="address-info">
+                                <section class="form-group">
+                                    <label for="cep_usuario">CEP</label>
+                                    <input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" required>
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="logradouro_usuario">Logradouro</label>
+                                    <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida, etc." required>
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="numero_usuario">Número</label>
+                                    <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" required>
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="complemento_usuario">Complemento</label>
+                                    <input type="text" id="complemento_usuario" name="complemento_usuario" placeholder="Apto, Bloco, etc.">
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="bairro_usuario">Bairro</label>
+                                    <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Nome do bairro" required>
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="cidade_usuario">Cidade</label>
+                                    <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Nome da cidade" required>
+                                </section>
+ 
+                                <section class="form-group">
+                                    <label for="uf_usuario">UF</label>
+                                    <select id="uf_usuario" name="uf_usuario" required>
+                                        <option value="">Selecione</option>
+                                        <option value="SP">SP</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="MG">MG</option>
+                                        <option value="RS">RS</option>
+                                        <option value="PR">PR</option>
+                                        <option value="SC">SC</option>
+                                        <option value="BA">BA</option>
+                                        <option value="GO">GO</option>
+                                        <option value="PE">PE</option>
+                                        <option value="CE">CE</option>
+                                    </select>
+                                </section>
+                            </section>
+                        </section>
+                        <button type="submit" class="create-button">Criar Administrador</button>
+                    </form>
+                </section>
             </section>
         </section>
     </main>
-
-    <script>
-        function handleProfilePhotoUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    document.getElementById('profile-img').src = e.target.result;
-                };
-                
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function toggleSection(sectionId) {
-            const content = document.getElementById(sectionId);
-            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
-            
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'block';
-                arrow.innerHTML = '▲';
-            } else {
-                content.style.display = 'none';
-                arrow.innerHTML = '▼';
-            }
-        }
-
-        function buscarCEP(cep) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('endereco').value = data.logradouro || '';
-                        document.getElementById('bairro').value = data.bairro || '';
-                        document.getElementById('cidade').value = data.localidade || '';
-                        document.getElementById('uf').value = data.uf || '';
-                    } else {
-                        alert('CEP não encontrado!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar CEP:', error);
-                    alert('Erro ao buscar CEP.');
-                });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('personal-info').style.display = 'none';
-            document.getElementById('address-info').style.display = 'none';
-            
-            const cepInput = document.getElementById('cep');
-            if (cepInput) {
-                cepInput.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 5) {
-                        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
-                    }
-                    e.target.value = value;
-                });
-                
-                cepInput.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCEP(cep);
-                    }
-                });
-            }
-        });
-    </script>
+ 
+    <script src="js/cadastroadm.js"></script>
    
 </body>
-
+ 
 </html>

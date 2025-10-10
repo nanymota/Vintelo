@@ -6,26 +6,7 @@
   <title>Vintélo - Finalizar Compra</title>
   <link rel="stylesheet" href="/css/finalizandocompra.css">
   <link rel="stylesheet" href="/css/finalizando2.css">
-  <style>
-    .text-left {
-      text-align: left !important;
-    }
-    .text-left h1, .text-left h3, .text-left p {
-      text-align: left !important;
-    }
-    .produto-container {
-      padding: 10px;
-    }
-    .preco p {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333;
-    }
-    .preco span {
-      font-size: 0.9em;
-      color: #666;
-    }
-  </style>
+
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
@@ -38,9 +19,13 @@
         </a>
         <h1>Finalizar Compra</h1>
         <% if (autenticado && autenticado.imagem) { %>
-          <img src="/<%= autenticado.imagem %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          <a href="/perfilcliente">
+            <img src="/<%= autenticado.imagem %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          </a>
         <% } else { %>
-          <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          <a href="/perfilcliente">
+            <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          </a>
         <% } %>
       </nav>
     </header>
@@ -53,17 +38,12 @@
                index === self.findIndex(i => i.produto_id === item.produto_id)); %>
           <% uniqueItems.forEach((item) => { %>
             <article class="product-card1" data-product-id="<%= item.produto_id %>">
-              <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img">
+              <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="product-img" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover;">
               <section class="produto-info">
                 <h3><%= item.nome %></h3>
-                <% if (item.descricao) { %><p class="descricao"><%= item.descricao %></p><% } %>
                 <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
                 <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
-                <% if (item.estampa) { %><p>Estampa: <%= item.estampa %></p><% } %>
                 <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
-                <% if (item.marca) { %><p>Marca: <%= item.marca %></p><% } %>
-                <% if (item.condicao) { %><p>Condição: <%= item.condicao %></p><% } %>
-                <% if (item.vendedor) { %><p>Vendedor: <%= item.vendedor %></p><% } %>
                 <p class="preco">R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
                 <section class="quantity-control">
                   <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
@@ -77,6 +57,20 @@
             </article>
           <% }) %>
         <% } %>
+      </section>
+
+      <!-- Shipping Section -->
+      <section class="shipping-section">
+        <h4>Calcular frete</h4>
+        <form class="shipping-form" onsubmit="return false;">
+          <input type="text" id="cep-mobile" placeholder="Digite seu CEP" maxlength="9">
+          <button type="button" onclick="calculateShipping()">Calcular</button>
+        </form>
+        <section class="shipping-options" id="shipping-options-mobile">
+          <p>Opções de entrega:</p>
+          <label><input type="radio" name="shipping-mobile" value="10.00" onchange="updateShipping(10.00)"> PAC - R$ 10,00 (5-7 dias)</label>
+          <label><input type="radio" name="shipping-mobile" value="15.00" onchange="updateShipping(15.00)"> SEDEX - R$ 15,00 (2-3 dias)</label>
+        </section>
       </section>
 
       <!-- Order Info -->
@@ -102,20 +96,34 @@
       <!-- Suggestions -->
       <section class="suggestions-section">
         <h4>Adicione mais à sacola</h4>
-        <ul class="product-list">
-          <li class="product-suggestion">
-            <img src="/imagens/conjunto.png" alt="Saia Branca">
-            <p>Saia Branca</p>
-            <p>R$25,00</p>
-            <button class="adicionar-compra">Adicionar</button>
-          </li>
-          <li class="product-suggestion">
-            <img src="/imagens/saia preta.png" alt="Saia Preta">
-            <p>Saia Preta</p>
-            <p>R$30,00</p>
-            <button class="adicionar-compra">Adicionar</button>
-          </li>
-        </ul>
+        <div class="carousel-container">
+          <ul class="product-list carousel-list">
+            <li class="product-suggestion">
+              <img src="/imagens/conjunto.png" alt="Saia Branca">
+              <p>Saia Branca</p>
+              <p>R$25,00</p>
+              <button class="adicionar-compra">Adicionar</button>
+            </li>
+            <li class="product-suggestion">
+              <img src="/imagens/saia preta.png" alt="Saia Preta">
+              <p>Saia Preta</p>
+              <p>R$30,00</p>
+              <button class="adicionar-compra">Adicionar</button>
+            </li>
+            <li class="product-suggestion">
+              <img src="/imagens/vestido branco.png" alt="Vestido Branco">
+              <p>Vestido Branco</p>
+              <p>R$35,00</p>
+              <button class="adicionar-compra">Adicionar</button>
+            </li>
+            <li class="product-suggestion">
+              <img src="/imagens/cropped rosa.png" alt="Cropped Rosa">
+              <p>Cropped Rosa</p>
+              <p>R$20,00</p>
+              <button class="adicionar-compra">Adicionar</button>
+            </li>
+          </ul>
+        </div>
         <a href="/favoritos" class="link-branco"><p class="favorites-link">Conferir peças favoritas ></p></a>
       </section>
 
@@ -146,7 +154,13 @@
           </form>
           <ul>
             <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
-            <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="img-tamanho"></a></li>
+            <li><a href="/perfilcliente">
+              <% if (autenticado && autenticado.imagem) { %>
+                <img src="/<%= autenticado.imagem %>" class="maria">
+              <% } else { %>
+                <img src="imagens/icone sem cadastro.png" class="img-tamanho">
+              <% } %>
+            </a></li>
             <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
           </ul>
         </section>
@@ -161,18 +175,16 @@
                index === self.findIndex(i => i.produto_id === item.produto_id)); %>
           <% uniqueItems.forEach((item) => { %>
             <section class="produto-card" data-product-id="<%= item.produto_id %>">
-              <img src="<%= item.imagem %>" alt="<%= item.nome %>" class="produto-img-desktop">
-              <section class="produto-info-desktop">
+              <img src="<%= item.imagem %>" alt="<%= item.nome %>" style="width: 120px; height: 120px; border-radius: 12px; object-fit: cover;">
+              <section class="produto-info">
                 <h2><%= item.nome || 'Produto não encontrado' %></h2>
-                <p class="preco-desktop">R$ <%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
-                <% if (item.cor) { %><p class="detalhe">Cor: <%= item.cor %></p><% } %>
-                <% if (item.tamanho) { %><p class="detalhe">Tamanho: <%= item.tamanho %></p><% } %>
-                <% if (item.estilo) { %><p class="detalhe">Estilo: <%= item.estilo %></p><% } %>
-                <% if (item.condicao) { %><p class="detalhe">Condição: <%= item.condicao %></p><% } %>
-                <% if (item.vendedor) { %><p class="detalhe">Vendedor: <%= item.vendedor %></p><% } %>
-                <section class="quantity-controls-desktop">
+                <% if (item.cor) { %><p>Cor: <%= item.cor %></p><% } %>
+                <% if (item.estilo) { %><p>Estilo: <%= item.estilo %></p><% } %>
+                <% if (item.tamanho) { %><p>Tamanho: <%= item.tamanho %></p><% } %>
+                <p class="preco">R$<%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %></p>
+                <section class="quantity-control-desktop">
                   <button class="qty-btn" onclick="decreaseQuantity('<%= item.produto_id %>')">-</button>
-                  <span class="qty-display" id="qty-desktop-<%= item.produto_id %>"><%= item.quantidade %></span>
+                  <span class="quantity" id="qty-<%= item.produto_id %>"><%= item.quantidade %></span>
                   <button class="qty-btn" onclick="increaseQuantity('<%= item.produto_id %>')">+</button>
                 </section>
               </section>
@@ -188,6 +200,20 @@
 
 
         <section class="pedido-info">
+          <!-- Cálculo de Frete Desktop -->
+          <section class="shipping-section">
+            <h4>Calcular frete</h4>
+            <form class="shipping-form" onsubmit="return false;">
+              <input type="text" id="cep-desktop" placeholder="Digite seu CEP" maxlength="9">
+              <button type="button" onclick="calculateShippingDesktop()">Calcular</button>
+            </form>
+            <section class="shipping-options" id="shipping-options-desktop">
+              <p>Opções de entrega:</p>
+              <label><input type="radio" name="shipping-desktop" value="10.00" onchange="updateShippingDesktop(10.00)"> PAC - R$ 10,00 (5-7 dias)</label>
+              <label><input type="radio" name="shipping-desktop" value="15.00" onchange="updateShippingDesktop(15.00)"> SEDEX - R$ 15,00 (2-3 dias)</label>
+            </section>
+          </section>
+          
           <h2>Informações do pedido</h2>
           <section class="pedido-detalhes">
             <section class="detalhe">
@@ -220,20 +246,27 @@
     <section class="produtos-ocultos">
       <h1 class="adicionar">Adicione mais à sacola</h1>
       <section class="product-grid">
-        <article class="product-card">
-          <img src="/imagens/oculos.png" alt="Óculos de sol">
-          <h2>Óculos de sol</h2>
-          <p class="price">R$12,00</p>
-          <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
-          <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
-        </article>
-        <article class="product-card">
-          <img src="/imagens/colar.png" alt="Conjunto 3 colares">
-          <h2>Conjunto 3 colares de prata</h2>
-          <p class="price">R$29,99</p>
-          <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
-          <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
-        </article>
+        <% if (produtosSugeridos && produtosSugeridos.length > 0) { %>
+          <% produtosSugeridos.forEach(produto => { %>
+            <article class="product-card">
+              <a href="/produto/<%= produto.ID_PRODUTO %>">
+                <img src="<%= produto.imagem %>" alt="<%= produto.NOME_PRODUTO %>">
+              </a>
+              <h2><%= produto.NOME_PRODUTO %></h2>
+              <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+              <button class="favorite" onclick="toggleFavorite('<%= produto.ID_PRODUTO %>')"><img src="/imagens/coraçao de fav2.png"></button>
+              <button class="cart" onclick="addToCartSuggestion('<%= produto.ID_PRODUTO %>')"><img src="/imagens/sacola.png" class="img-sacola"></button>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <article class="product-card">
+            <img src="/imagens/oculos.png" alt="Óculos de sol">
+            <h2>Óculos de sol</h2>
+            <p class="price">R$12,00</p>
+            <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
+            <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
+          </article>
+        <% } %>
       </section>
     </section>
 
@@ -253,28 +286,141 @@
   </section>
 
   <script>
-    function increaseQuantity(productId) {
-      const qtyElement = document.getElementById('qty-' + productId);
-      if (qtyElement) {
-        let currentQty = parseInt(qtyElement.textContent);
-        qtyElement.textContent = currentQty + 1;
-      }
-    }
-
-    function decreaseQuantity(productId) {
-      const qtyElement = document.getElementById('qty-' + productId);
-      if (qtyElement) {
-        let currentQty = parseInt(qtyElement.textContent);
-        if (currentQty > 1) {
-          qtyElement.textContent = currentQty - 1;
+    function increaseQuantity(produtoId) {
+      const quantityElement = document.getElementById('qty-' + produtoId);
+      const currentQuantity = parseInt(quantityElement.textContent);
+      const newQuantity = currentQuantity + 1;
+      
+      fetch('/atualizar-quantidade-sacola', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          quantityElement.textContent = newQuantity;
+          setTimeout(() => location.reload(), 500);
         }
+      });
+    }
+
+    function decreaseQuantity(produtoId) {
+      const quantityElement = document.getElementById('qty-' + produtoId);
+      const currentQuantity = parseInt(quantityElement.textContent);
+      
+      if (currentQuantity > 1) {
+        const newQuantity = currentQuantity - 1;
+        
+        fetch('/atualizar-quantidade-sacola', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            quantityElement.textContent = newQuantity;
+            setTimeout(() => location.reload(), 500);
+          }
+        });
       }
     }
 
-    function removeItem(productId) {
+    function removeItem(produtoId) {
       if (confirm('Deseja remover este item da sacola?')) {
-        location.reload();
+        fetch('/remover-item-sacola', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ produto_id: produtoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          }
+        });
       }
+    }
+
+    // Funções de cálculo de frete
+    function calculateShipping() {
+      const cep = document.getElementById('cep-mobile').value.replace(/\D/g, '');
+      if (cep.length === 8) {
+        document.getElementById('shipping-options-mobile').style.display = 'block';
+      } else {
+        alert('Digite um CEP válido com 8 dígitos!');
+      }
+    }
+
+    function calculateShippingDesktop() {
+      const cep = document.getElementById('cep-desktop').value.replace(/\D/g, '');
+      if (cep.length === 8) {
+        document.getElementById('shipping-options-desktop').style.display = 'block';
+      } else {
+        alert('Digite um CEP válido com 8 dígitos!');
+      }
+    }
+
+    function updateShipping(cost) {
+      document.getElementById('shipping-cost').textContent = 'R$' + cost.toFixed(2).replace('.', ',');
+      updateTotal();
+    }
+
+    function updateShippingDesktop(cost) {
+      updateShipping(cost);
+    }
+
+    function updateTotal() {
+      // Atualizar total com novo frete
+      setTimeout(() => location.reload(), 1000);
+    }
+
+    // Formatar CEP
+    document.addEventListener('DOMContentLoaded', function() {
+      const cepInputs = document.querySelectorAll('#cep-mobile, #cep-desktop');
+      cepInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 5) {
+            value = value.substring(0, 5) + '-' + value.substring(5, 8);
+          }
+          e.target.value = value;
+        });
+      });
+    });
+
+    // Funções para produtos sugeridos
+    function toggleFavorite(produtoId) {
+      fetch('/favoritar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto_id: produtoId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const btn = event.target.closest('button');
+          const img = btn.querySelector('img');
+          img.src = data.favorited ? '/imagens/coraçao de fav.png' : '/imagens/coraçao de fav2.png';
+        }
+      });
+    }
+
+    function addToCartSuggestion(produtoId) {
+      fetch('/adicionar-sacola', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto_id: produtoId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Produto adicionado à sacola!');
+        } else {
+          alert('Erro ao adicionar produto');
+        }
+      });
     }
   </script>
 </body>

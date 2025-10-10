@@ -25,7 +25,7 @@ verificarUsuAutenticado = (req, res, next) => {
     if (req.session && req.session.autenticado && req.session.autenticado.id) {
         next();
     } else {
-        return res.status(401).json({ success: false, message: 'Usuário não autenticado' });
+        return res.redirect('/cadastro');
     }
 }
 

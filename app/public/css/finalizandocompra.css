@@ -49,11 +49,12 @@
   
   header img {
     width: 50px;
-    height: auto;
+    height: 50px;
+    border-radius: 45px;
   }
   
   .header h2 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
   }
   
@@ -71,20 +72,33 @@
   
   .product-card1 {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
     background-color: #ffffff;
     border-radius: 15px;
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.274);
+    position: relative;
   }
   
   .lixeira{
-    width: 15%;
-    height: auto;
-    border-radius: 8px;
-    align-items: end;
+    width: 38px;
+    height: 38px;
+    opacity: 0.6;
+  }
+  
+  .remove-item {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .remove-item:hover .lixeira {
+    opacity: 1;
   }
 
   .lixeira2{
@@ -93,6 +107,8 @@
     border-radius: 8px;
     align-items: end;
   }
+
+
 /*                                                           barra de pesquisa                                                                */
 .top-bar {
   background-color: #7D2838;
@@ -153,7 +169,7 @@ nav.grid {
   display: grid;
   grid-template-columns: auto 1fr auto auto auto; 
   align-items: center;
-  gap: 80px; 
+  gap: 60px; 
   padding: 20px;
 }
 
@@ -178,24 +194,46 @@ nav.grid-2 a {
   }
 
   .product-img {
-    width: 25%;
-    height: auto;
+    width: 120px;
+    height: 150px;
     border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  
+  /* Mobile específico */
+  @media (max-width: 768px) {
+    .product-img {
+      width: 120px !important;
+      height: 150px !important;
+    }
   }
   
   .product-info {
-    flex-grow: 1;
-    margin-left: 16px;
+    flex: 1;
+    margin-left: 12px;
+    margin-right: 40px;
   }
   
   .product-info h3 {
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    color: #333;
+    font-weight: 600;
   }
   
   .product-info p {
-    font-size: 14px;
-    color: #888;
+    font-size: 13px;
+    color: #666;
+    margin: 2px 0;
+    line-height: 1.3;
+  }
+  
+  .product-info .preco {
+    font-size: 16px;
+    font-weight: bold;
+    color: #7b2f35;
+    margin: 8px 0 6px 0;
   }
   
   .delete-product {
@@ -234,6 +272,71 @@ nav.grid-2 a {
     margin-bottom: 16px;
   }
   
+  /* Seção de sugestões */
+  .suggestions-section {
+    padding: 16px 0;
+  }
+  
+  .suggestions-section h4 {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  /* Carrossel apenas para mobile */
+  .carousel-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .product-list {
+    display: flex;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .product-suggestion {
+    flex: 0 0 150px;
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .product-suggestion img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .product-suggestion p {
+    font-size: 14px;
+    margin: 4px 0;
+    color: #333;
+  }
+  
+  .product-suggestion p:last-of-type {
+    font-weight: bold;
+    color: #7b2f35;
+  }
+  
+  .favorites-link {
+    color: #7b2f35;
+    font-size: 14px;
+    margin-top: 12px;
+    text-decoration: underline;
+  }
+  
   .discount-input {
     display: flex;
     gap: 8px;
@@ -255,52 +358,67 @@ nav.grid-2 a {
     cursor: pointer;
   }
   
-  .suggestions-section {
+  /* Seção de cálculo de frete */
+  .shipping-section {
     padding: 16px 0;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
   }
   
-  .suggestions-section h4 {
+  .shipping-section h4 {
     font-size: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    color: #333;
   }
   
-  .product-list {
+  .shipping-form {
     display: flex;
-    gap: 16px;
-    padding: 10px;
-    overflow-x: auto;
+    gap: 8px;
+    margin-bottom: 10px;
   }
   
-  .product-suggestion {
-    text-align: center;
-    list-style: none;
+  .shipping-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .shipping-form button {
+    background: #7b2f35;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.274);
-  }
-  
-  .product-suggestion img {
-    width: auto;
-    border-radius: 8px;
-    margin-bottom: 8px;
-  }
-  
-  .product-suggestion p {
     font-size: 14px;
-    color: #888;
-    text-align: left;
   }
   
-  .favorites-link {
-    text-align: center;
-    color: #888;
-    margin-top: 16px;
-    cursor: pointer;
-    text-align: right;
+  .shipping-form button:hover {
+    background: #5a1e28;
   }
+  
+  .shipping-options {
+    margin-top: 10px;
+    display: none;
+  }
+  
+  .shipping-options p {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #666;
+  }
+  
+  .shipping-options label {
+    display: block;
+    margin: 5px 0;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+
   .finalize-button2{
     width: 100%;
     background-color: #7b2f35;
@@ -318,11 +436,22 @@ nav.grid-2 a {
     }
   }
   
-  .quantity-controls {
+  .quantity-control {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-top: 8px;
+  }
+  
+  .quantity-control .qty-btn {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+  }
+  
+  .quantity-control .quantity {
+    font-size: 14px;
+    min-width: 25px;
   }
   
   .quantity-controls-desktop {
@@ -362,24 +491,31 @@ nav.grid-2 a {
     border-radius: 4px;
   }
   
-  @media (min-width: 480px) {
-    .product-img {
-      width: 80px;
-      height: auto;
-    }
-  }
+
   
   @media (min-width: 768px) {
     .header {
       justify-content: space-between;
     }
   
-    .product-list {
-      justify-content: center;
-    }
-  
     .finalize-button {
       padding: 20px;
+    }
+    
+    /* Desktop - remover carrossel */
+    .carousel-container {
+      overflow: visible;
+    }
+    
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+    
+    .product-suggestion {
+      flex: none;
     }
   }
   
@@ -395,6 +531,120 @@ nav.grid-2 a {
   }
   
 
+
+/* Estilos adicionais da página */
+.text-left {
+  text-align: left !important;
+}
+
+.text-left h1, .text-left h3, .text-left p {
+  text-align: left !important;
+}
+
+.produto-container {
+  padding: 10px;
+}
+
+.preco p {
+  font-size: 17px;
+  font-weight: bold;
+  color: #333;
+}
+
+.preco span {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Estilos para melhor formatação */
+.produto-card {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Tamanho da imagem do produto no desktop */
+@media (min-width: 769px) {
+  .produto-card img {
+    width: 150px;
+    height: 170px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+}
+
+.produto-info {
+  flex: 1;
+}
+
+.produto-info h2 {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.produto-info p {
+  margin: 4px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.produto-info .preco {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #7b2f35;
+  margin: 8px 0;
+}
+
+.quantity-control-desktop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.qty-btn {
+  background: #7b2f35;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover {
+  background: #5a1e28;
+}
+
+.quantity {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.lixeira2 {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+
+.lixeira2:hover {
+  opacity: 1;
+}
 
 /*                                                      Rodapé                                                      */
 .footer {
