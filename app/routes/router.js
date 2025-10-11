@@ -374,7 +374,7 @@ router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
         res.render('pages/homevendedor', {
             brecho: brechoData,
             autenticado: req.session.autenticado,
-            produtos: produtos,
+            produtos: produtos || [],
             banners: banners
         });
     } catch (error) {
