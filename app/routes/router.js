@@ -2265,6 +2265,62 @@ router.get('/verificar-favorito/:produto_id', async function(req, res){
     }
 });
 
+// Rota de busca global
+router.get('/buscar', carregarDadosUsuario, async function(req, res){
+    try {
+        const termo = req.query.q || '';
+        let produtos = [];
+        let brechos = [];
+        
+        if (termo.trim()) {
+            // Buscar produtos
+            const [produtosResult] = await pool.query(`
+                SELECT p.*, img.URL_IMG, u.NOME_USUARIO as VENDEDOR
+                FROM PRODUTOS p
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+                WHERE p.STATUS_PRODUTO = 'd' AND (
+                    p.NOME_PRODUTO LIKE ? OR 
+                    p.TIPO_PRODUTO LIKE ? OR 
+                    p.COR_PRODUTO LIKE ? OR
+                    p.ESTILO_PRODUTO LIKE ?
+                )
+                GROUP BY p.ID_PRODUTO
+                LIMIT 20
+            `, [`%${termo}%`, `%${termo}%`, `%${termo}%`, `%${termo}%`]);
+            
+            // Buscar brechós
+            const [brechosResult] = await pool.query(`
+                SELECT u.NOME_USUARIO, u.IMG_URL, u.ID_USUARIO,
+                       COUNT(p.ID_PRODUTO) as total_produtos
+                FROM USUARIOS u
+                LEFT JOIN PRODUTOS p ON u.ID_USUARIO = p.ID_USUARIO AND p.STATUS_PRODUTO = 'd'
+                WHERE u.TIPO_USUARIO = 'b' AND u.NOME_USUARIO LIKE ?
+                GROUP BY u.ID_USUARIO
+                LIMIT 10
+            `, [`%${termo}%`]);
+            
+            produtos = produtosResult;
+            brechos = brechosResult;
+        }
+        
+        res.render('pages/buscar', {
+            termo: termo,
+            produtos: produtos,
+            brechos: brechos,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro na busca:', error);
+        res.render('pages/buscar', {
+            termo: req.query.q || '',
+            produtos: [],
+            brechos: [],
+            autenticado: req.session.autenticado || null
+        });
+    }
+});
+
 
 
 module.exports = router;
