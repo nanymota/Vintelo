@@ -358,7 +358,9 @@ router.get('/homecomprador', carregarDadosUsuario, async function(req, res){
 
 router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
     try {
+        const { produtoModel } = require('../models/produtoModel');
         const { bannerModel } = require('../models/bannerModel');
+        const produtos = await produtoModel.findRecent(8) || [];
         const banners = await bannerModel.findByPosition('Home') || [];
         const brechoData = req.session.brecho || {
             nome: 'Meu Brechó',
@@ -372,9 +374,11 @@ router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
         res.render('pages/homevendedor', {
             brecho: brechoData,
             autenticado: req.session.autenticado,
+            produtos: produtos,
             banners: banners
         });
     } catch (error) {
+        console.log('Erro ao buscar dados:', error);
         const brechoData = req.session.brecho || {
             nome: 'Meu Brechó',
             proprietario: 'Vendedor',
@@ -387,6 +391,7 @@ router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
         res.render('pages/homevendedor', {
             brecho: brechoData,
             autenticado: req.session.autenticado,
+            produtos: [],
             banners: []
         });
     }

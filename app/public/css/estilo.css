@@ -189,6 +189,7 @@ img[alt*="Usuário" i] {
   display: flex;
   z-index: 100001;
   position: relative;
+  box-shadow: none;
 }
 
 .hamburguer {

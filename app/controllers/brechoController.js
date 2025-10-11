@@ -50,9 +50,15 @@ const brechoController = {
             }),
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!")
-            .custom(async (value) => {
+            .custom(async (value, { req }) => {
                 const existe = await usuario.findCampoCustom('email_usuario', value);
-                if (existe > 0) throw new Error('E-mail já cadastrado');
+                if (existe > 0) {
+                    // Permitir se for o próprio usuário autenticado
+                    if (req.session && req.session.autenticado && req.session.autenticado.email === value) {
+                        return true;
+                    }
+                    throw new Error('E-mail já cadastrado');
+                }
                 return true;
             }),
         body("nome_usu")
@@ -131,12 +137,42 @@ const brechoController = {
         }
     },
 
-    mostrarFormulario: (req, res) => {
-        res.render("pages/criarbrecho", {
-            listaErros: null,
-            dadosNotificacao: null,
-            valores: {}
-        });
+    mostrarFormulario: async (req, res) => {
+        try {
+            let valores = {};
+            
+            if (req.session && req.session.autenticado && req.session.autenticado.id) {
+                const userDetails = await usuario.findId(req.session.autenticado.id);
+                if (userDetails && userDetails.length > 0) {
+                    const user = userDetails[0];
+                    valores = {
+                        nome_usu: user.NOME_USUARIO || '',
+                        email_usu: user.EMAIL_USUARIO || '',
+                        fone_usu: user.CELULAR_USUARIO || '',
+                        cep: user.CEP_USUARIO || '',
+                        endereco: user.LOGRADOURO_USUARIO || '',
+                        numero: user.NUMERO_USUARIO || '',
+                        bairro: user.BAIRRO_USUARIO || '',
+                        cidade: user.CIDADE_USUARIO || '',
+                        uf: user.UF_USUARIO || '',
+                        nomeusu_usu: user.USER_USUARIO || ''
+                    };
+                }
+            }
+            
+            res.render("pages/criarbrecho", {
+                listaErros: null,
+                dadosNotificacao: null,
+                valores: valores
+            });
+        } catch (error) {
+            console.error('Erro ao carregar formulário:', error);
+            res.render("pages/criarbrecho", {
+                listaErros: null,
+                dadosNotificacao: null,
+                valores: {}
+            });
+        }
     },
 
     mostrarInformacoes: async (req, res) => {
@@ -200,42 +236,57 @@ const brechoController = {
         };
 
         try {
-            console.log('Criando usuário com dados:', dadosUsuario);
-            const createUsuario = await usuario.create(dadosUsuario);
-            console.log('Resultado criação usuário:', createUsuario);
+            let userId;
             
-            if (createUsuario && createUsuario.insertId) {
-                console.log('Usuário criado com ID:', createUsuario.insertId);
+            if (req.session && req.session.autenticado && req.session.autenticado.id) {
+                // Usuário já autenticado - atualizar para tipo brechó
+                userId = req.session.autenticado.id;
+                console.log('Atualizando usuário existente ID:', userId);
                 
-                const dadosBrecho = {
-                    ID_USUARIO: createUsuario.insertId,
-                    CNPJ_BRECHO: req.body.cnpj_brecho ? req.body.cnpj_brecho.replace(/\D/g, '') : '',
-                    RAZAO_SOCIAL: req.body.razao_social ? sanitizeInput(req.body.razao_social.trim()) : sanitizeInput(req.body.nomeusu_usu.trim()),
-                    NOME_FANTASIA: sanitizeInput(req.body.nomeusu_usu.trim())
+                const dadosAtualizacao = {
+                    TIPO_USUARIO: 'b',
+                    USER_USUARIO: req.body.nomeusu_usu.trim(),
+                    NOME_USUARIO: req.body.nome_usu.trim(),
+                    CELULAR_USUARIO: req.body.fone_usu.replace(/\D/g, ''),
+                    LOGRADOURO_USUARIO: req.body.endereco.trim(),
+                    NUMERO_USUARIO: req.body.numero.trim(),
+                    BAIRRO_USUARIO: req.body.bairro.trim(),
+                    CIDADE_USUARIO: req.body.cidade.trim(),
+                    UF_USUARIO: req.body.uf.toUpperCase().trim(),
+                    CEP_USUARIO: req.body.cep.replace(/\D/g, '')
                 };
                 
-                console.log('Criando brechó com dados:', dadosBrecho);
-                const createBrecho = await brechoModel.create(dadosBrecho);
-                console.log('Resultado criação brechó:', createBrecho);
+                await usuario.update(dadosAtualizacao, userId);
+                req.session.autenticado.tipo = 'b';
+            } else {
+                // Criar novo usuário
+                console.log('Criando novo usuário com dados:', dadosUsuario);
+                const createUsuario = await usuario.create(dadosUsuario);
+                userId = createUsuario.insertId;
                 
                 req.session.autenticado = {
-                    id: createUsuario.insertId,
+                    id: userId,
                     nome: dadosUsuario.NOME_USUARIO,
                     email: dadosUsuario.EMAIL_USUARIO,
                     username: dadosUsuario.USER_USUARIO,
                     tipo: dadosUsuario.TIPO_USUARIO,
                     imagem: null
                 };
-
-                
-                console.log('Sessão criada:', req.session.autenticado);
-                
-                console.log('Redirecionando para /homevendedor');
-                res.redirect('/homevendedor');
-            } else {
-                console.log('Falha na criação do usuário - sem insertId');
-                throw new Error('Falha ao criar usuário');
             }
+            
+            const dadosBrecho = {
+                ID_USUARIO: userId,
+                CNPJ_BRECHO: req.body.cnpj_brecho ? req.body.cnpj_brecho.replace(/\D/g, '') : '',
+                RAZAO_SOCIAL: req.body.razao_social ? sanitizeInput(req.body.razao_social.trim()) : sanitizeInput(req.body.nomeusu_usu.trim()),
+                NOME_FANTASIA: sanitizeInput(req.body.nomeusu_usu.trim())
+            };
+            
+            console.log('Criando brechó com dados:', dadosBrecho);
+            const createBrecho = await brechoModel.create(dadosBrecho);
+            console.log('Resultado criação brechó:', createBrecho);
+            
+            console.log('Redirecionando para /homevendedor');
+            res.redirect('/homevendedor');
         } catch (error) {
             console.error('Erro ao criar brechó:', {
                 error: error.message,
