@@ -21,7 +21,7 @@ const processarPagamento = async (req, res) => {
                 }
             ],
             back_urls: {
-                success: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-sucesso`,
+                success: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pedidoconf`,
                 failure: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`,
                 pending: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`
             },
@@ -58,7 +58,7 @@ const pagamentoSucesso = (req, res) => {
         merchant_order_id
     });
     
-    res.render('pages/pagamentoSucesso', {
+    res.render('pages/pedidoconf', {
         autenticado: req.session.autenticado || null,
         payment_id,
         external_reference

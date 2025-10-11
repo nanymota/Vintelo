@@ -6,7 +6,21 @@
     <title>Vintélo</title>
     <link rel="stylesheet" href="css/produtos.css">
     <link rel="stylesheet" href="css/produtos2.css">
-
+    <style>
+        .text-left {
+            text-align: left !important;
+        }
+        .produto-container h1,
+        .produto-container p,
+        .produto-container span,
+        .descricao h1,
+        .descricao p,
+        .tamanho-disponivel h1,
+        .preco p,
+        .preco span {
+            text-align: left !important;
+        }
+    </style>
 
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
@@ -53,10 +67,6 @@
     </section>
        <section class="product-view">
     <main>
-         <center>
-            <img src="imagens/produto2.png" alt="Vestido branco" style="width: 80px; height: 80px; margin: 5px;">
-            <img src="imagens/fila-vestido-branco.png" alt="Fila vestido branco" style="width: 80px; height: 80px; margin: 5px;">
-         </center>
           <section class="produto-container">
             <h1>Vestido Branco Com Decote</h1>
             <section class="preco">
@@ -324,7 +334,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = '/finalizandocompra';
+                    window.location.href = '/finalizandocompra2';
                 } else {
                     alert('Erro ao adicionar produto');
                 }

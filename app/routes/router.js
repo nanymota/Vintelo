@@ -1020,6 +1020,8 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
             seguidores: 0
         };
         
+        let produtos = [];
+        
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
             const userDetails = await usuarioModel.findId(req.session.autenticado.id);
             
@@ -1031,6 +1033,25 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
                 userData.imagem = user.IMG_URL || null;
                 userData.user_usuario = user.USER_USUARIO || 'usuario';
             }
+            
+            // Buscar produtos do usuário
+            console.log('Buscando produtos para usuário ID:', req.session.autenticado.id);
+            const [produtosUsuario] = await pool.query(`
+                SELECT p.*, 
+                       COALESCE(img.URL_IMG, CONCAT('imagem/produtos/', p.ID_PRODUTO, '.jpg')) as URL_IMG
+                FROM PRODUTOS p
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                WHERE p.ID_USUARIO = ?
+                GROUP BY p.ID_PRODUTO
+                ORDER BY p.ID_PRODUTO DESC
+            `, [req.session.autenticado.id]);
+            
+            console.log('Produtos encontrados:', produtosUsuario.length);
+            if (produtosUsuario.length > 0) {
+                console.log('Primeiro produto:', JSON.stringify(produtosUsuario[0], null, 2));
+            }
+            produtos = produtosUsuario;
+            userData.itens_venda = produtos.length;
         }
         
         const brechoData = {
@@ -1045,6 +1066,7 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
         res.render('pages/perfilvender', {
             brecho: brechoData,
             usuario: userData,
+            produtos: produtos,
             autenticado: req.session.autenticado
         });
     } catch (error) {
@@ -1067,6 +1089,7 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
                 favoritos: 0,
                 avaliacoes: 0
             },
+            produtos: [],
             autenticado: req.session.autenticado
         });
     }

@@ -91,109 +91,73 @@
               </section>
             </section>
       
-            <section class="section">
+
+
+            <section class="payment-methods">
               <h2>Forma de pagamento</h2>
-              <section class="item payment-option" onclick="selectPayment(this)">
-                <img src="imagens/visa.png" alt="Visa" class="icon">
-                <span>Adicionar Cartão</span>
-                <img src="imagens/erro.png" alt="Erro" class="error-icon">
-              </section>
-              <section class="item payment-option" onclick="selectPayment(this)">
-                <img src="imagens/pix.png" alt="PIX" class="icon">
-                <span>PIX</span>
-                <img src="imagens/check.png" alt="Check" class="check-icon">
-              </section>
-              <section class="item payment-option" onclick="selectPayment(this)">
-                <img src="imagens/boleto.png" alt="Boleto" class="icon">
-                <span>Boleto</span>
-                <img src="imagens/check.png" alt="Check" class="check-icon">
+              <section class="payment-options">
+                <section class="payment-option" onclick="selectPayment(this)">
+                  <img src="imagens/pix.png" alt="PIX" class="icon">
+                  <span>PIX</span>
+                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
+                  <img src="imagens/erro.png" alt="Error" class="error-icon">
+                </section>
+                <section class="payment-option" onclick="selectPayment(this)">
+                  <img src="imagens/cartao.png" alt="Cartão" class="icon">
+                  <span>Cartão de Crédito</span>
+                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
+                  <img src="imagens/erro.png" alt="Error" class="error-icon">
+                </section>
+                <section class="payment-option" onclick="selectPayment(this)">
+                  <img src="imagens/boleto.png" alt="Boleto" class="icon">
+                  <span>Boleto Bancário</span>
+                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
+                  <img src="imagens/erro.png" alt="Error" class="error-icon">
+                </section>
               </section>
             </section>
 
-            <!-- MERCADO PAGO 
-             <section class="payment-form dark">
-  <section class="block-heading">
-    <h2>Checkout</h2>
-  </section>
-
-  <section class="products">
-    <h3>Resumo do pedido</h3>
-    <script>
-      let carrinho = [
-        { produto: "Produto A", qtd: 2, preco: 49.90 },
-        { produto: "Produto B", qtd: 1, preco: 89.90 },
-        { produto: "Produto C", qtd: 3, preco: 19.90 }
-      ];
-
-      let total = 0;
-      carrinho.forEach(item => {
-        total += item.qtd * item.preco;
-        document.write(`
-          <section class="item">
-            <span class="price">R$ ${item.preco.toFixed(2)}</span>
-            <span class="name">${item.produto}</span>
-            <span class="quantity">Qtd: ${item.qtd}</span>
-          </section>
-        `);
-      });
-
-      document.write(`
-        <section class="total">
-          <span>Total: R$ ${total.toFixed(2)}</span>
-        </section>
-      `);
-    </script>
-  </section>
-</section>
-            -->
-
-            <section class="payment-form dark">
-  <section class="block-heading">
-    <h2>Checkout</h2>
-  </section>
-
-  <section class="products">
-    <h3>Resumo do pedido</h3>
-    <% if (produto) { %>
-        <section class="item">
-            <span class="price">R$ <%= produto.preco.toFixed(2) %></span>
-            <span class="name"><%= produto.nome %></span>
-            <span class="quantity">Qtd: <%= produto.quantidade %></span>
-        </section>
-    <% } else { %>
-        <section class="item">
-            <span class="price">R$ 49.90</span>
-            <span class="name">Produto</span>
-            <span class="quantity">Qtd: 1</span>
-        </section>
-    <% } %>
-    <section class="total">
-        <span>Subtotal: R$ <%= subtotal || '49,90' %></span>
-    </section>
-    <section class="total">
-        <span>Frete: R$ <%= frete || '10,00' %></span>
-    </section>
-    <section class="total">
-        <span>Total: R$ <%= total || '59,90' %></span>
-    </section>
-  </section>
-</section>
+            <section class="payment-summary">
+              <h2>Resumo do pedido</h2>
+              <section class="summary-content">
+                <% if (produto) { %>
+                    <section class="summary-item">
+                        <span class="item-name"><%= produto.nome %></span>
+                        <span class="item-price">R$ <%= produto.preco.toFixed(2) %></span>
+                    </section>
+                    <section class="summary-item">
+                        <span>Quantidade: <%= produto.quantidade %></span>
+                    </section>
+                <% } else { %>
+                    <section class="summary-item">
+                        <span class="item-name">Produto</span>
+                        <span class="item-price">R$ 49,90</span>
+                    </section>
+                <% } %>
+                <hr class="divider">
+                <section class="summary-item">
+                    <span>Subtotal</span>
+                    <span>R$ <%= subtotal || '49,90' %></span>
+                </section>
+                <section class="summary-item">
+                    <span>Frete</span>
+                    <span>R$ <%= frete || '10,00' %></span>
+                </section>
+                <section class="summary-item total-line">
+                    <span>Total</span>
+                    <span>R$ <%= total || '59,90' %></span>
+                </section>
+              </section>
+            </section>
             
-            <section class="total">
-              <span>Total</span>
-              <span>R$<%= total || '59,99' %></span>
-            </section>
+
             <section class="oculto-mobile">
-              <!-- Container para o botão do Mercado Pago -->
-              <section id="walletBrick_container"></section>
-              <button class="finalize-button" onclick="processarPagamento()">Finalizar compra</button>
+              <button class="finalize-button" onclick="processarPagamento()">Pagar com Mercado Pago</button>
             </section>
           </section>
           </section>
           <section class="oculto-desktop">
-            <!-- Container para o botão do Mercado Pago -->
-            <section id="walletBrick_container_mobile"></section>
-            <button class="finalize-button" onclick="processarPagamento()">Finalizar compra</button>
+            <button class="finalize-button" onclick="processarPagamento()">Pagar com Mercado Pago</button>
           </main>
           </section>
     </main>
@@ -212,19 +176,6 @@
        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
   </section>
-
-    <!-- SDK do Mercado Pago -->
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script src="/js/pagamento.js"></script>orAll('.payment-option .error-icon').forEach(icon => {
-                icon.style.display = 'block';
-            });
-            
-            // Selecionar novo método
-            const checkIcon = element.querySelector('.check-icon');
-            const errorIcon = element.querySelector('.error-icon');
-            if (checkIcon) checkIcon.style.display = 'block';
-            if (errorIcon) errorIcon.style.display = 'none';
-        }
-    </script>
+    <script src="js/pagamento.js"></script>
 </body>
 </html>

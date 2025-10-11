@@ -406,16 +406,18 @@ input[type="range"]::-webkit-slider-thumb {
   .products-section {
     grid-template-columns: repeat(3, 1fr);
     flex-grow: 1;
-    padding: 20px 150px;
-    gap: 25px;
+    padding: 20px 50px;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 
 @media (min-width: 1024px) {
   .products-section {
-    grid-template-columns: repeat(5, 1fr);
-    padding: 20px 150px;
-    gap: 25px;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 20px 50px;
+    gap: 30px;
   }
 }
 
@@ -477,13 +479,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 @media (min-width: 768px) {
     .product-card img {
-        height: 350px;
+        height: 280px;
         border-radius: 12px;
         transition: transform 0.3s ease;
     }
     
     .product-card:hover img {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 }
 

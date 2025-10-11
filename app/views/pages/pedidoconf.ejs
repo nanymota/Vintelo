@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido Confirmado - Vintélo</title>
-    <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/pedidoconf.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
@@ -15,7 +14,7 @@
                 <p>10% OFF na primeira compra</p>
             </section>
             <section class="main-header">
-                <a href="/">
+                <a href="/homecomprador">
                     <img src="imagens/logo.png" alt="Logo Vintelo" class="img-logo">
                 </a>
                 <nav>
@@ -23,15 +22,15 @@
                     <a href="/categorias">Saias</a>
                     <a href="/categorias">Blusas</a>
                     <a href="/categorias">Calças</a>
-                    <a href="/categorias">Outros</a>
+                    <a href="/categorias">Categorias</a>
                 </nav>
                 <section class="search-profile">
                     <form>
                         <input type="text" placeholder="Buscar...">
                     </form>
                     <ul>
-                        <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Adicionar Brechó"></a></li>
-                        <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="img-tamanho" alt="Perfil"></a></li>
+                        <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                        <li><a href="/menu"><img src="imagens/icone sem cadastro.png" class="img-tamanho" alt="Perfil"></a></li>
                         <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                     </ul>
                 </section>
@@ -45,43 +44,112 @@
                 <a href="/homecomprador">
                     <img src="imagens/seta.png" alt="Voltar">
                 </a>
-                <img src="imagens/logo.png" alt="Logo">
-                <img src="imagens/foto-branca.png" alt="Placeholder">
+                <h1>Pedido Confirmado</h1>
+                <a href="/homecomprador">
+                    <img src="imagens/casa.png" alt="Home">
+                </a>
             </nav>
         </header>
     </section>
 
     <main>
-        <section class="success-container">
+        <section class="desktop-layout oculto-mobile">
+            <section class="success-container-desktop">
+                <section class="success-header">
+                    <div class="success-icon-large">✓</div>
+                    <h1 class="success-title-desktop">Pedido Confirmado!</h1>
+                    <p class="success-subtitle">Obrigado pela sua compra! Seu pedido foi processado com sucesso.</p>
+                </section>
+                
+                <section class="content-grid">
+                    <section class="order-summary">
+                        <h3>Resumo do Pedido</h3>
+                        <div class="summary-card">
+                            <div class="order-info">
+                                <div class="info-row">
+                                    <span class="label">Número do Pedido:</span>
+                                    <span class="value">#<%= Math.floor(Math.random() * 1000000) %></span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Data do Pedido:</span>
+                                    <span class="value"><%= new Date().toLocaleDateString('pt-BR') %></span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Status:</span>
+                                    <span class="value status-confirmed">Confirmado</span>
+                                </div>
+                                <div class="info-row total-row">
+                                    <span class="label">Total Pago:</span>
+                                    <span class="value total-value">R$ 59,90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="next-steps">
+                        <h3>Próximos Passos</h3>
+                        <div class="steps-card">
+                            <div class="step">
+                                <div class="step-icon">📧</div>
+                                <div class="step-content">
+                                    <h4>Confirmação por E-mail</h4>
+                                    <p>Você receberá um e-mail com os detalhes do seu pedido</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">📦</div>
+                                <div class="step-content">
+                                    <h4>Preparação</h4>
+                                    <p>Seu pedido será preparado em até 2 dias úteis</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">🚚</div>
+                                <div class="step-content">
+                                    <h4>Entrega</h4>
+                                    <p>Acompanhe o status da entrega pelo seu painel</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                
+                <section class="action-buttons">
+                    <a href="/minhascompras" class="btn btn-primary-large">
+                        <span class="btn-icon">📋</span>
+                        Ver Meus Pedidos
+                    </a>
+                    <a href="/homecomprador" class="btn btn-secondary-large">
+                        <span class="btn-icon">🛍️</span>
+                        Continuar Comprando
+                    </a>
+                </section>
+            </section>
+        </section>
+        
+        <!-- Layout Mobile (mantido) -->
+        <section class="success-container oculto-desktop">
             <div class="success-icon">✓</div>
             <h1 class="success-title">Pedido Confirmado!</h1>
             <p class="success-message">
-                Obrigado pela sua compra! Seu pedido foi processado com sucesso e você receberá um e-mail de confirmação em breve.
+                Obrigado pela sua compra! Seu pedido foi processado com sucesso.
             </p>
             
             <section class="order-details">
                 <h3>Detalhes do Pedido</h3>
                 <div class="order-item">
                     <span>Número do Pedido:</span>
-                    <span>#<%= pedido_id || Math.floor(Math.random() * 1000000) %></span>
+                    <span>#<%= Math.floor(Math.random() * 1000000) %></span>
                 </div>
                 <div class="order-item">
                     <span>Data:</span>
                     <span><%= new Date().toLocaleDateString('pt-BR') %></span>
                 </div>
                 <div class="order-item">
-                    <span>Método de Pagamento:</span>
-                    <span><%= metodo_pagamento || 'PIX' %></span>
-                </div>
-                <div class="order-item">
                     <span>Total:</span>
-                    <span>R$ <%= total || '59,99' %></span>
+                    <span>R$ 59,90</span>
                 </div>
             </section>
-            
-            <p class="success-message">
-                Você pode acompanhar o status do seu pedido na seção "Minhas Compras" do seu perfil.
-            </p>
             
             <section class="btn-group">
                 <a href="/minhascompras" class="btn btn-primary">Ver Meus Pedidos</a>
@@ -96,7 +164,7 @@
             <p class="p-footer">Siga nossas redes sociais</p>
             <ul class="social-links">
                 <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-                <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
+                <li><a href="https://pinterest.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
                 <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
             </ul>
         </section>

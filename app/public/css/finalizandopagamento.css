@@ -154,7 +154,7 @@ nav a {
   
   .item.selected {
     background-color: #e6f7ff;
-    border: 2px solid #4a90e2;
+    border: 2px solid #7D2838;
   }
   
   .total {
@@ -253,4 +253,139 @@ footer .newsletter {
   font-size: 15px;
   margin-top: 20px;
   color: #ffffffe7;
+}
+/* Estilos para o resumo do pedido melhorado */
+.payment-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.payment-summary h2 {
+    color: #7D2838;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.summary-item .item-name {
+    font-weight: 500;
+    color: #7D2838;
+}
+
+.summary-item .item-price {
+    font-weight: 600;
+    color: #7D2838;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 10px 0;
+}
+
+.total-line {
+    font-weight: 600;
+    font-size: 16px;
+    color: #7D2838;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    margin-top: 8px;
+}
+
+.finalize-button {
+    width: 100%;
+    background: #7D2838;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.finalize-button:hover {
+    background: #5a1e2a;
+}
+
+/* Estilos para as opções de pagamento */
+.payment-methods {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.payment-methods h2 {
+    color: #7D2838;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.payment-option:hover {
+    background-color: #e6f7ff;
+    border-color: #7D2838;
+}
+
+.payment-option.selected {
+    background-color: #e6f7ff;
+    border-color: #7D2838;
+}
+
+.payment-option .icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+}
+
+.payment-option span {
+    flex: 1;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.payment-option .check-icon,
+.payment-option .error-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
 }

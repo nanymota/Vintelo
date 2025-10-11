@@ -154,7 +154,7 @@
                   <% produtos.forEach(function(produto) { %>
                     <article class="product-card" data-category="<%= produto.TIPO_PRODUTO ? produto.TIPO_PRODUTO.toLowerCase() : 'outros' %>">
                         <a href="/produto/<%= produto.ID_PRODUTO %>">
-                            <img src="<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
+                            <img src="<%= produto.URL_IMG ? produto.URL_IMG : 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
                         </a>
                         <h2><%= produto.NOME_PRODUTO %></h2>
                         <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
@@ -189,6 +189,59 @@
 
     <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        
+        // Filtros e ordenação
+        function sortProducts(type) {
+            const products = document.querySelectorAll('.product-card');
+            const container = document.querySelector('.products-section');
+            const addItem = container.querySelector('.add-item');
+            const productsArray = Array.from(products);
+            
+            productsArray.sort((a, b) => {
+                const priceA = parseFloat(a.querySelector('.price').textContent.replace('R$', '').replace(',', '.'));
+                const priceB = parseFloat(b.querySelector('.price').textContent.replace('R$', '').replace(',', '.'));
+                
+                switch(type) {
+                    case 'price-low': return priceA - priceB;
+                    case 'price-high': return priceB - priceA;
+                    default: return 0;
+                }
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(addItem);
+            productsArray.forEach(product => container.appendChild(product));
+        }
+        
+        function filterByCategory(category) {
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                const productCategory = product.dataset.category || 'outros';
+                product.style.display = (category === 'todos' || productCategory === category) ? 'block' : 'none';
+            });
+        }
+        
+        function applyFilters() {
+            const activeCategory = document.querySelector('.category-btn.active')?.dataset.category || 'todos';
+            filterByCategory(activeCategory);
+        }
+        
+        function clearFilters() {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-category="todos"]').classList.add('active');
+            filterByCategory('todos');
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterByCategory(this.dataset.category);
+                });
+            });
+        });
     </script>
     <script src="/js/favoritos-global.js"></script>
     <script src="/js/carrinho-global.js"></script>
