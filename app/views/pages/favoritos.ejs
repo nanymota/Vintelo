@@ -11,7 +11,7 @@
 <body>
       <!-- Cabeçalho desktop -->
        <section class="oculto-mobile">
-        <header1>
+        <header>
           <section class="top-bar">
               <p class="banner">10% OFF na primeira compra</p>
           </section>
@@ -37,7 +37,7 @@
                       <% } else { %>
                           <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
                       <% } %>
-                      <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
+                      <li><a href="/favoritos"><img src="imagens/icone coração.png" class="img-tamanho"></a></li>
                   </ul>
               </section>
           </section>
@@ -70,11 +70,12 @@
   <main>
         <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
         <!-- Informações de lista -->
-        <section class="list-info">
-            <p class="favorite-text"> Favorite uma peça</p>
-        </section>
-        
-
+        <nav class="category-nav category-nav-mobile">
+            <br>
+            <span class="garimpe-text">Seus</span><br>
+            <span class="vintelo-text">Favoritos</span>
+            <br>
+        </nav>
         
         <!-- Layout com Sidebar (Desktop) -->
         <section class="container oculto-mobile">
@@ -143,63 +144,18 @@
                 <% if (typeof favoritos !== 'undefined' && favoritos && favoritos.length > 0) { %>
                     <% favoritos.forEach(function(favorito) { %>
                         <article class="product-card">
-                            <img src="<%= favorito.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= favorito.NOME_PRODUTO %>">
-                            <h2><%= favorito.NOME_PRODUTO %></h2>
+                            <a href="/produto/<%= favorito.ID_PRODUTO %>">
+                                <img src="<%= favorito.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= favorito.NOME_PRODUTO %>">
+                                <h2><%= favorito.NOME_PRODUTO %></h2>
+                            </a>
                             <p class="price">R$<%= favorito.PRECO_PRODUTO %></p>
                             <p class="descricao">ou em 2x de R$<%= (favorito.PRECO_PRODUTO / 2).toFixed(2) %></p>
-                            <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                            <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                             <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
                 <% } else { %>
-                    <article class="product-card">
-                        <img src="imagens/conjunto.png" alt="Saia Branca">
-                        <h2>Saia Branca</h2>
-                        <p class="price">R$25,00</p>
-                        <p class="descricao">ou em 2x de R$12,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 1)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
-                        <h2>Saia Preta Com Brilho</h2>
-                        <p class="price">R$30,00</p>
-                        <p class="descricao">ou em 2x de R$15,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 2)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia marrom.png" alt="Saia Marrom">
-                        <h2>Saia De Veludo Marrom</h2>
-                        <p class="price">R$25,00</p>
-                        <p class="descricao">ou em 2x de R$12,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 3)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/calça reta.png" alt="Calça Jeans">
-                        <h2>Calça Reta Jeans Clara</h2>
-                        <p class="price">R$49,99</p>
-                        <p class="descricao">ou em 2x de R$25,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 4)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
-                        <h2>Conjunto saia preta c/ brilho + Top preto</h2>
-                        <p class="price">R$57,00</p>
-                        <p class="descricao">ou em 3x de R$19,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 5)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/vestido pink.png" alt="Vestido Rosa">
-                        <h2>Vestido rosa longo</h2>
-                        <p class="price">R$15,00</p>
-                        <p class="descricao">ou em 2x de R$7,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 6)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
+                    <p>Nenhum favorito encontrado</p>
                 <% } %>
             </section>
         </section>
@@ -210,63 +166,18 @@
                 <% if (typeof favoritos !== 'undefined' && favoritos && favoritos.length > 0) { %>
                     <% favoritos.forEach(function(favorito) { %>
                         <article class="product-card">
-                            <img src="<%= favorito.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= favorito.NOME_PRODUTO %>">
-                            <h2><%= favorito.NOME_PRODUTO %></h2>
+                            <a href="/produto/<%= favorito.ID_PRODUTO %>">
+                                <img src="<%= favorito.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= favorito.NOME_PRODUTO %>">
+                                <h2><%= favorito.NOME_PRODUTO %></h2>
+                            </a>
                             <p class="price">R$<%= favorito.PRECO_PRODUTO %></p>
                             <p class="descricao">ou em 2x de R$<%= (favorito.PRECO_PRODUTO / 2).toFixed(2) %></p>
-                            <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                            <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                             <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
                 <% } else { %>
-                    <article class="product-card">
-                        <img src="imagens/conjunto.png" alt="Saia Branca">
-                        <h2>Saia Branca</h2>
-                        <p class="price">R$25,00</p>
-                        <p class="descricao">ou em 2x de R$12,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 1)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia preta brilhante.png" alt="Saia Preta">
-                        <h2>Saia Preta Com Brilho</h2>
-                        <p class="price">R$30,00</p>
-                        <p class="descricao">ou em 2x de R$15,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 2)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia marrom.png" alt="Saia Marrom">
-                        <h2>Saia De Veludo Marrom</h2>
-                        <p class="price">R$25,00</p>
-                        <p class="descricao">ou em 2x de R$12,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 3)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/calça reta.png" alt="Calça Jeans">
-                        <h2>Calça Reta Jeans Clara</h2>
-                        <p class="price">R$49,99</p>
-                        <p class="descricao">ou em 2x de R$25,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 4)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/saia preta brilhante.png" alt="Conjunto Preto">
-                        <h2>Conjunto saia preta c/ brilho + Top preto</h2>
-                        <p class="price">R$57,00</p>
-                        <p class="descricao">ou em 3x de R$19,00</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 5)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
-                    <article class="product-card">
-                        <img src="imagens/vestido pink.png" alt="Vestido Rosa">
-                        <h2>Vestido rosa longo</h2>
-                        <p class="price">R$15,00</p>
-                        <p class="descricao">ou em 2x de R$7,50</p>
-                        <button class="favorite" onclick="toggleFavorite(this, 6)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
-                    </article>
+                    <p>Nenhum favorito encontrado</p>
                 <% } %>
             </section>
         </section>
