@@ -1,136 +1,309 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Vintélo - Estatísticas</title>
-  <link rel="stylesheet" href="css/estatistica.css">
-  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo - Estatísticas</title>
+    <link rel="stylesheet" href="css/estatistica.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
-  <!-- Cabeçalho Mobile -->
-  <header class="mobile-header">
-    <nav class="grid">
-      <a href="/homevendedor">
-        <img src="imagens/seta.png" alt="Voltar">
-      </a>
-      <img src="imagens/logo.png" alt="Logo">
-      <a href="/carrinho">
-        <img src="imagens/carrinho.png" alt="Carrinho">
-      </a>
-    </nav>
-  </header>
+    <!-- Header Mobile -->
+    <header class="header-mobile">
+        <nav>
+            <a href="/homevendedor">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo">
+            <a href="/menuvendedor">
+                <img src="<%= (estatisticas && estatisticas.brecho && estatisticas.brecho.IMAGEM_BRECHO) || '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil">
+            </a>
+        </nav>
+    </header>
 
-  <!-- Cabeçalho Desktop -->
-  <section class="desktop-header">
-    <section class="top-bar">
-      <p>10% OFF na primeira compra</p>
-    </section>
-    <section class="main-header">
-      <a href="/homevendedor">
-        <img src="imagens/logo.png" class="img-logo">
-      </a>
-      <nav>
-        <a href="/categorias">Vestidos</a>
-        <a href="/categorias">Saias</a>
-        <a href="/categorias">Blusas</a>
-        <a href="/categorias">Calças</a>
-        <a href="/categorias">Outros</a>
-      </nav>
-      <section class="search-profile">
-        <form>
-          <input type="text" placeholder="Buscar...">
-        </form>
-        <ul>
-          <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
-          <li><a href="/menuvendedor"><img src="imagens/icone sem cadastro.png" class="img-tamanho"></a></li>
-          <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
-        </ul>
-      </section>
-    </section>
-  </section>
+    <!-- Header Desktop -->
+    <header class="header-desktop">
+        <div class="top-bar">
+            <p>10% OFF na primeira compra</p>
+        </div>
+        <div class="main-nav">
+            <a href="/homevendedor">
+                <img src="imagens/logo.png" class="logo">
+            </a>
+            <nav>
+                <a href="/categorias">Vestidos</a>
+                <a href="/categorias">Saias</a>
+                <a href="/categorias">Blusas</a>
+                <a href="/categorias">Calças</a>
+                <a href="/categorias">Outros</a>
+            </nav>
+            <div class="nav-icons">
+                <input type="text" placeholder="Buscar...">
+                <a href="/adicionar"><img src="imagens/add brecho.png"></a>
+                <a href="/menuvendedor"><img src="<%= (estatisticas && estatisticas.brecho && estatisticas.brecho.IMAGEM_BRECHO) || '/imagens/icone sem cadastro.png' %>"></a>
+                <a href="/favoritos"><img src="imagens/icone coraçao.png"></a>
+            </div>
+        </div>
+    </header>
 
-  <main>
-    <h1 class="titulo">Dashboard de Vendas</h1>
-    <section class="dashboard">
-      <section class="stats-card">
-        <h3>Receita Total</h3>
-        <section class="stats-value">R$ 12.450</section>
-        <section class="stats-change">+15% este mês</section>
-      </section>
-      <section class="stats-card">
-        <h3>Produtos Vendidos</h3>
-        <section class="stats-value">89</section>
-        <section class="stats-change">+8% este mês</section>
-      </section>
-      <section class="stats-card">
-        <h3>Visualizações</h3>
-        <section class="stats-value">1.234</section>
-        <section class="stats-change">+22% este mês</section>
-      </section>
-      <section class="stats-card">
-        <h3>Taxa Conversão</h3>
-        <section class="stats-value">7.2%</section>
-        <section class="stats-change negative">-2% este mês</section>
-      </section>
-      <section class="chart-container">
-        <h3>Vendas por Categoria</h3>
-        <section class="bar-chart">
-          <section class="bar" style="height: 80%;">
-            <span class="bar-value">32</span>
-            <span class="bar-label">Vestidos</span>
-          </section>
-          <section class="bar" style="height: 60%;">
-            <span class="bar-value">24</span>
-            <span class="bar-label">Blusas</span>
-          </section>
-          <section class="bar" style="height: 45%;">
-            <span class="bar-value">18</span>
-            <span class="bar-label">Saias</span>
-          </section>
-          <section class="bar" style="height: 35%;">
-            <span class="bar-value">14</span>
-            <span class="bar-label">Calças</span>
-          </section>
-        </section>
-      </section>
-      <section class="chart-container">
-        <h3>Distribuição de Receita</h3>
-        <section class="pie-chart">
-          <section class="pie-center">100%</section>
-        </section>
-        <section class="pie-legend">
-          <section class="legend-item">
-            <section class="legend-color" style="background: #8c2b44;"></section>
-            <span>Vestidos (40%)</span>
-          </section>
-          <section class="legend-item">
-            <section class="legend-color" style="background: #a64d61;"></section>
-            <span>Blusas (30%)</span>
-          </section>
-          <section class="legend-item">
-            <section class="legend-color" style="background: #c96d7e;"></section>
-            <span>Saias (20%)</span>
-          </section>
-          <section class="legend-item">
-            <section class="legend-color" style="background: #e8a5b0;"></section>
-            <span>Outros (10%)</span>
-          </section>
-        </section>
-      </section>
-    </section>
-  </main>
+    <main>
+        <h1>Dashboard - <%= (estatisticas && estatisticas.brecho && estatisticas.brecho.NOME_BRECHO) || 'Meu Brechó' %></h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card" onclick="showSection('vendas')">
+                <h3>Produtos Vendidos</h3>
+                <div class="value"><%= (estatisticas && estatisticas.totalVendas) || 12 %></div>
+                <div class="change">+8% este mês</div>
+            </div>
+            
+            <div class="stat-card" onclick="showSection('visualizacoes')">
+                <h3>Visualizações</h3>
+                <div class="value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 150 %></div>
+                <div class="change">+22% este mês</div>
+            </div>
+            
+            <div class="stat-card" onclick="showSection('conversao')">
+                <h3>Taxa Conversão</h3>
+                <div class="value"><%= (estatisticas && estatisticas.taxaConversao) || 8.0 %>%</div>
+                <div class="change">+2% este mês</div>
+            </div>
+        </div>
 
-  <footer class="footer">
-    <img src="imagens/logo2.jpeg" alt="Logo" class="footer-image">
-    <section class="social-media">
-      <p class="p-footer">Siga nossas redes sociais</p>
-      <ul class="social-links">
-        <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-        <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
-        <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
-      </ul>
-    </section>
-    <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
-  </footer>
+        <div class="charts-grid" id="charts-section">
+            <div class="chart-card">
+                <h3>Vendas por Categoria</h3>
+                <div class="bar-chart">
+                    <% if (estatisticas && estatisticas.vendasCategoria && estatisticas.vendasCategoria.length > 0) { %>
+                        <% estatisticas.vendasCategoria.forEach(function(categoria, index) { %>
+                            <div class="bar" style="height: <%= 80 - (index * 15) %>%;">
+                                <span class="bar-value"><%= categoria.quantidade %></span>
+                                <span class="bar-label"><%= categoria.categoria %></span>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="bar" style="height: 80%;">
+                            <span class="bar-value">5</span>
+                            <span class="bar-label">Vestidos</span>
+                        </div>
+                        <div class="bar" style="height: 60%;">
+                            <span class="bar-value">4</span>
+                            <span class="bar-label">Blusas</span>
+                        </div>
+                        <div class="bar" style="height: 45%;">
+                            <span class="bar-value">3</span>
+                            <span class="bar-label">Saias</span>
+                        </div>
+                        <div class="bar" style="height: 35%;">
+                            <span class="bar-value">2</span>
+                            <span class="bar-label">Calças</span>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3>Distribuição de Receita</h3>
+                <div class="pie-chart">
+                    <div class="pie-center">100%</div>
+                </div>
+                <div class="pie-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #8c2b44;"></div>
+                        <span>Vestidos (40%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #a64d61;"></div>
+                        <span>Blusas (30%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #c96d7e;"></div>
+                        <span>Saias (20%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e8a5b0;"></div>
+                        <span>Outros (10%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seções Detalhadas -->
+        <section id="vendas" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Detalhes dos Produtos</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Total Cadastrados</h4>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
+                        <p>Produtos no seu brechó</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Vendas Realizadas</h4>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                        <p>Produtos vendidos</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Disponíveis</h4>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
+                        <p>Produtos à venda</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 10 produtos cadastrados</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalProdutos) || 0)/10*100, 100) %>%;"></div>
+                    </div>
+                    <p><%= Math.min(((estatisticas && estatisticas.totalProdutos) || 0)/10*100, 100).toFixed(0) %>% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="visualizacoes" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Detalhes das Visualizações</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Produtos Ativos</h4>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                        <p>Produtos disponíveis</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Visualizações</h4>
+                        <div class="detail-value">0</div>
+                        <p>Acessos aos produtos</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Alcance</h4>
+                        <div class="detail-value">0</div>
+                        <p>Pessoas alcançadas</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 20 produtos ativos</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/20*100, 100) %>%;"></div>
+                    </div>
+                    <p><%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/20*100, 100).toFixed(0) %>% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conversao" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Detalhes da Performance</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Visitantes</h4>
+                        <div class="detail-value">0</div>
+                        <p>Pessoas que visitaram</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Vendas</h4>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                        <p>Conversões realizadas</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Taxa</h4>
+                        <div class="detail-value">0%</div>
+                        <p>Percentual de conversão</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Performance</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <p>Aguardando primeiras vendas para calcular taxa</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <img src="imagens/logo2.jpeg" alt="Logo">
+        <div class="social">
+            <p>Siga nossas redes sociais</p>
+            <div class="social-links">
+                <a href="https://facebook.com" target="_blank"><img src="imagens/Facebook.png" alt="Facebook"></a>
+                <a href="https://twitter.com" target="_blank"><img src="imagens/Pinterest.png" alt="Pinterest"></a>
+                <a href="https://www.instagram.com/vintelobrechos" target="_blank"><img src="imagens/Instagram.png" alt="Instagram"></a>
+            </div>
+        </div>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+
+    
+    <script>
+        // Animar contadores
+        function animateCounters() {
+            const counters = document.querySelectorAll('.value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = counter.textContent.replace(/[0-9,]+/, target.toLocaleString());
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = counter.textContent.replace(/[0-9,]+/, Math.floor(current).toLocaleString());
+                    }
+                }, 40);
+            });
+        }
+        
+        // Adicionar interatividade às barras
+        function addBarInteractivity() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.addEventListener('click', function() {
+                    const value = this.querySelector('.bar-value').textContent;
+                    const label = this.querySelector('.bar-label').textContent;
+                    alert(`${label}: ${value} vendas`);
+                });
+            });
+        }
+        
+        // Adicionar interatividade ao gráfico pizza
+        function addPieInteractivity() {
+            const pieChart = document.querySelector('.pie-chart');
+            if (pieChart) {
+                pieChart.addEventListener('click', function() {
+                    alert('Distribuição de receita por categoria');
+                });
+            }
+        }
+        
+        // Mostrar seção específica
+        function showSection(sectionId) {
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Esconder todas as seções
+        function hideAllSections() {
+            const sections = document.querySelectorAll('.detail-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(animateCounters, 500);
+            addBarInteractivity();
+            addPieInteractivity();
+        });
+    </script>
 </body>
 </html>

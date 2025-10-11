@@ -1555,7 +1555,130 @@ router.post('/verificarsenha', function(req, res){
     });
 })
 
-router.get('/estatistica', carregarDadosUsuario, (req, res) => res.render('pages/estatistica', { autenticado: req.session.autenticado || null }));
+router.get('/estatistica', carregarDadosUsuario, async (req, res) => {
+    try {
+        let estatisticas = {
+            brecho: { NOME_BRECHO: 'Meu Brechó', IMAGEM_BRECHO: null },
+            totalProdutos: 0,
+            totalVendas: 0,
+            receitaTotal: 0,
+            totalVisualizacoes: 0,
+            taxaConversao: 0,
+            vendasCategoria: [],
+            produtosMaisVendidos: [],
+            vendasRecentes: [],
+            produtosPorCategoria: {},
+            receitaPorCategoria: {},
+            produtosDetalhes: []
+        };
+        
+        if (req.session.autenticado && req.session.autenticado.id) {
+            const userId = req.session.autenticado.id;
+            
+            // Buscar produtos do usuário
+            const [produtos] = await pool.query(
+                'SELECT COUNT(*) as total FROM PRODUTOS WHERE ID_USUARIO = ?',
+                [userId]
+            );
+            
+            // Buscar produtos por categoria
+            const [produtosCategorias] = await pool.query(
+                `SELECT TIPO_PRODUTO, COUNT(*) as quantidade, 
+                        AVG(PRECO) as preco_medio, SUM(PRECO) as receita_total
+                 FROM PRODUTOS WHERE ID_USUARIO = ? 
+                 GROUP BY TIPO_PRODUTO`,
+                [userId]
+            );
+            
+            // Buscar detalhes dos produtos
+            const [produtosDetalhes] = await pool.query(
+                `SELECT NOME_PRODUTO, PRECO, TIPO_PRODUTO, 
+                        DATE(DATA_CADASTRO) as data_cadastro
+                 FROM PRODUTOS WHERE ID_USUARIO = ? 
+                 ORDER BY DATA_CADASTRO DESC LIMIT 10`,
+                [userId]
+            );
+            
+            estatisticas.totalProdutos = produtos[0]?.total || 0;
+            estatisticas.brecho.NOME_BRECHO = req.session.autenticado.nome + ' Brechó';
+            estatisticas.produtosDetalhes = produtosDetalhes;
+            
+            // Processar dados por categoria
+            let totalReceita = 0;
+            produtosCategorias.forEach(cat => {
+                totalReceita += parseFloat(cat.receita_total || 0);
+                estatisticas.produtosPorCategoria[cat.TIPO_PRODUTO] = cat.quantidade;
+                estatisticas.receitaPorCategoria[cat.TIPO_PRODUTO] = parseFloat(cat.receita_total || 0);
+            });
+            
+            estatisticas.receitaTotal = totalReceita;
+            estatisticas.totalVisualizacoes = estatisticas.totalProdutos;
+            estatisticas.totalVendas = 0;
+            estatisticas.taxaConversao = estatisticas.totalVisualizacoes > 0 
+                ? ((estatisticas.totalVendas / estatisticas.totalVisualizacoes) * 100).toFixed(1)
+                : 0;
+            
+            estatisticas.vendasCategoria = produtosCategorias.map(cat => ({
+                categoria: cat.TIPO_PRODUTO || 'Outros',
+                quantidade: cat.quantidade,
+                receita: parseFloat(cat.receita_total || 0)
+            }));
+        }
+        
+        res.render('pages/estatistica', { autenticado: req.session.autenticado, estatisticas });
+    } catch (error) {
+        console.log('Erro ao carregar estatísticas:', error);
+        const estatisticas = {
+            brecho: { NOME_BRECHO: 'Meu Brechó', IMAGEM_BRECHO: null },
+            totalProdutos: 0,
+            totalVendas: 0,
+            receitaTotal: 0,
+            totalVisualizacoes: 0,
+            taxaConversao: 0,
+            vendasCategoria: [],
+            produtosMaisVendidos: [],
+            vendasRecentes: [],
+            produtosPorCategoria: {},
+            receitaPorCategoria: {},
+            produtosDetalhes: []
+        };
+        res.render('pages/estatistica', { autenticado: req.session.autenticado, estatisticas });
+    }
+});
+
+router.get('/estatisticaadm', async (req, res) => {
+    try {
+        // Buscar estatísticas gerais da plataforma
+        const [totalUsuarios] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS');
+        const [totalBrechos] = await pool.query('SELECT COUNT(*) as total FROM BRECHOS');
+        const [totalProdutos] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS');
+        const [totalVendas] = await pool.query('SELECT COUNT(*) as total FROM PEDIDOS WHERE STATUS_PEDIDO = "finalizado"');
+        const [receitaTotal] = await pool.query('SELECT SUM(VALOR_TOTAL) as receita FROM PEDIDOS WHERE STATUS_PEDIDO = "finalizado"');
+        const [denunciasPendentes] = await pool.query('SELECT COUNT(*) as total FROM DENUNCIAS WHERE STATUS_DENUNCIA = "pendente"');
+        
+        const estatisticas = {
+            totalUsuarios: totalUsuarios[0]?.total || 0,
+            totalBrechos: totalBrechos[0]?.total || 0,
+            totalProdutos: totalProdutos[0]?.total || 0,
+            totalVendas: totalVendas[0]?.total || 0,
+            receitaTotal: receitaTotal[0]?.receita || 0,
+            denunciasPendentes: denunciasPendentes[0]?.total || 0
+        };
+        
+        res.render('pages/estatisticaadm', { estatisticas });
+    } catch (error) {
+        console.log('Erro ao carregar estatísticas admin:', error);
+        const estatisticas = {
+            totalUsuarios: 0,
+            totalBrechos: 0,
+            totalProdutos: 0,
+            totalVendas: 0,
+            receitaTotal: 0,
+            denunciasPendentes: 0
+        };
+        res.render('pages/estatisticaadm', { estatisticas });
+    }
+});
 router.get('/estatistica-mobile', (req, res) => res.render('pages/estatistica-mobile'));
 router.get('/estatistica-desktop', (req, res) => res.render('pages/estatistica-desktop'));
 
@@ -1889,6 +2012,13 @@ router.get('/homeadm', async (req, res) => {
         res.render('pages/homeadm', { banners: [] });
     }
 });
+
+router.get('/menuadm', (req, res) => res.render('pages/menuadm'));
+router.get('/usuariosadm', (req, res) => res.render('pages/usuariosadm'));
+router.get('/brechosadm', (req, res) => res.render('pages/brechosadm'));
+router.get('/produtosadm', (req, res) => res.render('pages/produtosadm'));
+router.get('/pedidosadm', (req, res) => res.render('pages/pedidosadm'));
+router.get('/relatorioadm', (req, res) => res.render('pages/relatorioadm'));
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
 
 router.get('/denuncias', function(req, res) {

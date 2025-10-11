@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo - Estatísticas Admin</title>
+    <link rel="stylesheet" href="css/estatistica.css?v=1.1">
+    <link rel="stylesheet" href="css/estatisticaadm.css?v=1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <header class="header-mobile">
+        <nav>
+            <a href="/homeadm">
+                <img src="imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="imagens/logo.png" alt="Logo">
+            <a href="/menuadm">
+                <img src="/imagens/icone sem cadastro.png" alt="Perfil" class="perfil">
+            </a>
+        </nav>
+    </header>
+
+    <!-- Header Desktop -->
+    <header class="header-desktop">
+        <div class="top-bar">
+            <p>Painel Administrativo</p>
+        </div>
+        <div class="main-nav">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="logo">
+            </a>
+            <nav>
+                <a href="/usuariosadm">Usuários</a>
+                <a href="/brechosadm">Brechós</a>
+                <a href="/produtosadm">Produtos</a>
+                <a href="/pedidosadm">Pedidos</a>
+                <a href="/relatorioadm">Relatórios</a>
+            </nav>
+            <div class="nav-icons">
+                <input type="text" placeholder="Buscar...">
+                <a href="/menuadm"><img src="/imagens/icone sem cadastro.png"></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h1>Dashboard Administrativo - Vintélo</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card" onclick="showSection('usuarios')">
+                <h3>Total Usuários</h3>
+                <div class="value">1,250</div>
+            </div>
+            
+            <div class="stat-card" onclick="showSection('brechos')">
+                <h3>Brechós Ativos</h3>
+                <div class="value">85</div>
+            </div>
+            
+            <div class="stat-card" onclick="showSection('produtos')">
+                <h3>Produtos Cadastrados</h3>
+                <div class="value">3,420</div>
+            </div>
+            
+            <div class="stat-card" onclick="showSection('vendas')">
+                <h3>Vendas Totais</h3>
+                <div class="value">892</div>
+            </div>
+            
+
+            
+            <div class="stat-card" onclick="showSection('denuncias')">
+                <h3>Denúncias Pendentes</h3>
+                <div class="value">12</div>
+            </div>
+        </div>
+
+        <div class="charts-grid" id="charts-section">
+            <div class="chart-card">
+                <h3>Crescimento de Usuários</h3>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 80%;">
+                        <span class="bar-value">320</span>
+                        <span class="bar-label">Jan</span>
+                    </div>
+                    <div class="bar" style="height: 65%;">
+                        <span class="bar-value">260</span>
+                        <span class="bar-label">Fev</span>
+                    </div>
+                    <div class="bar" style="height: 90%;">
+                        <span class="bar-value">360</span>
+                        <span class="bar-label">Mar</span>
+                    </div>
+                    <div class="bar" style="height: 75%;">
+                        <span class="bar-value">300</span>
+                        <span class="bar-label">Abr</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3>Distribuição por Categoria</h3>
+                <div class="pie-chart">
+                    <div class="pie-center">100%</div>
+                </div>
+                <div class="pie-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #8c2b44;"></div>
+                        <span>Vestidos (35%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #a64d61;"></div>
+                        <span>Blusas (25%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #c96d7e;"></div>
+                        <span>Acessórios (20%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e8a5b0;"></div>
+                        <span>Outros (20%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seções Detalhadas -->
+        <section id="usuarios" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Gestão de Usuários</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Usuários Ativos</h4>
+                        <div class="detail-value">1,180</div>
+                        <p>Usuários com login recente</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Novos Cadastros</h4>
+                        <div class="detail-value">70</div>
+                        <p>Este mês</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Usuários Bloqueados</h4>
+                        <div class="detail-value">8</div>
+                        <p>Por violação de termos</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 1.500 usuários ativos</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%;"></div>
+                    </div>
+                    <p>78% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="brechos" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Gestão de Brechós</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Brechós Verificados</h4>
+                        <div class="detail-value">72</div>
+                        <p>Com documentação completa</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Pendentes Aprovação</h4>
+                        <div class="detail-value">13</div>
+                        <p>Aguardando verificação</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Brechós Suspensos</h4>
+                        <div class="detail-value">3</div>
+                        <p>Por irregularidades</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 100 brechós ativos</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%;"></div>
+                    </div>
+                    <p>85% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="produtos" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Gestão de Produtos</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Produtos Ativos</h4>
+                        <div class="detail-value">3,200</div>
+                        <p>Disponíveis para venda</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Aguardando Moderação</h4>
+                        <div class="detail-value">220</div>
+                        <p>Produtos para aprovação</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Produtos Removidos</h4>
+                        <div class="detail-value">45</div>
+                        <p>Por violação de políticas</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 5.000 produtos ativos</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 64%;"></div>
+                    </div>
+                    <p>64% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vendas" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Análise de Vendas</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Vendas Concluídas</h4>
+                        <div class="detail-value">892</div>
+                        <p>Transações finalizadas</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Vendas Canceladas</h4>
+                        <div class="detail-value">28</div>
+                        <p>Por diversos motivos</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Taxa de Conversão</h4>
+                        <div class="detail-value">12.5%</div>
+                        <p>Visitantes que compraram</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: 1.000 vendas mensais</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 89%;"></div>
+                    </div>
+                    <p>89% da meta atingida</p>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="denuncias" class="detail-section" style="display: none;">
+            <div class="section-wrapper">
+                <div class="section-header">
+                    <h2>Gestão de Denúncias</h2>
+                    <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <h4>Denúncias Abertas</h4>
+                        <div class="detail-value">12</div>
+                        <p>Aguardando análise</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Resolvidas Este Mês</h4>
+                        <div class="detail-value">45</div>
+                        <p>Casos finalizados</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Tempo Médio</h4>
+                        <div class="detail-value">2.5 dias</div>
+                        <p>Para resolução</p>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <h4>Meta: Resolver em até 3 dias</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 83%;"></div>
+                    </div>
+                    <p>Dentro do prazo estabelecido</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <img src="imagens/logo2.jpeg" alt="Logo">
+        <div class="social">
+            <p>Siga nossas redes sociais</p>
+            <div class="social-links">
+                <a href="https://facebook.com" target="_blank"><img src="imagens/Facebook.png" alt="Facebook"></a>
+                <a href="https://twitter.com" target="_blank"><img src="imagens/Pinterest.png" alt="Pinterest"></a>
+                <a href="https://www.instagram.com/vintelobrechos" target="_blank"><img src="imagens/Instagram.png" alt="Instagram"></a>
+            </div>
+        </div>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script>
+        // Função vazia - animação removida
+        function animateCounters() {
+            // Animação de contadores removida
+        }
+        
+        // Mostrar seção específica
+        function showSection(sectionId) {
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Esconder todas as seções
+        function hideAllSections() {
+            const sections = document.querySelectorAll('.detail-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(animateCounters, 500);
+        });
+    </script>
+</body>
+</html>

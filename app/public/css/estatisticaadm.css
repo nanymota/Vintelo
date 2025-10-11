@@ -1,0 +1,166 @@
+/* Estilos específicos para estatisticaadm.ejs */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1 {
+    color: #8c2b44;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.garimpe-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #7d2838;
+    display: inline-block;
+}
+
+.vintelo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 32px;
+    color: #7d2838;
+    line-height: 1.2;
+    display: inline-block;
+}
+
+.stat-card h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+.value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+.chart-card h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+.section-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: #2d3748;
+}
+
+.detail-card h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+.detail-value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: 0;
+}
+
+.progress-section h4 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+.progress-section p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #718096;
+}
+
+.back-btn {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0;
+}
+
+.top-bar {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0;
+}
+
+.main-nav nav a {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 0;
+    color: #4a5568;
+}
+
+/* Desktop adjustments */
+@media (min-width: 768px) {
+    h1 {
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.8px;
+    }
+    
+    .garimpe-text {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+    
+    .vintelo-text {
+        font-size: 40px;
+    }
+    
+    .value {
+        font-size: 32px;
+        font-weight: 400;
+        letter-spacing: 0;
+    }
+    
+    .section-header h2 {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+    }
+    
+    .detail-value {
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: 0;
+    }
+}
+/* Força aplicação das regras */
+body h1 {
+    color: #8c2b44 !important;
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    letter-spacing: -0.5px !important;
+}
+
+@media (min-width: 768px) {
+    body h1 {
+        font-size: 32px !important;
+        letter-spacing: -0.8px !important;
+    }
+}
