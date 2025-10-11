@@ -59,14 +59,9 @@
                     <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" class="cart-item-img">
                     <section class="cart-item-info">
                         <h2><%= produto.nome %></h2>
-                        <% if (produto.descricao) { %><p><%= produto.descricao %></p><% } %>
                         <% if (produto.cor) { %><p>Cor: <%= produto.cor %></p><% } %>
-                        <% if (produto.estilo) { %><p>Estilo: <%= produto.estilo %></p><% } %>
-                        <% if (produto.estampa) { %><p>Estampa: <%= produto.estampa %></p><% } %>
-                        <% if (produto.tamanho) { %><p>Tamanho: <%= produto.tamanho %></p><% } %>
-                        <% if (produto.vendedor) { %><p>Vendedor: <%= produto.vendedor %></p><% } %>
+                        <% if (produto.categoria) { %><p>Categoria: <%= produto.categoria %></p><% } %>
                         <p>Quantidade: <%= produto.quantidade %></p>
-                        <p>Preço unitário: R$ <%= produto.preco.toFixed(2) %></p>
                         <p>Total</p>
                         <span>R$ <%= (produto.preco * produto.quantidade).toFixed(2) %></span>
                     </section>
@@ -82,40 +77,6 @@
           </section>
 
           <section class="content">
-            <section class="section">
-              <h2>Endereço de entrega</h2>
-              <section class="item">
-                <img src="imagens/mapa.png" alt="Ícone de localização" class="icon">
-                <span>Av. Paulista</span>
-                <img src="imagens/check.png" alt="Check" class="check-icon">
-              </section>
-            </section>
-      
-
-
-            <section class="payment-methods">
-              <h2>Forma de pagamento</h2>
-              <section class="payment-options">
-                <section class="payment-option" onclick="selectPayment(this)">
-                  <img src="imagens/pix.png" alt="PIX" class="icon">
-                  <span>PIX</span>
-                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
-                  <img src="imagens/erro.png" alt="Error" class="error-icon">
-                </section>
-                <section class="payment-option" onclick="selectPayment(this)">
-                  <img src="imagens/cartao.png" alt="Cartão" class="icon">
-                  <span>Cartão de Crédito</span>
-                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
-                  <img src="imagens/erro.png" alt="Error" class="error-icon">
-                </section>
-                <section class="payment-option" onclick="selectPayment(this)">
-                  <img src="imagens/boleto.png" alt="Boleto" class="icon">
-                  <span>Boleto Bancário</span>
-                  <img src="imagens/check.png" alt="Check" class="check-icon" style="display: none;">
-                  <img src="imagens/erro.png" alt="Error" class="error-icon">
-                </section>
-              </section>
-            </section>
 
             <section class="payment-summary">
               <h2>Resumo do pedido</h2>
