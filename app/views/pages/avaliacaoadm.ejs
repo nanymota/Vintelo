@@ -65,80 +65,67 @@
 
         <!-- Lista de Avaliações -->
         <section class="reviews" id="reviewsList">
-            <section class="review-item">
-                <img src="imagens/brecho1.png" alt="Jenny" class="profile-pic">
-                <section class="review-content">
-                    <section class="review-header">
-                        <h3>Jenny</h3>
-                        <span class="review-date">1 Set, 2023</span>
+            <% if (avaliacoes && avaliacoes.length > 0) { %>
+                <% avaliacoes.forEach(function(avaliacao, index) { %>
+                    <section class="review-item" id="review-<%= avaliacao.ID_AVALIACAO %>">
+                        <img src="<%= avaliacao.IMG_URL ? avaliacao.IMG_URL : 'imagens/icone sem cadastro.png' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="profile-pic">
+                        <section class="review-content">
+                            <section class="review-header">
+                                <h3><%= avaliacao.NOME_USUARIO %></h3>
+                                <span class="review-date"><%= new Date(avaliacao.DATA_AVALIACAO).toLocaleDateString('pt-BR') %></span>
+                            </section>
+                            <p class="rating"><%= avaliacao.NOTA %> 
+                                <span class="stars">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <%= i <= avaliacao.NOTA ? '★' : '☆' %>
+                                    <% } %>
+                                </span>
+                            </p>
+                            <p class="review-text"><%= avaliacao.COMENTARIO %></p>
+                        </section>
+                        <section class="admin-controls">
+                            <button class="btn-delete" onclick="excluirComentario(<%= avaliacao.ID_AVALIACAO %>)">Excluir</button>
+                        </section>
                     </section>
-                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
-                    <p class="review-text">Pagamento rápido, preços perfeitos e ainda tem tudo o que alguém precisa, não só roupa. Faço compras neste site pelo menos 1 vez por mês porque adoro e confio muito! Não tenho críticas, super recomendo!</p>
+                <% }); %>
+            <% } else { %>
+                <section class="no-reviews">
+                    <p>Nenhuma avaliação encontrada.</p>
                 </section>
-                <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="review-item">
-                <img src="imagens/brecho2.png" alt="Isabelly" class="profile-pic">
-                <section class="review-content">
-                    <section class="review-header">
-                        <h3>Isabelly</h3>
-                        <span class="review-date">3 Ago, 2023</span>
-                    </section>
-                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
-                    <p class="review-text">Produtos excelentes, preço ótimo, qualidade incríveis. Comprei um vestido e mais coisas e ainda chegou antes da data prevista. Maravilhoso, adorei e adoro comprar na Vintélo.</p>
-                </section>
-                <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="review-item">
-                <img src="imagens/brecho3.png" alt="Soraya" class="profile-pic">
-                <section class="review-content">
-                    <section class="review-header">
-                        <h3>Soraya</h3>
-                        <span class="review-date">13 Maio, 2023</span>
-                    </section>
-                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
-                    <p class="review-text">Todos os produtos de excelente qualidade e tal como anunciados. Precisei de fazer umas questões e o atendimento ao cliente foi rápido a responder e esclarecer.</p>
-                </section>
-                <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="review-item">
-                <img src="imagens/maria.png" alt="Ana Sofia" class="profile-pic">
-                <section class="review-content">
-                    <section class="review-header">
-                        <h3>Ana Sofia</h3>
-                        <span class="review-date">13 Set, 2023</span>
-                    </section>
-                    <p class="rating">4.8 <span class="stars">★★★★☆</span></p>
-                    <p class="review-text">Sempre tive receio de comprar roupas pela internet, mas a Vintélo me surpreendeu positivamente! Todas as roupas que comprei são de ótima qualidade, vestem super bem e o melhor é que, além de ter preços muito bons, não demoram a chegar!</p>
-                </section>
-                <section class="admin-controls">
-                    <button class="btn-delete" onclick="excluirComentario(1)">Excluir</button>
-                </section>
-            </section>
+            <% } %>
         </section>
     </main>
 
     <script>
         function excluirComentario(id) {
-            if (confirm('Tem certeza que deseja excluir este comentário?')) {
+            if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
                 const reviewElement = document.getElementById(`review-${id}`);
                 if (reviewElement) {
                     reviewElement.style.opacity = '0.5';
                     reviewElement.style.transition = 'opacity 0.3s';
                     
-                    setTimeout(() => {
-                        reviewElement.remove();
-                        alert(`Comentário ${id} excluído com sucesso!`);
-                    }, 300);
+                    fetch(`/avaliacaoadm/excluir/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            setTimeout(() => {
+                                reviewElement.remove();
+                                alert('Avaliação excluída com sucesso!');
+                            }, 300);
+                        } else {
+                            reviewElement.style.opacity = '1';
+                            alert('Erro ao excluir avaliação: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        reviewElement.style.opacity = '1';
+                        alert('Erro ao excluir avaliação');
+                    });
                 }
             }
         }

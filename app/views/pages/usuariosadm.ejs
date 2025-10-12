@@ -73,158 +73,67 @@
 
         <!-- Lista de Usuários -->
         <section class="perfis-grid">
-            <!-- Usuário 1 -->
-            <article class="perfil-card" data-status="ativo">
-                <section class="perfil-header">
-                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@maria_cliente</h3>
-                        <p>Maria Silva Santos</p>
-                        <span class="status-badge ativo">Ativo</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">23</span>
-                            <span class="stat-label">Compras</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">R$ 1.2k</span>
-                            <span class="stat-label">Gasto</span>
-                        </div>
-                    </section>
-                </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>maria.silva@email.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 99999-9999</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CPF:</label>
-                        <span>123.456.789-00</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>10/01/2024</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Última compra:</label>
-                        <span>15/12/2024</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(1)">Visualizar</button>
-                    <button class="btn-suspender" onclick="suspenderPerfil(1)">Suspender</button>
-                    <button class="btn-historico" onclick="verHistorico(1)">Histórico</button>
-                </section>
-            </article>
-
-            <!-- Usuário 2 -->
-            <article class="perfil-card" data-status="suspenso">
-                <section class="perfil-header">
-                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@joao_comprador</h3>
-                        <p>João Oliveira</p>
-                        <span class="status-badge suspenso">Suspenso</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">5</span>
-                            <span class="stat-label">Compras</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">R$ 320</span>
-                            <span class="stat-label">Gasto</span>
-                        </div>
-                    </section>
-                </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>joao@email.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 88888-8888</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CPF:</label>
-                        <span>987.654.321-00</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>25/02/2024</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Suspensão:</label>
-                        <span>10/12/2024</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(2)">Visualizar</button>
-                    <button class="btn-reativar" onclick="reativarPerfil(2)">Reativar</button>
-                    <button class="btn-historico" onclick="verHistorico(2)">Histórico</button>
-                </section>
-            </article>
-
-            <!-- Usuário 3 -->
-            <article class="perfil-card" data-status="ativo">
-                <section class="perfil-header">
-                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@ana_fashion</h3>
-                        <p>Ana Carolina</p>
-                        <span class="status-badge ativo">Ativo</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">67</span>
-                            <span class="stat-label">Compras</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">R$ 3.4k</span>
-                            <span class="stat-label">Gasto</span>
-                        </div>
-                    </section>
-                </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>ana.carolina@email.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 77777-7777</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CPF:</label>
-                        <span>456.789.123-00</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>05/11/2023</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Última compra:</label>
-                        <span>18/12/2024</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(3)">Visualizar</button>
-                    <button class="btn-suspender" onclick="suspenderPerfil(3)">Suspender</button>
-                    <button class="btn-historico" onclick="verHistorico(3)">Histórico</button>
-                </section>
-            </article>
+            <% if (usuarios && usuarios.length > 0) { %>
+                <% usuarios.forEach(function(usuario) { %>
+                    <article class="perfil-card" data-status="<%= usuario.STATUS_USUARIO === 'a' ? 'ativo' : 'suspenso' %>">
+                        <section class="perfil-header">
+                            <img src="<%= usuario.IMG_URL || 'imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil-img">
+                            <section class="perfil-info">
+                                <h3>@<%= usuario.USER_USUARIO || 'usuario' %></h3>
+                                <p><%= usuario.NOME_USUARIO %></p>
+                                <span class="status-badge <%= usuario.STATUS_USUARIO === 'a' ? 'ativo' : 'suspenso' %>">
+                                    <%= usuario.STATUS_USUARIO === 'a' ? 'Ativo' : 'Suspenso' %>
+                                </span>
+                            </section>
+                            <section class="perfil-stats">
+                                <div class="stat">
+                                    <span class="stat-number">0</span>
+                                    <span class="stat-label">Compras</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">R$ 0</span>
+                                    <span class="stat-label">Gasto</span>
+                                </div>
+                            </section>
+                        </section>
+                        
+                        <section class="perfil-detalhes">
+                            <div class="detalhe-item">
+                                <label>Email:</label>
+                                <span><%= usuario.EMAIL_USUARIO %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Telefone:</label>
+                                <span><%= usuario.CELULAR_USUARIO || 'Não informado' %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>CPF:</label>
+                                <span>Não informado</span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Cadastro:</label>
+                                <span><%= new Date(usuario.DATA_CADASTRO).toLocaleDateString('pt-BR') %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Última compra:</label>
+                                <span>Nunca</span>
+                            </div>
+                        </section>
+                        
+                        <section class="perfil-actions">
+                            <button class="btn-visualizar" onclick="visualizarPerfil(<%= usuario.ID_USUARIO %>)">Visualizar</button>
+                            <% if (usuario.STATUS_USUARIO === 'a') { %>
+                                <button class="btn-suspender" onclick="suspenderPerfil(<%= usuario.ID_USUARIO %>)">Suspender</button>
+                            <% } else { %>
+                                <button class="btn-reativar" onclick="reativarPerfil(<%= usuario.ID_USUARIO %>)">Reativar</button>
+                            <% } %>
+                            <button class="btn-historico" onclick="verHistorico(<%= usuario.ID_USUARIO %>)">Histórico</button>
+                        </section>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>Nenhum usuário encontrado.</p>
+            <% } %>
         </section>
     </main>
 
@@ -271,10 +180,20 @@
             cards.forEach(card => {
                 const status = card.dataset.status;
                 const nome = card.querySelector('h3').textContent.toLowerCase();
-                const email = card.querySelector('.detalhe-item span').textContent.toLowerCase();
+                const nomeCompleto = card.querySelector('.perfil-info p').textContent.toLowerCase();
+                const emailSpans = card.querySelectorAll('.detalhe-item span');
+                const email = emailSpans[0] ? emailSpans[0].textContent.toLowerCase() : '';
+                const cpfSpan = emailSpans[2] ? emailSpans[2].textContent.toLowerCase() : '';
                 
-                const matchStatus = statusFiltro === 'todos' || status === statusFiltro;
-                const matchSearch = !searchTerm || nome.includes(searchTerm) || email.includes(searchTerm);
+                const matchStatus = statusFiltro === 'todos' || 
+                    (statusFiltro === 'ativos' && status === 'ativo') ||
+                    (statusFiltro === 'suspensos' && status === 'suspenso');
+                    
+                const matchSearch = !searchTerm || 
+                    nome.includes(searchTerm) || 
+                    nomeCompleto.includes(searchTerm) ||
+                    email.includes(searchTerm) ||
+                    cpfSpan.includes(searchTerm);
                 
                 if (matchStatus && matchSearch) {
                     card.style.display = 'block';

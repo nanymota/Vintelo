@@ -71,158 +71,69 @@
 
         <!-- Lista de Brechós -->
         <section class="perfis-grid">
-            <!-- Brechó 1 -->
-            <article class="perfil-card" data-status="ativo">
-                <section class="perfil-header">
-                    <img src="imagens/brecho1.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@mayte_brecho</h3>
-                        <p>Mayte Silva</p>
-                        <span class="status-badge ativo">Ativo</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">4.8</span>
-                            <span class="stat-label">Avaliação</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">156</span>
-                            <span class="stat-label">Vendas</span>
-                        </div>
-                    </section>
+            <% if (brechos && brechos.length > 0) { %>
+                <% brechos.forEach(function(brecho) { %>
+                    <article class="perfil-card" data-status="<%= brecho.STATUS_USUARIO === 'a' ? 'ativo' : 'suspenso' %>">
+                        <section class="perfil-header">
+                            <img src="<%= brecho.IMG_URL ? brecho.IMG_URL : 'imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil-img">
+                            <section class="perfil-info">
+                                <h3>@<%= brecho.NOME_USUARIO.toLowerCase().replace(/\s+/g, '_') %></h3>
+                                <p><%= brecho.NOME_USUARIO %></p>
+                                <span class="status-badge <%= brecho.STATUS_USUARIO === 'a' ? 'ativo' : 'suspenso' %>">
+                                    <%= brecho.STATUS_USUARIO === 'a' ? 'Ativo' : 'Suspenso' %>
+                                </span>
+                            </section>
+                            <section class="perfil-stats">
+                                <div class="stat">
+                                    <span class="stat-number">4.5</span>
+                                    <span class="stat-label">Avaliação</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number"><%= brecho.TOTAL_PRODUTOS %></span>
+                                    <span class="stat-label">Produtos</span>
+                                </div>
+                            </section>
+                        </section>
+                        
+                        <section class="perfil-detalhes">
+                            <div class="detalhe-item">
+                                <label>Email:</label>
+                                <span><%= brecho.EMAIL_USUARIO %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Telefone:</label>
+                                <span><%= brecho.CELULAR_USUARIO || 'Não informado' %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>CNPJ:</label>
+                                <span><%= brecho.CNPJ_BRECHO || 'Não informado' %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Cadastro:</label>
+                                <span><%= new Date(brecho.DATA_CADASTRO).toLocaleDateString('pt-BR') %></span>
+                            </div>
+                            <div class="detalhe-item">
+                                <label>Razão Social:</label>
+                                <span><%= brecho.RAZAO_SOCIAL || 'Não informado' %></span>
+                            </div>
+                        </section>
+                        
+                        <section class="perfil-actions">
+                            <button class="btn-visualizar" onclick="visualizarPerfil(<%= brecho.ID_USUARIO %>)">Visualizar</button>
+                            <% if (brecho.STATUS_USUARIO === 'a') { %>
+                                <button class="btn-suspender" onclick="suspenderPerfil(<%= brecho.ID_USUARIO %>)">Suspender</button>
+                            <% } else { %>
+                                <button class="btn-reativar" onclick="reativarPerfil(<%= brecho.ID_USUARIO %>)">Reativar</button>
+                            <% } %>
+                            <button class="btn-denuncias" onclick="verDenuncias(<%= brecho.ID_USUARIO %>)">Denúncias</button>
+                        </section>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <section class="no-brechos">
+                    <p>Nenhum brechó encontrado.</p>
                 </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>mayte@email.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 99999-9999</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CNPJ:</label>
-                        <span>12.345.678/0001-90</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>15/01/2024</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Produtos:</label>
-                        <span>45 ativos</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(1)">Visualizar</button>
-                    <button class="btn-suspender" onclick="suspenderPerfil(1)">Suspender</button>
-                    <button class="btn-denuncias" onclick="verDenuncias(1)">Denúncias (2)</button>
-                </section>
-            </article>
-
-            <!-- Brechó 2 -->
-            <article class="perfil-card" data-status="suspenso">
-                <section class="perfil-header">
-                    <img src="imagens/brecho2.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@karine_vintage</h3>
-                        <p>Karine Santos</p>
-                        <span class="status-badge suspenso">Suspenso</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">3.2</span>
-                            <span class="stat-label">Avaliação</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">89</span>
-                            <span class="stat-label">Vendas</span>
-                        </div>
-                    </section>
-                </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>karine@email.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 88888-8888</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CNPJ:</label>
-                        <span>98.765.432/0001-10</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>03/02/2024</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Produtos:</label>
-                        <span>12 ativos</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(2)">Visualizar</button>
-                    <button class="btn-reativar" onclick="reativarPerfil(2)">Reativar</button>
-                    <button class="btn-denuncias" onclick="verDenuncias(2)">Denúncias (5)</button>
-                </section>
-            </article>
-
-            <!-- Brechó 3 -->
-            <article class="perfil-card" data-status="ativo">
-                <section class="perfil-header">
-                    <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                    <section class="perfil-info">
-                        <h3>@vintage_store</h3>
-                        <p>Loja Vintage Ltda</p>
-                        <span class="status-badge ativo">Ativo</span>
-                    </section>
-                    <section class="perfil-stats">
-                        <div class="stat">
-                            <span class="stat-number">4.6</span>
-                            <span class="stat-label">Avaliação</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">234</span>
-                            <span class="stat-label">Vendas</span>
-                        </div>
-                    </section>
-                </section>
-                
-                <section class="perfil-detalhes">
-                    <div class="detalhe-item">
-                        <label>Email:</label>
-                        <span>contato@vintagestore.com</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Telefone:</label>
-                        <span>(11) 77777-7777</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>CNPJ:</label>
-                        <span>11.222.333/0001-44</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Cadastro:</label>
-                        <span>20/12/2023</span>
-                    </div>
-                    <div class="detalhe-item">
-                        <label>Produtos:</label>
-                        <span>78 ativos</span>
-                    </div>
-                </section>
-                
-                <section class="perfil-actions">
-                    <button class="btn-visualizar" onclick="visualizarPerfil(3)">Visualizar</button>
-                    <button class="btn-suspender" onclick="suspenderPerfil(3)">Suspender</button>
-                    <button class="btn-denuncias" onclick="verDenuncias(3)">Denúncias (0)</button>
-                </section>
-            </article>
+            <% } %>
         </section>
     </main>
 

@@ -50,9 +50,9 @@
     </section>
 
     <main class="admin-container">
-        <section class="admin-header">
-            <h1>Gerenciar Denúncias</h1>
-            <p>Visualize e gerencie denúncias de usuários e perfis</p>
+        <section class="page-title">
+            <span class="garimpe-text">Gerenciar</span><br>
+            <span class="vintelo-text">Denúncias</span>
         </section>
 
         <!-- Filtros -->
@@ -208,24 +208,7 @@
         </section>
     </main>
 
-    <script>
-        function analisarDenuncia(id) {
-            window.location.href = `/denuncias/analisar/${id}`;
-        }
-
-        function resolverDenuncia(id) {
-            const resolucao = prompt('Digite a resolução da denúncia:');
-            if (resolucao) {
-                alert(`Denúncia ${id} resolvida: ${resolucao}`);
-            }
-        }
-
-        function rejeitarDenuncia(id) {
-            if (confirm(`Tem certeza que deseja rejeitar a denúncia ${id}?`)) {
-                alert(`Denúncia ${id} rejeitada`);
-            }
-        }
-    </script>
+    <script src="js/denuncias.js"></script>
 
     <footer class="footer">
         <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">

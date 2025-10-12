@@ -16,7 +16,7 @@
             </a>
             <img src="imagens/logo.png" alt="Logo">
             <a href="/menuvendedor">
-                <img src="<%= (estatisticas && estatisticas.brecho && estatisticas.brecho.IMAGEM_BRECHO) || '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil">
+                <img src="<%= (autenticado && autenticado.imagem) ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil">
             </a>
         </nav>
     </header>
@@ -39,8 +39,8 @@
             </nav>
             <div class="nav-icons">
                 <input type="text" placeholder="Buscar...">
-                <a href="/adicionar"><img src="imagens/add brecho.png"></a>
-                <a href="/menuvendedor"><img src="<%= (estatisticas && estatisticas.brecho && estatisticas.brecho.IMAGEM_BRECHO) || '/imagens/icone sem cadastro.png' %>"></a>
+                <a href="/adicionar"><img src="imagens/adicionar peça.png"></a>
+                <a href="/menuvendedor"><img src="<%= (autenticado && autenticado.imagem) ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>"></a>
                 <a href="/favoritos"><img src="imagens/icone coraçao.png"></a>
             </div>
         </div>
