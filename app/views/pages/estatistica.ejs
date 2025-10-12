@@ -11,7 +11,7 @@
     <!-- Header Mobile -->
     <header class="header-mobile">
         <nav>
-            <a href="/homevendedor">
+            <a href="javascript:void(0)" onclick="goBack()">
                 <img src="imagens/seta.png" alt="Voltar">
             </a>
             <img src="imagens/logo.png" alt="Logo">
@@ -306,12 +306,15 @@
         });
     </script>
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
         <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

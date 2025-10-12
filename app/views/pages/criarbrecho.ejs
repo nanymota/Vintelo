@@ -18,7 +18,7 @@
 
     <header>
         <nav class="grid">
-            <a href="/homecomprador">
+            <a href="javascript:void(0)" onclick="goBack()">
                 <img src="imagens/seta.png" alt="Seta Voltar">
             </a>
             <img src="imagens/logo.png" alt="Logo" class="logo-vintelo">
@@ -28,7 +28,7 @@
     <main class="login-container">
         <aside class="image-section">
             <section class="seta">
-                <a href="/homecomprador">
+                <a href="javascript:void(0)" onclick="goBack()">
                     <img src="imagens/seta.png">
                 </a>
             </section>
@@ -177,12 +177,15 @@
     </main>
 
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
         <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

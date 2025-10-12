@@ -149,7 +149,15 @@ router.post("/login", async function (req, res) {
             };
             
             console.log('Sessão criada:', req.session.autenticado);
-            return res.redirect('/homecomprador');
+            
+            // Redirecionar baseado no tipo de usuário
+            if (usuario.TIPO_USUARIO === 'b') {
+                return res.redirect('/homevendedor');
+            } else if (usuario.TIPO_USUARIO === 'a') {
+                return res.redirect('/homeadm');
+            } else {
+                return res.redirect('/homecomprador');
+            }
         }
         
         res.render('pages/login', {
@@ -637,9 +645,9 @@ router.get('/brecho/:id', carregarDadosUsuario, async function(req, res){
     }
 });
 
-router.get('/perfil1', (req, res) => res.render('pages/perfil1'));
-router.get('/perfil2', (req, res) => res.render('pages/perfil2'));
-router.get('/perfil3', (req, res) => res.render('pages/perfil3'));
+router.get('/perfil1', carregarDadosUsuario, (req, res) => res.render('pages/perfil1', { autenticado: req.session.autenticado || null }));
+router.get('/perfil2', carregarDadosUsuario, (req, res) => res.render('pages/perfil2', { autenticado: req.session.autenticado || null }));
+router.get('/perfil3', carregarDadosUsuario, (req, res) => res.render('pages/perfil3', { autenticado: req.session.autenticado || null }));
 
 router.get('/homecomprador', carregarDadosUsuario, async function(req, res){
     try {
@@ -788,20 +796,26 @@ router.get('/finalizandocompra', verificarUsuAutenticado, async function(req, re
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
-        // Buscar produtos sugeridos
+        // Buscar produtos sugeridos reais
         const [produtosSugeridos] = await pool.query(`
-            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, img.URL_IMG
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, p.COR_PRODUTO, 
+                   p.ESTILO_PRODUTO, p.TAMANHO_PRODUTO, img.URL_IMG
             FROM PRODUTOS p
             LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
             WHERE p.STATUS_PRODUTO = 'd' AND p.ID_PRODUTO != ?
+            GROUP BY p.ID_PRODUTO
             ORDER BY RAND()
-            LIMIT 4
+            LIMIT 8
         `, [produtoId || 0]);
         
         const sugestoes = produtosSugeridos.map(item => ({
             ID_PRODUTO: item.ID_PRODUTO,
             NOME_PRODUTO: item.NOME_PRODUTO,
-            PRECO: item.PRECO,
+            PRECO: parseFloat(item.PRECO),
+            TIPO_PRODUTO: item.TIPO_PRODUTO,
+            COR_PRODUTO: item.COR_PRODUTO,
+            ESTILO_PRODUTO: item.ESTILO_PRODUTO,
+            TAMANHO_PRODUTO: item.TAMANHO_PRODUTO,
             imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png'
         }));
         
@@ -1282,15 +1296,15 @@ router.get('/sacola1', carregarDadosUsuario, async function(req, res){
             `, [req.session.autenticado.id]);
             
             carrinho = itensSacola.map(item => ({
-                produto_id: item.ID_PRODUTO,
-                nome: item.NOME_PRODUTO,
-                preco: parseFloat(item.PRECO),
-                quantidade: item.QUANTIDADE,
-                imagem: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
-                cor: item.COR_PRODUTO,
-                estilo: item.ESTILO_PRODUTO,
-                estampa: item.ESTAMPA_PRODUTO,
-                tamanho: item.TAMANHO_PRODUTO
+                ID_PRODUTO: item.ID_PRODUTO,
+                NOME_PRODUTO: item.NOME_PRODUTO,
+                PRECO_PRODUTO: parseFloat(item.PRECO).toFixed(2).replace('.', ','),
+                QUANTIDADE: item.QUANTIDADE,
+                IMG_PRODUTO_1: item.URL_IMG ? '/' + item.URL_IMG : '/imagens/produto-default.png',
+                COR_PRODUTO: item.COR_PRODUTO,
+                ESTILO_PRODUTO: item.ESTILO_PRODUTO,
+                ESTAMPA_PRODUTO: item.ESTAMPA_PRODUTO,
+                TAMANHO_PRODUTO: item.TAMANHO_PRODUTO
             }));
             
             subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
@@ -1612,7 +1626,7 @@ router.post('/entrar', async function(req, res){
             
             console.log('Sessão criada na página entrar:', req.session.autenticado);
             
-            if (usuario.TIPO_USUARIO == 'b') {
+            if (usuario.TIPO_USUARIO === 'b') {
                 req.session.brecho = {
                     nome: 'Meu Brechó',
                     proprietario: usuario.NOME_USUARIO,
@@ -1623,6 +1637,9 @@ router.post('/entrar', async function(req, res){
                 };
                 console.log('Redirecionando para /homevendedor');
                 return res.redirect('/homevendedor');
+            } else if (usuario.TIPO_USUARIO === 'a') {
+                console.log('Redirecionando para /homeadm');
+                return res.redirect('/homeadm');
             } else {
                 console.log('Redirecionando para /homecomprador');
                 return res.redirect('/homecomprador');
@@ -3220,24 +3237,6 @@ router.post('/adicionar-sacola', verificarUsuAutenticado, async function(req, re
         console.log('Dados do item:', verificacao[0]);
         
         console.log('=== PRODUTO ADICIONADO COM SUCESSO! ===');
-        
-        // Notificar usuários que favoritaram produtos similares
-        const emailService = require('../services/emailService');
-        const [produtoInfo] = await pool.query('SELECT NOME_PRODUTO FROM PRODUTOS WHERE ID_PRODUTO = ?', [produto_id]);
-        if (produtoInfo.length > 0) {
-            // Buscar usuários que favoritaram produtos similares (simplificado)
-            const [usuariosFavoritos] = await pool.query(`
-                SELECT DISTINCT f.ID_USUARIO 
-                FROM FAVORITOS f 
-                JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
-                WHERE f.TIPO_ITEM = 'produto' AND f.STATUS_FAVORITO = 'favoritado' 
-                LIMIT 5
-            `);
-            
-            usuariosFavoritos.forEach(async (user) => {
-                await emailService.notificarNovoProduto(user.ID_USUARIO, produtoInfo[0].NOME_PRODUTO);
-            });
-        }
         
         res.json({ success: true, message: 'Produto adicionado à sacola com sucesso!' });
     } catch (error) {

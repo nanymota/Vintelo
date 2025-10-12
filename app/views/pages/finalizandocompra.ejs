@@ -98,30 +98,23 @@
         <h4>Adicione mais à sacola</h4>
         <div class="carousel-container">
           <ul class="product-list carousel-list">
-            <li class="product-suggestion">
-              <img src="/imagens/conjunto.png" alt="Saia Branca">
-              <p>Saia Branca</p>
-              <p>R$25,00</p>
-              <button class="adicionar-compra">Adicionar</button>
-            </li>
-            <li class="product-suggestion">
-              <img src="/imagens/saia preta.png" alt="Saia Preta">
-              <p>Saia Preta</p>
-              <p>R$30,00</p>
-              <button class="adicionar-compra">Adicionar</button>
-            </li>
-            <li class="product-suggestion">
-              <img src="/imagens/vestido branco.png" alt="Vestido Branco">
-              <p>Vestido Branco</p>
-              <p>R$35,00</p>
-              <button class="adicionar-compra">Adicionar</button>
-            </li>
-            <li class="product-suggestion">
-              <img src="/imagens/cropped rosa.png" alt="Cropped Rosa">
-              <p>Cropped Rosa</p>
-              <p>R$20,00</p>
-              <button class="adicionar-compra">Adicionar</button>
-            </li>
+            <% if (produtosSugeridos && produtosSugeridos.length > 0) { %>
+              <% produtosSugeridos.forEach(produto => { %>
+                <li class="product-suggestion">
+                  <img src="<%= produto.imagem %>" alt="<%= produto.NOME_PRODUTO %>">
+                  <p><%= produto.NOME_PRODUTO %></p>
+                  <p>R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+                  <button class="adicionar-compra" onclick="addToCartSuggestion('<%= produto.ID_PRODUTO %>')">Adicionar</button>
+                </li>
+              <% }) %>
+            <% } else { %>
+              <li class="product-suggestion">
+                <img src="/imagens/conjunto.png" alt="Saia Branca">
+                <p>Saia Branca</p>
+                <p>R$25,00</p>
+                <button class="adicionar-compra">Adicionar</button>
+              </li>
+            <% } %>
           </ul>
         </div>
         <a href="/favoritos" class="link-branco"><p class="favorites-link">Conferir peças favoritas ></p></a>
@@ -272,7 +265,7 @@
             <h2>Óculos de sol</h2>
             <p class="price">R$12,00</p>
             <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
-            <button class="cart"><img src="/imagens/sacola.png" class="img-sacola"></button>
+            <button class="cart" onclick="alert('Produto não disponível')"><img src="/imagens/sacola.png" class="img-sacola"></button>
           </article>
         <% } %>
       </section>
@@ -416,6 +409,12 @@
     }
 
     function addToCartSuggestion(produtoId) {
+      const button = event.target;
+      const originalText = button.textContent;
+      
+      button.textContent = 'Adicionando...';
+      button.disabled = true;
+      
       fetch('/adicionar-sacola', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,10 +423,31 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert('Produto adicionado à sacola!');
+          button.textContent = 'Adicionado!';
+          button.style.backgroundColor = '#28a745';
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 2000);
         } else {
-          alert('Erro ao adicionar produto');
+          button.textContent = 'Erro';
+          button.style.backgroundColor = '#dc3545';
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 2000);
         }
+      })
+      .catch(error => {
+        button.textContent = 'Erro';
+        button.style.backgroundColor = '#dc3545';
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.backgroundColor = '';
+          button.disabled = false;
+        }, 2000);
       });
     }
 

@@ -32,7 +32,7 @@
             </a>
             <nav>
                 <a href="/denuncias">Voltar às Denúncias</a>
-                <a href="/homeadm">Painel Admin</a>
+                <a href="javascript:void(0)" onclick="goBack()">Painel Admin</a>
             </nav>
             <section class="search-profile">
                 <ul>
@@ -257,12 +257,15 @@
         <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
     </footer>
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
         <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>oad();

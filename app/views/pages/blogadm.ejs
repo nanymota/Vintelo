@@ -10,11 +10,11 @@
 <body>
     <!-- Header Mobile -->
     <header class="mobile-header">
-        <a href="/homeadm">
+        <a href="javascript:void(0)" onclick="goBack()">
             <img src="imagens/seta.png" alt="Voltar">
         </a>
         <h1><span class="highlight">VINTÉLO</span></h1>
-        <a href="/homeadm">
+        <a href="javascript:void(0)" onclick="goBack()">
             <img src="imagens/carrinho.png" alt="Home">
         </a>
     </header>
@@ -400,12 +400,15 @@
         });
     </script>
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
         <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

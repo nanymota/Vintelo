@@ -56,7 +56,7 @@
         </header>
     </section>
     <section class="oculto-desktop">
-        <a href="/">
+        <a href="javascript:void(0)" onclick="goBack()">
          <img src="imagens/seta.png" class="img-seta">
         </a>
     </section>
@@ -309,9 +309,16 @@
          <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
       </footer>
        </section>
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
+        <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
+    <script src="/js/navegacao.js"></script>
     <script src="js/favoritos-global.js"></script>
     <script>
         

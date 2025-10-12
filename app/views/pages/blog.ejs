@@ -10,7 +10,7 @@
 <body>
     <!-- Header Mobile -->
     <header class="mobile-header">
-        <a href="/homecomprador">
+        <a href="javascript:void(0)" onclick="goBack()">
             <img src="imagens/seta.png" alt="Voltar">
         </a>
         <h1>CONHEÇA AS TENDÊNCIAS NA <br><span class="highlight">VINTÉLO</span></h1>
@@ -193,12 +193,15 @@
     </footer>
     <script src="/js/busca-global.js"></script>
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
         <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

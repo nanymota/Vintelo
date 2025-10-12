@@ -187,62 +187,16 @@
         <p class="copyright">© 2024, Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-    <script>
+                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        
-        // Filtros e ordenação
-        function sortProducts(type) {
-            const products = document.querySelectorAll('.product-card');
-            const container = document.querySelector('.products-section');
-            const addItem = container.querySelector('.add-item');
-            const productsArray = Array.from(products);
-            
-            productsArray.sort((a, b) => {
-                const priceA = parseFloat(a.querySelector('.price').textContent.replace('R$', '').replace(',', '.'));
-                const priceB = parseFloat(b.querySelector('.price').textContent.replace('R$', '').replace(',', '.'));
-                
-                switch(type) {
-                    case 'price-low': return priceA - priceB;
-                    case 'price-high': return priceB - priceA;
-                    default: return 0;
-                }
-            });
-            
-            container.innerHTML = '';
-            container.appendChild(addItem);
-            productsArray.forEach(product => container.appendChild(product));
-        }
-        
-        function filterByCategory(category) {
-            const products = document.querySelectorAll('.product-card');
-            products.forEach(product => {
-                const productCategory = product.dataset.category || 'outros';
-                product.style.display = (category === 'todos' || productCategory === category) ? 'block' : 'none';
-            });
-        }
-        
-        function applyFilters() {
-            const activeCategory = document.querySelector('.category-btn.active')?.dataset.category || 'todos';
-            filterByCategory(activeCategory);
-        }
-        
-        function clearFilters() {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('[data-category="todos"]').classList.add('active');
-            filterByCategory('todos');
-        }
-        
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    filterByCategory(this.dataset.category);
-                });
-            });
-        });
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
+        <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
+    <script src="/js/navegacao.js"></script>
     <script src="/js/favoritos-global.js"></script>
     <script src="/js/carrinho-global.js"></script>
     <script src="/js/busca-global.js"></script>

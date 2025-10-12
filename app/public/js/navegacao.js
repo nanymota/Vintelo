@@ -39,18 +39,13 @@ class NavigationManager {
     }
 
     goBack() {
-        // Verificar se há histórico válido
-        if (window.history.length > 1 && document.referrer && !document.referrer.includes('index')) {
-            window.history.back();
-        } else {
-            // Redirecionar baseado no status de login
-            this.redirectToHome();
-        }
+        // Sempre usar a lógica de redirecionamento baseada no login
+        this.redirectToHome();
     }
 
     redirectToHome() {
         // Verificar se usuário está logado
-        if (window.isAuthenticated) {
+        if (window.isAuthenticated === true || window.isAuthenticated === 'true') {
             // Verificar tipo de usuário
             const userType = this.getUserType();
             switch(userType) {
@@ -79,23 +74,19 @@ new NavigationManager();
 
 // Função global para navegação (compatibilidade)
 function goBack() {
-    if (window.history.length > 1 && document.referrer && !document.referrer.includes('index')) {
-        window.history.back();
-    } else {
-        if (window.isAuthenticated) {
-            const userType = window.userType || sessionStorage.getItem('userType') || 'c';
-            switch(userType) {
-                case 'b':
-                    window.location.href = '/homevendedor';
-                    break;
-                case 'a':
-                    window.location.href = '/homeadm';
-                    break;
-                default:
-                    window.location.href = '/homecomprador';
-            }
-        } else {
-            window.location.href = '/';
+    if (window.isAuthenticated === true || window.isAuthenticated === 'true') {
+        const userType = window.userType || sessionStorage.getItem('userType') || 'c';
+        switch(userType) {
+            case 'b':
+                window.location.href = '/homevendedor';
+                break;
+            case 'a':
+                window.location.href = '/homeadm';
+                break;
+            default:
+                window.location.href = '/homecomprador';
         }
+    } else {
+        window.location.href = '/';
     }
 }

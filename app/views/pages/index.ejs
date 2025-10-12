@@ -532,9 +532,16 @@
     </footer>
     
     <script src="js/menu.js"></script>
-    <script>
-        window.isAuthenticated = <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>true<% } else { %>false<% } %>;
+                <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        window.userType = 'c';
+        <% } %>
     </script>
+    <script src="/js/navegacao.js"></script>
+    <script src="/js/navegacao.js"></script>
     <script src="js/seguir-brechos.js"></script>
     <script src="js/index.js"></script>
 </body>
