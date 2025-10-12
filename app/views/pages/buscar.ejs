@@ -114,9 +114,9 @@
                                      style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
                                 <h3 style="color: #7d2838; margin-bottom: 10px;"><%= brecho.NOME_USUARIO %></h3>
                                 <p style="color: #666; font-size: 14px;"><%= brecho.total_produtos %> produtos</p>
-                                <button style="background: #7d2838; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-top: 10px;">
+                                <a href="/brecho/<%= brecho.ID_USUARIO %>" style="background: #7d2838; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
                                     Ver Brechó
-                                </button>
+                                </a>
                             </div>
                         <% }); %>
                     </section>

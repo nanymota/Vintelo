@@ -68,7 +68,9 @@
 
     <!-- Lista de Produtos -->
   <main>
-        <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
+        <% if (typeof favoritos === 'undefined' || !favoritos || favoritos.length === 0) { %>
+            <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
+        <% } %>
         <!-- Informações de lista -->
         <nav class="category-nav category-nav-mobile">
             <br>

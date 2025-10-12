@@ -193,7 +193,7 @@ router.get("/cadastro", function (req, res) {
 
 router.post("/cadastro", usuarioController.regrasValidacaoFormCad, usuarioController.cadastrar);
 
-// Remover a rota POST /login conflitante - o form já aponta para /cadastro
+
 
 router.get('/cadastroadm', function(req, res){ res.render('pages/cadastroadm'); });
 
@@ -203,27 +203,9 @@ router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "page
     });
 });
 
-// router.post("/create-preference", function (req, res) {
-//   const preference = new Preference(client);
-//   console.log(req.body.items);
-//   preference.create({
-//     body: {
-//       items: req.body.items,
-//       back_urls: {
-//         "success": process.env.URL_BASE + "/feedback",
-//         "failure": process.env.URL_BASE + "/feedback",
-//         "pending": process.env.URL_BASE + "/feedback"
-//       },
-//       auto_return: "approved",
-//     }
-//   })
-//     .then((value) => {
-//       res.json(value)
-//     })
-//     .catch(console.log)
-// });
 
-// Rota para visualizar produto individual (deve vir antes das rotas estáticas)
+
+
 router.get('/produto/:id', carregarDadosUsuario, async function(req, res){
     try {
         const { id } = req.params;
@@ -326,6 +308,67 @@ router.get('/carrinho', verificarUsuAutenticado, async function(req, res){
             frete: '0,00',
             total: '0,00',
             autenticado: req.session.autenticado
+        });
+    }
+});
+
+
+router.get('/brecho/:id', carregarDadosUsuario, async function(req, res){
+    try {
+        const { id } = req.params;
+        console.log('Acessando perfil do brechó ID:', id);
+        
+        // Buscar dados do usuário/brechó
+        const [usuario] = await pool.query(
+            'SELECT * FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [id]
+        );
+        
+        if (usuario.length === 0) {
+            console.log('Brechó não encontrado');
+            return res.render('pages/perfilbrecho', {
+                brecho: null,
+                produtos: [],
+                autenticado: req.session.autenticado || null
+            });
+        }
+        
+        // Buscar produtos do brechó
+        const [produtos] = await pool.query(
+            `SELECT p.*, img.URL_IMG 
+             FROM PRODUTOS p 
+             LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+             WHERE p.ID_USUARIO = ? AND p.STATUS_PRODUTO = 'd'
+             GROUP BY p.ID_PRODUTO
+             ORDER BY p.DATA_CADASTRO DESC`,
+            [id]
+        );
+        
+        const brechoData = {
+            ID_USUARIO: usuario[0].ID_USUARIO,
+            NOME_USUARIO: usuario[0].NOME_USUARIO,
+            IMG_URL: usuario[0].IMG_URL,
+            DESCRICAO_USUARIO: usuario[0].DESCRICAO_USUARIO || 'Descrição não disponível',
+            avaliacao: '4.5',
+            itens_venda: produtos.length,
+            vendidos: '0',
+            seguidores: '0'
+        };
+        
+        console.log('Dados do brechó:', brechoData);
+        console.log('Produtos encontrados:', produtos.length);
+        
+        res.render('pages/perfilbrecho', {
+            brecho: brechoData,
+            produtos: produtos,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar perfil do brechó:', error);
+        res.render('pages/perfilbrecho', {
+            brecho: null,
+            produtos: [],
+            autenticado: req.session.autenticado || null
         });
     }
 });
@@ -726,7 +769,7 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
         });
     }
 });
-// Rota para atualizar quantidade na sacola
+
 router.post('/atualizar-quantidade-sacola', verificarUsuAutenticado, async function(req, res){
     try {
         const { produto_id, quantidade } = req.body;
@@ -760,7 +803,7 @@ router.post('/atualizar-quantidade-sacola', verificarUsuAutenticado, async funct
     }
 });
 
-// Rota para remover item da sacola
+
 router.post('/remover-item-sacola', verificarUsuAutenticado, async function(req, res){
     try {
         const { produto_id } = req.body;
@@ -2131,7 +2174,7 @@ router.get('/usuariosadm', (req, res) => res.render('pages/usuariosadm'));
 router.post('/premium/atualizar-plano', atualizarPlano);
 router.post('/premium/alternar-status', alternarStatusPlano);
 
-// Rotas de Compra
+
 router.post('/adicionar-carrinho', compraController.adicionarAoCarrinho);
 router.get('/carrinho', compraController.mostrarCarrinho);
 router.post('/atualizar-quantidade', compraController.atualizarQuantidade);
@@ -2140,7 +2183,7 @@ router.get('/finalizar-compra', compraController.finalizarCompra);
 router.post('/limpar-carrinho', compraController.limparCarrinho);
 router.get('/confirmar-pedido', compraController.confirmarPedido);
 
-// Rotas do Mercado Pago
+
 router.post('/processar-pagamento', pagamentoController.processarPagamento);
 router.get('/pagamento-sucesso', pagamentoController.pagamentoSucesso);
 router.get('/pagamento-falha', pagamentoController.pagamentoFalha);
@@ -2148,7 +2191,7 @@ router.get('/pagamento-pendente', pagamentoController.pagamentoPendente);
 
 router.post('/webhook-mercadopago', pagamentoController.webhookMercadoPago);
 
-// Rota para adicionar à sacola
+
 router.post('/adicionar-sacola', verificarUsuAutenticado, async function(req, res){
     console.log('=== ADICIONAR À SACOLA ===');
     console.log('Body recebido:', req.body);
@@ -2241,7 +2284,7 @@ router.post('/adicionar-sacola', verificarUsuAutenticado, async function(req, re
     }
 });
 
-// Rotas de Favoritos
+
 router.post('/favoritar', verificarUsuAutenticado, async function(req, res){
     try {
         const { produto_id } = req.body;
@@ -2300,7 +2343,7 @@ router.get('/verificar-favorito/:produto_id', async function(req, res){
     }
 });
 
-// Rota de busca global
+
 router.get('/buscar', carregarDadosUsuario, async function(req, res){
     try {
         const termo = req.query.q || '';
@@ -2357,5 +2400,73 @@ router.get('/buscar', carregarDadosUsuario, async function(req, res){
 });
 
 
+
+
+router.post('/api/seguir-brecho', verificarUsuAutenticado, async function(req, res){
+    try {
+        const { brechoId, action } = req.body;
+        const userId = req.session.autenticado.id;
+
+        if (action === 'follow') {
+            const [existing] = await pool.query(
+                'SELECT * FROM SEGUINDO_BRECHO WHERE ID_USUARIO = ? AND ID_BRECHO = ?',
+                [userId, brechoId]
+            );
+            
+            if (existing.length === 0) {
+                await pool.query(
+                    'INSERT INTO SEGUINDO_BRECHO (ID_USUARIO, ID_BRECHO, DATA_SEGUINDO) VALUES (?, ?, NOW())',
+                    [userId, brechoId]
+                );
+            }
+        } else {
+            await pool.query(
+                'DELETE FROM SEGUINDO_BRECHO WHERE ID_USUARIO = ? AND ID_BRECHO = ?',
+                [userId, brechoId]
+            );
+        }
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.log('Erro ao seguir brechó:', error);
+        res.json({ success: false, message: 'Erro interno' });
+    }
+});
+
+router.post('/api/favoritar-brecho', verificarUsuAutenticado, async function(req, res){
+    try {
+        const { brechoId, action } = req.body;
+        const userId = req.session.autenticado.id;
+
+        if (action === 'favorite') {
+            const [existing] = await pool.query(
+                'SELECT * FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "brecho"',
+                [brechoId, userId]
+            );
+            
+            if (existing.length === 0) {
+                await pool.query(
+                    'INSERT INTO FAVORITOS (ID_ITEM, ID_USUARIO, STATUS_FAVORITO, TIPO_ITEM, DATA_FAVORITO) VALUES (?, ?, "favoritado", "brecho", NOW())',
+                    [brechoId, userId]
+                );
+            } else {
+                await pool.query(
+                    'UPDATE FAVORITOS SET STATUS_FAVORITO = "favoritado" WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "brecho"',
+                    [brechoId, userId]
+                );
+            }
+        } else {
+            await pool.query(
+                'UPDATE FAVORITOS SET STATUS_FAVORITO = "nulo" WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "brecho"',
+                [brechoId, userId]
+            );
+        }
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.log('Erro ao favoritar brechó:', error);
+        res.json({ success: false, message: 'Erro interno' });
+    }
+});
 
 module.exports = router;

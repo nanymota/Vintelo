@@ -304,7 +304,7 @@
 
 
           </section>
-          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
+          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
         </li>
 
         <li class="profile-item">
@@ -313,7 +313,7 @@
             <strong>Karine</strong>
             <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
           </section>
-          <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
+          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 2)">Favoritar</button>
         </li>
 
         <li class="profile-item">
@@ -322,7 +322,7 @@
             <strong>Coisitas</strong>
             <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
           </section>
-          <a href="/perfil3"><button class="follow-button">Favoritar</button></a>
+          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 3)">Favoritar</button>
         </li>
 
         <li class="profile-item">
@@ -331,7 +331,7 @@
             <strong>Luana</strong>
             <span class="rating">4.7 ⭐⭐⭐⭐⭐</span>
           </section>
-          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
+          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 4)">Favoritar</button>
         </li>
       </ul>
         <!--                                       banner de cadastro                                              -->
@@ -535,6 +535,7 @@
     <script>
         window.isAuthenticated = <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>true<% } else { %>false<% } %>;
     </script>
+    <script src="js/seguir-brechos.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>
