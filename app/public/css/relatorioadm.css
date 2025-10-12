@@ -1,0 +1,296 @@
+/* Usar o mesmo CSS da estatisticaadm.css */
+@import url('estatisticaadm.css');
+
+/* Estilos específicos para relatórios */
+.filters-section {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(125, 40, 56, 0.1);
+}
+
+.filter-group {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #7D2838;
+}
+
+.filter-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-generate {
+    background: #7D2838;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 20px;
+}
+
+.btn-generate:hover {
+    background: #5a1d28;
+}
+
+.reports-section {
+    display: grid;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.report-table {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(125, 40, 56, 0.1);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-header h3 {
+    color: #7D2838;
+    margin: 0;
+}
+
+.btn-export {
+    background: #f8f9fa;
+    color: #7D2838;
+    border: 1px solid #7D2838;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.table-wrapper th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #7D2838;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #7D2838;
+    color: white;
+}
+
+.btn-secondary {
+    background: white;
+    color: #7D2838;
+    border: 2px solid #7D2838;
+}
+
+.btn-primary:hover {
+    background: #5a1d28;
+}
+
+.btn-secondary:hover {
+    background: #7D2838;
+    color: white;
+}
+
+.trend {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.trend.positive {
+    color: #28a745;
+}
+
+.trend.negative {
+    color: #dc3545;
+}
+
+/* Estilos específicos para cards com ícones */
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.usuarios-card {
+    background: linear-gradient(135deg, #7D2838 0%, #8c2b44 100%);
+    color: white;
+}
+
+.brechos-card {
+    background: linear-gradient(135deg, #a64d61 0%, #b85a6e 100%);
+    color: white;
+}
+
+.produtos-card {
+    background: linear-gradient(135deg, #c96d7e 0%, #d47a8a 100%);
+    color: white;
+}
+
+.vendas-card {
+    background: linear-gradient(135deg, #e8a5b0 0%, #edb1bb 100%);
+    color: #7D2838;
+}
+
+.receita-card {
+    background: linear-gradient(135deg, #f4c2c7 0%, #f7cdd1 100%);
+    color: #7D2838;
+}
+
+.denuncias-card {
+    background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+    color: white;
+}
+
+/* Título padronizado - centralizado */
+.category-nav {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-nav .garimpe-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: #7d2838;
+    display: block;
+    text-align: center;
+}
+
+.category-nav .vintelo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 50px;
+    color: #7d2838;
+    line-height: 1.2;
+    display: block;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .category-nav .garimpe-text {
+        font-size: 1.2rem;
+    }
+    
+    .category-nav .vintelo-text {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        padding: 20px 15px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(125, 40, 56, 0.4);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-card h3 {
+        font-size: 0.9rem;
+        margin: 10px 0;
+        font-weight: 600;
+    }
+    
+    .stat-card .value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    
+    .card-icon {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+    
+    .filters-section {
+        padding: 15px;
+    }
+    
+    .filter-group {
+        display: block;
+        margin-bottom: 15px;
+        margin-right: 0;
+    }
+    
+    .btn-generate {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}

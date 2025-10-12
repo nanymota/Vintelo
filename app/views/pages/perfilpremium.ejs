@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
     <link rel="stylesheet" href="/css/perfilpremium.css">
+    <style>
+        .page-title {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-title .garimpe-text {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 300;
+            font-size: 20px;
+            letter-spacing: 3px;
+            color: #7d2838;
+            display: block;
+            text-align: center;
+        }
+        
+        .page-title .vintelo-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 50px;
+            color: #7d2838;
+            line-height: 1.2;
+            display: block;
+            text-align: center;
+            margin-top: -25px;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title .garimpe-text {
+                font-size: 1.2rem;
+            }
+            
+            .page-title .vintelo-text {
+                font-size: 2rem;
+            }
+        }
+        
+        .plan-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #7d2838;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+    </style>
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
@@ -54,7 +104,10 @@
     <main>
         <section class="premium-container">
             <section class="premium-header">
-                <h1>Perfil Premium</h1>
+                <div class="page-title">
+                    <span class="garimpe-text">Gerencie</span><br>
+                    <span class="vintelo-text">Premium</span>
+                </div>
                 <p>Gerencie planos e acompanhe estatísticas dos usuários premium</p>
             </section>
 
@@ -129,22 +182,22 @@
                 <section class="stats-overview">
                     <section class="stat-item">
                         <h4>Total Premium</h4>
-                        <section class="number">247</section>
+                        <section class="number" id="totalPremium"><%= estatisticas.totalPremium || 0 %></section>
                         <span class="trend up">+12%</span>
                     </section>
                     <section class="stat-item">
                         <h4>Receita Mensal</h4>
-                        <section class="number">R$ 8.450</section>
+                        <section class="number" id="receitaMensal">R$ <%= (estatisticas.receitaMensal || 0).toFixed(2).replace('.', ',') %></section>
                         <span class="trend up">+8%</span>
                     </section>
                     <section class="stat-item">
                         <h4>Taxa Conversão</h4>
-                        <section class="number">3.2%</section>
+                        <section class="number" id="taxaConversao"><%= (estatisticas.taxaConversao || 0).toFixed(1) %>%</section>
                         <span class="trend down">-0.5%</span>
                     </section>
                     <section class="stat-item">
                         <h4>Taxa Retenção</h4>
-                        <section class="number">89%</section>
+                        <section class="number" id="taxaRetencao"><%= (estatisticas.taxaRetencao || 0).toFixed(0) %>%</section>
                         <span class="trend up">+2%</span>
                     </section>
                 </section>
@@ -171,39 +224,23 @@
                     <section class="chart-container">
                         <h4>Usuários Premium Recentes</h4>
                         <section class="users-list">
-                            <section class="user-item">
-                                <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <section class="user-info">
-                                    <strong>Maria Silva</strong>
-                                    <span>Premium - 15/03/2024</span>
-                                </section>
-                                <section class="user-buttons">
-                                    <button class="btn-view">Ver</button>
-                                    <button class="btn-suspend">Suspender</button>
-                                </section>
-                            </section>
-                            <section class="user-item">
-                                <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <section class="user-info">
-                                    <strong>João Santos</strong>
-                                    <span>Básico - 14/03/2024</span>
-                                </section>
-                                <section class="user-buttons">
-                                    <button class="btn-view">Ver</button>
-                                    <button class="btn-suspend">Suspender</button>
-                                </section>
-                            </section>
-                            <section class="user-item">
-                                <img src="/imagens/icone sem cadastro.png" alt="User">
-                                <section class="user-info">
-                                    <strong>Ana Costa</strong>
-                                    <span>Enterprise - 13/03/2024</span>
-                                </section>
-                                <section class="user-buttons">
-                                    <button class="btn-view">Ver</button>
-                                    <button class="btn-suspend">Suspender</button>
-                                </section>
-                            </section>
+                            <% if (typeof usuariosPremium !== 'undefined' && usuariosPremium && usuariosPremium.length > 0) { %>
+                                <% usuariosPremium.forEach(function(usuario) { %>
+                                    <section class="user-item">
+                                        <img src="<%= usuario.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="User">
+                                        <section class="user-info">
+                                            <strong><%= usuario.NOME_USUARIO %></strong>
+                                            <span><%= usuario.PLANO_PREMIUM || 'Básico' %> - <%= new Date(usuario.DATA_PREMIUM || usuario.DATA_CADASTRO).toLocaleDateString('pt-BR') %></span>
+                                        </section>
+                                        <section class="user-buttons">
+                                            <button class="btn-view" onclick="verUsuario(<%= usuario.ID_USUARIO %>)">Ver</button>
+                                            <button class="btn-suspend" onclick="suspenderPremium(<%= usuario.ID_USUARIO %>)">Suspender</button>
+                                        </section>
+                                    </section>
+                                <% }); %>
+                            <% } else { %>
+                                <p>Nenhum usuário premium encontrado</p>
+                            <% } %>
                         </section>
                     </section>
                 </section>

@@ -2189,7 +2189,59 @@ router.get('/menucompras', carregarDadosUsuario, (req, res) => {
         pedidos: []
     });
 });
-router.get('/planos', carregarDadosUsuario, (req, res) => res.render('pages/planos', { autenticado: req.session.autenticado || null }));
+router.get('/planos', carregarDadosUsuario, async (req, res) => {
+    try {
+        let planos = [];
+        let planoAtual = null;
+        
+        // Tentar buscar planos do banco, se falhar usar planos padrão
+        try {
+            const [planosResult] = await pool.query(`
+                SELECT ID_PLANO, NOME_PLANO, PRECO_PLANO, BENEFICIOS, STATUS_PLANO
+                FROM PLANOS_PREMIUM 
+                WHERE STATUS_PLANO = 'ativo'
+                ORDER BY PRECO_PLANO ASC
+            `);
+            planos = planosResult;
+        } catch (dbError) {
+            console.log('Tabela PLANOS_PREMIUM não existe, usando planos padrão');
+            planos = [];
+        }
+        
+        // Se usuário autenticado, tentar buscar plano atual
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            try {
+                const [assinatura] = await pool.query(`
+                    SELECT a.*, p.NOME_PLANO, p.PRECO_PLANO
+                    FROM ASSINATURAS a
+                    JOIN PLANOS_PREMIUM p ON a.ID_PLANO = p.ID_PLANO
+                    WHERE a.ID_USUARIO = ? AND a.STATUS_ASSINATURA = 'ativa'
+                    ORDER BY a.DATA_INICIO DESC
+                    LIMIT 1
+                `, [req.session.autenticado.id]);
+                
+                if (assinatura.length > 0) {
+                    planoAtual = assinatura[0];
+                }
+            } catch (dbError) {
+                console.log('Erro ao buscar plano atual:', dbError.message);
+            }
+        }
+        
+        res.render('pages/planos', {
+            autenticado: req.session.autenticado || null,
+            planos: planos,
+            planoAtual: planoAtual
+        });
+    } catch (error) {
+        console.log('Erro geral ao carregar planos:', error);
+        res.render('pages/planos', {
+            autenticado: req.session.autenticado || null,
+            planos: [],
+            planoAtual: null
+        });
+    }
+});
 
 router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(req, res){
     try {
@@ -2415,7 +2467,55 @@ router.post('/denuncias/rejeitar/:id', denunciaController.rejeitarDenuncia);
 router.get('/denuncias/analisar/:id', denunciaController.analisarDenunciaDetalhada);
 
 router.get('/analisardenuncia', (req, res) => res.render('pages/analisardenuncia'));
-router.get('/perfilpremium', (req, res) => res.render('pages/perfilpremium'));
+router.get('/perfilpremium', async (req, res) => {
+    const defaultStats = {
+        totalPremium: 0,
+        receitaMensal: 0,
+        taxaConversao: 0,
+        taxaRetencao: 89
+    };
+    
+    try {
+        let estatisticas = defaultStats;
+        let usuariosPremium = [];
+        
+        try {
+            // Buscar estatísticas premium
+            const [totalPremiumResult] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS WHERE PLANO_PREMIUM IS NOT NULL');
+            const [totalUsuarios] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS');
+            
+            estatisticas = {
+                totalPremium: totalPremiumResult[0]?.total || 0,
+                receitaMensal: 0, // Valor padrão
+                taxaConversao: totalUsuarios[0]?.total > 0 ? ((totalPremiumResult[0]?.total || 0) / totalUsuarios[0].total) * 100 : 0,
+                taxaRetencao: 89
+            };
+            
+            // Buscar usuários premium (simulado)
+            const [usuarios] = await pool.query(`
+                SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL, u.DATA_CADASTRO, u.PLANO_PREMIUM
+                FROM USUARIOS u
+                WHERE u.PLANO_PREMIUM IS NOT NULL
+                ORDER BY u.DATA_CADASTRO DESC
+                LIMIT 10
+            `);
+            usuariosPremium = usuarios;
+        } catch (dbError) {
+            console.log('Erro no banco, usando valores padrão:', dbError.message);
+        }
+        
+        res.render('pages/perfilpremium', {
+            estatisticas: estatisticas,
+            usuariosPremium: usuariosPremium
+        });
+    } catch (error) {
+        console.log('Erro geral ao carregar perfil premium:', error);
+        res.render('pages/perfilpremium', {
+            estatisticas: defaultStats,
+            usuariosPremium: []
+        });
+    }
+});
 router.get('/blogadm', (req, res) => {
     const posts = [
         {
@@ -2644,6 +2744,102 @@ router.post('/produtosadm/excluir', async (req, res) => {
 
 router.post('/premium/atualizar-plano', atualizarPlano);
 router.post('/premium/alternar-status', alternarStatusPlano);
+
+// Rotas para gestão de planos do usuário
+router.post('/planos/contratar', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { planoId, nomePlano, preco } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        // Verificar se já tem plano ativo
+        const [planoExistente] = await pool.query(
+            'SELECT * FROM ASSINATURAS WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
+            [userId]
+        );
+        
+        if (planoExistente.length > 0) {
+            return res.json({ success: false, message: 'Você já possui um plano ativo' });
+        }
+        
+        // Criar nova assinatura
+        const dataInicio = new Date();
+        const dataVencimento = new Date();
+        dataVencimento.setMonth(dataVencimento.getMonth() + 1);
+        
+        await pool.query(`
+            INSERT INTO ASSINATURAS (ID_USUARIO, ID_PLANO, STATUS_ASSINATURA, DATA_INICIO, DATA_VENCIMENTO, VALOR_PLANO)
+            VALUES (?, ?, 'ativa', ?, ?, ?)
+        `, [userId, planoId, dataInicio, dataVencimento, preco]);
+        
+        // Atualizar usuário
+        await pool.query(
+            'UPDATE USUARIOS SET PLANO_PREMIUM = ? WHERE ID_USUARIO = ?',
+            [nomePlano, userId]
+        );
+        
+        res.json({ success: true, message: 'Plano contratado com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao contratar plano:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+router.post('/planos/cancelar', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const userId = req.session.autenticado.id;
+        
+        // Cancelar assinatura ativa
+        await pool.query(
+            'UPDATE ASSINATURAS SET STATUS_ASSINATURA = "cancelada" WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
+            [userId]
+        );
+        
+        // Remover plano premium do usuário
+        await pool.query(
+            'UPDATE USUARIOS SET PLANO_PREMIUM = NULL WHERE ID_USUARIO = ?',
+            [userId]
+        );
+        
+        res.json({ success: true, message: 'Plano cancelado com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao cancelar plano:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+router.post('/planos/alterar', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { novoPlanoId, nomePlano, preco } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        // Cancelar plano atual
+        await pool.query(
+            'UPDATE ASSINATURAS SET STATUS_ASSINATURA = "alterado" WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
+            [userId]
+        );
+        
+        // Criar nova assinatura
+        const dataInicio = new Date();
+        const dataVencimento = new Date();
+        dataVencimento.setMonth(dataVencimento.getMonth() + 1);
+        
+        await pool.query(`
+            INSERT INTO ASSINATURAS (ID_USUARIO, ID_PLANO, STATUS_ASSINATURA, DATA_INICIO, DATA_VENCIMENTO, VALOR_PLANO)
+            VALUES (?, ?, 'ativa', ?, ?, ?)
+        `, [userId, novoPlanoId, dataInicio, dataVencimento, preco]);
+        
+        // Atualizar usuário
+        await pool.query(
+            'UPDATE USUARIOS SET PLANO_PREMIUM = ? WHERE ID_USUARIO = ?',
+            [nomePlano, userId]
+        );
+        
+        res.json({ success: true, message: 'Plano alterado com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao alterar plano:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
 
 
 router.post('/adicionar-carrinho', compraController.adicionarAoCarrinho);

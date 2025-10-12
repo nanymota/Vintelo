@@ -5,6 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vintélo</title>
   <link rel="stylesheet" href="css/planos.css">
+  <style>
+    .login-required {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid #7D2838;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .auth-message h3 {
+      color: #7D2838;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .auth-message p {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-primary, .btn-secondary {
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: #7D2838;
+      color: white;
+      border: 2px solid #7D2838;
+    }
+    
+    .btn-primary:hover {
+      background: #5a1d28;
+      border-color: #5a1d28;
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #7D2838;
+      border: 2px solid #7D2838;
+    }
+    
+    .btn-secondary:hover {
+      background: #7D2838;
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .auth-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-primary, .btn-secondary {
+        width: 200px;
+      }
+    }
+  </style>
 
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
   
@@ -57,45 +127,99 @@
   <section class="planos-header">
     <h1>Nós temos os melhores planos!</h1>
     <p>Escolha o plano perfeito para o seu brechó.</p>
+    <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+      <% if (typeof planoAtual !== 'undefined' && planoAtual) { %>
+        <section class="plano-atual">
+          <p><strong>Seu plano atual:</strong> <%= planoAtual.NOME_PLANO %> - R$ <%= planoAtual.PRECO_PLANO.toFixed(2).replace('.', ',') %>/mês</p>
+          <p><strong>Status:</strong> <%= planoAtual.STATUS_ASSINATURA === 'ativa' ? 'Ativo' : 'Inativo' %></p>
+          <% if (planoAtual.DATA_VENCIMENTO) { %>
+            <p><strong>Vencimento:</strong> <%= new Date(planoAtual.DATA_VENCIMENTO).toLocaleDateString('pt-BR') %></p>
+          <% } %>
+        </section>
+      <% } else { %>
+        <section class="sem-plano">
+          <p>Você ainda não possui um plano premium. Escolha um abaixo!</p>
+        </section>
+      <% } %>
+    <% } else { %>
+      <section class="login-required">
+        <div class="auth-message">
+          <h3>Acesso Premium</h3>
+          <p>Para contratar um plano premium, você precisa ter uma conta na Vintélo</p>
+          <div class="auth-buttons">
+            <a href="/cadastro" class="btn-primary">Criar Conta</a>
+            <a href="/entrar" class="btn-secondary">Já tenho conta</a>
+          </div>
+        </div>
+      </section>
+    <% } %>
   </section>
 
   <section class="planos-container">
-    <section class="plano">
-      <h2>BÁSICO</h2>
-      <p class="preco"><span>R$</span><strong>19</strong><span>/mês</span></p>
-      <ul>
-        <li>Cadastro de produtos</li>
-        <li>Exclusão de produtos</li>
-      </ul>
-      <button>Iniciar</button>
-    </section>
+    <% if (typeof planos !== 'undefined' && planos && planos.length > 0) { %>
+      <% planos.forEach(function(plano, index) { %>
+        <section class="plano <%= index === 1 ? 'destaque' : '' %>">
+          <% if (index === 1) { %>
+            <section class="popular-badge">MAIS POPULAR</section>
+          <% } %>
+          <h2><%= plano.NOME_PLANO.toUpperCase() %></h2>
+          <p class="preco"><span>R$</span><strong><%= Math.floor(plano.PRECO_PLANO) %></strong><span>/mês</span></p>
+          <ul>
+            <% if (plano.BENEFICIOS) { %>
+              <% plano.BENEFICIOS.split(',').forEach(function(beneficio) { %>
+                <li><%= beneficio.trim() %></li>
+              <% }); %>
+            <% } else { %>
+              <li>Cadastro de produtos</li>
+              <li>Exclusão de produtos</li>
+              <% if (index > 0) { %>
+                <li>Suporte <%= index === 1 ? 'básico' : 'premium' %></li>
+                <li>Destaque nos resultados</li>
+              <% } %>
+            <% } %>
+          </ul>
+          <button onclick="contratarPlano('<%= plano.ID_PLANO %>', '<%= plano.NOME_PLANO %>', <%= plano.PRECO_PLANO %>)">Iniciar</button>
+        </section>
+      <% }); %>
+    <% } else { %>
+      <!-- Planos padrão caso não haja no banco -->
+      <section class="plano">
+        <h2>BÁSICO</h2>
+        <p class="preco"><span>R$</span><strong>19</strong><span>/mês</span></p>
+        <ul>
+          <li>Cadastro de produtos</li>
+          <li>Exclusão de produtos</li>
+        </ul>
+        <button onclick="contratarPlano('basico', 'Básico', 19.90)">Iniciar</button>
+      </section>
 
-    <section class="plano destaque">
-      <section class="popular-badge">MAIS POPULAR</section>
-      <h2>PREMIUM</h2>
-      <p class="preco"><span>R$</span><strong>39</strong><span>/mês</span></p>
-      <ul>
-        <li>Cadastro de produtos</li>
-        <li>Envio de anúncios</li>
-        <li>Exclusão de produtos</li>
-        <li>Suporte básico</li>
-        <li>Destaque nos resultados</li>
-      </ul>
-      <button>Iniciar</button>
-    </section>
+      <section class="plano destaque">
+        <section class="popular-badge">MAIS POPULAR</section>
+        <h2>PREMIUM</h2>
+        <p class="preco"><span>R$</span><strong>39</strong><span>/mês</span></p>
+        <ul>
+          <li>Cadastro de produtos</li>
+          <li>Envio de anúncios</li>
+          <li>Exclusão de produtos</li>
+          <li>Suporte básico</li>
+          <li>Destaque nos resultados</li>
+        </ul>
+        <button onclick="contratarPlano('premium', 'Premium', 39.90)">Iniciar</button>
+      </section>
 
-    <section class="plano">
-      <h2>PROFISSIONAL</h2>
-      <p class="preco"><span>R$</span><strong>59</strong><span>/mês</span></p>
-      <ul>
-        <li>Cadastro de produtos</li>
-        <li>Envio de anúncios</li>
-        <li>Exclusão de produtos</li>
-        <li>Suporte premium</li>
-        <li>Destaque avançado</li>
-      </ul>
-      <button>Iniciar</button>
-    </section>
+      <section class="plano">
+        <h2>PROFISSIONAL</h2>
+        <p class="preco"><span>R$</span><strong>59</strong><span>/mês</span></p>
+        <ul>
+          <li>Cadastro de produtos</li>
+          <li>Envio de anúncios</li>
+          <li>Exclusão de produtos</li>
+          <li>Suporte premium</li>
+          <li>Destaque avançado</li>
+        </ul>
+        <button onclick="contratarPlano('profissional', 'Profissional', 59.90)">Iniciar</button>
+      </section>
+    <% } %>
   </section>
    <br>
    <br>
@@ -113,6 +237,9 @@
     <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
   </footer>
   
-  <script src="script/planos.js"></script>
+  <script>
+    window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+  </script>
+  <script src="/js/planos.js"></script>
 </body>
 </html>
