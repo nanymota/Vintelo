@@ -42,7 +42,7 @@
   <section class="oculto-desktop">
     <header>
     <nav class="grid">
-      <a href="/carrinho">
+      <a href="javascript:void(0)" onclick="goBack()">
         <img src="imagens/seta.png" alt="Seta Voltar">
       </a>
       <h1>Sacola</h1>
@@ -779,5 +779,13 @@ function closeNotification() {
 }
 </script>
 
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>

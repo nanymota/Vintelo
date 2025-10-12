@@ -12,16 +12,16 @@
   <section class="oculto-desktop">
     <header>
       <nav class="grid">
-        <a href="/homecomprador">
+        <a href="javascript:void(0)" onclick="goBack()">
           <img src="/imagens/seta.png" alt="Voltar">
         </a>
         <h1>Pagamento Pendente</h1>
         <% if (autenticado && autenticado.imagem) { %>
-          <a href="/perfilcliente">
+          <a href="javascript:void(0)" onclick="goBack()">
             <img src="/<%= autenticado.imagem %>" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
           </a>
         <% } else { %>
-          <a href="/perfilcliente">
+          <a href="javascript:void(0)" onclick="goBack()">
             <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
           </a>
         <% } %>
@@ -42,8 +42,8 @@
         <p>Você receberá uma confirmação em breve por e-mail.</p>
         
         <section class="actions">
-          <a href="/minhascompras" class="btn-primary">Acompanhar Pedido</a>
-          <a href="/homecomprador" class="btn-secondary">Continuar Comprando</a>
+          <a href="javascript:void(0)" onclick="goBack()" class="btn-primary">Acompanhar Pedido</a>
+          <a href="javascript:void(0)" onclick="goBack()" class="btn-secondary">Continuar Comprando</a>
         </section>
       </section>
     </main>
@@ -117,5 +117,13 @@
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
   </section>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>

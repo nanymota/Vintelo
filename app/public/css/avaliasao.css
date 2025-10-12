@@ -109,6 +109,49 @@ body {
     height: 40px;
 }
 
+/*                    Navegação por Abas                  */
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+}
+
+.tab-btn.active {
+    background-color: #7D2838;
+    color: white;
+    box-shadow: 0 2px 8px rgba(125, 40, 56, 0.3);
+}
+
+.tab-btn:hover:not(.active) {
+    background-color: #e9ecef;
+    color: #7D2838;
+}
+
+/*                    Conteúdo das Abas                  */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
 /*                            Seção de Resumo                  */
 .summary {
     background-color: #fff;
@@ -170,6 +213,78 @@ body {
 .add-review-btn img {
     width: 20px;
     height: 20px;
+}
+
+/*                    Lista de Brechós                  */
+.brechos-list {
+    padding: 0 20px;
+}
+
+.brecho-card {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.brecho-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.brecho-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #7D2838;
+}
+
+.brecho-info {
+    flex: 1;
+}
+
+.brecho-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.brecho-rating {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.btn-avaliar {
+    padding: 8px 16px;
+    background-color: #7D2838;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-avaliar:hover {
+    background-color: #a64d61;
+    transform: translateY(-1px);
+}
+
+.no-brechos {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    margin: 20px;
 }
 
 /*                         Formulário de Avaliação                  */
@@ -272,7 +387,7 @@ body {
 }
 
 /*                   Lista de Avaliações                  */
-.reviews {
+.reviews-list {
     padding: 0 20px;
 }
 
@@ -329,6 +444,52 @@ body {
     line-height: 1.5;
 }
 
+.brecho-name {
+    font-size: 12px;
+    color: #7D2838;
+    font-weight: 600;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.no-reviews {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    margin: 20px;
+}
+
+.login-message {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.login-message a {
+    color: #7d2838;
+    text-decoration: none;
+}
+
+.review-actions {
+    margin-top: 10px;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
 /*                     rodapé            */
 .footer {
     background-color: #7D2838;
@@ -369,6 +530,48 @@ body {
 .copyright {
     font-size: 14px;
     color: #ccc;
+}
+
+/*                    Título da Página                  */
+.page-title {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-title .garimpe-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: #7d2838;
+    display: block;
+    text-align: center;
+}
+
+.page-title .vintelo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 50px;
+    color: #7d2838;
+    line-height: 1.2;
+    display: block;
+    text-align: center;
+    margin-top: -10px;
+}
+
+@media (max-width: 768px) {
+    .page-title .garimpe-text {
+        font-size: 1.2rem;
+    }
+    
+    .page-title .vintelo-text {
+        font-size: 2rem;
+    }
 }
 
 /*                    Responsividade Desktop             */
@@ -470,7 +673,7 @@ body {
         border-radius: 12px;
     }
     
-    .reviews {
+    .reviews-list {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         gap: 25px;
@@ -541,5 +744,37 @@ body {
     .form-actions button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .brechos-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+        padding: 0 20px;
+    }
+    
+    .brecho-card {
+        padding: 25px;
+        margin-bottom: 0;
+    }
+    
+    .brecho-img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .brecho-info h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+    
+    .brecho-rating {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-avaliar {
+        padding: 10px 20px;
+        font-size: 14px;
     }
 }

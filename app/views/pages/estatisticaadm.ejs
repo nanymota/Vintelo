@@ -28,10 +28,10 @@
 
     <!-- Header Desktop -->
     <header class="header-desktop">
-        <div class="top-bar">
+        <section class="top-bar">
             <p>Painel Administrativo</p>
-        </div>
-        <div class="main-nav">
+        </section>
+        <section class="main-nav">
             <a href="/homeadm">
                 <img src="imagens/logo.png" class="logo">
             </a>
@@ -42,11 +42,11 @@
                 <a href="/pedidosadm">Pedidos</a>
                 <a href="/relatorioadm">Relatórios</a>
             </nav>
-            <div class="nav-icons">
+            <section class="nav-icons">
                 <input type="text" placeholder="Buscar...">
                 <a href="/menuadm"><img src="/imagens/icone sem cadastro.png"></a>
-            </div>
-        </div>
+            </section>
+        </section>
     </header>
 
     <main>
@@ -57,305 +57,305 @@
             <br>
         </nav>
         
-        <div class="stats-grid">
-            <div class="stat-card usuarios-card" onclick="showSection('usuarios')">
-                <div class="card-icon">👥</div>
+        <section class="stats-grid">
+            <section class="stat-card usuarios-card" onclick="showSection('usuarios')">
+                <section class="card-icon">👥</section>
                 <h3>Total Usuários</h3>
-                <div class="value"><%= estatisticas.totalUsuarios %></div>
-            </div>
+                <section class="value"><%= estatisticas.totalUsuarios %></section>
+            </section>
             
-            <div class="stat-card brechos-card" onclick="showSection('brechos')">
-                <div class="card-icon">🏪</div>
+            <section class="stat-card brechos-card" onclick="showSection('brechos')">
+                <section class="card-icon">🏪</section>
                 <h3>Brechós Ativos</h3>
-                <div class="value"><%= estatisticas.totalBrechos %></div>
-            </div>
+                <section class="value"><%= estatisticas.totalBrechos %></section>
+            </section>
             
-            <div class="stat-card produtos-card" onclick="showSection('produtos')">
-                <div class="card-icon">📦</div>
+            <section class="stat-card produtos-card" onclick="showSection('produtos')">
+                <section class="card-icon">📦</section>
                 <h3>Produtos Cadastrados</h3>
-                <div class="value"><%= estatisticas.totalProdutos %></div>
-            </div>
+                <section class="value"><%= estatisticas.totalProdutos %></section>
+            </section>
             
-            <div class="stat-card vendas-card" onclick="showSection('vendas')">
-                <div class="card-icon">💰</div>
+            <section class="stat-card vendas-card" onclick="showSection('vendas')">
+                <section class="card-icon">💰</section>
                 <h3>Vendas Totais</h3>
-                <div class="value"><%= estatisticas.totalVendas %></div>
-            </div>
+                <section class="value"><%= estatisticas.totalVendas %></section>
+            </section>
             
-            <div class="stat-card receita-card" onclick="showSection('receita')">
-                <div class="card-icon">📊</div>
+            <section class="stat-card receita-card" onclick="showSection('receita')">
+                <section class="card-icon">📊</section>
                 <h3>Receita Total</h3>
-                <div class="value">R$ <%= (estatisticas.receitaTotal || 0).toFixed(2).replace('.', ',') %></div>
-            </div>
+                <section class="value">R$ <%= (estatisticas.receitaTotal || 0).toFixed(2).replace('.', ',') %></section>
+            </section>
             
-            <div class="stat-card denuncias-card" onclick="showSection('denuncias')">
-                <div class="card-icon">⚠️</div>
+            <section class="stat-card denuncias-card" onclick="showSection('denuncias')">
+                <section class="card-icon">⚠️</section>
                 <h3>Denúncias Pendentes</h3>
-                <div class="value"><%= estatisticas.denunciasPendentes %></div>
-            </div>
-        </div>
+                <section class="value"><%= estatisticas.denunciasPendentes %></section>
+            </section>
+        </section>
 
-        <div class="charts-grid" id="charts-section">
-            <div class="chart-card">
+        <section class="charts-grid" id="charts-section">
+            <section class="chart-card">
                 <h3>Crescimento de Usuários</h3>
-                <div class="bar-chart">
-                    <div class="bar" style="height: 80%;">
+                <section class="bar-chart">
+                    <section class="bar" style="height: 80%;">
                         <span class="bar-value">320</span>
                         <span class="bar-label">Jan</span>
-                    </div>
-                    <div class="bar" style="height: 65%;">
+                    </section>
+                    <section class="bar" style="height: 65%;">
                         <span class="bar-value">260</span>
                         <span class="bar-label">Fev</span>
-                    </div>
-                    <div class="bar" style="height: 90%;">
+                    </section>
+                    <section class="bar" style="height: 90%;">
                         <span class="bar-value">360</span>
                         <span class="bar-label">Mar</span>
-                    </div>
-                    <div class="bar" style="height: 75%;">
+                    </section>
+                    <section class="bar" style="height: 75%;">
                         <span class="bar-value">300</span>
                         <span class="bar-label">Abr</span>
-                    </div>
-                </div>
-            </div>
+                    </section>
+                </section>
+            </section>
             
-            <div class="chart-card">
+            <section class="chart-card">
                 <h3>Distribuição por Categoria</h3>
-                <div class="pie-chart">
-                    <div class="pie-center">100%</div>
-                </div>
-                <div class="pie-legend">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #8c2b44;"></div>
+                <section class="pie-chart">
+                    <section class="pie-center">100%</section>
+                </section>
+                <section class="pie-legend">
+                    <section class="legend-item">
+                        <section class="legend-color" style="background: #8c2b44;"></section>
                         <span>Vestidos (35%)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #a64d61;"></div>
+                    </section>
+                    <section class="legend-item">
+                        <section class="legend-color" style="background: #a64d61;"></section>
                         <span>Blusas (25%)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #c96d7e;"></div>
+                    </section>
+                    <section class="legend-item">
+                        <section class="legend-color" style="background: #c96d7e;"></section>
                         <span>Acessórios (20%)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #e8a5b0;"></div>
+                    </section>
+                    <section class="legend-item">
+                        <section class="legend-color" style="background: #e8a5b0;"></section>
                         <span>Outros (20%)</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </section>
+                </section>
+            </section>
+        </section>
 
         <!-- Seções Detalhadas -->
         <section id="usuarios" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Gestão de Usuários</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Usuários Ativos</h4>
-                        <div class="detail-value">1,180</div>
+                        <section class="detail-value">1,180</section>
                         <p>Usuários com login recente</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Novos Cadastros</h4>
-                        <div class="detail-value">70</div>
+                        <section class="detail-value">70</section>
                         <p>Este mês</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Usuários Bloqueados</h4>
-                        <div class="detail-value">8</div>
+                        <section class="detail-value">8</section>
                         <p>Por violação de termos</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: 1.500 usuários ativos</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 78%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: 78%;"></section>
+                    </section>
                     <p>78% da meta atingida</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
         <section id="brechos" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Gestão de Brechós</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Brechós Verificados</h4>
-                        <div class="detail-value">72</div>
+                        <section class="detail-value">72</section>
                         <p>Com documentação completa</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Pendentes Aprovação</h4>
-                        <div class="detail-value">13</div>
+                        <section class="detail-value">13</section>
                         <p>Aguardando verificação</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Brechós Suspensos</h4>
-                        <div class="detail-value">3</div>
+                        <section class="detail-value">3</section>
                         <p>Por irregularidades</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: 100 brechós ativos</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 85%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: 85%;"></section>
+                    </section>
                     <p>85% da meta atingida</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
         <section id="produtos" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Gestão de Produtos</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Produtos Ativos</h4>
-                        <div class="detail-value">3,200</div>
+                        <section class="detail-value">3,200</section>
                         <p>Disponíveis para venda</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Aguardando Moderação</h4>
-                        <div class="detail-value">220</div>
+                        <section class="detail-value">220</section>
                         <p>Produtos para aprovação</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Produtos Removidos</h4>
-                        <div class="detail-value">45</div>
+                        <section class="detail-value">45</section>
                         <p>Por violação de políticas</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: 5.000 produtos ativos</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 64%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: 64%;"></section>
+                    </section>
                     <p>64% da meta atingida</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
         <section id="vendas" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Análise de Vendas</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Vendas Concluídas</h4>
-                        <div class="detail-value">892</div>
+                        <section class="detail-value">892</section>
                         <p>Transações finalizadas</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Vendas Canceladas</h4>
-                        <div class="detail-value">28</div>
+                        <section class="detail-value">28</section>
                         <p>Por diversos motivos</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Taxa de Conversão</h4>
-                        <div class="detail-value">12.5%</div>
+                        <section class="detail-value">12.5%</section>
                         <p>Visitantes que compraram</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: 1.000 vendas mensais</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 89%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: 89%;"></section>
+                    </section>
                     <p>89% da meta atingida</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
 
 
         <section id="receita" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Análise de Receita</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Receita Bruta</h4>
-                        <div class="detail-value">R$ <%= (estatisticas.receitaTotal || 0).toFixed(2).replace('.', ',') %></div>
+                        <section class="detail-value">R$ <%= (estatisticas.receitaTotal || 0).toFixed(2).replace('.', ',') %></section>
                         <p>Total arrecadado</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Comissão Plataforma</h4>
-                        <div class="detail-value">R$ <%= ((estatisticas.receitaTotal || 0) * 0.05).toFixed(2).replace('.', ',') %></div>
+                        <section class="detail-value">R$ <%= ((estatisticas.receitaTotal || 0) * 0.05).toFixed(2).replace('.', ',') %></section>
                         <p>5% sobre vendas</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Ticket Médio</h4>
-                        <div class="detail-value">R$ <%= estatisticas.totalVendas > 0 ? ((estatisticas.receitaTotal || 0) / estatisticas.totalVendas).toFixed(2).replace('.', ',') : '0,00' %></div>
+                        <section class="detail-value">R$ <%= estatisticas.totalVendas > 0 ? ((estatisticas.receitaTotal || 0) / estatisticas.totalVendas).toFixed(2).replace('.', ',') : '0,00' %></section>
                         <p>Por transação</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: R$ 50.000 mensais</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas.receitaTotal || 0) / 50000) * 100, 100) %>%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: <%= Math.min(((estatisticas.receitaTotal || 0) / 50000) * 100, 100) %>%;"></section>
+                    </section>
                     <p><%= Math.min(((estatisticas.receitaTotal || 0) / 50000) * 100, 100).toFixed(1) %>% da meta atingida</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
         <section id="denuncias" class="detail-section" style="display: none;">
-            <div class="section-wrapper">
-                <div class="section-header">
+            <section class="section-wrapper">
+                <section class="section-header">
                     <h2>Gestão de Denúncias</h2>
                     <button class="back-btn" onclick="hideAllSections()">← Voltar</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
+                </section>
+                <section class="detail-grid">
+                    <section class="detail-card">
                         <h4>Denúncias Abertas</h4>
-                        <div class="detail-value"><%= estatisticas.denunciasPendentes %></div>
+                        <section class="detail-value"><%= estatisticas.denunciasPendentes %></section>
                         <p>Aguardando análise</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Resolvidas Este Mês</h4>
-                        <div class="detail-value">45</div>
+                        <section class="detail-value">45</section>
                         <p>Casos finalizados</p>
-                    </div>
-                    <div class="detail-card">
+                    </section>
+                    <section class="detail-card">
                         <h4>Tempo Médio</h4>
-                        <div class="detail-value">2.5 dias</div>
+                        <section class="detail-value">2.5 dias</section>
                         <p>Para resolução</p>
-                    </div>
-                </div>
-                <div class="progress-section">
+                    </section>
+                </section>
+                <section class="progress-section">
                     <h4>Meta: Resolver em até 3 dias</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 83%;"></div>
-                    </div>
+                    <section class="progress-bar">
+                        <section class="progress-fill" style="width: 83%;"></section>
+                    </section>
                     <p>Dentro do prazo estabelecido</p>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
     </main>
 
     <footer>
         <img src="imagens/logo2.jpeg" alt="Logo">
-        <div class="social">
+        <section class="social">
             <p>Siga nossas redes sociais</p>
-            <div class="social-links">
+            <section class="social-links">
                 <a href="https://facebook.com" target="_blank"><img src="imagens/Facebook.png" alt="Facebook"></a>
                 <a href="https://twitter.com" target="_blank"><img src="imagens/Pinterest.png" alt="Pinterest"></a>
                 <a href="https://www.instagram.com/vintelobrechos" target="_blank"><img src="imagens/Instagram.png" alt="Instagram"></a>
-            </div>
-        </div>
+            </section>
+        </section>
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
     
@@ -383,5 +383,13 @@
             setTimeout(animateCounters, 500);
         });
     </script>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>

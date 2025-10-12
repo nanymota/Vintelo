@@ -12,7 +12,7 @@
     <section class="oculto-desktop">
         <header>
             <nav class="grid">
-                <a href="/homeadm">
+                <a href="javascript:void(0)" onclick="goBack()">
                     <img src="imagens/seta.png" alt="Voltar">
                 </a>
                 <img src="imagens/logo.png" alt="Logo">
@@ -86,38 +86,38 @@
                                 </span>
                             </section>
                             <section class="perfil-stats">
-                                <div class="stat">
+                                <section class="stat">
                                     <span class="stat-number">0</span>
                                     <span class="stat-label">Compras</span>
-                                </div>
-                                <div class="stat">
+                                </section>
+                                <section class="stat">
                                     <span class="stat-number">R$ 0</span>
                                     <span class="stat-label">Gasto</span>
-                                </div>
+                                </section>
                             </section>
                         </section>
                         
                         <section class="perfil-detalhes">
-                            <div class="detalhe-item">
+                            <section class="detalhe-item">
                                 <label>Email:</label>
                                 <span><%= usuario.EMAIL_USUARIO %></span>
-                            </div>
-                            <div class="detalhe-item">
+                            </section>
+                            <section class="detalhe-item">
                                 <label>Telefone:</label>
                                 <span><%= usuario.CELULAR_USUARIO || 'Não informado' %></span>
-                            </div>
-                            <div class="detalhe-item">
+                            </section>
+                            <section class="detalhe-item">
                                 <label>CPF:</label>
                                 <span>Não informado</span>
-                            </div>
-                            <div class="detalhe-item">
+                            </section>
+                            <section class="detalhe-item">
                                 <label>Cadastro:</label>
                                 <span><%= new Date(usuario.DATA_CADASTRO).toLocaleDateString('pt-BR') %></span>
-                            </div>
-                            <div class="detalhe-item">
+                            </section>
+                            <section class="detalhe-item">
                                 <label>Última compra:</label>
                                 <span>Nunca</span>
-                            </div>
+                            </section>
                         </section>
                         
                         <section class="perfil-actions">
@@ -222,5 +222,13 @@
         </section>
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>

@@ -76,5 +76,13 @@
    <button type="submit" form="loginForm" class="login-btn">Entrar</button>
   <script src="script/entrar.js"></script> 
 
- </body>
+ 
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
+</body>
 </html>

@@ -43,10 +43,10 @@
         </section>
 
         <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
-            <div class="notification <%= dadosNotificacao.tipo %>">
+            <section class="notification <%= dadosNotificacao.tipo %>">
                 <strong><%= dadosNotificacao.titulo %></strong>
                 <%= dadosNotificacao.mensagem %>
-            </div>
+            </section>
         <% } %>
 
         <section class="admin-forms">
@@ -58,14 +58,14 @@
             <!-- Login Form -->
             <section id="login-form" class="tab-content active">
                 <form action="/login-admin" method="post" class="admin-form">
-                    <div class="form-group">
+                    <section class="form-group">
                         <label for="email_login">Email</label>
                         <input type="email" id="email_login" name="email_usu" placeholder="Digite seu email" required>
-                    </div>
-                    <div class="form-group">
+                    </section>
+                    <section class="form-group">
                         <label for="senha_login">Senha</label>
                         <input type="password" id="senha_login" name="senha_usu" placeholder="Digite sua senha" required>
-                    </div>
+                    </section>
                     <button type="submit" class="btn-primary">Entrar</button>
                 </form>
             </section>
@@ -73,56 +73,56 @@
             <!-- Cadastro Form -->
             <section id="cadastro-form" class="tab-content">
                 <form action="/cadastroadm" method="post" class="admin-form">
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="user_usuario">Nome de Usuário</label>
                             <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" value="<%= typeof valores !== 'undefined' ? valores.user_usuario || '' : '' %>" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="nome_usuario">Nome Completo</label>
                             <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" value="<%= typeof valores !== 'undefined' ? valores.nome_usuario || '' : '' %>" required>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="email_usuario">Email</label>
                             <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" value="<%= typeof valores !== 'undefined' ? valores.email_usuario || '' : '' %>" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="celular_usuario">Celular</label>
                             <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" value="<%= typeof valores !== 'undefined' ? valores.celular_usuario || '' : '' %>" required>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="cep_usuario">CEP</label>
                             <input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" value="<%= typeof valores !== 'undefined' ? valores.cep_usuario || '' : '' %>" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="logradouro_usuario">Logradouro</label>
                             <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida..." value="<%= typeof valores !== 'undefined' ? valores.logradouro_usuario || '' : '' %>" required>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="numero_usuario">Número</label>
                             <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" value="<%= typeof valores !== 'undefined' ? valores.numero_usuario || '' : '' %>" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="bairro_usuario">Bairro</label>
                             <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Nome do bairro" value="<%= typeof valores !== 'undefined' ? valores.bairro_usuario || '' : '' %>" required>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="cidade_usuario">Cidade</label>
                             <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Nome da cidade" value="<%= typeof valores !== 'undefined' ? valores.cidade_usuario || '' : '' %>" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="uf_usuario">UF</label>
                             <select id="uf_usuario" name="uf_usuario" required>
                                 <option value="">Selecione</option>
@@ -154,19 +154,19 @@
                                 <option value="SE" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'SE' ? 'selected' : '' %>>SE</option>
                                 <option value="TO" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'TO' ? 'selected' : '' %>>TO</option>
                             </select>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
-                    <div class="form-row">
-                        <div class="form-group">
+                    <section class="form-row">
+                        <section class="form-group">
                             <label for="senha_usuario">Senha</label>
                             <input type="password" id="senha_usuario" name="senha_usuario" placeholder="Digite sua senha" required>
-                        </div>
-                        <div class="form-group">
+                        </section>
+                        <section class="form-group">
                             <label for="confirmar_senha">Confirmar Senha</label>
                             <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     
                     <button type="submit" class="btn-primary">Criar Administrador</button>
                 </form>
@@ -195,5 +195,13 @@
         </section>
         <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>

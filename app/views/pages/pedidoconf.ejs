@@ -41,11 +41,11 @@
     <section class="oculto-desktop">
         <header>
             <nav class="grid">
-                <a href="/homecomprador">
+                <a href="javascript:void(0)" onclick="goBack()">
                     <img src="imagens/seta.png" alt="Voltar">
                 </a>
                 <h1>Pedido Confirmado</h1>
-                <a href="/menu">
+                <a href="javascript:void(0)" onclick="goBack()">
                     <img src="imagens/icone sem cadastro.png" alt="Perfil">
                 </a>
             </nav>
@@ -178,5 +178,13 @@
             sessionStorage.removeItem('pedido_confirmado');
         }
     </script>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
+        window.userType = '<%= autenticado.tipo %>';
+        <% } %>
+    </script>
+    <script src="/js/navegacao.js"></script>
 </body>
 </html>
