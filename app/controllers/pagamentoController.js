@@ -10,28 +10,46 @@ const processarPagamento = async (req, res) => {
         const { valor, descricao, metodo_pagamento } = req.body;
         
         console.log('Dados recebidos:', { valor, descricao, metodo_pagamento });
-        console.log('Valor parseado:', parseFloat(valor));
+        console.log('Access Token configurado:', !!process.env.accessToken);
+        
+        if (!process.env.accessToken) {
+            throw new Error('Access Token do Mercado Pago não configurado');
+        }
+        
+        const valorNumerico = Number(parseFloat(valor).toFixed(2));
+        if (isNaN(valorNumerico) || valorNumerico <= 0) {
+            throw new Error('Valor inválido para pagamento');
+        }
+        
+        console.log('Valor parseado:', valorNumerico);
+        
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        console.log('Base URL:', baseUrl);
         
         const preference = {
             items: [
                 {
                     title: descricao || 'Compra Vintélo',
-                    unit_price: Number(parseFloat(valor).toFixed(2)),
+                    unit_price: valorNumerico,
                     quantity: 1,
                 }
             ],
             back_urls: {
-                success: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pedidoconf`,
-                failure: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`,
-                pending: `${process.env.URL_BASE || req.protocol + '://' + req.get('host')}/pagamento-falha`
+                success: `${baseUrl}/pagamento-sucesso`,
+                failure: `${baseUrl}/pagamento-falha`,
+                pending: `${baseUrl}/pagamento-pendente`
             },
-            external_reference: `vintelo-${Date.now()}`
+            external_reference: `vintelo-${Date.now()}`,
+            notification_url: `${baseUrl}/webhook-mercadopago`
         };
+        
+        console.log('Preference criada:', JSON.stringify(preference, null, 2));
 
         const preference_client = new Preference(client);
         const response = await preference_client.create({ body: preference });
         
         console.log('Preference ID criado:', response.id);
+        console.log('Init point:', response.init_point);
         
         res.json({
             success: true,
@@ -41,9 +59,21 @@ const processarPagamento = async (req, res) => {
         
     } catch (error) {
         console.error('Erro ao processar pagamento:', error);
+        console.error('Detalhes do erro:', error.message);
+        console.error('Stack trace:', error.stack);
+        
+        let errorMessage = 'Erro ao conectar com Mercado Pago';
+        if (error.message.includes('auto_return')) {
+            errorMessage = 'Erro de configuração nas URLs de retorno';
+        } else if (error.message.includes('back_url')) {
+            errorMessage = 'URLs de retorno inválidas';
+        } else if (error.message.includes('Access Token')) {
+            errorMessage = 'Token de acesso não configurado';
+        }
+        
         res.status(500).json({
             success: false,
-            error: 'Erro interno do servidor'
+            error: errorMessage + ': ' + error.message
         });
     }
 };
