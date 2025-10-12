@@ -1690,7 +1690,34 @@ router.get('/estatisticaadm', async (req, res) => {
 router.get('/estatistica-mobile', (req, res) => res.render('pages/estatistica-mobile'));
 router.get('/estatistica-desktop', (req, res) => res.render('pages/estatistica-desktop'));
 
-router.get('/categorias', carregarDadosUsuario, categoriaController.mostrarCategorias);
+router.get('/categorias', carregarDadosUsuario, async function(req, res){
+    try {
+        const [produtos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, 
+                   p.TAMANHO_PRODUTO, p.COR_PRODUTO, p.CONDICAO_PRODUTO,
+                   p.ESTAMPA_PRODUTO, p.QUANTIDADE_ESTOQUE,
+                   img.URL_IMG,
+                   u.NOME_USUARIO as VENDEDOR
+            FROM PRODUTOS p 
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+            WHERE p.STATUS_PRODUTO = 'd'
+            GROUP BY p.ID_PRODUTO
+            ORDER BY p.DATA_CADASTRO DESC
+        `);
+        
+        res.render('pages/categorias', {
+            autenticado: req.session.autenticado || null,
+            produtos: produtos || []
+        });
+    } catch (error) {
+        console.log('Erro ao buscar produtos para categorias:', error);
+        res.render('pages/categorias', {
+            autenticado: req.session.autenticado || null,
+            produtos: []
+        });
+    }
+});
 router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProdutos);
 
 router.get('/editarbanners', bannerController.mostrarFormulario);
