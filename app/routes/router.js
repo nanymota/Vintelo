@@ -195,7 +195,231 @@ router.post("/cadastro", usuarioController.regrasValidacaoFormCad, usuarioContro
 
 
 
-router.get('/cadastroadm', function(req, res){ res.render('pages/cadastroadm'); });
+router.get('/cadastroadm', function(req, res){ 
+    res.render('pages/cadastroadm', {
+        listaErros: null,
+        dadosNotificacao: null,
+        valores: {}
+    }); 
+});
+
+router.post('/cadastroadm', async function(req, res){
+    try {
+        const { user_usuario, nome_usuario, email_usuario, celular_usuario, cep_usuario, logradouro_usuario, numero_usuario, bairro_usuario, cidade_usuario, uf_usuario, senha_usuario, confirmar_senha } = req.body;
+        
+        // Validações de campos obrigatórios
+        if (!user_usuario?.trim() || !nome_usuario?.trim() || !email_usuario?.trim() || !celular_usuario?.trim() || !cep_usuario?.trim() || !logradouro_usuario?.trim() || !numero_usuario?.trim() || !bairro_usuario?.trim() || !cidade_usuario?.trim() || !uf_usuario?.trim() || !senha_usuario) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Todos os campos são obrigatórios', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de nome de usuário
+        if (user_usuario.length < 3 || user_usuario.length > 20 || !/^[a-zA-Z0-9_]+$/.test(user_usuario)) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome de usuário deve ter 3-20 caracteres (apenas letras, números e _)', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de nome completo
+        if (nome_usuario.length < 2 || nome_usuario.length > 70 || !/^[a-zA-ZÀ-ſ\s]+$/.test(nome_usuario)) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome deve ter 2-70 caracteres (apenas letras e espaços)', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email_usuario)) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Email inválido', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de celular
+        const celularLimpo = celular_usuario.replace(/\D/g, '');
+        if (celularLimpo.length !== 11 || !celularLimpo.startsWith('11')) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Celular deve ter 11 dígitos e começar com 11', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de CEP
+        const cepLimpo = cep_usuario.replace(/\D/g, '');
+        if (cepLimpo.length !== 8) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'CEP deve ter 8 dígitos', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de logradouro
+        if (logradouro_usuario.length < 5 || logradouro_usuario.length > 100) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Logradouro deve ter entre 5 e 100 caracteres', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de número
+        if (numero_usuario.length > 4 || !/^[0-9]+$/.test(numero_usuario)) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Número deve ter até 4 dígitos', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de bairro
+        if (bairro_usuario.length < 2 || bairro_usuario.length > 30) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Bairro deve ter entre 2 e 30 caracteres', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de cidade
+        if (cidade_usuario.length < 2 || cidade_usuario.length > 30) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Cidade deve ter entre 2 e 30 caracteres', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de UF
+        const ufsValidas = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+        if (!ufsValidas.includes(uf_usuario.toUpperCase())) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'UF inválida', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Validação de senha
+        if (senha_usuario.length < 6) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Senha deve ter pelo menos 6 caracteres', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        if (senha_usuario !== confirmar_senha) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Senhas não coincidem', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        // Verificar duplicatas no banco
+        const [emailExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE EMAIL_USUARIO = ?', [email_usuario]);
+        if (emailExiste.length > 0) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Email já cadastrado', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        const [userExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE USER_USUARIO = ?', [user_usuario]);
+        if (userExiste.length > 0) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome de usuário já existe', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        const [celularExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE CELULAR_USUARIO = ?', [celularLimpo]);
+        if (celularExiste.length > 0) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Celular já cadastrado', tipo: 'error' },
+                valores: req.body
+            });
+        }
+        
+        const senhaHash = bcrypt.hashSync(senha_usuario, 10);
+        
+        const [resultado] = await pool.query(`
+            INSERT INTO USUARIOS (USER_USUARIO, NOME_USUARIO, EMAIL_USUARIO, CELULAR_USUARIO, SENHA_USUARIO, TIPO_USUARIO, CEP_USUARIO, LOGRADOURO_USUARIO, NUMERO_USUARIO, BAIRRO_USUARIO, CIDADE_USUARIO, UF_USUARIO)
+            VALUES (?, ?, ?, ?, ?, 'a', ?, ?, ?, ?, ?, ?)
+        `, [user_usuario.trim(), nome_usuario.trim(), email_usuario.trim(), celularLimpo, senhaHash, cepLimpo, logradouro_usuario.trim(), numero_usuario, bairro_usuario.trim(), cidade_usuario.trim(), uf_usuario.toUpperCase()]);
+        
+        await pool.query('INSERT INTO ADMINISTRADORES (ID_USUARIO, CPF_ADM) VALUES (?, ?)', [resultado.insertId, '00000000000']);
+        
+        req.session.autenticado = {
+            autenticado: nome_usuario,
+            id: resultado.insertId,
+            tipo: 'a',
+            nome: nome_usuario,
+            email: email_usuario
+        };
+        
+        res.redirect('/homeadm');
+    } catch (error) {
+        console.log('Erro completo:', error);
+        res.render('pages/cadastroadm', {
+            listaErros: null,
+            dadosNotificacao: { titulo: 'Erro!', mensagem: 'Erro interno: ' + error.message, tipo: 'error' },
+            valores: req.body
+        });
+    }
+});
+
+router.post('/login-admin', async function(req, res){
+    try {
+        const { email_usu, senha_usu } = req.body;
+        
+        const [admin] = await pool.query(`
+            SELECT u.*, a.CPF_ADMIN 
+            FROM USUARIOS u 
+            JOIN ADMINISTRADORES a ON u.ID_USUARIO = a.ID_USUARIO 
+            WHERE u.EMAIL_USUARIO = ? AND u.TIPO_USUARIO = 'a'
+        `, [email_usu]);
+        
+        if (admin.length === 0 || !bcrypt.compareSync(senha_usu, admin[0].SENHA_USUARIO)) {
+            return res.render('pages/cadastroadm', {
+                listaErros: null,
+                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Credenciais inválidas', tipo: 'error' },
+                valores: {}
+            });
+        }
+        
+        req.session.autenticado = {
+            autenticado: admin[0].NOME_USUARIO,
+            id: admin[0].ID_USUARIO,
+            tipo: admin[0].TIPO_USUARIO,
+            nome: admin[0].NOME_USUARIO,
+            email: admin[0].EMAIL_USUARIO
+        };
+        
+        res.redirect('/homeadm');
+    } catch (error) {
+        console.log('Erro no login admin:', error);
+        res.render('pages/cadastroadm', {
+            listaErros: null,
+            dadosNotificacao: { titulo: 'Erro!', mensagem: 'Erro interno do servidor', tipo: 'error' },
+            valores: {}
+        });
+    }
+});
 
 router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "pages/restrito"), function (req, res) {
     res.render("pages/adm", {
@@ -2149,7 +2373,7 @@ router.get('/homeadm', async (req, res) => {
 
 router.get('/menuadm', (req, res) => res.render('pages/menuadm'));
 router.get('/brechosadm', (req, res) => res.render('pages/brechosadm'));
-router.get('/produtosadm', (req, res) => res.render('pages/produtosadm'));
+
 router.get('/pedidosadm', (req, res) => res.render('pages/pedidosadm'));
 router.get('/relatorioadm', (req, res) => res.render('pages/relatorioadm'));
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
@@ -2316,6 +2540,105 @@ router.get('/usuariosadm', async (req, res) => {
     } catch (error) {
         console.log('Erro ao carregar usuários admin:', error);
         res.render('pages/usuariosadm', { usuarios: [] });
+    }
+});
+
+router.get('/produtosadm', async (req, res) => {
+    try {
+        const [produtos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, p.TAMANHO_PRODUTO,
+                   p.COR_PRODUTO, p.ESTILO_PRODUTO, p.CONDICAO_PRODUTO, p.STATUS_PRODUTO,
+                   p.DATA_CADASTRO, p.DETALHES_PRODUTO,
+                   u.NOME_USUARIO as VENDEDOR,
+                   img.URL_IMG
+            FROM PRODUTOS p
+            JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            GROUP BY p.ID_PRODUTO
+            ORDER BY p.DATA_CADASTRO DESC
+        `);
+        
+        res.render('pages/produtosadm', { produtos: produtos || [] });
+    } catch (error) {
+        console.log('Erro ao carregar produtos admin:', error);
+        res.render('pages/produtosadm', { produtos: [] });
+    }
+});
+
+router.post('/produtosadm/status', async (req, res) => {
+    try {
+        const { produtoId, status } = req.body;
+        
+        await pool.query('UPDATE PRODUTOS SET STATUS_PRODUTO = ? WHERE ID_PRODUTO = ?', [status, produtoId]);
+        
+        res.json({ success: true, message: 'Status alterado com sucesso' });
+    } catch (error) {
+        console.log('Erro ao alterar status:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+router.get('/detalheprodutoadm', async (req, res) => {
+    try {
+        const { id } = req.query;
+        
+        if (!id) {
+            return res.redirect('/produtosadm');
+        }
+        
+        const [produto] = await pool.query(`
+            SELECT p.*, u.NOME_USUARIO as NOME_BRECHO, img.URL_IMG as IMAGEM_PRODUTO
+            FROM PRODUTOS p
+            JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            WHERE p.ID_PRODUTO = ?
+            GROUP BY p.ID_PRODUTO
+        `, [id]);
+        
+        res.render('pages/detalheprodutoadm', {
+            produto: produto[0] || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar detalhe produto:', error);
+        res.redirect('/produtosadm');
+    }
+});
+
+router.get('/produtosadm/detalhes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [produto] = await pool.query(`
+            SELECT p.*, u.NOME_USUARIO as VENDEDOR, img.URL_IMG
+            FROM PRODUTOS p
+            JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            WHERE p.ID_PRODUTO = ?
+            GROUP BY p.ID_PRODUTO
+        `, [id]);
+        
+        if (produto.length > 0) {
+            res.json({ success: true, data: produto[0] });
+        } else {
+            res.json({ success: false, message: 'Produto não encontrado' });
+        }
+    } catch (error) {
+        console.log('Erro ao buscar detalhes:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+router.post('/produtosadm/excluir', async (req, res) => {
+    try {
+        const { produtoId } = req.body;
+        
+        await pool.query('DELETE FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+        await pool.query('DELETE FROM PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+        
+        res.json({ success: true, message: 'Produto excluído com sucesso' });
+    } catch (error) {
+        console.log('Erro ao excluir produto:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
     }
 });
 

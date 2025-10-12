@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos Admin - Vintélo</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/produtosadm.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Header Mobile -->
+    <section class="oculto-desktop">
+        <header>
+            <nav class="grid">
+                <a href="/homeadm">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo">
+                <img src="imagens/icone saco.png" class="img-branca">
+            </nav>
+        </header>
+    </section>
+
+    <!-- Header Desktop -->
+    <section class="oculto-mobile">
+        <section class="discount-banner">
+            <span class="highlight">Painel Admin - Produtos</span>
+        </section>
+        <header class="main-header">
+            <a href="/homeadm">
+                <img src="imagens/logo.png" class="img-logo">
+            </a>
+            <nav>
+                <a href="/homeadm">Home Admin</a>
+                <a href="/usuariosadm">Usuários</a>
+                <a href="/brechoadm">Brechós</a>
+                <a href="/produtosadm">Produtos</a>
+                <a href="/denuncias">Denúncias</a>
+                <a href="/estatisticaadm">Estatísticas</a>
+            </nav>
+            <section class="search-profile">
+                <form>
+                    <input type="text" placeholder="Buscar...">
+                </form>
+                <ul>
+                    <li><img src="imagens/icone sem cadastro.png" class="maria"></li>
+                    <li><img src="imagens/icone saco.png" class="img-tamanho"></li>
+                    <li><img src="imagens/icone saco.png" class="img-tamanho2"></li>
+                </ul>
+            </section>
+        </header>
+    </section>
+
+    <main class="admin-container">
+        <section class="page-title">
+            <span class="garimpe-text">Gerencie</span><br>
+            <span class="vintelo-text">Produtos</span>
+        </section>
+
+        <section class="content-wrapper">
+            <!-- Filtro Lateral -->
+            <aside class="sidebar-filters">
+                <h3>Filtros Avançados</h3>
+                
+                <section class="filter-section">
+                    <h4>Status</h4>
+                    <label><input type="radio" name="status" value="" checked> Todos</label>
+                    <label><input type="radio" name="status" value="d"> Disponível</label>
+                    <label><input type="radio" name="status" value="i"> Inativo</label>
+                </section>
+                
+                <section class="filter-section">
+                    <h4>Categoria</h4>
+                    <select id="categoriaFilter">
+                        <option value="">Todas</option>
+                        <option value="Vestido">Vestido</option>
+                        <option value="Blusa">Blusa</option>
+                        <option value="Calça">Calça</option>
+                        <option value="Saia">Saia</option>
+                        <option value="Acessório">Acessório</option>
+                    </select>
+                </section>
+                
+                <section class="filter-section">
+                    <h4>Preço</h4>
+                    <input type="number" id="precoMin" placeholder="Min">
+                    <input type="number" id="precoMax" placeholder="Max">
+                </section>
+                
+                <section class="filter-section">
+                    <h4>Data Cadastro</h4>
+                    <select id="dataFilter">
+                        <option value="">Todas</option>
+                        <option value="hoje">Hoje</option>
+                        <option value="semana">Última semana</option>
+                        <option value="mes">Último mês</option>
+                    </select>
+                </section>
+                
+                <section class="filter-section">
+                    <h4>Vendedor</h4>
+                    <input type="text" id="vendedorFilter" placeholder="Nome do vendedor">
+                </section>
+                
+                <section class="filter-actions">
+                    <button onclick="aplicarFiltros()" class="btn-aplicar">Aplicar</button>
+                    <button onclick="limparFiltros()" class="btn-limpar">Limpar</button>
+                </section>
+            </aside>
+            
+            <section class="main-content">
+                <!-- Busca rápida -->
+                <section class="search-section">
+                    <input type="text" id="searchInput" placeholder="Buscar produto...">
+                </section>
+
+        <!-- Lista de Produtos -->
+        <section class="produtos-list">
+            <section class="produtos-header">
+                <h3>Produtos Cadastrados (<span id="totalProdutos"><%= typeof produtos !== 'undefined' ? produtos.length : 0 %></span>)</h3>
+            </section>
+            
+            <section class="produtos-grid">
+                <% if (produtos && produtos.length > 0) { %>
+                    <% produtos.forEach(produto => { %>
+                        <section class="produto-card" data-status="<%= produto.STATUS_PRODUTO %>" data-categoria="<%= produto.TIPO_PRODUTO %>">
+                            <section class="produto-image">
+                                <img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
+                                <span class="status-badge <%= produto.STATUS_PRODUTO === 'd' ? 'ativo' : 'inativo' %>">
+                                    <%= produto.STATUS_PRODUTO === 'd' ? 'Ativo' : 'Inativo' %>
+                                </span>
+                            </section>
+                            
+                            <section class="produto-info">
+                                <h4><%= produto.NOME_PRODUTO %></h4>
+                                <p class="produto-preco">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                                <p class="produto-categoria"><%= produto.TIPO_PRODUTO %></p>
+                                <p class="produto-vendedor">Vendedor: <%= produto.VENDEDOR %></p>
+                                <p class="produto-data">Cadastrado: <%= new Date(produto.DATA_CADASTRO).toLocaleDateString('pt-BR') %></p>
+                            </section>
+                            
+                            <section class="produto-actions">
+                                <% if (produto.STATUS_PRODUTO === 'd') { %>
+                                    <button onclick="alterarStatus(<%= produto.ID_PRODUTO %>, 'i')" class="btn-inativar">Inativar</button>
+                                <% } else { %>
+                                    <button onclick="alterarStatus(<%= produto.ID_PRODUTO %>, 'd')" class="btn-ativar">Ativar</button>
+                                <% } %>
+                                <button onclick="verDetalhes(<%= produto.ID_PRODUTO %>)" class="btn-detalhes">Detalhes</button>
+                                <button onclick="excluirProduto(<%= produto.ID_PRODUTO %>)" class="btn-excluir">Excluir</button>
+                            </section>
+                        </section>
+                    <% }) %>
+                <% } else { %>
+                    <section class="empty-state">
+                        <img src="imagens/empty-products.png" alt="Nenhum produto">
+                        <h3>Nenhum produto encontrado</h3>
+                        <p>Não há produtos cadastrados no sistema.</p>
+                    </section>
+                <% } %>
+            </section>
+            </section>
+        </section>
+    </main>
+
+    <!-- Modal Detalhes -->
+    <section id="detalhesModal" class="modal">
+        <section class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detalhes do Produto</h2>
+            <section id="detalhesContent"></section>
+        </section>
+    </section>
+
+    <script src="js/produtosadm.js"></script>
+
+    <footer class="footer">
+        <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
+        <section class="social-media">
+            <p>Painel Administrativo</p>
+        </section>
+        <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
