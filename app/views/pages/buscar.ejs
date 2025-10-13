@@ -28,7 +28,7 @@
             </nav>
             <section class="search-profile">
                 <form action="/buscar" method="GET">
-                    <input type="text" name="q" placeholder="Buscar..." value="<%= termo %>">
+                    <input type="text" name="q" placeholder="Buscar...">
                 </form>
                 <ul>
                     <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
@@ -59,7 +59,7 @@
         <nav class="category-nav category-nav-mobile">
             <br>
             <span class="garimpe-text">Resultados para</span><br>
-            <span class="vintelo-text">"<%= termo %>"</span>
+            <span class="vintelo-text">""</span>
             <br>
         </nav>
 
@@ -67,71 +67,11 @@
         <nav class="category-nav category-nav-desktop">
             <section class="garimpe-vintelo-container">
                 <span class="garimpe-text">Resultados para</span><br>
-                <span class="vintelo-text">"<%= termo %>"</span>
+                <span class="vintelo-text">""</span>
             </section>
         </nav>
 
-        <!-- Resultados -->
-        <% if (produtos.length > 0 || brechos.length > 0) { %>
-            <!-- Produtos encontrados -->
-            <% if (produtos.length > 0) { %>
-                <section class="categoria-section">
-                    <nav class="grid-produtos">
-                        <h3 class="garimpe-text">Produtos (<%= produtos.length %>)</h3>
-                    </nav>
-                    <section class="products-section">
-                        <% produtos.forEach(function(produto) { %>
-                            <article class="product-card">
-                                <a href="/produto/<%= produto.ID_PRODUTO %>">
-                                    <img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>">
-                                </a>
-                                <h2><%= produto.NOME_PRODUTO %></h2>
-                                <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                                <p class="Descrição">Por: <%= produto.VENDEDOR || 'Vendedor' %></p>
-                                <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)">
-                                    <img src="imagens/coraçao de fav2.png">
-                                </button>
-                                <button class="cart" onclick="adicionarAoCarrinho(<%= produto.ID_PRODUTO %>)">
-                                    <img src="imagens/sacola.png" class="img-sacola">
-                                </button>
-                            </article>
-                        <% }); %>
-                    </section>
-                </section>
-            <% } %>
-
-            <!-- Brechós encontrados -->
-            <% if (brechos.length > 0) { %>
-                <section class="categoria-section">
-                    <nav class="grid-produtos">
-                        <h3 class="garimpe-text">Brechós (<%= brechos.length %>)</h3>
-                    </nav>
-                    <section class="brechos-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px;">
-                        <% brechos.forEach(function(brecho) { %>
-                            <div class="brecho-card" style="background: white; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/icone sem cadastro.png' %>" 
-                                     alt="<%= brecho.NOME_USUARIO %>" 
-                                     style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
-                                <h3 style="color: #7d2838; margin-bottom: 10px;"><%= brecho.NOME_USUARIO %></h3>
-                                <p style="color: #666; font-size: 14px;"><%= brecho.total_produtos %> produtos</p>
-                                <a href="/brecho/<%= brecho.ID_USUARIO %>" style="background: #7d2838; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
-                                    Ver Brechó
-                                </a>
-                            </div>
-                        <% }); %>
-                    </section>
-                </section>
-            <% } %>
-        <% } else { %>
-            <!-- Nenhum resultado -->
-            <section style="text-align: center; padding: 60px 20px;">
-                <h2 style="color: #7d2838; margin-bottom: 20px;">Nenhum resultado encontrado</h2>
-                <p style="color: #666; margin-bottom: 30px;">Tente buscar por outros termos ou navegue pelas categorias</p>
-                <a href="/categorias" style="background: #7d2838; color: white; padding: 12px 24px; text-decoration: none; border-radius: 25px;">
-                    Ver Categorias
-                </a>
-            </section>
-        <% } %>
+        <!-- Resultados carregados via JavaScript -->
     </main>
 
     <!-- Footer -->
@@ -147,24 +87,10 @@
         </section>
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/busca-global.js"></script>
     <script src="/js/favoritos-global.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
     <script src="/js/sacola-global.js"></script>
 </body>
 </html>

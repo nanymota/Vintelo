@@ -1,14 +1,13 @@
-function toggleSection(sectionId) {
-    const content = document.getElementById(sectionId);
-    const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
+function showTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
     
-    if (content.style.display === 'none' || content.style.display === '') {
-        content.style.display = 'block';
-        arrow.innerHTML = '▲';
-    } else {
-        content.style.display = 'none';
-        arrow.innerHTML = '▼';
-    }
+    document.getElementById(tabName + '-form').classList.add('active');
+    event.target.classList.add('active');
 }
 
 function formatCEP(value) {
@@ -16,15 +15,6 @@ function formatCEP(value) {
         .replace(/\D/g, '')
         .replace(/(\d{5})(\d)/, '$1-$2')
         .replace(/(-\d{3})\d+?$/, '$1');
-}
-
-function formatCPF(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-        .replace(/(-\d{2})\d+?$/, '$1');
 }
 
 function buscarCEP(cep) {
@@ -48,13 +38,6 @@ function goBack() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('basic-info').style.display = 'block';
-    document.getElementById('security-info').style.display = 'block';
-    document.getElementById('address-info').style.display = 'block';
-    document.getElementById('basic-arrow').innerHTML = '▲';
-    document.getElementById('security-arrow').innerHTML = '▲';
-    document.getElementById('address-arrow').innerHTML = '▲';
-    
     const cepInput = document.getElementById('cep_usuario');
     if (cepInput) {
         cepInput.addEventListener('input', function() {
@@ -69,13 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    const cpfInput = document.getElementById('cpf_cliente');
-    if (cpfInput) {
-        cpfInput.addEventListener('input', function() {
-            this.value = formatCPF(this.value);
-        });
-    }
-    
     const telefoneInput = document.getElementById('celular_usuario');
     if (telefoneInput) {
         telefoneInput.addEventListener('input', function() {
@@ -83,16 +59,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    const cadastroForm = document.querySelector('form[action="/cadastro"]');
-    
+    const cadastroForm = document.querySelector('form[action="/cadastroadm"]');
     if (cadastroForm) {
         cadastroForm.addEventListener('submit', async function(e) {
+            const senha = document.getElementById('senha_usuario').value;
+            const confirmarSenha = document.getElementById('confirmar_senha').value;
+            
+            if (senha !== confirmarSenha) {
+                e.preventDefault();
+                alert('As senhas não coincidem!');
+                return;
+            }
+            
             e.preventDefault();
             
             const formData = new FormData(this);
             
             try {
-                const response = await fetch('/cadastro', {
+                const response = await fetch('/cadastroadm', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -105,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const result = await response.json();
                     
                     if (result.success) {
-                        localStorage.setItem('userData', JSON.stringify(result.userData));
-                        window.location.href = '/homecomprador';
+                        alert('Administrador criado com sucesso!');
+                        window.location.href = '/homeadm';
                     }
                 } else {
                     this.submit();

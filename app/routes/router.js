@@ -2158,6 +2158,30 @@ router.get('/categorias', carregarDadosUsuario, async function(req, res){
         });
     }
 });
+
+// API endpoint para produtos (usado pelo JavaScript da página categorias)
+router.get('/api/produtos', async function(req, res){
+    try {
+        const [produtos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, 
+                   p.TAMANHO_PRODUTO, p.COR_PRODUTO, p.CONDICAO_PRODUTO,
+                   p.ESTAMPA_PRODUTO, p.QUANTIDADE_ESTOQUE,
+                   img.URL_IMG,
+                   u.NOME_USUARIO as VENDEDOR
+            FROM PRODUTOS p 
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+            WHERE p.STATUS_PRODUTO = 'd'
+            GROUP BY p.ID_PRODUTO
+            ORDER BY p.DATA_CADASTRO DESC
+        `);
+        
+        res.json(produtos || []);
+    } catch (error) {
+        console.log('Erro ao buscar produtos via API:', error);
+        res.json([]);
+    }
+});
 router.get('/categorias/filtrar/:categoryId', categoriaController.filtrarProdutos);
 
 router.get('/editarbanners', bannerController.mostrarFormulario);
@@ -3859,6 +3883,28 @@ router.get('/debug/produtos', verificarUsuAutenticado, async (req, res) => {
 });
 
 module.exports = router;
+
+// API endpoint para status de autenticação (usado pelo perfil-autenticado.js)
+router.get('/api/auth-status', function(req, res){
+    try {
+        if (req.session && req.session.autenticado) {
+            res.json({
+                isAuthenticated: true,
+                user: {
+                    id: req.session.autenticado.id,
+                    nome: req.session.autenticado.nome,
+                    email: req.session.autenticado.email,
+                    tipo: req.session.autenticado.tipo
+                }
+            });
+        } else {
+            res.json({ isAuthenticated: false });
+        }
+    } catch (error) {
+        console.log('Erro ao verificar status de autenticação:', error);
+        res.json({ isAuthenticated: false });
+    }
+});
 
 // Rota para criar produto de teste
 router.post('/debug/criar-produto-teste', verificarUsuAutenticado, async (req, res) => {

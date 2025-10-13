@@ -108,11 +108,11 @@
 
                                     <label for="email_usu">Endereço de email</label>
                                     <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
+                                        required>
 
                                     <label for="celular_usuario">Contato</label>
                                     <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="11999999999" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.celular_usuario || '' %>" maxlength="11" required>
+                                        maxlength="11" required>
                                 </section>
                             </section>
 
@@ -128,11 +128,11 @@
                                     
                                     <label for="cpf_cliente">CPF</label>
                                     <input type="text" id="cpf_cliente" name="cpf_cliente" placeholder="000.000.000-00" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cpf_cliente || '' %>" required>
+                                        required>
                                     
                                     <label for="data_nasc">Data de Nascimento</label>
                                     <input type="date" id="data_nasc" name="data_nasc" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.data_nasc || '' %>" required>
+                                        required>
                                 </section>
                             </section>
 
@@ -145,27 +145,27 @@
                                 <section class="section-content" id="address-info">
                                     <label for="cep_usuario">CEP</label>
                                     <input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" maxlength="9" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cep_usuario || '' %>" required>
+                                        required>
 
                                     <label for="logradouro_usuario">Endereço</label>
                                     <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida..." 
-                                        value="<%= typeof valores !== 'undefined' && valores?.logradouro_usuario || '' %>" required>
+                                        required>
 
                                     <label for="numero_usuario">Número</label>
                                     <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.numero_usuario || '' %>" maxlength="4" required>
+                                        maxlength="4" required>
 
                                     <label for="bairro_usuario">Bairro</label>
                                     <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Bairro" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.bairro_usuario || '' %>" required>
+                                        required>
 
                                     <label for="cidade_usuario">Cidade</label>
                                     <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Cidade" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cidade_usuario || '' %>" required>
+                                        required>
 
                                     <label for="uf_usuario">UF</label>
                                     <input type="text" id="uf_usuario" name="uf_usuario" placeholder="SP" maxlength="2" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.uf_usuario || '' %>" required>
+                                        required>
                                 </section>
                             </section>
 
@@ -176,109 +176,8 @@
             </section>
         </section>
     </main>
-
-    <script>
-        function toggleSection(sectionId) {
-            const content = document.getElementById(sectionId);
-            const arrow = document.getElementById(sectionId.replace('-info', '-arrow'));
-            
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'block';
-                arrow.innerHTML = '▲';
-            } else {
-                content.style.display = 'none';
-                arrow.innerHTML = '▼';
-            }
-        }
-
-        // Inicializar seções abertas e configurar validações
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('basic-info').style.display = 'block';
-            document.getElementById('security-info').style.display = 'block';
-            document.getElementById('address-info').style.display = 'block';
-            document.getElementById('basic-arrow').innerHTML = '▲';
-            document.getElementById('security-arrow').innerHTML = '▲';
-            document.getElementById('address-arrow').innerHTML = '▲';
-            
-            // Formatação do CEP
-            const cepInput = document.getElementById('cep_usuario');
-            if (cepInput) {
-                cepInput.addEventListener('input', function() {
-                    this.value = formatCEP(this.value);
-                });
-                
-                cepInput.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCEP(cep);
-                    }
-                });
-            }
-            
-            // Formatação do CPF
-            const cpfInput = document.getElementById('cpf_cliente');
-            if (cpfInput) {
-                cpfInput.addEventListener('input', function() {
-                    this.value = formatCPF(this.value);
-                });
-            }
-            
-            // Telefone apenas números
-            const telefoneInput = document.getElementById('celular_usuario');
-            if (telefoneInput) {
-                telefoneInput.addEventListener('input', function() {
-                    this.value = this.value.replace(/\D/g, '').substring(0, 11);
-                });
-            }
-        });
-        
-        function formatCEP(value) {
-            return value
-                .replace(/\D/g, '')
-                .replace(/(\d{5})(\d)/, '$1-$2')
-                .replace(/(-\d{3})\d+?$/, '$1');
-        }
-        
-        function formatCPF(value) {
-            return value
-                .replace(/\D/g, '')
-                .replace(/(\d{3})(\d)/, '$1.$2')
-                .replace(/(\d{3})(\d)/, '$1.$2')
-                .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-                .replace(/(-\d{2})\d+?$/, '$1');
-        }
-        
-        function buscarCEP(cep) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('logradouro_usuario').value = data.logradouro || '';
-                        document.getElementById('bairro_usuario').value = data.bairro || '';
-                        document.getElementById('cidade_usuario').value = data.localidade || '';
-                        document.getElementById('uf_usuario').value = data.uf || '';
-                    }
-                })
-                .catch(error => {
-                    console.log('Erro ao buscar CEP:', error);
-                });
-        }
-    </script>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
+    <script src="/js/cadastro-ajax.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
 </body>
 </html>

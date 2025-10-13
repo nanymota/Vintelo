@@ -42,13 +42,6 @@
             <span class="vintelo-text">Administrativa</span>
         </section>
 
-        <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
-            <section class="notification <%= dadosNotificacao.tipo %>">
-                <strong><%= dadosNotificacao.titulo %></strong>
-                <%= dadosNotificacao.mensagem %>
-            </section>
-        <% } %>
-
         <section class="admin-forms">
             <section class="tabs">
                 <button type="button" class="tab-button active" onclick="showTab('login')">Login Admin</button>
@@ -76,83 +69,83 @@
                     <section class="form-row">
                         <section class="form-group">
                             <label for="user_usuario">Nome de Usuário</label>
-                            <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" value="<%= typeof valores !== 'undefined' ? valores.user_usuario || '' : '' %>" required>
+                            <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" required>
                         </section>
                         <section class="form-group">
                             <label for="nome_usuario">Nome Completo</label>
-                            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" value="<%= typeof valores !== 'undefined' ? valores.nome_usuario || '' : '' %>" required>
+                            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" required>
                         </section>
                     </section>
                     
                     <section class="form-row">
                         <section class="form-group">
                             <label for="email_usuario">Email</label>
-                            <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" value="<%= typeof valores !== 'undefined' ? valores.email_usuario || '' : '' %>" required>
+                            <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" required>
                         </section>
                         <section class="form-group">
                             <label for="celular_usuario">Celular</label>
-                            <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" value="<%= typeof valores !== 'undefined' ? valores.celular_usuario || '' : '' %>" required>
+                            <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" required>
                         </section>
                     </section>
                     
                     <section class="form-row">
                         <section class="form-group">
                             <label for="cep_usuario">CEP</label>
-                            <input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" value="<%= typeof valores !== 'undefined' ? valores.cep_usuario || '' : '' %>" required>
+                            <input type="text" id="cep_usuario" name="cep_usuario" placeholder="00000-000" required>
                         </section>
                         <section class="form-group">
                             <label for="logradouro_usuario">Logradouro</label>
-                            <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida..." value="<%= typeof valores !== 'undefined' ? valores.logradouro_usuario || '' : '' %>" required>
+                            <input type="text" id="logradouro_usuario" name="logradouro_usuario" placeholder="Rua, Avenida..." required>
                         </section>
                     </section>
                     
                     <section class="form-row">
                         <section class="form-group">
                             <label for="numero_usuario">Número</label>
-                            <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" value="<%= typeof valores !== 'undefined' ? valores.numero_usuario || '' : '' %>" required>
+                            <input type="text" id="numero_usuario" name="numero_usuario" placeholder="123" required>
                         </section>
                         <section class="form-group">
                             <label for="bairro_usuario">Bairro</label>
-                            <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Nome do bairro" value="<%= typeof valores !== 'undefined' ? valores.bairro_usuario || '' : '' %>" required>
+                            <input type="text" id="bairro_usuario" name="bairro_usuario" placeholder="Nome do bairro" required>
                         </section>
                     </section>
                     
                     <section class="form-row">
                         <section class="form-group">
                             <label for="cidade_usuario">Cidade</label>
-                            <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Nome da cidade" value="<%= typeof valores !== 'undefined' ? valores.cidade_usuario || '' : '' %>" required>
+                            <input type="text" id="cidade_usuario" name="cidade_usuario" placeholder="Nome da cidade" required>
                         </section>
                         <section class="form-group">
                             <label for="uf_usuario">UF</label>
                             <select id="uf_usuario" name="uf_usuario" required>
                                 <option value="">Selecione</option>
-                                <option value="AC" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'AC' ? 'selected' : '' %>>AC</option>
-                                <option value="AL" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'AL' ? 'selected' : '' %>>AL</option>
-                                <option value="AP" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'AP' ? 'selected' : '' %>>AP</option>
-                                <option value="AM" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'AM' ? 'selected' : '' %>>AM</option>
-                                <option value="BA" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'BA' ? 'selected' : '' %>>BA</option>
-                                <option value="CE" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'CE' ? 'selected' : '' %>>CE</option>
-                                <option value="DF" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'DF' ? 'selected' : '' %>>DF</option>
-                                <option value="ES" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'ES' ? 'selected' : '' %>>ES</option>
-                                <option value="GO" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'GO' ? 'selected' : '' %>>GO</option>
-                                <option value="MA" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'MA' ? 'selected' : '' %>>MA</option>
-                                <option value="MT" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'MT' ? 'selected' : '' %>>MT</option>
-                                <option value="MS" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'MS' ? 'selected' : '' %>>MS</option>
-                                <option value="MG" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'MG' ? 'selected' : '' %>>MG</option>
-                                <option value="PA" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'PA' ? 'selected' : '' %>>PA</option>
-                                <option value="PB" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'PB' ? 'selected' : '' %>>PB</option>
-                                <option value="PR" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'PR' ? 'selected' : '' %>>PR</option>
-                                <option value="PE" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'PE' ? 'selected' : '' %>>PE</option>
-                                <option value="PI" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'PI' ? 'selected' : '' %>>PI</option>
-                                <option value="RJ" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'RJ' ? 'selected' : '' %>>RJ</option>
-                                <option value="RN" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'RN' ? 'selected' : '' %>>RN</option>
-                                <option value="RS" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'RS' ? 'selected' : '' %>>RS</option>
-                                <option value="RO" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'RO' ? 'selected' : '' %>>RO</option>
-                                <option value="RR" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'RR' ? 'selected' : '' %>>RR</option>
-                                <option value="SC" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'SC' ? 'selected' : '' %>>SC</option>
-                                <option value="SP" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'SP' ? 'selected' : '' %>>SP</option>
-                                <option value="SE" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'SE' ? 'selected' : '' %>>SE</option>
-                                <option value="TO" <%= typeof valores !== 'undefined' && valores.uf_usuario === 'TO' ? 'selected' : '' %>>TO</option>
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MT">MT</option>
+                                <option value="MS">MS</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
                             </select>
                         </section>
                     </section>
@@ -174,20 +167,6 @@
         </section>
     </main>
 
-    <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(tabName + '-form').classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
-
     <footer class="footer">
         <img src="imagens/logo2.jpeg" alt="Vintélo" class="footer-image">
         <section class="social-media">
@@ -196,20 +175,8 @@
         <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
     </footer>
 
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
+    <script src="/js/cadastroadm.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
 </body>
 </html>
