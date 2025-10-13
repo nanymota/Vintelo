@@ -215,12 +215,9 @@
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-    <script>
-        window.isAuthenticated = <%= (typeof authData !== 'undefined' && authData.isAuthenticated) || false %>;
-        window.userType = '<%= (typeof authData !== 'undefined' && authData.userType) || 'c' %>';
-    </script>
+    <script src="/js/auth-config.js"></script>
     
-    <script src="/js/verificar-codigo.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

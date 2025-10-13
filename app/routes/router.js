@@ -744,6 +744,118 @@ router.get('/tensustentavel', (req, res) => {
         });
     }
 });
+
+router.get('/js/auth-config.js', (req, res) => {
+    const isAuthenticated = !!(req.session && req.session.autenticado && req.session.autenticado.autenticado);
+    let userType = 'c';
+    
+    if (req.session && req.session.autenticado && req.session.autenticado.tipo) {
+        userType = req.session.autenticado.tipo;
+    } else if (req.session && req.session.autenticado && req.session.autenticado.autenticado) {
+        userType = 'c';
+    }
+    
+    const jsContent = `window.isAuthenticated = ${isAuthenticated};
+window.userType = '${userType}';`;
+    res.setHeader('Content-Type', 'application/javascript');
+    res.send(jsContent);
+});
+
+router.get('/js/produto-config.js', (req, res) => {
+    const authData = {
+        isAuthenticated: !!(req.session && req.session.autenticado && req.session.autenticado.autenticado),
+        userType: (req.session && req.session.autenticado && req.session.autenticado.tipo) || 'c'
+    };
+    const produtoId = req.query.id || '';
+    const jsContent = `window.isAuthenticated = ${authData.isAuthenticated};
+window.userType = '${authData.userType}';
+window.produtoId = '${produtoId}';`;
+    res.setHeader('Content-Type', 'application/javascript');
+    res.send(jsContent);
+});
+
+router.get('/js/produto-actions.js', (req, res) => {
+    const jsContent = `
+function alterarStatus(produtoId, novoStatus) {
+    if (!confirm('Tem certeza que deseja alterar o status deste produto?')) return;
+    
+    fetch('/produtosadm/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produtoId, status: novoStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Erro: ' + data.message);
+        }
+    })
+    .catch(error => alert('Erro de conexão'));
+}
+
+function verDetalhes(produtoId) {
+    fetch('/produtosadm/detalhes/' + produtoId)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const produto = data.data;
+            document.getElementById('detalhesContent').innerHTML = \`
+                <p><strong>Nome:</strong> \${produto.NOME_PRODUTO}</p>
+                <p><strong>Preço:</strong> R$ \${parseFloat(produto.PRECO).toFixed(2)}</p>
+                <p><strong>Categoria:</strong> \${produto.TIPO_PRODUTO}</p>
+                <p><strong>Vendedor:</strong> \${produto.VENDEDOR}</p>
+                <p><strong>Status:</strong> \${produto.STATUS_PRODUTO === 'd' ? 'Ativo' : 'Inativo'}</p>
+                \${produto.DETALHES_PRODUTO ? '<p><strong>Descrição:</strong> ' + produto.DETALHES_PRODUTO + '</p>' : ''}
+            \`;
+            document.getElementById('detalhesModal').style.display = 'block';
+        } else {
+            alert('Erro ao carregar detalhes');
+        }
+    })
+    .catch(error => alert('Erro de conexão'));
+}
+
+function excluirProduto(produtoId) {
+    if (!confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')) return;
+    
+    fetch('/produtosadm/excluir', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produtoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Erro: ' + data.message);
+        }
+    })
+    .catch(error => alert('Erro de conexão'));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('detalhesModal');
+    const closeBtn = document.querySelector('.close');
+    
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+    }
+    
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+    `;
+    res.setHeader('Content-Type', 'application/javascript');
+    res.send(jsContent);
+});
 router.get('/sweer', (req, res) => res.render('pages/sweer'));
 
 router.get('/pedidoconf', function(req, res){
@@ -1290,6 +1402,12 @@ router.get('/sacola1', carregarDadosUsuario, async function(req, res){
     try {
         let carrinho = [];
         let subtotal = 0;
+        let carrinhoHtml = `
+            <section class="empty-state">
+                <p>Sua sacola está vazia</p>
+                <a href="/homecomprador" class="btn-continue">Continuar Comprando</a>
+            </section>
+        `;
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
             const [itensSacola] = await pool.query(`
@@ -1324,13 +1442,42 @@ router.get('/sacola1', carregarDadosUsuario, async function(req, res){
                 TAMANHO_PRODUTO: item.TAMANHO_PRODUTO
             }));
             
+            // Processar HTML no backend
+            if (carrinho.length > 0) {
+                carrinhoHtml = carrinho.map(item => `
+                    <article class="product-card">
+                        <img src="${item.IMG_PRODUTO_1 || 'imagens/conjunto.png'}" alt="${item.NOME_PRODUTO}">
+                        <h2>${item.NOME_PRODUTO}</h2>
+                        <p class="price">R$${item.PRECO_PRODUTO}</p>
+                        <p class="descricao">ou em 2x de R$${(parseFloat(item.PRECO_PRODUTO.replace(',', '.')) / 2).toFixed(2)}</p>
+                        <button class="favorite" onclick="toggleFavorite(this, ${item.ID_PRODUTO})"><img src="imagens/coração de fav2.png"></button>
+                        <button class="cart" onclick="removeFromCart(${item.ID_PRODUTO})"><img src="imagens/lixeira.png" class="img-sacola"></button>
+                    </article>
+                `).join('');
+            } else {
+                carrinhoHtml = `
+                    <section class="empty-state">
+                        <p>Sua sacola está vazia</p>
+                        <a href="/homecomprador" class="btn-continue">Continuar Comprando</a>
+                    </section>
+                `;
+            }
+            
             subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        } else {
+            carrinhoHtml = `
+                <section class="empty-state">
+                    <p>Sua sacola está vazia</p>
+                    <a href="/homecomprador" class="btn-continue">Continuar Comprando</a>
+                </section>
+            `;
         }
         
         const frete = subtotal > 0 ? 10 : 0;
         const total = subtotal + frete;
         
         res.render('pages/sacola1', {
+            carrinhoHtml,
             carrinho: carrinho,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
@@ -1339,7 +1486,14 @@ router.get('/sacola1', carregarDadosUsuario, async function(req, res){
         });
     } catch (error) {
         console.log('Erro ao carregar sacola1:', error);
+        const emptyHtml = `
+            <section class="empty-state">
+                <p>Sua sacola está vazia</p>
+                <a href="/homecomprador" class="btn-continue">Continuar Comprando</a>
+            </section>
+        `;
         res.render('pages/sacola1', {
+            carrinhoHtml: emptyHtml,
             carrinho: [],
             subtotal: '0,00',
             frete: '0,00',
@@ -2518,6 +2672,12 @@ router.get('/planos', carregarDadosUsuario, async (req, res) => {
             }
         ];
         
+        // Processar botões no backend
+        planos = planos.map(plano => {
+            plano.buttonHtml = `<button onclick="contratarPlano('${plano.ID_PLANO}', '${plano.NOME_PLANO}', ${plano.PRECO_PLANO})">Iniciar</button>`;
+            return plano;
+        });
+        
         // Se usuário autenticado, buscar plano atual na tabela USUARIOS
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
             try {
@@ -2791,6 +2951,7 @@ router.get('/perfilpremium', async (req, res) => {
     try {
         let estatisticas = defaultStats;
         let usuariosPremium = [];
+        let usuariosPremiumHtml = '<p>Nenhum usuário premium encontrado</p>';
         
         try {
             // Buscar estatísticas premium
@@ -2804,7 +2965,7 @@ router.get('/perfilpremium', async (req, res) => {
                 taxaRetencao: 89
             };
             
-            // Buscar usuários premium (simulado)
+            // Buscar usuários premium
             const [usuarios] = await pool.query(`
                 SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL, u.DATA_CADASTRO, u.PLANO_PREMIUM
                 FROM USUARIOS u
@@ -2813,19 +2974,44 @@ router.get('/perfilpremium', async (req, res) => {
                 LIMIT 10
             `);
             usuariosPremium = usuarios;
+            
+            // Gerar HTML no backend
+            if (usuariosPremium && usuariosPremium.length > 0) {
+                usuariosPremiumHtml = usuariosPremium.map(usuario => {
+                    const imgUrl = usuario.IMG_URL || '/imagens/icone sem cadastro.png';
+                    const plano = usuario.PLANO_PREMIUM || 'Básico';
+                    const dataFormatada = new Date(usuario.DATA_PREMIUM || usuario.DATA_CADASTRO).toLocaleDateString('pt-BR');
+                    
+                    return `
+                        <section class="user-item">
+                            <img src="${imgUrl}" alt="User">
+                            <section class="user-info">
+                                <strong>${usuario.NOME_USUARIO}</strong>
+                                <span>${plano} - ${dataFormatada}</span>
+                            </section>
+                            <section class="user-buttons">
+                                <button class="btn-view" onclick="verUsuario(${usuario.ID_USUARIO})">Ver</button>
+                                <button class="btn-suspend" onclick="suspenderPremium(${usuario.ID_USUARIO})">Suspender</button>
+                            </section>
+                        </section>
+                    `;
+                }).join('');
+            }
         } catch (dbError) {
             console.log('Erro no banco, usando valores padrão:', dbError.message);
         }
         
         res.render('pages/perfilpremium', {
             estatisticas: estatisticas,
-            usuariosPremium: usuariosPremium
+            usuariosPremium: usuariosPremium,
+            usuariosPremiumHtml: usuariosPremiumHtml
         });
     } catch (error) {
         console.log('Erro geral ao carregar perfil premium:', error);
         res.render('pages/perfilpremium', {
             estatisticas: defaultStats,
-            usuariosPremium: []
+            usuariosPremium: [],
+            usuariosPremiumHtml: '<p>Nenhum usuário premium encontrado</p>'
         });
     }
 });
@@ -2984,10 +3170,16 @@ router.get('/produtosadm', async (req, res) => {
             ORDER BY p.DATA_CADASTRO DESC
         `);
         
-        res.render('pages/produtosadm', { produtos: produtos || [] });
+        res.render('pages/produtosadm', { 
+            produtos: produtos || [],
+            autenticado: req.session ? req.session.autenticado : null
+        });
     } catch (error) {
         console.log('Erro ao carregar produtos admin:', error);
-        res.render('pages/produtosadm', { produtos: [] });
+        res.render('pages/produtosadm', { 
+            produtos: [],
+            autenticado: req.session ? req.session.autenticado : null
+        });
     }
 });
 
