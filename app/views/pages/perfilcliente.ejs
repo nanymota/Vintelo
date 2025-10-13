@@ -477,15 +477,7 @@
             alert('Funcionalidade de adicionar cartão em desenvolvimento');
         }
     </script>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>

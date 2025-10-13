@@ -3458,6 +3458,63 @@ router.get('/buscar', carregarDadosUsuario, async function(req, res){
     }
 });
 
+// API endpoint para busca (usado pelo JavaScript)
+router.get('/api/buscar', async function(req, res){
+    const termo = req.query.q || '';
+    
+    try {
+        let produtos = [];
+        let brechos = [];
+        
+        if (termo.trim()) {
+            // Buscar produtos
+            const [produtosResult] = await pool.query(`
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, 
+                       p.COR_PRODUTO, p.ESTILO_PRODUTO, p.CONDICAO_PRODUTO,
+                       img.URL_IMG, u.NOME_USUARIO as VENDEDOR
+                FROM PRODUTOS p
+                LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+                LEFT JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
+                WHERE p.STATUS_PRODUTO = 'd' AND (
+                    p.NOME_PRODUTO LIKE ? OR 
+                    p.TIPO_PRODUTO LIKE ? OR 
+                    p.COR_PRODUTO LIKE ?
+                )
+                GROUP BY p.ID_PRODUTO
+                LIMIT 20
+            `, [`%${termo}%`, `%${termo}%`, `%${termo}%`]);
+            
+            produtos = produtosResult;
+            
+            // Buscar brechós
+            const [brechosResult] = await pool.query(`
+                SELECT u.NOME_USUARIO, u.IMG_URL, u.ID_USUARIO,
+                       COUNT(p.ID_PRODUTO) as total_produtos
+                FROM USUARIOS u
+                LEFT JOIN PRODUTOS p ON u.ID_USUARIO = p.ID_USUARIO AND p.STATUS_PRODUTO = 'd'
+                WHERE u.TIPO_USUARIO = 'b' AND u.NOME_USUARIO LIKE ?
+                GROUP BY u.ID_USUARIO
+                LIMIT 10
+            `, [`%${termo}%`]);
+            
+            brechos = brechosResult;
+        }
+        
+        res.json({
+            produtos: produtos,
+            brechos: brechos,
+            termo: termo
+        });
+        
+    } catch (error) {
+        res.json({
+            produtos: [],
+            brechos: [],
+            termo: termo
+        });
+    }
+});
+
 
 
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo - <%= brecho ? brecho.NOME_USUARIO : 'Brechó' %></title>
     <link rel="stylesheet" href="/css/perfis.css">
+    <link rel="stylesheet" href="/css/perfilbrecho-custom.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
@@ -31,7 +32,7 @@
                 <ul>
                     <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
                     <% if (autenticado && autenticado.autenticado) { %>
-                        <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" alt="Perfil"></a></li>
+                        <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria profile-img" alt="Perfil"></a></li>
                     <% } else { %>
                         <li><a href="/cadastro"><img src="/imagens/icone sem cadastro.png" class="maria" alt="Perfil"></a></li>
                     <% } %>
@@ -50,7 +51,7 @@
                 <img src="/imagens/logo.png" alt="Logo">
                 <% if (autenticado && autenticado.autenticado) { %>
                     <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
-                        <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                        <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-img-mobile">
                     </a>
                 <% } else { %>
                     <a href="javascript:void(0)" onclick="goBack()">
@@ -75,7 +76,7 @@
                 </section>
                 
                 <section class="profile-actions">
-                    <button class="follow-btn" onclick="toggleFollowBrecho(this, <%= brecho.ID_USUARIO %>)">Seguir</button>
+                    <button class="follow-btn" data-brecho-id="<%= brecho.ID_USUARIO %>">Seguir</button>
                     <a href="/brecho/<%= brecho.ID_USUARIO %>/avaliacoes"><button class="reviews-btn">Ver avaliações</button></a>
                 </section>
                 
@@ -181,12 +182,12 @@
                             <h2><%= produto.NOME_PRODUTO %></h2>
                             <p class="price">R$<%= produto.PRECO %></p>
                             <p class="Descrição">ou em 2x de R$<%= (produto.PRECO / 2).toFixed(2) %></p>
-                            <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="/imagens/coraçao de fav2.png"></button>
-                            <button class="cart" onclick="adicionarAoCarrinho(<%= produto.ID_PRODUTO %>)"><img src="/imagens/sacola.png" class="img-sacola"></button>
+                            <button class="favorite" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/coraçao de fav2.png"></button>
+                            <button class="cart" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
                 <% } else { %>
-                    <p style="text-align: center; color: #666; padding: 40px;">Este brechó ainda não possui produtos cadastrados.</p>
+                    <p class="no-products-message">Este brechó ainda não possui produtos cadastrados.</p>
                 <% } %>
             </section>
         </section>
@@ -194,7 +195,7 @@
 
     <% if (produtos && produtos.length > 0) { %>
         <section class="more-btn">
-            <button onclick="loadMoreProducts()">Ver mais</button>
+            <button class="load-more-btn">Ver mais</button>
         </section>
     <% } %>
 
@@ -211,35 +212,13 @@
         </section>
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/perfilbrecho.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/filtros.js"></script>
     <script src="/js/favoritos-global.js"></script>
     <script src="/js/seguir-brechos.js"></script>
     <script src="/js/busca-global.js"></script>
-    
-    <% if (brecho) { %>
-    <script>
-        // Verificar status de seguir ao carregar a página
-        document.addEventListener('DOMContentLoaded', function() {
-            checkFollowStatus(<%= brecho.ID_USUARIO %>);
-        });
-    </script>
-    <% } %>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
     <script src="/js/sacola-global.js"></script>
 </body>
 </html>

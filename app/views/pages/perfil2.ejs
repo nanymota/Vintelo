@@ -211,75 +211,7 @@
         <button onclick="loadMoreProducts()">Ver mais</button>
     </section>
 
-    <script>
-        // Filtro por categoria
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                filterByCategory(this.dataset.category);
-            });
-        });
 
-        // Filtro por tamanho
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                filterBySizes();
-            });
-        });
-
-        function filterByCategory(category) {
-            const products = document.querySelectorAll('.product-card');
-            products.forEach(product => {
-                if (category === 'todos') {
-                    product.style.display = 'block';
-                } else {
-                    const productCategory = product.dataset.category;
-                    product.style.display = productCategory === category ? 'block' : 'none';
-                }
-            });
-        }
-
-        function sortProducts(type) {
-            console.log('Ordenando por:', type);
-        }
-
-        function updatePriceRange() {
-            const minRange = document.getElementById('min');
-            const maxRange = document.getElementById('max');
-            document.getElementById('min-value').value = minRange.value;
-            document.getElementById('max-value').value = maxRange.value;
-        }
-
-        function filterByPrice() {
-            console.log('Filtrando por preço');
-        }
-
-        function filterBySizes() {
-            const activeSizes = document.querySelectorAll('.size-btn.active');
-            console.log('Tamanhos selecionados:', activeSizes.length);
-        }
-
-        function applyFilters() {
-            console.log('Aplicando todos os filtros');
-        }
-
-        function clearFilters() {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.category-btn[data-category="todos"]').classList.add('active');
-            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.getElementById('min').value = 10;
-            document.getElementById('max').value = 300;
-            updatePriceRange();
-            filterByCategory('todos');
-        }
-
-        function loadMoreProducts() {
-            console.log('Carregando mais produtos');
-        }
-    </script>
     <!-- Rodapé -->
     <footer class="footer">
         <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
@@ -293,22 +225,9 @@
         </section>
          <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
       </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil2.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
     <script src="/js/sacola-global.js"></script>
 </body>
 </html>

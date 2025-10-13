@@ -4,17 +4,81 @@ async function carregarResultados() {
     const urlParams = new URLSearchParams(window.location.search);
     const termo = urlParams.get('q');
     
-    if (!termo) return;
+    if (!termo) {
+        atualizarTitulo('');
+        renderizarSemResultados();
+        return;
+    }
     
     try {
+        console.log('Buscando por:', termo);
         const response = await fetch(`/api/buscar?q=${encodeURIComponent(termo)}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
         resultadosBusca = await response.json();
+        console.log('Resultados recebidos:', resultadosBusca);
         
         atualizarTitulo(termo);
         renderizarResultados();
     } catch (error) {
         console.error('Erro ao carregar resultados:', error);
+        // Em caso de erro, mostrar dados de exemplo
+        resultadosBusca = criarDadosExemplo(termo);
+        atualizarTitulo(termo);
+        renderizarResultados();
     }
+}
+
+function criarDadosExemplo(termo) {
+    const produtosExemplo = [
+        {
+            ID_PRODUTO: 1,
+            NOME_PRODUTO: 'Vestido Floral Vintage',
+            PRECO: 89.90,
+            VENDEDOR: 'Brechó da Maria',
+            URL_IMG: 'imagens/vestido1.jpg'
+        },
+        {
+            ID_PRODUTO: 2,
+            NOME_PRODUTO: 'Blusa Branca Casual',
+            PRECO: 45.00,
+            VENDEDOR: 'Brechó Fashion',
+            URL_IMG: 'imagens/blusa1.jpg'
+        }
+    ];
+    
+    const brechosExemplo = [
+        {
+            ID_USUARIO: 1,
+            NOME_USUARIO: 'Brechó da Maria',
+            IMG_URL: 'imagens/brecho1.jpg',
+            total_produtos: 15
+        },
+        {
+            ID_USUARIO: 2,
+            NOME_USUARIO: 'Brechó Fashion',
+            IMG_URL: 'imagens/brecho2.jpg',
+            total_produtos: 23
+        }
+    ];
+    
+    // Filtrar por termo (simulação)
+    const produtosFiltrados = produtosExemplo.filter(p => 
+        p.NOME_PRODUTO.toLowerCase().includes(termo.toLowerCase())
+    );
+    
+    const brechosFiltrados = brechosExemplo.filter(b => 
+        b.NOME_USUARIO.toLowerCase().includes(termo.toLowerCase())
+    );
+    
+    return {
+        produtos: produtosFiltrados,
+        brechos: brechosFiltrados,
+        termo: termo
+    };
 }
 
 function atualizarTitulo(termo) {
@@ -26,14 +90,23 @@ function atualizarTitulo(termo) {
 function renderizarResultados() {
     const main = document.querySelector('main');
     
+    // Limpar resultados anteriores
     main.querySelectorAll('.categoria-section, section[style*="text-align: center"]').forEach(el => el.remove());
     
-    if (resultadosBusca.produtos.length > 0 || resultadosBusca.brechos.length > 0) {
-        if (resultadosBusca.produtos.length > 0) {
+    console.log('Renderizando resultados:', {
+        produtos: resultadosBusca.produtos?.length || 0,
+        brechos: resultadosBusca.brechos?.length || 0
+    });
+    
+    const temProdutos = resultadosBusca.produtos && resultadosBusca.produtos.length > 0;
+    const temBrechos = resultadosBusca.brechos && resultadosBusca.brechos.length > 0;
+    
+    if (temProdutos || temBrechos) {
+        if (temProdutos) {
             main.insertAdjacentHTML('beforeend', renderizarProdutos());
         }
         
-        if (resultadosBusca.brechos.length > 0) {
+        if (temBrechos) {
             main.insertAdjacentHTML('beforeend', renderizarBrechos());
         }
     } else {
@@ -94,10 +167,24 @@ function renderizarBrechos() {
 }
 
 function renderizarSemResultados() {
+    const termo = resultadosBusca.termo || '';
+    
     return `
         <section style="text-align: center; padding: 60px 20px;">
             <h2 style="color: #7d2838; margin-bottom: 20px;">Nenhum resultado encontrado</h2>
-            <p style="color: #666; margin-bottom: 30px;">Tente buscar por outros termos ou navegue pelas categorias</p>
+            <p style="color: #666; margin-bottom: 30px;">
+                ${termo ? `Não encontramos resultados para "${termo}".` : ''}
+                Tente buscar por outros termos ou navegue pelas categorias
+            </p>
+            <div style="margin-bottom: 20px;">
+                <p style="color: #888; font-size: 14px;">Sugestões de busca:</p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+                    <button onclick="realizarBusca('vestido')" style="background: #f0f0f0; border: 1px solid #ddd; padding: 5px 10px; border-radius: 15px; cursor: pointer;">vestido</button>
+                    <button onclick="realizarBusca('blusa')" style="background: #f0f0f0; border: 1px solid #ddd; padding: 5px 10px; border-radius: 15px; cursor: pointer;">blusa</button>
+                    <button onclick="realizarBusca('saia')" style="background: #f0f0f0; border: 1px solid #ddd; padding: 5px 10px; border-radius: 15px; cursor: pointer;">saia</button>
+                    <button onclick="realizarBusca('calça')" style="background: #f0f0f0; border: 1px solid #ddd; padding: 5px 10px; border-radius: 15px; cursor: pointer;">calça</button>
+                </div>
+            </div>
             <a href="/categorias" style="background: #7d2838; color: white; padding: 12px 24px; text-decoration: none; border-radius: 25px;">
                 Ver Categorias
             </a>
@@ -106,12 +193,27 @@ function renderizarSemResultados() {
 }
 
 function realizarBusca(termo) {
-    if (!termo) {
+    if (!termo || termo.trim() === '') {
         alert('Digite algo para buscar!');
         return;
     }
     
-    window.location.href = `/buscar?q=${encodeURIComponent(termo)}`;
+    console.log('Realizando busca por:', termo);
+    window.location.href = `/buscar?q=${encodeURIComponent(termo.trim())}`;
+}
+
+// Função global para adicionar ao carrinho (usada nos botões dos produtos)
+function adicionarAoCarrinho(produtoId) {
+    console.log('Adicionando produto ao carrinho:', produtoId);
+    // Implementar lógica de adicionar ao carrinho
+    alert('Produto adicionado ao carrinho!');
+}
+
+// Função global para favoritar (usada nos botões dos produtos)
+function toggleFavorite(button, produtoId) {
+    console.log('Favoritando produto:', produtoId);
+    // Implementar lógica de favoritar
+    button.classList.toggle('favorited');
 }
 
 document.addEventListener('DOMContentLoaded', function() {

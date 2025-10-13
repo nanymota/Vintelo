@@ -11,13 +11,13 @@
 </head>
 <body>
     <!-- Header Desktop -->
-    <header class="desktop-only">
+    <section class="desktop-header">
         <section class="top-bar">
             <p>10% OFF na primeira compra</p>
         </section>
-        <section class="main-header">
+        <header class="main-header">
             <a href="/homevendedor">
-            <img src="imagens/logo.png" class="img-logo">
+                <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
             </a>
             <nav>
                 <a href="/categorias">Vestidos</a>
@@ -31,63 +31,77 @@
                     <input type="text" placeholder="Buscar...">
                 </form>
                 <ul>
-                    <li><a href="criarbrecho/" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                    <li><a href="/cadastro" ></a><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % class="maria">" class="maria"> </li>
-                    <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
+                    <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Criar Brechó"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
-        </section>
-    </header>
-    
+        </header>
+    </section>
+
     <!-- Header Mobile -->
-    <header class="mobile-only mobile-header">
-        <nav class="grid">
-            <a href="/homevendedor">
-                <img src="imagens/seta.png" alt="Voltar">
-            </a>
-            <img src="imagens/logo.png" alt="Vintélo">
-            <a href="/menuvendedor">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % alt="Menu" class="maria">" alt="Menu">
-            </a>
-        </nav>
-    </header>
+    <section class="mobile-header">
+        <header>
+            <nav class="grid">
+                <a href="javascript:void(0)" onclick="goBack()">
+                    <img src="imagens/seta.png" alt="Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Vintélo">
+                <a href="/menuvendedor">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="maria">
+                </a>
+            </nav>
+        </header>
+    </section>
     
     <main>
-        <aside class="user-sidebar">
-            <section class="user-info">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % alt="Foto de perfil" class="maria">" alt="Foto de perfil">
-                <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Vendedor' %></h2>
-                <p><%= autenticado && autenticado.email ? autenticado.email : 'email@exemplo.com' %></p>
+        <section class="container">
+            <section class="titulo-section">
+                <span class="garimpe-text">Menu</span><br>
+                <span class="vintelo-text">Vendedor</span>
             </section>
-            <nav class="user-menu">
-                <a href="/informacao">Informação da conta</a>
-                <a href="/sacola1">Sacola</a>
-                <a href="/minhascomprasdesktop">Minhas compras</a>
-                <a href="#">Meus cartões</a>
-                <a href="/favoritos">Favoritos</a>
-                <a href="/blogdesktop">Blog</a>
-                <a href="/estatistica">Estatística de Vendas</a>
-                <a href="/pedidosdesktop">Pedidos</a>
-                <a href="/planos">Tornar-se Premium</a>
-                <a href="#">Sair</a>
-            </nav>
-        </aside>
+            
+            <section class="profile-wrapper">
+                <!-- Sidebar de Navegação -->
+                <aside class="profile-sidebar">
+                    <section class="profile-info">
+                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-image maria">
+                        <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Vendedor' %></h2>
+                        <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'vendedor' %></p>
+                    </section>
+                    <nav class="profile-menu">
+                        <a href="#" class="active">Geral</a>
+                        <a href="/criarbrecho">Criar Brechó</a>
+                        <a href="/informacao">Informação da conta</a>
+                        <a href="/sacola1">Sacola</a>
+                        <a href="/minhascomprasdesktop">Minhas compras</a>
+                        <a href="#">Meus cartões</a>
+                        <a href="/favoritos">Favoritos</a>
+                        <a href="/blogdesktop">Blog</a>
+                        <a href="/estatistica">Estatística de Vendas</a>
+                        <a href="/pedidosdesktop">Pedidos</a>
+                        <a href="/planos">Tornar-se Premium</a>
+                        <a href="/index">Sair</a>
+                    </nav>
+                </aside>
 
-        <section class="user-content">
-            <section class="orders">
-                <h3>Minhas compras</h3>
-                <section class="empty-box">
-                    <img src="imagens/compras vazia.png" alt="Ícone de caminhão vazio">
-                    <p>Você ainda não realizou nenhuma compra</p>
-                </section>
-            </section>
-            <br>
-            <br>
-            <section class="favorites">
-                <h3>Favoritos</h3>
-                <section class="empty-box">
-                    <img src="imagens/coraçao vazio.png" alt="Ícone de coração vazio">
-                    <p>Você ainda não favoritou nenhuma peça ou brechó</p>
+                <!-- Conteúdo Principal -->
+                <section class="profile-content">
+                    <section class="orders">
+                        <h3>Minhas compras</h3>
+                        <section class="empty-box">
+                            <img src="imagens/compras vazia.png" alt="Ícone de caminhão vazio">
+                            <p>Você ainda não realizou nenhuma compra</p>
+                        </section>
+                    </section>
+                    
+                    <section class="favorites">
+                        <h3>Favoritos</h3>
+                        <section class="empty-box">
+                            <img src="imagens/coraçao vazio.png" alt="Ícone de coração vazio">
+                            <p>Você ainda não favoritou nenhuma peça ou brechó</p>
+                        </section>
+                    </section>
                 </section>
             </section>
         </section>
@@ -106,16 +120,8 @@
         </section>
         <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
+    <script src="/js/menuvendedor.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

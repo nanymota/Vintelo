@@ -140,32 +140,7 @@
             <button type="submit" name="submit" id="submit" class="submit-btn">Cadastrar</button>
         </form>
     </main>
-
-    <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-        
-        <% if (dadosNotificacao) { %>
-        window.dadosNotificacao = {
-            tipo: '<%= dadosNotificacao.tipo %>',
-            titulo: '<%= dadosNotificacao.titulo || "" %>',
-            mensagem: '<%= dadosNotificacao.mensagem %>'
-        };
-        <% } %>
-        
-        <% if (listaErros && !listaErros.isEmpty()) { %>
-        window.listaErros = [
-            <% listaErros.errors.forEach(function(erro, index) { %>
-                { msg: '<%= erro.msg %>' }<%= index < listaErros.errors.length - 1 ? ',' : '' %>
-            <% }); %>
-        ];
-        <% } %>
-    </script>
-    
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.6/dist/simple-notify.min.js"></script>
     <script src="/script/simple-notify-config.js"></script>
     <script src="/script/app-config.js"></script>

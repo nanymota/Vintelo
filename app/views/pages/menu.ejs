@@ -30,7 +30,7 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/menu"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' % class="maria" alt="Perfil">" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/menu"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -46,7 +46,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menu">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' % alt="Menu" class="maria">" alt="Menu">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu" class="maria">
                 </a>
             </nav>
         </header>
@@ -63,7 +63,7 @@
                 <!-- Sidebar de Navegação -->
                 <aside class="profile-sidebar">
                     <section class="profile-info">
-                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % alt="Foto de perfil" class="profile-image maria">" alt="Foto de perfil" class="profile-image">
+                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-image maria">
                         <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Usuário' %></h2>
                         <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'usuario' %></p>
                     </section>
@@ -115,19 +115,8 @@
         </section>
         <p class="copyright">&copy; 2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-        
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/menu.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

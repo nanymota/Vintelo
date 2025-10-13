@@ -109,6 +109,35 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
         alert('As senhas não coincidem!');
         return;
     }
+    
+    const cnpj = document.getElementById('cnpj').value;
+    const razaoSocial = document.getElementById('razao_social').value;
+    const nomeFantasia = document.getElementById('nome_fantasia').value;
+    
+    // Validar CNPJ
+    if (cnpj && !validarCNPJ(cnpj)) {
+        alert('CNPJ inválido!');
+        return;
+    }
+    
+    // Validar Razão Social (mínimo 5 caracteres)
+    if (razaoSocial && razaoSocial.length < 5) {
+        alert('Razão Social deve ter pelo menos 5 caracteres!');
+        return;
+    }
+    
+    // Validar Nome Fantasia (mínimo 2 caracteres)
+    if (nomeFantasia && nomeFantasia.length < 2) {
+        alert('Nome Fantasia deve ter pelo menos 2 caracteres!');
+        return;
+    }
+    
+    // Validar CEP
+    const cep = document.getElementById('cep').value;
+    if (cep && !/^\d{5}-?\d{3}$/.test(cep)) {
+        alert('CEP inválido!');
+        return;
+    }
 
     const submitBtn = document.querySelector('.btn-primary');
     const originalText = submitBtn.textContent;
@@ -181,6 +210,86 @@ function showNotification(message, type = 'info') {
             notification.remove();
         }
     }, 5000);
+}
+
+// Upload de foto
+document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profileImage').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+        // Upload da foto
+        const formData = new FormData();
+        formData.append('profile-photo', file);
+        
+        fetch('/perfilcliente/foto', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Foto enviada com sucesso');
+            } else {
+                alert('Erro ao enviar foto');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar foto');
+        });
+    }
+});
+
+// Validação e formatação de CNPJ
+document.getElementById('cnpj').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{2})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1/$2');
+    value = value.replace(/(\d{4})(\d)/, '$1-$2');
+    e.target.value = value;
+});
+
+// Validação de CNPJ
+function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, '');
+    if (cnpj.length !== 14) return false;
+    
+    // Elimina CNPJs inválidos conhecidos
+    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+    
+    // Valida DVs
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+    
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(0)) return false;
+    
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    return resultado == digitos.charAt(1);
 }
 
 const style = document.createElement('style');

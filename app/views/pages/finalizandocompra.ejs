@@ -104,7 +104,7 @@
                   <img src="<%= produto.imagem %>" alt="<%= produto.NOME_PRODUTO %>">
                   <p><%= produto.NOME_PRODUTO %></p>
                   <p>R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
-                  <button class="adicionar-compra" onclick="addToCartSuggestion('<%= produto.ID_PRODUTO %>')">Adicionar</button>
+                  <button class="adicionar-compra" data-produto-id="<%= produto.ID_PRODUTO %>">Adicionar</button>
                 </li>
               <% }) %>
             <% } else { %>
@@ -255,8 +255,8 @@
               </a>
               <h2><%= produto.NOME_PRODUTO %></h2>
               <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="/imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCartSuggestion('<%= produto.ID_PRODUTO %>')"><img src="/imagens/sacola.png" class="img-sacola"></button>
+              <button class="favorite" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/coraçao de fav2.png"></button>
+              <button class="cart" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% }) %>
         <% } else { %>
@@ -285,185 +285,10 @@
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
   </section>
-
-  <script>
-    function increaseQuantity(produtoId) {
-      const quantityElement = document.getElementById('qty-' + produtoId);
-      const currentQuantity = parseInt(quantityElement.textContent);
-      const newQuantity = currentQuantity + 1;
-      
-      fetch('/atualizar-quantidade-sacola', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          quantityElement.textContent = newQuantity;
-          setTimeout(() => location.reload(), 500);
-        }
-      });
-    }
-
-    function decreaseQuantity(produtoId) {
-      const quantityElement = document.getElementById('qty-' + produtoId);
-      const currentQuantity = parseInt(quantityElement.textContent);
-      
-      if (currentQuantity > 1) {
-        const newQuantity = currentQuantity - 1;
-        
-        fetch('/atualizar-quantidade-sacola', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ produto_id: produtoId, quantidade: newQuantity })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            quantityElement.textContent = newQuantity;
-            setTimeout(() => location.reload(), 500);
-          }
-        });
-      }
-    }
-
-    function removeItem(produtoId) {
-      if (confirm('Deseja remover este item da sacola?')) {
-        fetch('/remover-item-sacola', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ produto_id: produtoId })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            location.reload();
-          }
-        });
-      }
-    }
-
-    // Funções de cálculo de frete
-    function calculateShipping() {
-      const cep = document.getElementById('cep-mobile').value.replace(/\D/g, '');
-      if (cep.length === 8) {
-        document.getElementById('shipping-options-mobile').style.display = 'block';
-      } else {
-        alert('Digite um CEP válido com 8 dígitos!');
-      }
-    }
-
-    function calculateShippingDesktop() {
-      const cep = document.getElementById('cep-desktop').value.replace(/\D/g, '');
-      if (cep.length === 8) {
-        document.getElementById('shipping-options-desktop').style.display = 'block';
-      } else {
-        alert('Digite um CEP válido com 8 dígitos!');
-      }
-    }
-
-    function updateShipping(cost) {
-      document.getElementById('shipping-cost').textContent = 'R$' + cost.toFixed(2).replace('.', ',');
-      updateTotal();
-    }
-
-    function updateShippingDesktop(cost) {
-      updateShipping(cost);
-    }
-
-    function updateTotal() {
-      // Atualizar total com novo frete
-      setTimeout(() => location.reload(), 1000);
-    }
-
-    // Formatar CEP
-    document.addEventListener('DOMContentLoaded', function() {
-      const cepInputs = document.querySelectorAll('#cep-mobile, #cep-desktop');
-      cepInputs.forEach(input => {
-        input.addEventListener('input', function(e) {
-          let value = e.target.value.replace(/\D/g, '');
-          if (value.length > 5) {
-            value = value.substring(0, 5) + '-' + value.substring(5, 8);
-          }
-          e.target.value = value;
-        });
-      });
-    });
-
-    // Funções para produtos sugeridos
-    function toggleFavorite(produtoId) {
-      fetch('/favoritar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ produto_id: produtoId })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const btn = event.target.closest('button');
-          const img = btn.querySelector('img');
-          img.src = data.favorited ? '/imagens/coraçao de fav.png' : '/imagens/coraçao de fav2.png';
-        }
-      });
-    }
-
-    function addToCartSuggestion(produtoId) {
-      const button = event.target;
-      const originalText = button.textContent;
-      
-      button.textContent = 'Adicionando...';
-      button.disabled = true;
-      
-      fetch('/adicionar-sacola', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ produto_id: produtoId })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          button.textContent = 'Adicionado!';
-          button.style.backgroundColor = '#28a745';
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-            button.disabled = false;
-          }, 2000);
-        } else {
-          button.textContent = 'Erro';
-          button.style.backgroundColor = '#dc3545';
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-            button.disabled = false;
-          }, 2000);
-        }
-      })
-      .catch(error => {
-        button.textContent = 'Erro';
-        button.style.backgroundColor = '#dc3545';
-        setTimeout(() => {
-          button.textContent = originalText;
-          button.style.backgroundColor = '';
-          button.disabled = false;
-        }, 2000);
-      });
-    }
-
-    // Configurar navegação
-    window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-    <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-    window.userType = '<%= autenticado.tipo %>';
-    <% } %>
-  </script>
+  <script src="/js/finalizandocompra.js"></script>
+  <script src="/js/perfil-autenticado.js"></script>
   <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
-    <script src="/js/favoritos-global.js"></script>
-    <script src="/js/sacola-global.js"></script>
+  <script src="/js/favoritos-global.js"></script>
+  <script src="/js/sacola-global.js"></script>
 </body>
 </html>

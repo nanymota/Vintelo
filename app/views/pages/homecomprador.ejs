@@ -608,22 +608,13 @@
       </section>
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-            <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-<script src="js/busca-global.js"></script>
-<script src="js/favoritos-global.js"></script>
-<script src="js/seguir-brechos.js"></script>
-<script src="script/dinamicahome.js"></script>
-<script src="js/homecomprador.js"></script>
+    <script src="js/busca-global.js"></script>
+    <script src="js/favoritos-global.js"></script>
+    <script src="js/seguir-brechos.js"></script>
+    <script src="script/dinamicahome.js"></script>
+    <script src="js/homecomprador.js"></script>
     <script src="/js/sacola-global.js"></script>
 </body>
 
