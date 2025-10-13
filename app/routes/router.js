@@ -4081,6 +4081,26 @@ router.get('/api/estatisticas-admin', async function(req, res){
     }
 });
 
+// API endpoint para favoritos (usado pelo perfil-cliente.js)
+router.get('/api/favoritos', verificarUsuAutenticado, async function(req, res){
+    try {
+        const [favoritos] = await pool.query(`
+            SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO as PRECO_PRODUTO, p.COR_PRODUTO, p.ESTILO_PRODUTO, 
+                   p.ESTAMPA_PRODUTO, p.TIPO_PRODUTO, img.URL_IMG as IMG_PRODUTO_1
+            FROM FAVORITOS f 
+            JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO
+            LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
+            WHERE f.ID_USUARIO = ? AND f.STATUS_FAVORITO = 'favoritado' AND f.TIPO_ITEM = 'produto'
+            GROUP BY p.ID_PRODUTO
+        `, [req.session.autenticado.id]);
+        
+        res.json(favoritos || []);
+    } catch (error) {
+        console.log('Erro ao buscar favoritos via API:', error);
+        res.json([]);
+    }
+});
+
 // Rota para criar produto de teste
 router.post('/debug/criar-produto-teste', verificarUsuAutenticado, async (req, res) => {
     try {

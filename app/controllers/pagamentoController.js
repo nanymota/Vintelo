@@ -1,6 +1,5 @@
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 
-// Configurar Mercado Pago
 const client = new MercadoPagoConfig({
     accessToken: process.env.accessToken
 });

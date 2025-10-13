@@ -35,7 +35,7 @@
 
     // Atualizar imagens de perfil na página
     function updateProfileImages(userData) {
-        const profileImages = document.querySelectorAll('.user-profile-img');
+        const profileImages = document.querySelectorAll('.user-profile-img, .maria');
         const defaultImage = '/imagens/icone sem cadastro.png';
         const userImage = userData.user?.imagem || defaultImage;
         
