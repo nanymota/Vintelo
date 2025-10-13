@@ -190,16 +190,7 @@
         </footer>
     </section>
 
-    <script>
-        // Variáveis globais para o JavaScript
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } %>
-        <% if (produto) { %>
-        window.produtoId = '<%= produto.ID_PRODUTO %>';
-        <% } %>
-    </script>
+    <script src="/js/produto-config.js?id=<%= produto ? produto.ID_PRODUTO : '' %>"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/produto.js"></script>
     <script src="/js/busca-global.js"></script>
