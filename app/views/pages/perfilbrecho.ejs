@@ -226,5 +226,14 @@
     <script src="/js/favoritos-global.js"></script>
     <script src="/js/seguir-brechos.js"></script>
     <script src="/js/busca-global.js"></script>
+    
+    <% if (brecho) { %>
+    <script>
+        // Verificar status de seguir ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkFollowStatus(<%= brecho.ID_USUARIO %>);
+        });
+    </script>
+    <% } %>
 </body>
 </html>

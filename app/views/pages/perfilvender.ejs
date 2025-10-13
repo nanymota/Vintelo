@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title>
     <link rel="stylesheet" href="css/perfilvender.css">
-
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-    
 </head>
 <body>
 
@@ -32,7 +30,7 @@
                         <input type="text" placeholder="Buscar...">
                     </form>
                     <ul>
-                        <li><a href="#" ></a><img src="imagens/icone saco.png" class="img-tamanho"> </li>
+                        <li><a href="/sacola" ></a><img src="imagens/icone saco.png" class="img-tamanho"> </li>
                         <li><a href="/menuvendedor" ><img src="<%= brecho && brecho.imagem ? brecho.imagem : '/imagens/icone sem cadastro.png' %>" class="img-tamanho"></a></li>
                         <li><a href="#" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
                     </ul>
@@ -44,11 +42,11 @@
     <section class="oculto-desktop">
     <header>
         <nav class="grid">
-          <a href="javascript:void(0)" onclick="goBack()">
+          <a href="javascript:void(0)" id="goBackBtn">
            <img src="imagens/seta.png" alt="Seta Voltar">
           </a>
           <img src="imagens/logo.png" alt="Logo">
-          <a href="javascript:void(0)" onclick="goBack()">
+          <a href="/planos">
            <img src="imagens/icone premium.png" alt="Premium">
           </a>
         </nav>
@@ -99,23 +97,23 @@
                 <details open>
                     <summary>Ordenar por</summary>
                     <ul>
-                        <li onclick="sortProducts('recent')">Mais recentes</li>
-                        <li onclick="sortProducts('price-low')">Menor preço</li>
-                        <li onclick="sortProducts('price-high')">Maior preço</li>
-                        <li onclick="sortProducts('popular')">Mais populares</li>
+                        <li data-sort="recent">Mais recentes</li>
+                        <li data-sort="price-low">Menor preço</li>
+                        <li data-sort="price-high">Maior preço</li>
+                        <li data-sort="popular">Mais populares</li>
                     </ul>
                 </details>
                 <details open>
                     <summary>Valor</summary>
                     <section class="faixa-valor">
                         <label for="min">Min</label>
-                        <input type="range" id="min" min="0" max="500" value="10" oninput="updatePriceRange()">
+                        <input type="range" id="min" min="0" max="500" value="10">
                         <label for="max">Max</label>
-                        <input type="range" id="max" min="0" max="500" value="300" oninput="updatePriceRange()">
+                        <input type="range" id="max" min="0" max="500" value="300">
                     </section>
                     <section class="valores">
-                        <input type="text" id="min-value" placeholder="10" onchange="filterByPrice()">
-                        <input type="text" id="max-value" placeholder="300" onchange="filterByPrice()">
+                        <input type="text" id="min-value" placeholder="10">
+                        <input type="text" id="max-value" placeholder="300">
                     </section>
                 </details>
                 <details open>
@@ -137,8 +135,8 @@
                         <li><input type="checkbox" id="usado"> <label for="usado">Usado</label></li>
                     </ul>
                 </details>
-                <button class="button-filtro" onclick="applyFilters()">APLICAR FILTROS</button>
-                <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
+                <button class="button-filtro" id="applyFiltersBtn">APLICAR FILTROS</button>
+                <button class="clear-filters" id="clearFiltersBtn">Limpar Filtros</button>
             </section>
             </section>
 
@@ -159,8 +157,14 @@
                         <h2><%= produto.NOME_PRODUTO %></h2>
                         <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
                         <p class="descricao">ou em 2x de R$<%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
-                        <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
-                        <button class="cart-btn" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" alt="Adicionar ao carrinho"></button>
+                        <section class="product-actions">
+                            <button class="edit-product-btn" data-product-id="<%= produto.ID_PRODUTO %>" title="Editar produto">
+                                <img src="imagens/editar.png" alt="Editar">
+                            </button>
+                            <button class="delete-product-btn" data-product-id="<%= produto.ID_PRODUTO %>" title="Excluir produto">
+                                <img src="imagens/lixeira.png" alt="Excluir">
+                            </button>
+                        </section>
                     </article>
                   <% }); %>
                 <% } else { %>
@@ -170,6 +174,80 @@
         </section>
 
     </main>
+    
+    <!-- Modal de Edição de Produto -->
+    <section id="editProductModal" class="modal" style="display: none;">
+        <section class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <h2>Editar Produto</h2>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+                
+                <section class="form-group">
+                    <label for="editNome">Nome do Produto:</label>
+                    <input type="text" id="editNome" required>
+                </section>
+                
+                <section class="form-group">
+                    <label for="editPreco">Preço (R$):</label>
+                    <input type="number" id="editPreco" step="0.01" min="0" required>
+                </section>
+                
+                <section class="form-group">
+                    <label for="editDescricao">Descrição:</label>
+                    <textarea id="editDescricao" rows="4"></textarea>
+                </section>
+                
+                <section class="form-group">
+                    <label for="editTipo">Categoria:</label>
+                    <select id="editTipo" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="vestidos">Vestidos</option>
+                        <option value="blusas">Blusas</option>
+                        <option value="calcas">Calças</option>
+                        <option value="saias">Saias</option>
+                        <option value="acessorios">Acessórios</option>
+                        <option value="calcados">Calçados</option>
+                        <option value="casacos">Casacos</option>
+                        <option value="conjuntos">Conjuntos</option>
+                    </select>
+                </section>
+                
+                <section class="form-group">
+                    <label for="editTamanho">Tamanho:</label>
+                    <select id="editTamanho">
+                        <option value="">Selecione um tamanho</option>
+                        <option value="PP">PP</option>
+                        <option value="P">P</option>
+                        <option value="M">M</option>
+                        <option value="G">G</option>
+                        <option value="GG">GG</option>
+                        <option value="XGG">XGG</option>
+                    </select>
+                </section>
+                
+                <section class="form-group">
+                    <label for="editCor">Cor:</label>
+                    <input type="text" id="editCor">
+                </section>
+                
+                <section class="form-group">
+                    <label for="editCondicao">Condição:</label>
+                    <select id="editCondicao">
+                        <option value="">Selecione a condição</option>
+                        <option value="novo">Novo</option>
+                        <option value="seminovo">Seminovo</option>
+                        <option value="usado">Usado</option>
+                    </select>
+                </section>
+                
+                <section class="form-actions">
+                    <button type="button" id="cancelEditBtn">Cancelar</button>
+                    <button type="submit">Salvar Alterações</button>
+                </section>
+            </form>
+        </section>
+    </section>
     
     <br><br>
 
@@ -187,18 +265,19 @@
         <p class="copyright">© 2024, Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-                <script>
+    <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
+        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %> 
         window.userType = 'c';
         <% } %>
     </script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
     <script src="/js/favoritos-global.js"></script>
     <script src="/js/carrinho-global.js"></script>
     <script src="/js/busca-global.js"></script>
+    <script src="/js/perfilvender.js"></script>
+
 </body>
 </html>

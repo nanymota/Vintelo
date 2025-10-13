@@ -68,9 +68,6 @@
 
     <!-- Lista de Produtos -->
   <main>
-        <% if (typeof favoritos === 'undefined' || !favoritos || favoritos.length === 0) { %>
-            <center><img src="imagens/favoritos.png" class="img-responsiva"></center>
-        <% } %>
         <!-- Informações de lista -->
         <nav class="category-nav category-nav-mobile">
             <br>
@@ -78,6 +75,15 @@
             <span class="vintelo-text">Favoritos</span>
             <br>
         </nav>
+        
+        <% if (typeof favoritos === 'undefined' || !favoritos || favoritos.length === 0) { %>
+            <center class="oculto-desktop">
+                <img src="imagens/favoritos.png" class="img-responsiva oculto-desktop" style="max-width: 150px; margin: 30px 0;">
+                <h3 style="color: #722F37; margin: 15px 0; font-size: 16px;">Nenhum favorito ainda</h3>
+                <p style="color: #722F37; margin-bottom: 20px;">Adicione produtos aos seus favoritos</p>
+                <a href="/homecomprador" style="background: #722F37; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Explorar Produtos</a>
+            </center>
+        <% } %>
         
         <!-- Layout com Sidebar (Desktop) -->
         <section class="container oculto-mobile">
@@ -156,8 +162,6 @@
                             <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
-                <% } else { %>
-                    <p>Nenhum favorito encontrado</p>
                 <% } %>
             </section>
         </section>
@@ -178,8 +182,6 @@
                             <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
-                <% } else { %>
-                    <p>Nenhum favorito encontrado</p>
                 <% } %>
             </section>
         </section>

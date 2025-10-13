@@ -1,3 +1,19 @@
+// Verificar se já segue o brechó ao carregar a página
+function checkFollowStatus(brechoId) {
+    if (!window.isAuthenticated) return;
+    
+    fetch(`/api/verificar-seguindo/${brechoId}`)
+    .then(response => response.json())
+    .then(data => {
+        const button = document.querySelector('.follow-btn');
+        if (button && data.seguindo) {
+            button.textContent = 'Seguindo';
+            button.classList.add('following');
+        }
+    })
+    .catch(error => console.log('Erro ao verificar status:', error));
+}
+
 // Funcionalidade para seguir/favoritar brechós
 function toggleFollowBrecho(button, brechoId) {
     if (!window.isAuthenticated) {
@@ -27,6 +43,12 @@ function toggleFollowBrecho(button, brechoId) {
             } else {
                 button.textContent = 'Seguindo';
                 button.classList.add('following');
+            }
+            
+            // Atualizar contador de seguidores na página
+            const seguidoresElement = document.querySelector('.stats p:nth-child(3) strong');
+            if (seguidoresElement && data.seguidores !== undefined) {
+                seguidoresElement.textContent = data.seguidores;
             }
         } else {
             alert('Erro ao seguir brechó. Tente novamente.');

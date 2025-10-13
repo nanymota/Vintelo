@@ -145,7 +145,12 @@ const adicionarController = {
                         }
                     }
                     
-                    res.redirect('/perfilvender?sucesso=produto_cadastrado');
+                    // Redirecionar baseado no tipo de usuário
+                    if (req.session.autenticado && req.session.autenticado.tipo === 'b') {
+                        res.redirect('/perfilvender?sucesso=produto_cadastrado');
+                    } else {
+                        res.redirect('/homecomprador?sucesso=produto_cadastrado');
+                    }
                 } catch (imageError) {
                     // Rollback: deletar produto e imagens já inseridas
                     await produtoModel.delete(resultado.insertId);

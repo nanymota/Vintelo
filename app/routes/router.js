@@ -597,7 +597,7 @@ router.get('/brecho/:id', carregarDadosUsuario, async function(req, res){
             [id]
         );
         
-        const mediaAvaliacoes = mediaResult[0]?.media || 0;
+        const mediaAvaliacoes = parseFloat(mediaResult[0]?.media) || 0;
         const totalAvaliacoes = mediaResult[0]?.total || 0;
         
         // Contar produtos vendidos (status diferente de 'd' = disponível)
@@ -1368,7 +1368,10 @@ router.get('/avaliasao', carregarDadosUsuario, async (req, res) => {
                 ORDER BY u.NOME_USUARIO
                 LIMIT 20
             `);
-            brechos = brechosResult;
+            brechos = brechosResult.map(brecho => ({
+                ...brecho,
+                MEDIA_AVALIACOES: parseFloat(brecho.MEDIA_AVALIACOES) || 0
+            }));
             
             // Calcular estatísticas da plataforma (simular já que não há avaliações da plataforma)
             const [stats] = await pool.query(`
@@ -1379,7 +1382,7 @@ router.get('/avaliasao', carregarDadosUsuario, async (req, res) => {
             if (stats.length > 0) {
                 estatisticas = {
                     totalAvaliacoes: stats[0].total || 0,
-                    mediaAvaliacoes: stats[0].media || 4.8
+                    mediaAvaliacoes: parseFloat(stats[0].media) || 4.8
                 };
             }
         } catch (dbError) {
@@ -1425,10 +1428,15 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
         let produtos = [];
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            console.log('=== DEBUG PERFILVENDER ===');
+            console.log('Usuário autenticado:', req.session.autenticado);
+            
             const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+            console.log('Detalhes do usuário encontrados:', userDetails.length > 0 ? 'SIM' : 'NÃO');
             
             if (userDetails && userDetails.length > 0) {
                 const user = userDetails[0];
+                console.log('Tipo de usuário:', user.TIPO_USUARIO);
                 userData.nome = user.NOME_USUARIO || 'Usuário';
                 userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
                 userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
@@ -1436,11 +1444,17 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
                 userData.user_usuario = user.USER_USUARIO || 'usuario';
             }
             
-            // Buscar produtos do usuário
+            // Buscar produtos do usuário com debug detalhado
             console.log('Buscando produtos para usuário ID:', req.session.autenticado.id);
+            
+            // Primeiro, verificar se existem produtos na tabela
+            const [totalProdutos] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS');
+            console.log('Total de produtos na tabela PRODUTOS:', totalProdutos[0].total);
+            
+            // Verificar produtos específicos do usuário
             const [produtosUsuario] = await pool.query(`
-                SELECT p.*, 
-                       COALESCE(img.URL_IMG, CONCAT('imagem/produtos/', p.ID_PRODUTO, '.jpg')) as URL_IMG
+                SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, p.STATUS_PRODUTO, p.ID_USUARIO,
+                       img.URL_IMG
                 FROM PRODUTOS p
                 LEFT JOIN IMG_PRODUTOS img ON p.ID_PRODUTO = img.ID_PRODUTO
                 WHERE p.ID_USUARIO = ?
@@ -1448,12 +1462,26 @@ router.get('/perfilvender', carregarDadosUsuario, async function(req, res){
                 ORDER BY p.ID_PRODUTO DESC
             `, [req.session.autenticado.id]);
             
-            console.log('Produtos encontrados:', produtosUsuario.length);
+            console.log('Produtos encontrados para o usuário:', produtosUsuario.length);
+            
             if (produtosUsuario.length > 0) {
-                console.log('Primeiro produto:', JSON.stringify(produtosUsuario[0], null, 2));
+                console.log('Primeiro produto encontrado:');
+                console.log('- ID:', produtosUsuario[0].ID_PRODUTO);
+                console.log('- Nome:', produtosUsuario[0].NOME_PRODUTO);
+                console.log('- Preço:', produtosUsuario[0].PRECO);
+                console.log('- Status:', produtosUsuario[0].STATUS_PRODUTO);
+                console.log('- ID_USUARIO:', produtosUsuario[0].ID_USUARIO);
+            } else {
+                console.log('NENHUM produto encontrado para o usuário');
+                
+                // Verificar se há produtos de outros usuários
+                const [outrosProdutos] = await pool.query('SELECT ID_PRODUTO, ID_USUARIO FROM PRODUTOS LIMIT 5');
+                console.log('Produtos de outros usuários (amostra):', outrosProdutos);
             }
+            
             produtos = produtosUsuario;
             userData.itens_venda = produtos.length;
+            console.log('=== FIM DEBUG ===');
         }
         
         const brechoData = {
@@ -2410,39 +2438,52 @@ router.get('/planos', carregarDadosUsuario, async (req, res) => {
         let planos = [];
         let planoAtual = null;
         
-        // Tentar buscar planos do banco, se falhar usar planos padrão
-        try {
-            const [planosResult] = await pool.query(`
-                SELECT ID_PLANO, NOME_PLANO, PRECO_PLANO, BENEFICIOS, STATUS_PLANO
-                FROM PLANOS_PREMIUM 
-                WHERE STATUS_PLANO = 'ativo'
-                ORDER BY PRECO_PLANO ASC
-            `);
-            planos = planosResult;
-        } catch (dbError) {
-            console.log('Tabela PLANOS_PREMIUM não existe, usando planos padrão');
-            planos = [];
-        }
+        console.log('=== CARREGANDO PÁGINA DE PLANOS ===');
         
-        // Se usuário autenticado, tentar buscar plano atual
+        // Usar planos padrão (sem depender de tabelas que podem não existir)
+        planos = [
+            {
+                ID_PLANO: 'basico',
+                NOME_PLANO: 'Básico',
+                PRECO_PLANO: 19.90,
+                BENEFICIOS: 'Cadastro de produtos, Exclusão de produtos'
+            },
+            {
+                ID_PLANO: 'premium',
+                NOME_PLANO: 'Premium',
+                PRECO_PLANO: 39.90,
+                BENEFICIOS: 'Cadastro de produtos, Envio de anúncios, Exclusão de produtos, Suporte básico, Destaque nos resultados'
+            },
+            {
+                ID_PLANO: 'profissional',
+                NOME_PLANO: 'Profissional',
+                PRECO_PLANO: 59.90,
+                BENEFICIOS: 'Cadastro de produtos, Envio de anúncios, Exclusão de produtos, Suporte premium, Destaque avançado'
+            }
+        ];
+        
+        // Se usuário autenticado, buscar plano atual na tabela USUARIOS
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
             try {
-                const [assinatura] = await pool.query(`
-                    SELECT a.*, p.NOME_PLANO, p.PRECO_PLANO
-                    FROM ASSINATURAS a
-                    JOIN PLANOS_PREMIUM p ON a.ID_PLANO = p.ID_PLANO
-                    WHERE a.ID_USUARIO = ? AND a.STATUS_ASSINATURA = 'ativa'
-                    ORDER BY a.DATA_INICIO DESC
-                    LIMIT 1
-                `, [req.session.autenticado.id]);
+                const [usuario] = await pool.query(
+                    'SELECT PLANO_PREMIUM FROM USUARIOS WHERE ID_USUARIO = ?',
+                    [req.session.autenticado.id]
+                );
                 
-                if (assinatura.length > 0) {
-                    planoAtual = assinatura[0];
+                if (usuario.length > 0 && usuario[0].PLANO_PREMIUM) {
+                    planoAtual = {
+                        NOME_PLANO: usuario[0].PLANO_PREMIUM,
+                        STATUS_ASSINATURA: 'ativa'
+                    };
+                    console.log('Plano atual encontrado:', planoAtual);
                 }
             } catch (dbError) {
                 console.log('Erro ao buscar plano atual:', dbError.message);
             }
         }
+        
+        console.log('Planos disponíveis:', planos.length);
+        console.log('Plano atual:', planoAtual ? planoAtual.NOME_PLANO : 'Nenhum');
         
         res.render('pages/planos', {
             autenticado: req.session.autenticado || null,
@@ -2967,36 +3008,37 @@ router.post('/planos/contratar', verificarUsuAutenticado, async (req, res) => {
         const { planoId, nomePlano, preco } = req.body;
         const userId = req.session.autenticado.id;
         
-        // Verificar se já tem plano ativo
-        const [planoExistente] = await pool.query(
-            'SELECT * FROM ASSINATURAS WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
+        console.log('=== CONTRATAR PLANO ===');
+        console.log('Dados recebidos:', { planoId, nomePlano, preco, userId });
+        
+        // Verificar se já tem plano ativo (usando campo PLANO_PREMIUM na tabela USUARIOS)
+        const [usuario] = await pool.query(
+            'SELECT PLANO_PREMIUM FROM USUARIOS WHERE ID_USUARIO = ?',
             [userId]
         );
         
-        if (planoExistente.length > 0) {
-            return res.json({ success: false, message: 'Você já possui um plano ativo' });
+        if (usuario.length > 0 && usuario[0].PLANO_PREMIUM) {
+            return res.json({ success: false, message: 'Você já possui um plano ativo: ' + usuario[0].PLANO_PREMIUM });
         }
         
-        // Criar nova assinatura
-        const dataInicio = new Date();
-        const dataVencimento = new Date();
-        dataVencimento.setMonth(dataVencimento.getMonth() + 1);
-        
-        await pool.query(`
-            INSERT INTO ASSINATURAS (ID_USUARIO, ID_PLANO, STATUS_ASSINATURA, DATA_INICIO, DATA_VENCIMENTO, VALOR_PLANO)
-            VALUES (?, ?, 'ativa', ?, ?, ?)
-        `, [userId, planoId, dataInicio, dataVencimento, preco]);
-        
-        // Atualizar usuário
-        await pool.query(
+        // Atualizar usuário com o novo plano (método simplificado)
+        const [resultado] = await pool.query(
             'UPDATE USUARIOS SET PLANO_PREMIUM = ? WHERE ID_USUARIO = ?',
             [nomePlano, userId]
         );
         
-        res.json({ success: true, message: 'Plano contratado com sucesso!' });
+        console.log('Resultado da atualização:', resultado);
+        
+        if (resultado.affectedRows > 0) {
+            console.log('Plano contratado com sucesso!');
+            res.json({ success: true, message: 'Plano ' + nomePlano + ' contratado com sucesso!' });
+        } else {
+            console.log('Falha ao contratar plano');
+            res.json({ success: false, message: 'Falha ao contratar o plano' });
+        }
     } catch (error) {
-        console.log('Erro ao contratar plano:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        console.log('Erro detalhado ao contratar plano:', error);
+        res.json({ success: false, message: 'Erro interno: ' + error.message });
     }
 });
 
@@ -3004,22 +3046,25 @@ router.post('/planos/cancelar', verificarUsuAutenticado, async (req, res) => {
     try {
         const userId = req.session.autenticado.id;
         
-        // Cancelar assinatura ativa
-        await pool.query(
-            'UPDATE ASSINATURAS SET STATUS_ASSINATURA = "cancelada" WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
-            [userId]
-        );
+        console.log('=== CANCELAR PLANO ===');
+        console.log('Usuário ID:', userId);
         
         // Remover plano premium do usuário
-        await pool.query(
+        const [resultado] = await pool.query(
             'UPDATE USUARIOS SET PLANO_PREMIUM = NULL WHERE ID_USUARIO = ?',
             [userId]
         );
         
-        res.json({ success: true, message: 'Plano cancelado com sucesso!' });
+        console.log('Resultado do cancelamento:', resultado);
+        
+        if (resultado.affectedRows > 0) {
+            res.json({ success: true, message: 'Plano cancelado com sucesso!' });
+        } else {
+            res.json({ success: false, message: 'Nenhum plano encontrado para cancelar' });
+        }
     } catch (error) {
         console.log('Erro ao cancelar plano:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        res.json({ success: false, message: 'Erro interno: ' + error.message });
     }
 });
 
@@ -3028,32 +3073,25 @@ router.post('/planos/alterar', verificarUsuAutenticado, async (req, res) => {
         const { novoPlanoId, nomePlano, preco } = req.body;
         const userId = req.session.autenticado.id;
         
-        // Cancelar plano atual
-        await pool.query(
-            'UPDATE ASSINATURAS SET STATUS_ASSINATURA = "alterado" WHERE ID_USUARIO = ? AND STATUS_ASSINATURA = "ativa"',
-            [userId]
-        );
+        console.log('=== ALTERAR PLANO ===');
+        console.log('Dados recebidos:', { novoPlanoId, nomePlano, preco, userId });
         
-        // Criar nova assinatura
-        const dataInicio = new Date();
-        const dataVencimento = new Date();
-        dataVencimento.setMonth(dataVencimento.getMonth() + 1);
-        
-        await pool.query(`
-            INSERT INTO ASSINATURAS (ID_USUARIO, ID_PLANO, STATUS_ASSINATURA, DATA_INICIO, DATA_VENCIMENTO, VALOR_PLANO)
-            VALUES (?, ?, 'ativa', ?, ?, ?)
-        `, [userId, novoPlanoId, dataInicio, dataVencimento, preco]);
-        
-        // Atualizar usuário
-        await pool.query(
+        // Atualizar usuário com o novo plano
+        const [resultado] = await pool.query(
             'UPDATE USUARIOS SET PLANO_PREMIUM = ? WHERE ID_USUARIO = ?',
             [nomePlano, userId]
         );
         
-        res.json({ success: true, message: 'Plano alterado com sucesso!' });
+        console.log('Resultado da alteração:', resultado);
+        
+        if (resultado.affectedRows > 0) {
+            res.json({ success: true, message: 'Plano alterado para ' + nomePlano + ' com sucesso!' });
+        } else {
+            res.json({ success: false, message: 'Falha ao alterar o plano' });
+        }
     } catch (error) {
         console.log('Erro ao alterar plano:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        res.json({ success: false, message: 'Erro interno: ' + error.message });
     }
 });
 
@@ -3389,10 +3427,42 @@ router.post('/api/seguir-brecho', verificarUsuAutenticado, async function(req, r
             );
         }
         
-        res.json({ success: true });
+        // Contar seguidores atualizados
+        const [seguidores] = await pool.query(
+            'SELECT COUNT(*) as total FROM FAVORITOS WHERE ID_ITEM = ? AND TIPO_ITEM = "brecho" AND STATUS_FAVORITO = "favoritado"',
+            [brechoId]
+        );
+        
+        res.json({ 
+            success: true, 
+            seguidores: seguidores[0]?.total || 0 
+        });
     } catch (error) {
         console.log('Erro ao seguir brechó:', error);
         res.json({ success: false, message: 'Erro interno: ' + error.message });
+    }
+});
+
+router.get('/api/verificar-seguindo/:brechoId', async function(req, res){
+    try {
+        const { brechoId } = req.params;
+        
+        if (!req.session.autenticado) {
+            return res.json({ seguindo: false });
+        }
+        
+        const userId = req.session.autenticado.id;
+        
+        const [favorito] = await pool.query(
+            'SELECT STATUS_FAVORITO FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "brecho"',
+            [brechoId, userId]
+        );
+        
+        const seguindo = favorito.length > 0 && favorito[0].STATUS_FAVORITO === 'favoritado';
+        res.json({ seguindo: seguindo });
+    } catch (error) {
+        console.log('Erro ao verificar seguindo:', error);
+        res.json({ seguindo: false });
     }
 });
 
@@ -3514,4 +3584,249 @@ router.post('/finalizar-pedido-real', verificarUsuAutenticado, async (req, res) 
     }
 });
 
+// Rotas para edição de produtos
+router.get('/produto/detalhes/:id', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.session.autenticado.id;
+        
+        console.log('Buscando produto ID:', id, 'para usuário:', userId);
+        
+        // Validar se o ID é um número válido
+        if (!id || isNaN(id)) {
+            return res.json({ success: false, message: 'ID do produto inválido' });
+        }
+        
+        const [produto] = await pool.query(
+            'SELECT * FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            [parseInt(id), userId]
+        );
+        
+        console.log('Produto encontrado:', produto.length > 0 ? 'SIM' : 'NÃO');
+        
+        if (produto.length === 0) {
+            return res.json({ success: false, message: 'Produto não encontrado ou sem permissão' });
+        }
+        
+        res.json({ success: true, produto: produto[0] });
+    } catch (error) {
+        console.log('Erro ao buscar produto:', error);
+        res.json({ success: false, message: 'Erro no servidor. Tente novamente.' });
+    }
+});
+
+router.post('/produto/editar', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { productId, nome, preco, descricao, tipo, tamanho, cor, condicao } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        console.log('Editando produto:', { productId, nome, preco, tipo, userId });
+        
+        // Validar dados de entrada
+        if (!productId || isNaN(productId)) {
+            return res.json({ success: false, message: 'ID do produto inválido' });
+        }
+        
+        if (!nome || nome.trim().length === 0) {
+            return res.json({ success: false, message: 'Nome do produto é obrigatório' });
+        }
+        
+        if (!preco || isNaN(preco) || parseFloat(preco) <= 0) {
+            return res.json({ success: false, message: 'Preço deve ser um número maior que zero' });
+        }
+        
+        if (!tipo || tipo.trim().length === 0) {
+            return res.json({ success: false, message: 'Categoria é obrigatória' });
+        }
+        
+        // Verificar se o produto pertence ao usuário
+        const [produto] = await pool.query(
+            'SELECT * FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            [parseInt(productId), userId]
+        );
+        
+        if (produto.length === 0) {
+            return res.json({ success: false, message: 'Produto não encontrado ou sem permissão' });
+        }
+        
+        // Preparar dados para atualização (limpar valores vazios)
+        const dadosAtualizacao = {
+            NOME_PRODUTO: nome.trim(),
+            PRECO: parseFloat(preco),
+            DETALHES_PRODUTO: descricao ? descricao.trim() : null,
+            TIPO_PRODUTO: tipo.trim(),
+            TAMANHO_PRODUTO: tamanho && tamanho.trim() ? tamanho.trim() : null,
+            COR_PRODUTO: cor && cor.trim() ? cor.trim() : null,
+            CONDICAO_PRODUTO: condicao && condicao.trim() ? condicao.trim() : null
+        };
+        
+        console.log('Dados para atualização:', dadosAtualizacao);
+        
+        // Atualizar produto
+        const [resultado] = await pool.query(`
+            UPDATE PRODUTOS SET 
+                NOME_PRODUTO = ?, 
+                PRECO = ?, 
+                DETALHES_PRODUTO = ?, 
+                TIPO_PRODUTO = ?, 
+                TAMANHO_PRODUTO = ?, 
+                COR_PRODUTO = ?, 
+                CONDICAO_PRODUTO = ?
+            WHERE ID_PRODUTO = ? AND ID_USUARIO = ?
+        `, [
+            dadosAtualizacao.NOME_PRODUTO,
+            dadosAtualizacao.PRECO,
+            dadosAtualizacao.DETALHES_PRODUTO,
+            dadosAtualizacao.TIPO_PRODUTO,
+            dadosAtualizacao.TAMANHO_PRODUTO,
+            dadosAtualizacao.COR_PRODUTO,
+            dadosAtualizacao.CONDICAO_PRODUTO,
+            parseInt(productId),
+            userId
+        ]);
+        
+        console.log('Resultado da atualização:', resultado);
+        
+        if (resultado.affectedRows === 0) {
+            return res.json({ success: false, message: 'Nenhuma alteração foi feita no produto' });
+        }
+        
+        res.json({ success: true, message: 'Produto atualizado com sucesso!' });
+    } catch (error) {
+        console.log('Erro detalhado ao editar produto:', error);
+        
+        // Tratar erros específicos do MySQL
+        if (error.code === 'ER_DATA_TOO_LONG') {
+            return res.json({ success: false, message: 'Algum campo contém dados muito longos' });
+        }
+        if (error.code === 'ER_BAD_NULL_ERROR') {
+            return res.json({ success: false, message: 'Campo obrigatório não pode estar vazio' });
+        }
+        if (error.code === 'ER_TRUNCATED_WRONG_VALUE') {
+            return res.json({ success: false, message: 'Valor inválido para algum campo' });
+        }
+        
+        res.json({ success: false, message: 'Erro interno do servidor: ' + error.message });
+    }
+});
+
+router.post('/produto/excluir', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        console.log('Excluindo produto:', productId, 'do usuário:', userId);
+        
+        // Validar ID do produto
+        if (!productId || isNaN(productId)) {
+            return res.json({ success: false, message: 'ID do produto inválido' });
+        }
+        
+        // Verificar se o produto pertence ao usuário
+        const [produto] = await pool.query(
+            'SELECT * FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
+            [parseInt(productId), userId]
+        );
+        
+        if (produto.length === 0) {
+            return res.json({ success: false, message: 'Produto não encontrado ou sem permissão' });
+        }
+        
+        // Excluir imagens do produto primeiro
+        await pool.query('DELETE FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?', [parseInt(productId)]);
+        
+        // Excluir produto
+        const [resultado] = await pool.query(
+            'DELETE FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?', 
+            [parseInt(productId), userId]
+        );
+        
+        console.log('Resultado da exclusão:', resultado);
+        
+        if (resultado.affectedRows === 0) {
+            return res.json({ success: false, message: 'Produto não pôde ser excluído' });
+        }
+        
+        res.json({ success: true, message: 'Produto excluído com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao excluir produto:', error);
+        res.json({ success: false, message: 'Erro no servidor. Tente novamente.' });
+    }
+});
+
+// Rota de teste para verificar produtos no banco
+router.get('/debug/produtos', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const userId = req.session.autenticado.id;
+        
+        // Verificar total de produtos
+        const [total] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS');
+        
+        // Verificar produtos do usuário
+        const [produtosUsuario] = await pool.query(
+            'SELECT * FROM PRODUTOS WHERE ID_USUARIO = ? ORDER BY ID_PRODUTO DESC',
+            [userId]
+        );
+        
+        // Verificar últimos produtos cadastrados
+        const [ultimosProdutos] = await pool.query(
+            'SELECT ID_PRODUTO, NOME_PRODUTO, ID_USUARIO, DATA_CADASTRO FROM PRODUTOS ORDER BY ID_PRODUTO DESC LIMIT 10'
+        );
+        
+        res.json({
+            totalProdutos: total[0].total,
+            produtosDoUsuario: produtosUsuario.length,
+            produtosUsuario: produtosUsuario,
+            ultimosProdutos: ultimosProdutos,
+            usuarioId: userId
+        });
+    } catch (error) {
+        console.log('Erro no debug:', error);
+        res.json({ error: error.message });
+    }
+});
+
 module.exports = router;
+
+// Rota para criar produto de teste
+router.post('/debug/criar-produto-teste', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const userId = req.session.autenticado.id;
+        
+        const produtoTeste = {
+            NOME_PRODUTO: 'Produto Teste - ' + new Date().toLocaleString(),
+            PRECO: 99.90,
+            TIPO_PRODUTO: 'vestidos',
+            COR_PRODUTO: 'azul',
+            CONDICAO_PRODUTO: 'novo',
+            TAMANHO_PRODUTO: 'M',
+            ESTILO_PRODUTO: 'casual',
+            DETALHES_PRODUTO: 'Produto criado para teste de funcionalidade',
+            STATUS_PRODUTO: 'd',
+            QUANTIDADE_ESTOQUE: 1,
+            ID_USUARIO: userId
+        };
+        
+        console.log('Criando produto teste:', produtoTeste);
+        
+        const [resultado] = await pool.query('INSERT INTO PRODUTOS SET ?', [produtoTeste]);
+        
+        console.log('Produto teste criado com ID:', resultado.insertId);
+        
+        // Verificar se foi realmente inserido
+        const [verificacao] = await pool.query(
+            'SELECT * FROM PRODUTOS WHERE ID_PRODUTO = ?',
+            [resultado.insertId]
+        );
+        
+        res.json({
+            success: true,
+            produtoId: resultado.insertId,
+            produtoInserido: verificacao[0],
+            message: 'Produto teste criado com sucesso!'
+        });
+    } catch (error) {
+        console.log('Erro ao criar produto teste:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
