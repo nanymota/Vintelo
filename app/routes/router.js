@@ -3885,16 +3885,23 @@ router.get('/debug/produtos', verificarUsuAutenticado, async (req, res) => {
 module.exports = router;
 
 // API endpoint para status de autenticação (usado pelo perfil-autenticado.js)
-router.get('/api/auth-status', function(req, res){
+router.get('/api/auth-status', async function(req, res){
     try {
         if (req.session && req.session.autenticado) {
+            // Buscar dados completos do usuário incluindo imagem
+            const [usuario] = await pool.query(
+                'SELECT IMG_URL FROM USUARIOS WHERE ID_USUARIO = ?',
+                [req.session.autenticado.id]
+            );
+            
             res.json({
                 isAuthenticated: true,
                 user: {
                     id: req.session.autenticado.id,
                     nome: req.session.autenticado.nome,
                     email: req.session.autenticado.email,
-                    tipo: req.session.autenticado.tipo
+                    tipo: req.session.autenticado.tipo,
+                    imagem: usuario[0]?.IMG_URL || null
                 }
             });
         } else {
@@ -3903,6 +3910,87 @@ router.get('/api/auth-status', function(req, res){
     } catch (error) {
         console.log('Erro ao verificar status de autenticação:', error);
         res.json({ isAuthenticated: false });
+    }
+});
+
+// API endpoint para denúncias (usado pelo denuncias-admin.js)
+router.get('/api/denuncias', async function(req, res){
+    try {
+        const [denuncias] = await pool.query(`
+            SELECT d.ID_DENUNCIA, d.MOTIVO, d.DESCRICAO, d.DATA_DENUNCIA, d.STATUS_DENUNCIA as STATUS,
+                   u1.NOME_USUARIO as NOME_DENUNCIANTE, u1.USER_USUARIO as USER_DENUNCIANTE,
+                   u2.NOME_USUARIO as NOME_ALVO, u2.USER_USUARIO as USER_ALVO, u2.TIPO_USUARIO as TIPO_ALVO
+            FROM DENUNCIAS d
+            LEFT JOIN USUARIOS u1 ON d.ID_USUARIO_DENUNCIANTE = u1.ID_USUARIO
+            LEFT JOIN USUARIOS u2 ON d.ID_USUARIO_ALVO = u2.ID_USUARIO
+            ORDER BY d.DATA_DENUNCIA DESC
+            LIMIT 50
+        `);
+        
+        res.json(denuncias || []);
+    } catch (error) {
+        console.log('Erro ao buscar denúncias via API:', error);
+        res.json([]);
+    }
+});
+
+// API endpoint para estatísticas do vendedor (usado pelo estatisticas-vendedor.js)
+router.get('/api/estatisticas', verificarUsuAutenticado, async function(req, res){
+    try {
+        const userId = req.session.autenticado.id;
+        
+        const [produtos] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS WHERE ID_USUARIO = ?', [userId]);
+        const [vendas] = await pool.query('SELECT COUNT(*) as total, SUM(PRECO) as receita FROM PRODUTOS WHERE ID_USUARIO = ? AND STATUS_PRODUTO != "d"', [userId]);
+        const [visualizacoes] = await pool.query('SELECT COUNT(DISTINCT f.ID_USUARIO) as total FROM FAVORITOS f JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO WHERE p.ID_USUARIO = ? AND f.TIPO_ITEM = "produto"', [userId]);
+        const [categorias] = await pool.query('SELECT TIPO_PRODUTO, COUNT(*) as quantidade, SUM(CASE WHEN STATUS_PRODUTO != "d" THEN 1 ELSE 0 END) as vendidos FROM PRODUTOS WHERE ID_USUARIO = ? GROUP BY TIPO_PRODUTO', [userId]);
+        
+        const totalProdutos = produtos[0]?.total || 0;
+        const totalVendas = vendas[0]?.total || 0;
+        const receitaTotal = parseFloat(vendas[0]?.receita) || 0;
+        const totalVisualizacoes = Math.max(visualizacoes[0]?.total || 0, totalProdutos * 2);
+        const taxaConversao = totalVisualizacoes > 0 ? ((totalVendas / totalVisualizacoes) * 100).toFixed(1) : 0;
+        
+        const vendasCategoria = categorias.map(cat => ({
+            categoria: cat.TIPO_PRODUTO || 'Outros',
+            quantidade: cat.vendidos || 0
+        }));
+        
+        res.json({
+            brecho: { NOME_BRECHO: req.session.autenticado.nome + ' Brechó' },
+            totalProdutos,
+            totalVendas,
+            receitaTotal,
+            totalVisualizacoes,
+            taxaConversao: parseFloat(taxaConversao),
+            vendasCategoria
+        });
+    } catch (error) {
+        console.log('Erro ao buscar estatísticas via API:', error);
+        res.json({});
+    }
+});
+
+// API endpoint para estatísticas do admin (usado pelo estatisticas-admin.js)
+router.get('/api/estatisticas-admin', async function(req, res){
+    try {
+        const [totalUsuarios] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS');
+        const [totalBrechos] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS WHERE TIPO_USUARIO = "b"');
+        const [totalProdutos] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS');
+        const [totalVendas] = await pool.query('SELECT COUNT(*) as total FROM PRODUTOS WHERE STATUS_PRODUTO != "d"');
+        const [receitaTotal] = await pool.query('SELECT SUM(PRECO) as receita FROM PRODUTOS WHERE STATUS_PRODUTO != "d"');
+        const [denunciasPendentes] = await pool.query('SELECT COUNT(*) as total FROM DENUNCIAS WHERE STATUS_DENUNCIA = "pendente"');
+        
+        res.json({
+            totalUsuarios: totalUsuarios[0]?.total || 0,
+            totalBrechos: totalBrechos[0]?.total || 0,
+            totalProdutos: totalProdutos[0]?.total || 0,
+            totalVendas: totalVendas[0]?.total || 0,
+            receitaTotal: parseFloat(receitaTotal[0]?.receita) || 0,
+            denunciasPendentes: denunciasPendentes[0]?.total || 0
+        });
+    } catch (error) {
+        console.log('Erro ao buscar estatísticas admin via API:', error);
+        res.json({});
     }
 });
 

@@ -16,7 +16,7 @@
             </a>
             <img src="imagens/logo.png" alt="Logo">
             <a href="/menuvendedor">
-                <img src="<%= (autenticado && autenticado.imagem) ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="perfil">
+                <img src="/imagens/icone sem cadastro.png" alt="Perfil" class="perfil user-profile-img">
             </a>
         </nav>
     </header>
@@ -40,31 +40,31 @@
             <div class="nav-icons">
                 <input type="text" placeholder="Buscar...">
                 <a href="/adicionar"><img src="imagens/vender peça.png"></a>
-                <a href="/menuvendedor"><img src="<%= (autenticado && autenticado.imagem) ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>"></a>
+                <a href="/menuvendedor"><img src="/imagens/icone sem cadastro.png" class="user-profile-img"></a>
                 <a href="/favoritos"><img src="imagens/icone coraçao.png"></a>
             </div>
         </div>
     </header>
 
     <main>
-        <h1>Dashboard - <%= (estatisticas && estatisticas.brecho && estatisticas.brecho.NOME_BRECHO) || 'Meu Brechó' %></h1>
+        <h1>Dashboard - Meu Brechó</h1>
         
         <div class="stats-grid">
             <div class="stat-card" onclick="showSection('vendas')">
                 <h3>Produtos Vendidos</h3>
-                <div class="value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                <div class="value">0</div>
                 <div class="change">Baseado em dados reais</div>
             </div>
             
             <div class="stat-card" onclick="showSection('visualizacoes')">
                 <h3>Visualizações</h3>
-                <div class="value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                <div class="value">0</div>
                 <div class="change">Interações com produtos</div>
             </div>
             
             <div class="stat-card" onclick="showSection('conversao')">
                 <h3>Taxa Conversão</h3>
-                <div class="value"><%= (estatisticas && estatisticas.taxaConversao) || 0 %>%</div>
+                <div class="value">0%</div>
                 <div class="change">Vendas/Visualizações</div>
             </div>
         </div>
@@ -73,31 +73,7 @@
             <div class="chart-card">
                 <h3>Vendas por Categoria</h3>
                 <div class="bar-chart">
-                    <% if (estatisticas && estatisticas.vendasCategoria && estatisticas.vendasCategoria.length > 0) { %>
-                        <% estatisticas.vendasCategoria.forEach(function(categoria, index) { %>
-                            <div class="bar" style="height: <%= 80 - (index * 15) %>%;">
-                                <span class="bar-value"><%= categoria.quantidade %></span>
-                                <span class="bar-label"><%= categoria.categoria %></span>
-                            </div>
-                        <% }); %>
-                    <% } else { %>
-                        <div class="bar" style="height: 80%;">
-                            <span class="bar-value">5</span>
-                            <span class="bar-label">Vestidos</span>
-                        </div>
-                        <div class="bar" style="height: 60%;">
-                            <span class="bar-value">4</span>
-                            <span class="bar-label">Blusas</span>
-                        </div>
-                        <div class="bar" style="height: 45%;">
-                            <span class="bar-value">3</span>
-                            <span class="bar-label">Saias</span>
-                        </div>
-                        <div class="bar" style="height: 35%;">
-                            <span class="bar-value">2</span>
-                            <span class="bar-label">Calças</span>
-                        </div>
-                    <% } %>
+                    <!-- Gráfico carregado via JavaScript -->
                 </div>
             </div>
             
@@ -137,26 +113,26 @@
                 <div class="detail-grid">
                     <div class="detail-card">
                         <h4>Total Cadastrados</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Produtos no seu brechó</p>
                     </div>
                     <div class="detail-card">
                         <h4>Vendas Realizadas</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Produtos vendidos</p>
                     </div>
                     <div class="detail-card">
                         <h4>Disponíveis</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Produtos à venda</p>
                     </div>
                 </div>
                 <div class="progress-section">
                     <h4>Meta: 10 produtos cadastrados</h4>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalProdutos) || 0)/10*100, 100) %>%;"></div>
+                        <div class="progress-fill" style="width: 0%;"></div>
                     </div>
-                    <p><%= Math.min(((estatisticas && estatisticas.totalProdutos) || 0)/10*100, 100).toFixed(0) %>% da meta atingida</p>
+                    <p>0% da meta atingida</p>
                 </div>
             </div>
         </section>
@@ -170,26 +146,26 @@
                 <div class="detail-grid">
                     <div class="detail-card">
                         <h4>Produtos Ativos</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Produtos disponíveis</p>
                     </div>
                     <div class="detail-card">
                         <h4>Visualizações</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Interações com produtos</p>
                     </div>
                     <div class="detail-card">
                         <h4>Alcance</h4>
-                        <div class="detail-value"><%= Math.floor((estatisticas && estatisticas.totalVisualizacoes) * 0.7) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Pessoas alcançadas</p>
                     </div>
                 </div>
                 <div class="progress-section">
                     <h4>Meta: 100 visualizações</h4>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/100*100, 100) %>%;"></div>
+                        <div class="progress-fill" style="width: 0%;"></div>
                     </div>
-                    <p><%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/100*100, 100).toFixed(0) %>% da meta atingida</p>
+                    <p>0% da meta atingida</p>
                 </div>
             </div>
         </section>
@@ -203,26 +179,26 @@
                 <div class="detail-grid">
                     <div class="detail-card">
                         <h4>Visitantes</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Pessoas que visitaram</p>
                     </div>
                     <div class="detail-card">
                         <h4>Vendas</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                        <div class="detail-value">0</div>
                         <p>Conversões realizadas</p>
                     </div>
                     <div class="detail-card">
                         <h4>Taxa</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.taxaConversao) || 0 %>%</div>
+                        <div class="detail-value">0%</div>
                         <p>Percentual de conversão</p>
                     </div>
                 </div>
                 <div class="progress-section">
                     <h4>Performance</h4>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: <%= Math.min((estatisticas && estatisticas.taxaConversao) || 0, 100) %>%;"></div>
+                        <div class="progress-fill" style="width: 0%;"></div>
                     </div>
-                    <p><%= (estatisticas && estatisticas.taxaConversao) || 0 %>% de taxa de conversão atual</p>
+                    <p>0% de taxa de conversão atual</p>
                 </div>
             </div>
         </section>
@@ -243,80 +219,27 @@
     
 
     
-    <script>
-        // Animar contadores
-        function animateCounters() {
-            const counters = document.querySelectorAll('.value');
-            counters.forEach(counter => {
-                const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
-                let current = 0;
-                const increment = target / 50;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        counter.textContent = counter.textContent.replace(/[0-9,]+/, target.toLocaleString());
-                        clearInterval(timer);
-                    } else {
-                        counter.textContent = counter.textContent.replace(/[0-9,]+/, Math.floor(current).toLocaleString());
-                    }
-                }, 40);
-            });
-        }
-        
-        // Adicionar interatividade às barras
-        function addBarInteractivity() {
-            const bars = document.querySelectorAll('.bar');
-            bars.forEach(bar => {
-                bar.addEventListener('click', function() {
-                    const value = this.querySelector('.bar-value').textContent;
-                    const label = this.querySelector('.bar-label').textContent;
-                    alert(`${label}: ${value} vendas`);
-                });
-            });
-        }
-        
-        // Adicionar interatividade ao gráfico pizza
-        function addPieInteractivity() {
-            const pieChart = document.querySelector('.pie-chart');
-            if (pieChart) {
-                pieChart.addEventListener('click', function() {
-                    alert('Distribuição de receita por categoria');
-                });
-            }
-        }
-        
-        // Mostrar seção específica
-        function showSection(sectionId) {
-            document.getElementById(sectionId).style.display = 'block';
-        }
-        
-        // Esconder todas as seções
-        function hideAllSections() {
-            const sections = document.querySelectorAll('.detail-section');
-            sections.forEach(section => {
-                section.style.display = 'none';
-            });
-        }
-        
-        // Inicializar quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(animateCounters, 500);
-            addBarInteractivity();
-            addPieInteractivity();
-        });
-    </script>
 
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/estatisticas-vendedor.js"></script>
     <script>
+        // Forçar atualização da imagem de perfil
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const userData = await window.PerfilAutenticado.getUserData();
+                if (userData.isAuthenticated && userData.user.imagem) {
+                    const profileImages = document.querySelectorAll('.user-profile-img');
+                    profileImages.forEach(img => {
+                        img.src = userData.user.imagem.startsWith('/') ? userData.user.imagem : '/' + userData.user.imagem;
+                    });
+                }
+            } catch (error) {
+                console.log('Erro ao carregar imagem de perfil:', error);
+            }
+        });
+        
         function goBack() {
             window.history.back();
         }

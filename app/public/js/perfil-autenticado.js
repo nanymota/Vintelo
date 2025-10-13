@@ -18,8 +18,13 @@
             cacheTime = now;
             
             // Compatibilidade com código legado
-            window.isAuthenticated = data.autenticado || false;
-            window.userType = data.tipo || 'c';
+            window.isAuthenticated = data.isAuthenticated || false;
+            window.userType = data.user?.tipo || 'c';
+            
+            // Atualizar imagens de perfil se autenticado
+            if (data.isAuthenticated) {
+                updateProfileImages(data);
+            }
             
             return data;
         } catch (error) {
@@ -28,20 +33,35 @@
         }
     }
 
+    // Atualizar imagens de perfil na página
+    function updateProfileImages(userData) {
+        const profileImages = document.querySelectorAll('.user-profile-img');
+        const defaultImage = '/imagens/icone sem cadastro.png';
+        const userImage = userData.user?.imagem || defaultImage;
+        
+        profileImages.forEach(img => {
+            img.src = userImage.startsWith('/') ? userImage : '/' + userImage;
+        });
+    }
+
     // API pública
     window.PerfilAutenticado = {
         async isAuthenticated() {
             const auth = await fetchAuthStatus();
-            return auth.autenticado || false;
+            return auth.isAuthenticated || false;
         },
 
         async getUserType() {
             const auth = await fetchAuthStatus();
-            return auth.tipo || 'c';
+            return auth.user?.tipo || 'c';
         },
 
         async getUserData() {
-            return await fetchAuthStatus();
+            const auth = await fetchAuthStatus();
+            if (auth.isAuthenticated) {
+                updateProfileImages(auth);
+            }
+            return auth;
         },
 
         clearCache() {

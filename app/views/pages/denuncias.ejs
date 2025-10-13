@@ -73,46 +73,7 @@
 
         <!-- Lista de Denúncias -->
         <section class="denuncias-list">
-            <% if (typeof denuncias !== 'undefined' && denuncias.length > 0) { %>
-                <% denuncias.forEach(function(denuncia) { %>
-                    <article class="denuncia-card" data-id="<%= denuncia.ID_DENUNCIA %>" data-status="<%= denuncia.STATUS || 'pendente' %>">
-                        <section class="denuncia-header">
-                            <span class="status-badge <%= denuncia.STATUS || 'pendente' %>"><%= denuncia.STATUS === 'analisando' ? 'Em análise' : denuncia.STATUS === 'resolvida' ? 'Resolvida' : 'Pendente' %></span>
-                            <span class="data"><%= new Date(denuncia.DATA_DENUNCIA).toLocaleDateString('pt-BR') %></span>
-                        </section>
-                        
-                        <section class="denuncia-content">
-                            <section class="perfil-denunciado">
-                                <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                                <section class="perfil-info">
-                                    <h3>@<%= denuncia.USER_ALVO || 'usuário' %></h3>
-                                    <p><%= denuncia.NOME_ALVO || 'Nome não disponível' %></p>
-                                    <span class="tipo-usuario"><%= denuncia.TIPO_ALVO %></span>
-                                </section>
-                            </section>
-                            
-                            <section class="denuncia-detalhes">
-                                <h4>Tipo: <%= denuncia.MOTIVO %></h4>
-                                <p class="motivo"><%= denuncia.DESCRICAO || 'Sem descrição adicional' %></p>
-                                <p class="denunciante">Denunciado por: @<%= denuncia.USER_DENUNCIANTE %></p>
-                                <% if (denuncia.RESOLUCAO) { %>
-                                    <p class="resolucao"><strong>Resolução:</strong> <%= denuncia.RESOLUCAO %></p>
-                                <% } %>
-                            </section>
-                        </section>
-                        
-                        <section class="denuncia-actions">
-                            <% if (denuncia.STATUS === 'resolvida') { %>
-                                <span class="status-text">Caso resolvido</span>
-                            <% } else { %>
-                                <button class="btn-analisar" onclick="analisarDenuncia(<%= denuncia.ID_DENUNCIA %>)">Analisar</button>
-                                <button class="btn-resolver" onclick="resolverDenuncia(<%= denuncia.ID_DENUNCIA %>)">Resolver</button>
-                                <button class="btn-rejeitar" onclick="rejeitarDenuncia(<%= denuncia.ID_DENUNCIA %>)">Rejeitar</button>
-                            <% } %>
-                        </section>
-                    </article>
-                <% }); %>
-            <% } else { %>
+            <!-- Denúncias carregadas via JavaScript -->
                 <!-- Denúncia 1 -->
                 <article class="denuncia-card" data-id="1" data-status="pendente">
                     <section class="denuncia-header">
@@ -204,7 +165,7 @@
                         <span class="status-text">Caso resolvido</span>
                     </section>
                 </article>
-            <% } %>
+
         </section>
     </main>
 
@@ -234,15 +195,7 @@
         </section>
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
     <script>
