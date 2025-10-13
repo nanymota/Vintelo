@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Vintélo</title>
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.6/dist/simple-notify.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 
@@ -35,24 +36,7 @@
         <p class="divider">ou acesse via email</p>
         <br>
 
-        <!-- coloca as notificações no topo da página, dps mudo pra ficar separado em cada campo -nany -->
-        <% if (dadosNotificacao) { %>
-            <aside class="alert alert-<%= dadosNotificacao.tipo %>" role="alert">
-                <strong><%= dadosNotificacao.titulo || '' %></strong>
-                <%= dadosNotificacao.mensagem %>
-            </aside>
-        <% } %>
-        
-        <!-- os erros -nany -->
-        <% if (listaErros && !listaErros.isEmpty()) { %>
-            <aside class="alert alert-error" role="alert">
-                <ul>
-                    <% listaErros.errors.forEach(function(erro) { %>
-                        <li><%= erro.msg %></li>
-                    <% }); %>
-                </ul>
-            </aside>
-        <% } %>
+
         
         <form id="registerForm" action="/cadastro" method="post">
             <section class="form-group">
@@ -158,86 +142,34 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Formatação do CEP
-            const cepInput = document.getElementById('cep_usuario');
-            if (cepInput) {
-                cepInput.addEventListener('input', function() {
-                    this.value = formatCEP(this.value);
-                });
-                
-                cepInput.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCEP(cep);
-                    }
-                });
-            }
-            
-            // Formatação do CPF
-            const cpfInput = document.getElementById('cpf_cliente');
-            if (cpfInput) {
-                cpfInput.addEventListener('input', function() {
-                    this.value = formatCPF(this.value);
-                });
-            }
-            
-            // Telefone apenas números
-            const telefoneInput = document.getElementById('celular_usuario');
-            if (telefoneInput) {
-                telefoneInput.addEventListener('input', function() {
-                    this.value = this.value.replace(/\D/g, '').substring(0, 11);
-                });
-            }
-            
-            function formatCEP(value) {
-                return value
-                    .replace(/\D/g, '')
-                    .replace(/(\d{5})(\d)/, '$1-$2')
-                    .replace(/(-\d{3})\d+?$/, '$1');
-            }
-            
-            function formatCPF(value) {
-                return value
-                    .replace(/\D/g, '')
-                    .replace(/(\d{3})(\d)/, '$1.$2')
-                    .replace(/(\d{3})(\d)/, '$1.$2')
-                    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-                    .replace(/(-\d{2})\d+?$/, '$1');
-            }
-            
-            function buscarCEP(cep) {
-                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.erro) {
-                            document.getElementById('logradouro_usuario').value = data.logradouro || '';
-                            document.getElementById('bairro_usuario').value = data.bairro || '';
-                            document.getElementById('cidade_usuario').value = data.localidade || '';
-                            document.getElementById('uf_usuario').value = data.uf || '';
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Erro ao buscar CEP:', error);
-                    });
-            }
-        });
-    </script>
-
-                <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
         <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
         window.userType = 'c';
         <% } %>
+        
+        <% if (dadosNotificacao) { %>
+        window.dadosNotificacao = {
+            tipo: '<%= dadosNotificacao.tipo %>',
+            titulo: '<%= dadosNotificacao.titulo || "" %>',
+            mensagem: '<%= dadosNotificacao.mensagem %>'
+        };
+        <% } %>
+        
+        <% if (listaErros && !listaErros.isEmpty()) { %>
+        window.listaErros = [
+            <% listaErros.errors.forEach(function(erro, index) { %>
+                { msg: '<%= erro.msg %>' }<%= index < listaErros.errors.length - 1 ? ',' : '' %>
+            <% }); %>
+        ];
+        <% } %>
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.6/dist/simple-notify.min.js"></script>
+    <script src="/script/simple-notify-config.js"></script>
+    <script src="/script/app-config.js"></script>
+    <script src="/js/login.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
 </body>
 </html>

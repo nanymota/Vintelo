@@ -157,9 +157,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-    </script>
-
-                <script>
+    </script>            <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';

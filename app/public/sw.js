@@ -1,4 +1,3 @@
-// Service Worker para notificações push
 self.addEventListener('push', function(event) {
     const options = {
         body: event.data ? event.data.text() : 'Nova notificação da Vintélo',
