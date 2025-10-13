@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliações - <%= brecho.NOME_USUARIO %> | Vintélo</title>
+    <link rel="stylesheet" href="/css/avaliacoes-brecho.css">
+    <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav class="grid">
+            <a href="javascript:void(0)" id="goBackBtn">
+                <img src="/imagens/seta.png" alt="Voltar">
+            </a>
+            <img src="/imagens/logo.png" alt="Logo">
+            <div></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="brecho-header">
+            <img src="<%= brecho.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
+            <div class="brecho-info">
+                <h1><%= brecho.NOME_USUARIO %></h1>
+                <div class="rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-number"><%= mediaAvaliacoes.toFixed(1) %></span>
+                    <span class="total-reviews">(<%= totalAvaliacoes %> avaliações)</span>
+                </div>
+            </div>
+        </section>
+
+        <% if (autenticado && autenticado.tipo === 'c') { %>
+        <section class="add-review">
+            <h2>Deixe sua avaliação</h2>
+            <form id="reviewForm">
+                <div class="rating-input">
+                    <label>Nota:</label>
+                    <div class="stars-input">
+                        <input type="radio" name="nota" value="1" id="star1">
+                        <label for="star1">★</label>
+                        <input type="radio" name="nota" value="2" id="star2">
+                        <label for="star2">★</label>
+                        <input type="radio" name="nota" value="3" id="star3">
+                        <label for="star3">★</label>
+                        <input type="radio" name="nota" value="4" id="star4">
+                        <label for="star4">★</label>
+                        <input type="radio" name="nota" value="5" id="star5">
+                        <label for="star5">★</label>
+                    </div>
+                </div>
+                <textarea name="comentario" placeholder="Escreva sua avaliação..." required></textarea>
+                <button type="submit">Enviar Avaliação</button>
+            </form>
+        </section>
+        <% } %>
+
+        <section class="reviews-list">
+            <h2>Avaliações (<%= avaliacoes.length %>)</h2>
+            <% if (avaliacoes.length > 0) { %>
+                <% avaliacoes.forEach(avaliacao => { %>
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="<%= avaliacao.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="user-img">
+                        <div class="review-info">
+                            <h3><%= avaliacao.NOME_USUARIO %></h3>
+                            <div class="review-rating">
+                                <% for(let i = 1; i <= 5; i++) { %>
+                                    <span class="star <%= i <= avaliacao.NOTA ? 'filled' : '' %>">★</span>
+                                <% } %>
+                            </div>
+                            <span class="review-date"><%= new Date(avaliacao.DT_AVALIACAO).toLocaleDateString('pt-BR') %></span>
+                        </div>
+                    </div>
+                    <p class="review-comment"><%= avaliacao.COMENTARIO %></p>
+                </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-reviews">Ainda não há avaliações para este brechó.</p>
+            <% } %>
+        </section>
+    </main>
+
+    <script>
+        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
+        window.brechoId = <%= brecho.ID_USUARIO %>;
+    </script>
+    <script src="/js/navegacao.js"></script>
+    <script src="/js/avaliacoes-brecho.js"></script>
+</body>
+</html>

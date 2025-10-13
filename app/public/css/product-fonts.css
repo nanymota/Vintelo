@@ -1,0 +1,24 @@
+/* Estilos para aumentar fontes dos produtos em desktop */
+@media (min-width: 769px) {
+  .product-card h2 {
+    font-size: 26px !important;
+    font-weight: 600;
+    color: #333;
+    margin: 10px 0;
+    padding: 0 15px;
+  }
+  
+  .product-card .price {
+    font-size: 30px !important;
+    font-weight: bold;
+    color: #8c2b44;
+    margin: 5px 0;
+    padding: 0 15px;
+  }
+  
+  .product-card .Descrição {
+    font-size: 22px !important;
+    color: #666;
+    padding: 0 15px;
+  }
+}

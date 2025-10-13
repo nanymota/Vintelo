@@ -679,7 +679,7 @@ h3 {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
   gap: 1rem !important;
-  padding: 20px 40px !important;
+  padding: 20px 70px !important;
   align-items: start !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -705,19 +705,23 @@ h3 {
   }
   
   .product-card h2 {
-    font-size: 26px;
+    font-size: 44px !important;
     margin: 0.3rem 0;
     padding: 0px 15px;
+    font-weight: 600;
   }
   
   .product-card .price {
-    font-size: 30px;
+    font-size: 48px !important;
     padding: 0px 15px;
+    font-weight: bold;
+    color: #8c2b44;
   }
   
   .product-card .Descrição {
-    font-size: 24px;
+    font-size: 36px !important;
     padding: 0px 15px;
+    color: #666;
   }
   
   .favorite {
@@ -897,7 +901,7 @@ h3 {
 
 @media (min-width: 768px) {
   .product-card img {
-    height: 380px;
+    height: 420px;
   }
 }
 

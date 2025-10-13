@@ -3521,6 +3521,51 @@ router.post('/api/favoritar-brecho', verificarUsuAutenticado, async function(req
 });
 
 // Rotas para gestão de avaliações
+router.get('/brecho/:id/avaliacoes', carregarDadosUsuario, async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Buscar dados do brechó
+        const [brecho] = await pool.query(
+            'SELECT * FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [id]
+        );
+        
+        if (brecho.length === 0) {
+            return res.redirect('/homecomprador');
+        }
+        
+        // Buscar avaliações do brechó
+        const [avaliacoes] = await pool.query(`
+            SELECT ab.*, u.NOME_USUARIO, u.IMG_URL
+            FROM AVALIACOES_BRECHOS ab
+            JOIN USUARIOS u ON ab.ID_USUARIO = u.ID_USUARIO
+            WHERE ab.ID_BRECHO = ?
+            ORDER BY ab.DT_AVALIACAO DESC
+        `, [id]);
+        
+        // Calcular média das avaliações
+        const [mediaResult] = await pool.query(
+            'SELECT AVG(NOTA) as media, COUNT(*) as total FROM AVALIACOES_BRECHOS WHERE ID_BRECHO = ?',
+            [id]
+        );
+        
+        const mediaAvaliacoes = parseFloat(mediaResult[0]?.media) || 0;
+        const totalAvaliacoes = mediaResult[0]?.total || 0;
+        
+        res.render('pages/avaliacoes-brecho', {
+            brecho: brecho[0],
+            avaliacoes: avaliacoes,
+            mediaAvaliacoes: mediaAvaliacoes,
+            totalAvaliacoes: totalAvaliacoes,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar avaliações:', error);
+        res.redirect('/homecomprador');
+    }
+});
+
 router.post('/avaliacoes/criar', verificarUsuAutenticado, async (req, res) => {
     try {
         const { nota, comentario, brechoId } = req.body;
@@ -3733,45 +3778,36 @@ router.post('/produto/editar', verificarUsuAutenticado, async (req, res) => {
 
 router.post('/produto/excluir', verificarUsuAutenticado, async (req, res) => {
     try {
+        console.log('=== EXCLUIR PRODUTO ===');
+        console.log('Body:', req.body);
+        console.log('Sessão:', req.session.autenticado);
+        
         const { productId } = req.body;
         const userId = req.session.autenticado.id;
         
-        console.log('Excluindo produto:', productId, 'do usuário:', userId);
+        console.log('ProductId:', productId, 'UserId:', userId);
         
-        // Validar ID do produto
-        if (!productId || isNaN(productId)) {
-            return res.json({ success: false, message: 'ID do produto inválido' });
+        if (!productId) {
+            return res.json({ success: false, message: 'ID do produto é obrigatório' });
         }
         
-        // Verificar se o produto pertence ao usuário
-        const [produto] = await pool.query(
-            'SELECT * FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?',
-            [parseInt(productId), userId]
-        );
-        
-        if (produto.length === 0) {
-            return res.json({ success: false, message: 'Produto não encontrado ou sem permissão' });
-        }
-        
-        // Excluir imagens do produto primeiro
-        await pool.query('DELETE FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?', [parseInt(productId)]);
-        
-        // Excluir produto
+        // Excluir produto diretamente
+        console.log('Executando DELETE...');
         const [resultado] = await pool.query(
             'DELETE FROM PRODUTOS WHERE ID_PRODUTO = ? AND ID_USUARIO = ?', 
-            [parseInt(productId), userId]
+            [productId, userId]
         );
         
-        console.log('Resultado da exclusão:', resultado);
+        console.log('Resultado:', resultado);
         
-        if (resultado.affectedRows === 0) {
-            return res.json({ success: false, message: 'Produto não pôde ser excluído' });
+        if (resultado.affectedRows > 0) {
+            res.json({ success: true, message: 'Produto excluído com sucesso!' });
+        } else {
+            res.json({ success: false, message: 'Produto não encontrado ou sem permissão' });
         }
-        
-        res.json({ success: true, message: 'Produto excluído com sucesso!' });
     } catch (error) {
-        console.log('Erro ao excluir produto:', error);
-        res.json({ success: false, message: 'Erro no servidor. Tente novamente.' });
+        console.log('ERRO COMPLETO ao excluir produto:', error);
+        res.json({ success: false, message: 'Erro interno: ' + error.message });
     }
 });
 
