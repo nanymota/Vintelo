@@ -726,7 +726,24 @@ router.get('/artigo', (req, res) => res.render('pages/artigo'));
 router.get('/bossartigo', (req, res) => res.render('pages/bossartigo'));
 router.get('/gucciartigo', (req, res) => res.render('pages/gucciartigo'));
 router.get('/ecologicoartigo', (req, res) => res.render('pages/ecologicoartigo'));
-router.get('/tensustentavel', (req, res) => res.render('pages/tensustentavel'));
+router.get('/tensustentavel', (req, res) => {
+    try {
+        const authData = {
+            isAuthenticated: !!(req.session && req.session.autenticado && req.session.autenticado.autenticado),
+            userType: (req.session && req.session.autenticado && req.session.autenticado.tipo) || 'c'
+        };
+        res.render('pages/tensustentavel', { 
+            authData,
+            autenticado: req.session ? req.session.autenticado : null 
+        });
+    } catch (error) {
+        console.log('Erro na rota tensustentavel:', error);
+        res.render('pages/tensustentavel', { 
+            authData: { isAuthenticated: false, userType: 'c' },
+            autenticado: null 
+        });
+    }
+});
 router.get('/sweer', (req, res) => res.render('pages/sweer'));
 
 router.get('/pedidoconf', function(req, res){
@@ -2932,7 +2949,20 @@ router.get('/usuariosadm', async (req, res) => {
             ORDER BY u.DATA_CADASTRO DESC
         `);
         
-        res.render('pages/usuariosadm', { usuarios: usuarios || [] });
+        // Processar ações no backend
+        const usuariosComAcoes = usuarios.map(usuario => {
+            const acoes = `
+                <button class="btn-visualizar" onclick="visualizarPerfil(${usuario.ID_USUARIO})">Visualizar</button>
+                ${usuario.STATUS_USUARIO === 'a' ? 
+                    `<button class="btn-suspender" onclick="suspenderPerfil(${usuario.ID_USUARIO})">Suspender</button>` :
+                    `<button class="btn-reativar" onclick="reativarPerfil(${usuario.ID_USUARIO})">Reativar</button>`
+                }
+                <button class="btn-historico" onclick="verHistorico(${usuario.ID_USUARIO})">Histórico</button>
+            `;
+            return { ...usuario, acoes };
+        });
+        
+        res.render('pages/usuariosadm', { usuarios: usuariosComAcoes || [] });
     } catch (error) {
         console.log('Erro ao carregar usuários admin:', error);
         res.render('pages/usuariosadm', { usuarios: [] });
