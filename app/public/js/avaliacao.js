@@ -22,12 +22,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Event listeners para botões de excluir
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const avaliacaoId = this.dataset.avaliacaoId;
+            if (avaliacaoId) {
+                excluirComentario(avaliacaoId);
+            }
+        });
+    });
+    
     initStarRating();
 });
 
 // Avaliar brechó
-function avaliarBrecho(brechoId) {
-    if (!window.isAuthenticated) {
+async function avaliarBrecho(brechoId) {
+    const isAuth = await window.PerfilAutenticado.isAuthenticated();
+    if (!isAuth) {
         alert('Faça login para avaliar brechós');
         window.location.href = '/entrar';
         return;
@@ -100,10 +112,11 @@ function updateStars() {
 }
 
 // Enviar avaliação
-function submitReview(event) {
+async function submitReview(event) {
     event.preventDefault();
     
-    if (!window.isAuthenticated) {
+    const isAuth = await window.PerfilAutenticado.isAuthenticated();
+    if (!isAuth) {
         alert('Faça login para avaliar');
         window.location.href = '/entrar';
         return;
@@ -151,8 +164,9 @@ function submitReview(event) {
 }
 
 // Excluir avaliação
-function excluirAvaliacao(avaliacaoId) {
-    if (!window.isAuthenticated) {
+async function excluirAvaliacao(avaliacaoId) {
+    const isAuth = await window.PerfilAutenticado.isAuthenticated();
+    if (!isAuth) {
         alert('Faça login para excluir avaliações');
         return;
     }
@@ -180,5 +194,39 @@ function excluirAvaliacao(avaliacaoId) {
             console.error('Erro:', error);
             alert('Erro interno do servidor');
         });
+    }
+}
+
+// Função para admin excluir comentários
+function excluirComentario(id) {
+    if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
+        const reviewElement = document.getElementById(`review-${id}`);
+        if (reviewElement) {
+            reviewElement.style.opacity = '0.5';
+            reviewElement.style.transition = 'opacity 0.3s';
+            
+            fetch(`/avaliacaoadm/excluir/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    setTimeout(() => {
+                        reviewElement.remove();
+                        alert('Avaliação excluída com sucesso!');
+                    }, 300);
+                } else {
+                    reviewElement.style.opacity = '1';
+                    alert('Erro ao excluir avaliação: ' + data.message);
+                }
+            })
+            .catch(error => {
+                reviewElement.style.opacity = '1';
+                alert('Erro ao excluir avaliação');
+            });
+        }
     }
 }

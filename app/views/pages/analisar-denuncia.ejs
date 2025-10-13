@@ -50,84 +50,84 @@
             <p>Denúncia #<%= denuncia.ID_DENUNCIA %> - <%= new Date(denuncia.DATA_DENUNCIA).toLocaleDateString('pt-BR') %></p>
         </section>
 
-        <div class="analise-grid">
+        <section class="analise-grid">
             <!-- Informações da Denúncia -->
             <section class="denuncia-info">
                 <h3>Informações da Denúncia</h3>
-                <div class="info-card">
-                    <div class="info-item">
+                <section class="info-card">
+                    <section class="info-item">
                         <label>Status:</label>
                         <span class="status-badge <%= denuncia.STATUS || 'pendente' %>">
                             <%= denuncia.STATUS === 'analisando' ? 'Em análise' : denuncia.STATUS === 'resolvida' ? 'Resolvida' : 'Pendente' %>
                         </span>
-                    </div>
-                    <div class="info-item">
+                    </section>
+                    <section class="info-item">
                         <label>Tipo de Alvo:</label>
                         <span><%= denuncia.TIPO_ALVO %></span>
-                    </div>
-                    <div class="info-item">
+                    </section>
+                    <section class="info-item">
                         <label>Motivo:</label>
                         <span><%= denuncia.MOTIVO %></span>
-                    </div>
-                    <div class="info-item">
+                    </section>
+                    <section class="info-item">
                         <label>Data:</label>
                         <span><%= new Date(denuncia.DATA_DENUNCIA).toLocaleString('pt-BR') %></span>
-                    </div>
-                </div>
+                    </section>
+                </section>
                 
-                <div class="descricao-card">
+                <section class="descricao-card">
                     <h4>Descrição da Denúncia</h4>
                     <p><%= denuncia.DESCRICAO || 'Sem descrição adicional' %></p>
-                </div>
+                </section>
             </section>
 
             <!-- Perfil Denunciado -->
             <section class="perfil-denunciado-detalhes">
                 <h3>Perfil Denunciado</h3>
-                <div class="perfil-card">
+                <section class="perfil-card">
                     <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img-grande">
-                    <div class="perfil-dados">
+                    <section class="perfil-dados">
                         <h4>@<%= denuncia.USER_ALVO || 'usuário' %></h4>
                         <p><%= denuncia.NOME_ALVO || 'Nome não disponível' %></p>
                         <span class="tipo-badge"><%= denuncia.TIPO_ALVO %></span>
                         
-                        <div class="perfil-stats">
-                            <div class="stat">
+                        <section class="perfil-stats">
+                            <section class="stat">
                                 <span class="stat-number">0</span>
                                 <span class="stat-label">Denúncias</span>
-                            </div>
-                            <div class="stat">
+                            </section>
+                            <section class="stat">
                                 <span class="stat-number">0</span>
                                 <span class="stat-label">Advertências</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </section>
+                        </section>
+                    </section>
+                </section>
             </section>
 
             <!-- Denunciante -->
             <section class="denunciante-info">
                 <h3>Denunciante</h3>
-                <div class="denunciante-card">
+                <section class="denunciante-card">
                     <img src="imagens/icone sem cadastro.png" alt="Denunciante" class="denunciante-img">
-                    <div class="denunciante-dados">
+                    <section class="denunciante-dados">
                         <h4>@<%= denuncia.USER_DENUNCIANTE %></h4>
                         <p><%= denuncia.DENUNCIANTE %></p>
                         <span class="credibilidade">Credibilidade: Alta</span>
-                    </div>
-                </div>
+                    </section>
+                </section>
             </section>
 
             <!-- Ações de Análise -->
-            <section class="acoes-analise">
+            <section class="acoes-analise" data-denuncia-id="<%= denuncia.ID_DENUNCIA %>">
                 <h3>Ações Disponíveis</h3>
                 
                 <% if (denuncia.STATUS !== 'resolvida') { %>
-                    <div class="acao-card">
+                    <section class="acao-card">
                         <h4>Resolver Denúncia</h4>
                         <form id="resolverForm">
                             <textarea id="resolucaoText" placeholder="Digite a resolução da denúncia..." required></textarea>
-                            <div class="acao-buttons">
+                            <section class="acao-buttons">
                                 <button type="button" class="btn-acao advertir" onclick="resolverComAcao('advertir')">
                                     Advertir Usuário
                                 </button>
@@ -137,118 +137,32 @@
                                 <button type="button" class="btn-acao banir" onclick="resolverComAcao('banir')">
                                     Banir Usuário
                                 </button>
-                            </div>
+                            </section>
                         </form>
-                    </div>
+                    </section>
                     
-                    <div class="acao-card">
+                    <section class="acao-card">
                         <h4>Outras Ações</h4>
-                        <div class="acao-buttons">
+                        <section class="acao-buttons">
                             <button class="btn-acao investigar" onclick="investigarMais()">
                                 Investigar Mais
                             </button>
                             <button class="btn-acao rejeitar" onclick="rejeitarDenuncia()">
                                 Rejeitar Denúncia
                             </button>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                 <% } else { %>
-                    <div class="resolucao-final">
+                    <section class="resolucao-final">
                         <h4>Denúncia Resolvida</h4>
                         <p><strong>Resolução:</strong> <%= denuncia.RESOLUCAO %></p>
                         <span class="status-final">Caso encerrado</span>
-                    </div>
+                    </section>
                 <% } %>
             </section>
-        </div>
+        </section>
     </main>
 
-    <script>
-        function resolverComAcao(acao) {
-            const resolucao = document.getElementById('resolucaoText').value;
-            if (!resolucao.trim()) {
-                alert('Por favor, digite uma resolução para a denúncia.');
-                return;
-            }
-
-            const resolucaoCompleta = `${acao.toUpperCase()}: ${resolucao}`;
-            
-            if (confirm(`Confirma a ação: ${acao} usuário?\nResolução: ${resolucao}`)) {
-                fetch(`/denuncias/resolver/<%= denuncia.ID_DENUNCIA %>`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        resolucao: resolucaoCompleta,
-                        acao: acao 
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        alert('Denúncia resolvida com sucesso!');
-                        window.location.href = '/denuncias';
-                    } else {
-                        alert('Erro ao resolver denúncia: ' + data.mensagem);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar solicitação');
-                });
-            }
-        }
-
-        function investigarMais() {
-            if (confirm('Marcar denúncia como "Em investigação"?')) {
-                fetch(`/denuncias/analisar/<%= denuncia.ID_DENUNCIA %>`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        alert('Denúncia marcada para investigação!');
-                        location.reload();
-                    } else {
-                        alert('Erro ao atualizar status');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar solicitação');
-                });
-            }
-        }
-
-        function rejeitarDenuncia() {
-            if (confirm('Tem certeza que deseja rejeitar esta denúncia? Esta ação não pode ser desfeita.')) {
-                fetch(`/denuncias/rejeitar/<%= denuncia.ID_DENUNCIA %>`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        alert('Denúncia rejeitada!');
-                        window.location.href = '/denuncias';
-                    } else {
-                        alert('Erro ao rejeitar denúncia');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar solicitação');
-                });
-            }
-        }
-    </script>
-
     <footer class="footer">
         <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
         <section class="social-media">
@@ -256,66 +170,8 @@
         </section>
         <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
-</body>
-</html>oad();
-                    } else {
-                        alert('Erro ao atualizar status');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar solicitação');
-                });
-            }
-        }
-
-        function rejeitarDenuncia() {
-            if (confirm('Tem certeza que deseja rejeitar esta denúncia? Esta ação não pode ser desfeita.')) {
-                fetch(`/denuncias/rejeitar/<%= denuncia.ID_DENUNCIA %>`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        alert('Denúncia rejeitada!');
-                        window.location.href = '/denuncias';
-                    } else {
-                        alert('Erro ao rejeitar denúncia');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar solicitação');
-                });
-            }
-        }
-    </script>
-
-    <footer class="footer">
-        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
-        <section class="social-media">
-            <p class="p-footer">Painel Administrativo</p>
-        </section>
-        <p class="copyright">©2024 Vintélo Admin. Todos os direitos reservados.</p>
-    </footer>
+    <script src="/js/analisar-denuncia.js"></script>
 </body>
 </html>

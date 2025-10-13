@@ -84,7 +84,7 @@
                             <p class="review-text"><%= avaliacao.COMENTARIO %></p>
                         </section>
                         <section class="admin-controls">
-                            <button class="btn-delete" onclick="excluirComentario(<%= avaliacao.ID_AVALIACAO %>)">Excluir</button>
+                            <button class="btn-delete" data-avaliacao-id="<%= avaliacao.ID_AVALIACAO %>">Excluir</button>
                         </section>
                     </section>
                 <% }); %>
@@ -96,40 +96,7 @@
         </section>
     </main>
 
-    <script>
-        function excluirComentario(id) {
-            if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
-                const reviewElement = document.getElementById(`review-${id}`);
-                if (reviewElement) {
-                    reviewElement.style.opacity = '0.5';
-                    reviewElement.style.transition = 'opacity 0.3s';
-                    
-                    fetch(`/avaliacaoadm/excluir/${id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            setTimeout(() => {
-                                reviewElement.remove();
-                                alert('Avaliação excluída com sucesso!');
-                            }, 300);
-                        } else {
-                            reviewElement.style.opacity = '1';
-                            alert('Erro ao excluir avaliação: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        reviewElement.style.opacity = '1';
-                        alert('Erro ao excluir avaliação');
-                    });
-                }
-            }
-        }
-    </script>
+
 
     <!--                                                    Rodapé                                                      -->
     <footer class="footer">
@@ -147,16 +114,8 @@
       </section>
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/perfil-autenticado.js"></script>
+    <script src="/js/avaliacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>
