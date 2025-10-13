@@ -3283,31 +3283,52 @@ router.post('/adicionar-sacola', verificarUsuAutenticado, async function(req, re
     }
 });
 
+// Rota para contar itens da sacola
+router.get('/sacola/count', verificarUsuAutenticado, async function(req, res){
+    try {
+        const userId = req.session.autenticado.id;
+        
+        const [result] = await pool.query(`
+            SELECT SUM(is.QUANTIDADE) as total
+            FROM ITENS_SACOLA is
+            JOIN SACOLA s ON is.ID_SACOLA = s.ID_SACOLA
+            WHERE s.ID_USUARIO = ?
+        `, [userId]);
+        
+        const count = result[0]?.total || 0;
+        res.json({ count: count });
+    } catch (error) {
+        console.log('Erro ao contar itens da sacola:', error);
+        res.json({ count: 0 });
+    }
+});
+
 
 router.post('/favoritar', verificarUsuAutenticado, async function(req, res){
     try {
-        const { produto_id } = req.body;
+        const { produto_id, tipo } = req.body;
         const userId = req.session.autenticado.id;
+        const tipoItem = tipo === 'sacola' ? 'sacola' : 'produto';
         
-        // Verificar se já está favoritado
+        // Verificar se já está favoritado/na sacola
         const [existing] = await pool.query(
-            'SELECT * FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "produto"',
-            [produto_id, userId]
+            'SELECT * FROM FAVORITOS WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = ?',
+            [produto_id, userId, tipoItem]
         );
         
         if (existing.length > 0) {
             // Se existe, alternar status
             const newStatus = existing[0].STATUS_FAVORITO === 'favoritado' ? 'nulo' : 'favoritado';
             await pool.query(
-                'UPDATE FAVORITOS SET STATUS_FAVORITO = ? WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = "produto"',
-                [newStatus, produto_id, userId]
+                'UPDATE FAVORITOS SET STATUS_FAVORITO = ? WHERE ID_ITEM = ? AND ID_USUARIO = ? AND TIPO_ITEM = ?',
+                [newStatus, produto_id, userId, tipoItem]
             );
             res.json({ success: true, favorited: newStatus === 'favoritado' });
         } else {
             // Se não existe, criar novo
             await pool.query(
-                'INSERT INTO FAVORITOS (ID_ITEM, ID_USUARIO, STATUS_FAVORITO, TIPO_ITEM, DATA_FAVORITO) VALUES (?, ?, "favoritado", "produto", NOW())',
-                [produto_id, userId]
+                'INSERT INTO FAVORITOS (ID_ITEM, ID_USUARIO, STATUS_FAVORITO, TIPO_ITEM, DATA_FAVORITO) VALUES (?, ?, "favoritado", ?, NOW())',
+                [produto_id, userId, tipoItem]
             );
             res.json({ success: true, favorited: true });
         }

@@ -10,10 +10,10 @@
 <body>
     <nav class="grid">
         <section class="nav-left">
-            <img src="/images/seta-esquerda.png" alt="Voltar" onclick="history.back()" style="cursor: pointer;">
+            <img src="/imagens/seta.png" alt="Voltar" onclick="history.back()" style="cursor: pointer;">
         </section>
         <section class="nav-center">
-            <img src="/images/logo-vintelo.png" alt="Vintélo" class="logo">
+            <img src="imagens/logo.png" alt="Vintélo" class="logo">
         </section>
         <section class="nav-right"></section>
     </nav>
@@ -70,16 +70,6 @@
     </section>
 
     <script src="/js/detalheprodutoadm.js"></script>
-
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>

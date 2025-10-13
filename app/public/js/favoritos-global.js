@@ -1,89 +1,119 @@
-// Sistema Global de Favoritos
-function toggleFavorite(button, produto_id, nome = '', preco = '', imagem = '') {
-    // Verificar se está autenticado
+// Função global para favoritar produtos
+function toggleFavorite(button, produtoId) {
     if (!window.isAuthenticated) {
-        window.location.href = '/cadastro';
+        showNotification('Faça login para favoritar produtos', 'error');
         return;
     }
-    
-    // Dados do produto
-    const produtoData = {
-        produto_id: produto_id,
-        nome: nome || button.closest('.product-card').querySelector('h2')?.textContent || 'Produto',
-        preco: preco || button.closest('.product-card').querySelector('.price')?.textContent || '0',
-        imagem: imagem || button.closest('.product-card').querySelector('img')?.src || ''
-    };
-    
-    // Fazer requisição para favoritar/desfavoritar
+
     fetch('/favoritar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(produtoData)
+        body: JSON.stringify({ produto_id: produtoId })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Atualizar visual do botão
+            button.classList.toggle('favorited');
             if (data.favorited) {
-                button.classList.add('favorited');
-                showNotification('Item adicionado aos favoritos!');
+                showNotification('Produto adicionado aos favoritos!', 'success');
             } else {
-                button.classList.remove('favorited');
-                showNotification('Item removido dos favoritos!');
+                showNotification('Produto removido dos favoritos', 'info');
             }
+        } else {
+            showNotification('Erro ao favoritar produto', 'error');
         }
     })
     .catch(error => {
         console.error('Erro:', error);
-        showNotification('Erro ao processar favorito');
+        showNotification('Erro ao favoritar produto', 'error');
     });
 }
 
-// Verificar favoritos ao carregar página
-function verificarFavoritos() {
-    if (!window.isAuthenticated) return;
-    
-    const buttons = document.querySelectorAll('.favorite');
-    buttons.forEach(button => {
-        const productCard = button.closest('.product-card');
-        if (productCard) {
-            const produto_id = button.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-            if (produto_id) {
-                fetch(`/verificar-favorito/${produto_id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.favorited) {
-                        button.classList.add('favorited');
-                    }
-                });
-            }
-        }
-    });
-}
+// Função para mostrar notificações
+function showNotification(message, type = 'info') {
+    // Remove notificação existente
+    const existing = document.querySelector('.notification');
+    if (existing) {
+        existing.remove();
+    }
 
-// Notificação simples
-function showNotification(message) {
+    // Cria nova notificação
     const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #7D2838;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 5px;
-        z-index: 9999;
-        font-size: 14px;
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">&times;</button>
     `;
-    notification.textContent = message;
+
+    // Adiciona ao body
     document.body.appendChild(notification);
-    
+
+    // Remove automaticamente após 3 segundos
     setTimeout(() => {
-        notification.remove();
+        if (notification.parentElement) {
+            notification.remove();
+        }
     }, 3000);
 }
 
-// Inicializar ao carregar página
-document.addEventListener('DOMContentLoaded', verificarFavoritos);
+// CSS para notificações
+const notificationCSS = `
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+}
+
+.notification-success {
+    background: #28a745;
+}
+
+.notification-error {
+    background: #dc3545;
+}
+
+.notification-info {
+    background: #17a2b8;
+}
+
+.notification button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+`;
+
+// Adiciona CSS ao head
+if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = notificationCSS;
+    document.head.appendChild(style);
+}

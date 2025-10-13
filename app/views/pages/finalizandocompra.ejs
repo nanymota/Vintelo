@@ -255,7 +255,7 @@
               </a>
               <h2><%= produto.NOME_PRODUTO %></h2>
               <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" onclick="toggleFavorite('<%= produto.ID_PRODUTO %>')"><img src="/imagens/coraçao de fav2.png"></button>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="/imagens/coraçao de fav2.png"></button>
               <button class="cart" onclick="addToCartSuggestion('<%= produto.ID_PRODUTO %>')"><img src="/imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% }) %>
@@ -458,5 +458,12 @@
     <% } %>
   </script>
   <script src="/js/navegacao.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <script src="/js/favoritos-global.js"></script>
+    <script src="/js/sacola-global.js"></script>
 </body>
 </html>

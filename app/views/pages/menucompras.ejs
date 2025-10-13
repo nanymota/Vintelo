@@ -45,7 +45,7 @@
     <main>
         <aside class="user-sidebar">
             <section class="user-info">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Foto de perfil">
+                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' % alt="Foto de perfil" class="maria">" alt="Foto de perfil">
                 <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
                 <p><%= autenticado && autenticado.email ? autenticado.email : 'email@exemplo.com' %></p>
             </section>

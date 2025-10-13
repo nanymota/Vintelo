@@ -58,7 +58,7 @@
             <li>
               <a href="/perfilvender">
                 <section class="profile-section">
-                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic">
+                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic maria">
                   <section class="profile-info">
                     <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Vendedor' %></h2>
                   </section>
@@ -114,7 +114,7 @@
         <img src="imagens/logo.png" class="logo">
         <a href="/menuvendedor">
           <div class="profile-container">
-            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="profile-pic" />
+            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="profile-pic maria" />
           </div>
         </a>
       </nav>
@@ -212,7 +212,7 @@
               <h2><%= produto.NOME_PRODUTO %></h2>
               <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
               <p class="Descrição">ou em 2x de R$<%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" onclick="favoritar(<%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
               <button class="cart" onclick="adicionarSacola(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% }); %>
@@ -233,7 +233,7 @@
             <p class="Descrição">ou em 2x de R$25,00</p>
             <br>
             <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
           </article>
 
           <article class="product-card">
@@ -242,7 +242,7 @@
             <p class="price">R$39,99</p>
             <p class="Descrição">ou em 2x de R$20,00</p>
             <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
           </article>
 
           <article class="product-card">
@@ -251,7 +251,7 @@
             <p class="price">R$29,99</p>
             <p class="Descrição">ou em 2x de R$15,00</p>
             <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
           </article>
 
           <article class="product-card">
@@ -260,7 +260,7 @@
             <p class="price">R$19,99</p>
             <p class="Descrição">ou em 2x de R$10,00</p>
             <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
           </article>
 
           <a href="/"><span class="ver">Ver tudo</span></a>
@@ -363,7 +363,7 @@
               <br>
               <p class="price">R$12,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -371,7 +371,7 @@
               <h2>Colares de prata</h2>
               <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -379,7 +379,7 @@
               <h2>Bolsa preta </h2>
               <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -388,7 +388,7 @@
               <br>
               <p class="price">R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
           </section>
 
@@ -399,7 +399,7 @@
               <h2>Bracelete</h2>
               <p class="price">R$19,99 <br>ou em 2x R$10,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -407,7 +407,7 @@
               <h2>Relógio Rose Gold</h2>
               <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -415,7 +415,7 @@
               <h2>Bolsa Brilhante</h2>
               <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
 
             <article class="product-card">
@@ -423,7 +423,7 @@
               <h2>Bracelete Duplo</h2>
               <p class="price">R$28,90 <br>ou em 2x R$14,45</p>
               <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
           </section>
         </section>
@@ -527,6 +527,8 @@
     </script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
+    <script src="/js/favoritos-global.js"></script>
+    <script src="/js/sacola-global.js"></script>
 </body>
 
 </html>

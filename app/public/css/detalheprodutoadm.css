@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Raleway', sans-serif;
-    background: #f8f9fa;
+    background: #ffffff;
     color: #333;
 }
 
@@ -15,16 +15,14 @@ nav.grid {
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     padding: 15px 20px;
-    background: #7D2838;
+    background: #ffffff;
     position: sticky;
     top: 0;
-    z-index: 100;
 }
 
 .nav-left img {
     height: 25px;
     width: auto;
-    filter: brightness(0) invert(1);
 }
 
 .nav-center {

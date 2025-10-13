@@ -32,7 +32,7 @@
                 </form>
                 <ul>
                     <li><a href="criarbrecho/" ></a><img src="imagens/add brecho.png" class="img-tamanho"> </li>
-                    <li><a href="/cadastro" ></a><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"> </li>
+                    <li><a href="/cadastro" ></a><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % class="maria">" class="maria"> </li>
                     <li><a href="/favoritos" ><img src="imagens/icone coraçao.png" class="img-tamanho"> </a></li>
                 </ul>
             </section>
@@ -47,7 +47,7 @@
             </a>
             <img src="imagens/logo.png" alt="Vintélo">
             <a href="/menuvendedor">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu">
+                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % alt="Menu" class="maria">" alt="Menu">
             </a>
         </nav>
     </header>
@@ -55,7 +55,7 @@
     <main>
         <aside class="user-sidebar">
             <section class="user-info">
-                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil">
+                <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' % alt="Foto de perfil" class="maria">" alt="Foto de perfil">
                 <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Vendedor' %></h2>
                 <p><%= autenticado && autenticado.email ? autenticado.email : 'email@exemplo.com' %></p>
             </section>

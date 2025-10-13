@@ -33,7 +33,7 @@
                   <ul>
                       <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
                       <% if (autenticado && autenticado.autenticado) { %>
-                          <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
+                          <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
                       <% } else { %>
                           <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
                       <% } %>
@@ -54,7 +54,7 @@
           <img src="imagens/logo.png" alt="Logo">
           <% if (autenticado && autenticado.autenticado) { %>
               <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
-                  <img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                  <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
               </a>
           <% } else { %>
               <a href="javascript:void(0)" onclick="goBack()">
@@ -159,7 +159,7 @@
                             <p class="price">R$<%= favorito.PRECO_PRODUTO %></p>
                             <p class="descricao">ou em 2x de R$<%= (favorito.PRECO_PRODUTO / 2).toFixed(2) %></p>
                             <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
-                            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
                 <% } %>
@@ -179,7 +179,7 @@
                             <p class="price">R$<%= favorito.PRECO_PRODUTO %></p>
                             <p class="descricao">ou em 2x de R$<%= (favorito.PRECO_PRODUTO / 2).toFixed(2) %></p>
                             <button class="favorite favorited" onclick="toggleFavorite(this, <%= favorito.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
-                            <button class="cart"><img src="imagens/sacola.png" class="img-sacola"></button>
+                            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
                         </article>
                     <% }); %>
                 <% } %>
@@ -213,5 +213,11 @@
     <script src="/js/favoritos-global.js"></script>
     <script src="js/filtros.js"></script>
     <script src="/js/busca-global.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <script src="/js/sacola-global.js"></script>
 </body>
 </html>

@@ -325,14 +325,9 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 
                 <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
+
     </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/adicionar-auth.js"></script>
     <script src="/js/navegacao.js"></script>
 </body>
 </html>
