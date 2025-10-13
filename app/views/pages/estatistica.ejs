@@ -39,7 +39,7 @@
             </nav>
             <div class="nav-icons">
                 <input type="text" placeholder="Buscar...">
-                <a href="/adicionar"><img src="imagens/adicionar peça.png"></a>
+                <a href="/adicionar"><img src="imagens/vender peça.png"></a>
                 <a href="/menuvendedor"><img src="<%= (autenticado && autenticado.imagem) ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>"></a>
                 <a href="/favoritos"><img src="imagens/icone coraçao.png"></a>
             </div>
@@ -52,20 +52,20 @@
         <div class="stats-grid">
             <div class="stat-card" onclick="showSection('vendas')">
                 <h3>Produtos Vendidos</h3>
-                <div class="value"><%= (estatisticas && estatisticas.totalVendas) || 12 %></div>
-                <div class="change">+8% este mês</div>
+                <div class="value"><%= (estatisticas && estatisticas.totalVendas) || 0 %></div>
+                <div class="change">Baseado em dados reais</div>
             </div>
             
             <div class="stat-card" onclick="showSection('visualizacoes')">
                 <h3>Visualizações</h3>
-                <div class="value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 150 %></div>
-                <div class="change">+22% este mês</div>
+                <div class="value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                <div class="change">Interações com produtos</div>
             </div>
             
             <div class="stat-card" onclick="showSection('conversao')">
                 <h3>Taxa Conversão</h3>
-                <div class="value"><%= (estatisticas && estatisticas.taxaConversao) || 8.0 %>%</div>
-                <div class="change">+2% este mês</div>
+                <div class="value"><%= (estatisticas && estatisticas.taxaConversao) || 0 %>%</div>
+                <div class="change">Vendas/Visualizações</div>
             </div>
         </div>
 
@@ -170,26 +170,26 @@
                 <div class="detail-grid">
                     <div class="detail-card">
                         <h4>Produtos Ativos</h4>
-                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalProdutos) || 0 %></div>
                         <p>Produtos disponíveis</p>
                     </div>
                     <div class="detail-card">
                         <h4>Visualizações</h4>
-                        <div class="detail-value">0</div>
-                        <p>Acessos aos produtos</p>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
+                        <p>Interações com produtos</p>
                     </div>
                     <div class="detail-card">
                         <h4>Alcance</h4>
-                        <div class="detail-value">0</div>
+                        <div class="detail-value"><%= Math.floor((estatisticas && estatisticas.totalVisualizacoes) * 0.7) || 0 %></div>
                         <p>Pessoas alcançadas</p>
                     </div>
                 </div>
                 <div class="progress-section">
-                    <h4>Meta: 20 produtos ativos</h4>
+                    <h4>Meta: 100 visualizações</h4>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/20*100, 100) %>%;"></div>
+                        <div class="progress-fill" style="width: <%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/100*100, 100) %>%;"></div>
                     </div>
-                    <p><%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/20*100, 100).toFixed(0) %>% da meta atingida</p>
+                    <p><%= Math.min(((estatisticas && estatisticas.totalVisualizacoes) || 0)/100*100, 100).toFixed(0) %>% da meta atingida</p>
                 </div>
             </div>
         </section>
@@ -203,7 +203,7 @@
                 <div class="detail-grid">
                     <div class="detail-card">
                         <h4>Visitantes</h4>
-                        <div class="detail-value">0</div>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.totalVisualizacoes) || 0 %></div>
                         <p>Pessoas que visitaram</p>
                     </div>
                     <div class="detail-card">
@@ -213,16 +213,16 @@
                     </div>
                     <div class="detail-card">
                         <h4>Taxa</h4>
-                        <div class="detail-value">0%</div>
+                        <div class="detail-value"><%= (estatisticas && estatisticas.taxaConversao) || 0 %>%</div>
                         <p>Percentual de conversão</p>
                     </div>
                 </div>
                 <div class="progress-section">
                     <h4>Performance</h4>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%;"></div>
+                        <div class="progress-fill" style="width: <%= Math.min((estatisticas && estatisticas.taxaConversao) || 0, 100) %>%;"></div>
                     </div>
-                    <p>Aguardando primeiras vendas para calcular taxa</p>
+                    <p><%= (estatisticas && estatisticas.taxaConversao) || 0 %>% de taxa de conversão atual</p>
                 </div>
             </div>
         </section>

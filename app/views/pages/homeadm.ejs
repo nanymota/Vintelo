@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
-<meta charset="UTF-8">
-
+<html lang="pt-BR">
 <head>
-  <title>Vintélo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vintélo - Administração</title>
   <link rel="stylesheet" href="css/estilo.css">
   <link rel="stylesheet" href="css/estilo2.css">
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
@@ -19,7 +19,7 @@
   <section class="oculto-mobile">
     <header class="main-header">
       <a href="/homeadm">
-        <img src="imagens/logo.png" class="img-logo">
+        <img src="imagens/logo.png" class="img-logo" alt="Logo Vintélo">
       </a>
       <nav>
         <a href="/blogadm">Blog</a>
@@ -33,9 +33,9 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/homeadm"><img src="/imagens/icone sem cadastro.png" class="maria"></a></li>
-          <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
-          <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+          <li><a href="/homeadm"><img src="/imagens/icone sem cadastro.png" class="maria" alt="Perfil Admin"></a></li>
+          <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+          <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2" alt="Favoritos"></a></li>
         </ul>
       </section>
     </header>
@@ -85,7 +85,7 @@
                   Administrador de Perfis
                 </li>
                 <li>
-                  <a href="/denuncias"><img src="imagens/denuncias.svg" class="icones" alt="Denúncias"></a>
+                  <a href="/denuncias"><img src="imagens/denuncia_icon.svg" class="icones" alt="Denúncias"></a>
                   Denúncias
                 </li>
                 <li>
@@ -103,9 +103,9 @@
               </ul>
             </aside>
         </nav>
-        <img src="imagens/logo.png" class="logo">
+        <img src="imagens/logo.png" class="logo" alt="Logo Vintélo">
         <a href="/homeadm">
-          <img src="/imagens/icone sem cadastro.png" class="logo" />
+          <img src="/imagens/icone sem cadastro.png" class="logo" alt="Perfil Admin" />
         </a>
       </nav>
     </header>
@@ -192,10 +192,9 @@
         </section>
       </nav>
       <!--                                    Seção dos produtos                                              -->
-      <nav class="grid-produtos">
+      <div class="grid-produtos">
         <h3>Novidades</h3>
-        
-      </nav>
+      </div>
       <section class="product-grid">
         <article class="product-card">
           <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
@@ -344,14 +343,14 @@
           <section class="container">
             <!-- Artigo de Moda Metalizada -->
             <article class="artigo">
-              <nav class="grid-artigos">
+              <div class="grid-artigos">
                 <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
-                <section class="artigo-texto">
+                <div class="artigo-texto">
                   <h3 class="vintelo-text">MODA |</h3>
                   <h3 class="vintelo-text">METALIZADA |</h3>
                   <a href="/artigo" class="ler-agora">Ler agora</a>
-                </section>
-              </nav>
+                </div>
+              </div>
             </article>
 
             <!-- Banner de Cashback -->
@@ -369,10 +368,10 @@
         
         <!--                                        PRODUTOS OCULTOS                                               -->
         <section class="produtos-ocultos">
-          <nav class="grid-produtos">
+          <div class="grid-produtos">
             <h1>Confira</h1>
             <a href="/categorias" class="ver-tudo">Ver tudo</a>
-          </nav>
+          </div>
           <section class="product-grid">
             <article class="product-card">
               <img src="imagens/oculos.png" alt="Óculos de sol">
@@ -532,10 +531,10 @@
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-<script src="script/dinamicahome.js"></script>
-<script src="js/favoritos.js"></script>
+<script src="/js/dinamicahome.js"></script>
+<script src="/js/favoritos.js"></script>
 
-                <script>
+            <script>
         window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
         <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
         window.userType = '<%= autenticado.tipo %>';
@@ -544,8 +543,8 @@
         <% } %>
     </script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
     <script src="/js/sacola-global.js"></script>
+    <script src="/js/homeadm.js"></script>
 </body>
 
 </html>
