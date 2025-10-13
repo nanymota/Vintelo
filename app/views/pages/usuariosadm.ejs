@@ -121,13 +121,7 @@
                         </section>
                         
                         <section class="perfil-actions">
-                            <button class="btn-visualizar" onclick="visualizarPerfil(<%= usuario.ID_USUARIO %>)">Visualizar</button>
-                            <% if (usuario.STATUS_USUARIO === 'a') { %>
-                                <button class="btn-suspender" onclick="suspenderPerfil(<%= usuario.ID_USUARIO %>)">Suspender</button>
-                            <% } else { %>
-                                <button class="btn-reativar" onclick="reativarPerfil(<%= usuario.ID_USUARIO %>)">Reativar</button>
-                            <% } %>
-                            <button class="btn-historico" onclick="verHistorico(<%= usuario.ID_USUARIO %>)">Histórico</button>
+                            <%- usuario.acoes %>
                         </section>
                     </article>
                 <% }); %>
@@ -223,15 +217,7 @@
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/verificar-codigo.js"></script>
     <script src="/js/navegacao.js"></script>
     <script>
         function goBack() {
