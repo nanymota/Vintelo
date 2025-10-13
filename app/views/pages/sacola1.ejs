@@ -30,13 +30,13 @@
                         <input type="text" placeholder="Buscar...">
                     </form>
                     <ul>
-                        <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
+                        <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-sacola"></a></li>
                         <% if (autenticado && autenticado.autenticado) { %>
                             <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
                         <% } else { %>
                             <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
                         <% } %>
-                        <li><a href="/favoritos"><img src="imagens/icone coração.png" class="img-tamanho"></a></li>
+                        <li><a href="/favoritos" style="display: block;"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos" style="animation: none; transition: none;"></a></li>
                     </ul>
                 </section>
             </section>
@@ -137,42 +137,10 @@
             </aside>
             
             <section class="product-grid">
-                <% if (typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0) { %>
-                    <% carrinho.forEach(function(item) { %>
-                        <article class="product-card">
-                            <img src="<%= item.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= item.NOME_PRODUTO %>">
-                            <h2><%= item.NOME_PRODUTO %></h2>
-                            <p class="price">R$<%= item.PRECO_PRODUTO %></p>
-                            <p class="descricao">ou em 2x de R$<%= (item.PRECO_PRODUTO / 2).toFixed(2) %></p>
-                            <button class="favorite" onclick="toggleFavorite(this, <%= item.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
-                            <button class="cart" onclick="removeFromCart(<%= item.ID_PRODUTO %>)"><img src="imagens/lixeira.png" class="img-sacola"></button>
-                        </article>
-                    <% }); %>
-                <% } else { %>
-                    <section class="empty-state">
-                        <p>Sua sacola está vazia</p>
-                        <a href="/homecomprador" class="btn-continue">Continuar Comprando</a>
-                    </section>
-                <% } %>
+                <%- typeof carrinhoHtml !== 'undefined' ? carrinhoHtml : '<section class="empty-state"><p>Sua sacola está vazia</p><a href="/homecomprador" class="btn-continue">Continuar Comprando</a></section>' %>
             </section>
         </section>
         
-        <!-- Layout Mobile -->
-        <section class="oculto-desktop">
-            <section class="product-grid">
-                <% if (typeof carrinho !== 'undefined' && carrinho && carrinho.length > 0) { %>
-                    <% carrinho.forEach(function(item) { %>
-                        <article class="product-card">
-                            <img src="<%= item.IMG_PRODUTO_1 || 'imagens/conjunto.png' %>" alt="<%= item.NOME_PRODUTO %>">
-                            <h2><%= item.NOME_PRODUTO %></h2>
-                            <p class="price">R$<%= item.PRECO_PRODUTO %></p>
-                            <p class="descricao">ou em 2x de R$<%= (item.PRECO_PRODUTO / 2).toFixed(2) %></p>
-                            <button class="favorite" onclick="toggleFavorite(this, <%= item.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
-                            <button class="cart" onclick="removeFromCart(<%= item.ID_PRODUTO %>)"><img src="imagens/lixeira.png" class="img-sacola"></button>
-                        </article>
-                    <% }); %>
-                <% } %>
-            </section>
         </section>
     </main>
 
@@ -190,15 +158,7 @@
         <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
 
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
-    <script src="/js/navegacao.js"></script>
+    <script src="/js/n.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/carrinho-global.js"></script>
     <script src="/js/busca-global.js"></script>

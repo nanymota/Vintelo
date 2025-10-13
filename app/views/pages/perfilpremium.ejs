@@ -223,24 +223,8 @@
 
                     <section class="chart-container">
                         <h4>Usuários Premium Recentes</h4>
-                        <section class="users-list">
-                            <% if (typeof usuariosPremium !== 'undefined' && usuariosPremium && usuariosPremium.length > 0) { %>
-                                <% usuariosPremium.forEach(function(usuario) { %>
-                                    <section class="user-item">
-                                        <img src="<%= usuario.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="User">
-                                        <section class="user-info">
-                                            <strong><%= usuario.NOME_USUARIO %></strong>
-                                            <span><%= usuario.PLANO_PREMIUM || 'Básico' %> - <%= new Date(usuario.DATA_PREMIUM || usuario.DATA_CADASTRO).toLocaleDateString('pt-BR') %></span>
-                                        </section>
-                                        <section class="user-buttons">
-                                            <button class="btn-view" onclick="verUsuario(<%= usuario.ID_USUARIO %>)">Ver</button>
-                                            <button class="btn-suspend" onclick="suspenderPremium(<%= usuario.ID_USUARIO %>)">Suspender</button>
-                                        </section>
-                                    </section>
-                                <% }); %>
-                            <% } else { %>
-                                <p>Nenhum usuário premium encontrado</p>
-                            <% } %>
+                        <section class="users-list" id="usuariosPremiumList">
+                            <%- usuariosPremiumHtml %>
                         </section>
                     </section>
                 </section>
@@ -267,14 +251,7 @@
 
     <script src="/js/perfilpremium.js"></script>
 
-                <script>
-        window.isAuthenticated = <%= typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado ? 'true' : 'false' %>;
-        <% if (typeof autenticado !== 'undefined' && autenticado && autenticado.tipo) { %>
-        window.userType = '<%= autenticado.tipo %>';
-        <% } else if (typeof autenticado !== 'undefined' && autenticado && autenticado.autenticado) { %>
-        window.userType = 'c';
-        <% } %>
-    </script>
+    <script src="/js/auth-config.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/navegacao.js"></script>
     <script>
