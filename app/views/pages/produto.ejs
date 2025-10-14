@@ -162,6 +162,22 @@
                         <span>EG</span>
                         <span>EGG</span>
                     </section>
+                    
+                    <!-- Calculadora de Frete - Apenas para usuários não logados -->
+                    <% if (!autenticado) { %>
+                    <section class="frete-calculator">
+                        <h4>Calcular Frete</h4>
+                        <section class="frete-input">
+                            <input type="text" id="cep_frete" placeholder="00000-000" maxlength="9" oninput="formatCEPFrete(this)">
+                            <button onclick="calcularFrete()" class="btn-calcular">Calcular</button>
+                        </section>
+                        <section id="frete-loading" style="display: none;">
+                            <p>Calculando frete...</p>
+                        </section>
+                        <section id="frete-result"></section>
+                    </section>
+                    <% } %>
+                    
                     <button class="btn-comprar-desktop" onclick="comprarAgora('<%= produto.ID_PRODUTO %>')">Comprar Agora</button>
                 </section>
             </section>
@@ -194,10 +210,30 @@
     <script src="/js/navegacao.js"></script>
     <script src="/js/produto.js"></script>
     <script src="/js/busca-global.js"></script>
+    <script src="/js/frete-calculator.js"></script>
     <script>
         function goBack() {
             window.history.back();
         }
+        
+        // Definir ID do produto para o calculador de frete
+        window.produtoId = '<%= produto ? produto.ID_PRODUTO : '' %>';
+        
+        // Modificar função de compra para incluir frete
+        function comprarAgora(produtoId) {
+            let url = `/finalizandocompra?produto=${produtoId}`;
+            
+            if (window.freteEscolhido) {
+                url += `&frete_nome=${encodeURIComponent(window.freteEscolhido.nome)}`;
+                url += `&frete_preco=${window.freteEscolhido.preco}`;
+                url += `&frete_prazo=${window.freteEscolhido.prazo}`;
+            }
+            
+            window.location.href = url;
+        }
+        
+        // Tornar freteEscolhido global
+        window.freteEscolhido = null;
     </script>
 </body>
 </html>
