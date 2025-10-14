@@ -61,3 +61,15 @@ img[alt*="Usuário" i] {
     border-radius: 50% !important;
     object-fit: cover !important;
 }
+
+/* Todas as imagens de perfil redondas - regra universal */
+img[src*="icone sem cadastro"],
+img[src*="imagem sem cadastro"],
+img[src*="perfil"],
+img[src*="usuario"],
+img[class*="maria"],
+img[class*="profile"],
+img[class*="user"] {
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}

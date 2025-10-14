@@ -417,6 +417,7 @@ nav.grid-2 p:hover {
 
 .search-profile img {
     height: 45px;
+    width: 45px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -427,6 +428,9 @@ nav.grid-2 p:hover {
 
 .maria {
     height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .img-tamanho {
