@@ -129,11 +129,6 @@
 
                                     <section class="form-row">
                                         <section class="form-group">
-                                            <label for="email_usu">Endereço de email</label>
-                                            <input type="email" id="email_usu" name="email_usu" placeholder="seu@email.com" 
-                                                value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
-                                        </section>
-                                        <section class="form-group">
                                             <label for="nome_usu">Nome Completo</label>
                                             <input type="text" id="nome_usu" name="nome_usu" placeholder="Seu nome completo" 
                                                 value="<%= typeof valores !== 'undefined' && valores?.nome_usu || '' %>" required>
@@ -141,6 +136,11 @@
                                     </section>
 
                                     <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="email_usu">Endereço de email</label>
+                                            <input type="email" id="email_usu" name="email_usu" placeholder="seu@email.com" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
+                                        </section>
                                         <section class="form-group">
                                             <label for="fone_usu">Contato</label>
                                             <input type="tel" id="fone_usu" name="fone_usu" placeholder="(11) 99999-9999" 

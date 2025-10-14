@@ -27,7 +27,7 @@
 }
 
 .section-header {
-    background: #7D2838 !important;
+    background: linear-gradient(135deg, #7D2838 0%, #a53860 100%);
     color: white !important;
     padding: 15px 20px;
     cursor: pointer;
@@ -198,7 +198,7 @@
 .submit-btn {
     width: 100%;
     padding: 15px;
-    background: #7D2838 !important;
+    background: linear-gradient(135deg, #7D2838 0%, #a53860 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -442,7 +442,7 @@
         position: fixed;
         left: 0;
         top: 0;
-        width: 50%;
+        width: 33.33%;
         height: 100vh;
         z-index: 1;
     }
@@ -451,7 +451,7 @@
         position: absolute;
         right: 0;
         top: 0;
-        width: 50%;
+        width: 66.67%;
         height: 100vh;
         overflow-y: auto;
         z-index: 2;
@@ -465,7 +465,7 @@
     }
     
     .login {
-        flex: 0 0 300px;
+        flex: 0 0 380px;
         margin-bottom: 0;
     }
     
