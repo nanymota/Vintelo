@@ -73,15 +73,21 @@ router.post(
 router.get("/", carregarDadosUsuario, async function (req, res) {
   try {
     const { bannerModel } = require('../models/bannerModel');
+    const { produtoModel } = require('../models/produtoModel');
+    
     const banners = await bannerModel.findByPosition('Home');
+    const produtos = await produtoModel.findRecent(16) || [];
+    
     res.render('pages/index', {
       autenticado: req.session ? req.session.autenticado : null,
-      banners: banners || []
+      banners: banners || [],
+      produtos: produtos
     });
   } catch (error) {
     res.render('pages/index', {
       autenticado: req.session ? req.session.autenticado : null,
-      banners: []
+      banners: [],
+      produtos: []
     });
   }
 });
@@ -89,15 +95,21 @@ router.get("/", carregarDadosUsuario, async function (req, res) {
 router.get("/index", async function (req, res) {
   try {
     const { bannerModel } = require('../models/bannerModel');
+    const { produtoModel } = require('../models/produtoModel');
+    
     const banners = await bannerModel.findByPosition('Home');
+    const produtos = await produtoModel.findRecent(16) || [];
+    
     res.render('pages/index', {
       autenticado: req.session ? req.session.autenticado : null,
-      banners: banners || []
+      banners: banners || [],
+      produtos: produtos
     });
   } catch (error) {
     res.render('pages/index', {
       autenticado: req.session ? req.session.autenticado : null,
-      banners: []
+      banners: [],
+      produtos: []
     });
   }
 });
