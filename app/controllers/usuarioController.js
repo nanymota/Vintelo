@@ -245,6 +245,7 @@ const usuarioController = {
                 };
                 
                 console.log('Usuário cadastrado e logado:', req.session.autenticado);
+                
                 console.log('Redirecionando para homecomprador');
                 res.redirect('/homecomprador');
             }

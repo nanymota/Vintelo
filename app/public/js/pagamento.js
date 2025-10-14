@@ -1,9 +1,13 @@
 function processarPagamento() {
-    const totalElement = document.querySelector('.total span:last-child');
-    let valorTexto = totalElement ? totalElement.textContent : 'R$59,99';
+    const totalElement = document.querySelector('.total-line span:last-child') || 
+                        document.querySelector('.summary-item.total-line span:last-child') ||
+                        document.querySelector('.cart-item-info span');
+    let valorTexto = totalElement ? totalElement.textContent : 'R$ 59,99';
     
     valorTexto = valorTexto.replace('R$', '').replace(',', '.').trim();
     const valorTotal = parseFloat(valorTexto) || 59.99;
+    
+    console.log('Valor capturado:', valorTexto, 'Valor final:', valorTotal);
     
     fetch('/processar-pagamento', {
         method: 'POST',

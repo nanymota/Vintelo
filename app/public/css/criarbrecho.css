@@ -62,6 +62,19 @@
     }
 }
 
+/* Garantir que no desktop o formulário funcione corretamente */
+@media (min-width: 768px) {
+    .register {
+        display: block !important;
+    }
+    .collapsible-section {
+        display: block !important;
+    }
+    .section-content {
+        display: block !important;
+    }
+}
+
 .photo-upload {
     margin: 20px 0;
     text-align: center;

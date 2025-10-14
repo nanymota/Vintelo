@@ -44,14 +44,14 @@ const brechoController = {
         body("nomeusu_usu")
             .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!")
             .custom(async (value) => {
-                const existe = await usuario.findCampoCustom('USER USUARIO', value);
+                const existe = await usuario.findCampoCustom('USER_USUARIO', value);
                 if (existe > 0) throw new Error('Nome de usuário já existe');
                 return true;
             }),
         body("email_usu")
             .isEmail().withMessage("Digite um e-mail válido!")
             .custom(async (value, { req }) => {
-                const existe = await usuario.findCampoCustom('email_usuario', value);
+                const existe = await usuario.findCampoCustom('EMAIL_USUARIO', value);
                 if (existe > 0) {
                     // Permitir se for o próprio usuário autenticado
                     if (req.session && req.session.autenticado && req.session.autenticado.email === value) {

@@ -30,7 +30,7 @@ const processarPagamento = async (req, res) => {
                 {
                     title: descricao || 'Compra Vintélo',
                     unit_price: valorNumerico,
-                    quantity: 1,
+                    quantity: 1
                 }
             ],
             back_urls: {
@@ -38,8 +38,7 @@ const processarPagamento = async (req, res) => {
                 failure: `${baseUrl}/pagamento-falha`,
                 pending: `${baseUrl}/pagamento-pendente`
             },
-            external_reference: `vintelo-${Date.now()}`,
-            notification_url: `${baseUrl}/webhook-mercadopago`
+            external_reference: `vintelo-${Date.now()}`
         };
         
         console.log('Preference criada:', JSON.stringify(preference, null, 2));
@@ -87,7 +86,7 @@ const pagamentoSucesso = (req, res) => {
         merchant_order_id
     });
     
-    res.render('pages/pedidoconf', {
+    res.render('pages/pagamentoSucesso', {
         autenticado: req.session.autenticado || null,
         payment_id,
         external_reference

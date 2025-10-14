@@ -1788,9 +1788,19 @@ router.post('/criarbrecho',
 );
 
 router.get('/entrar', function(req, res){
-    res.render('pages/entrar', { listaErros: null, dadosNotificacao: null,
+    // Verificar se há mensagem de sucesso na sessão
+    const mensagemSucesso = req.session.mensagemSucesso || null;
+    
+    // Limpar a mensagem da sessão após usá-la
+    if (req.session.mensagemSucesso) {
+        delete req.session.mensagemSucesso;
+    }
+    
+    res.render('pages/entrar', { 
+        listaErros: null, 
+        dadosNotificacao: mensagemSucesso,
         valores: {}
-     });
+    });
 });
 
 router.post('/entrar', async function(req, res){
