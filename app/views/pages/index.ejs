@@ -34,7 +34,7 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+          <li><a href="/cadastro"><img src="imagens/imagem sem cadastro.avif" class="maria"></a></li>
           <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
           <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
@@ -59,7 +59,7 @@
             <li>
               <a href="/cadastro">
                 <section class="profile-section">
-                  <img src="imagens/icone sem cadastro.png" alt="usuario" class="profile-pic icone-sem-cadastro">
+                  <img src="imagens/imagem sem cadastro.avif" alt="usuario" class="profile-pic icone-sem-cadastro">
                   <section class="profile-info">
                     <h2>Nome de usuário</h2>
                   </section>
@@ -101,7 +101,7 @@
         </nav>
         <img src="imagens/logo.png" class="logo">
         <a href="/cadastro">
-          <img src="imagens/imagem sem perfil.png" class="logo" />
+          <img src="imagens/imagem sem cadastro.avif" class="logo" />
         </a>
       </nav>
     </header>
@@ -267,43 +267,29 @@
       </section>
       
       <ul class="brechos-grid">
-        <li class="profile-item">
-          <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
-          <section class="profile-info">
-            <strong>Mayte</strong>
-            <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
-          </section>
-  
-          </section>
-          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
-          <section class="profile-info">
-            <strong>Karine</strong>
-            <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 2)">Favoritar</button>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image">
-          <section class="profile-info">
-            <strong>Coisitas</strong>
-            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 3)">Favoritar</button>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho4.png" alt="Luana" class="profile-image">
-          <section class="profile-info">
-            <strong>Luana</strong>
-            <span class="rating">4.7 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <button class="follow-button" onclick="toggleFavoriteBrecho(this, 4)">Favoritar</button>
-        </li>
+        <% if (brechos && brechos.length > 0) { %>
+          <% brechos.forEach(brecho => { %>
+            <li class="profile-item">
+              <a href="/brecho/<%= brecho.ID_USUARIO %>">
+                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-image">
+              </a>
+              <section class="profile-info">
+                <strong><%= brecho.NOME_USUARIO %></strong>
+                <span class="rating"><%= parseFloat(brecho.MEDIA_AVALIACOES).toFixed(1) %> ⭐⭐⭐⭐⭐</span>
+              </section>
+              <button class="follow-button" onclick="toggleFavoriteBrecho(this, <%= brecho.ID_USUARIO %>)">Favoritar</button>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="profile-item">
+            <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+            <section class="profile-info">
+              <strong>Mayte</strong>
+              <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+            </section>
+            <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
+          </li>
+        <% } %>
       </ul>
         <!--                                       banner de cadastro                                              -->
         <a href="/cadastro">
@@ -312,8 +298,8 @@
         <br>
         <br>
         <section class="artigos-section">
-          <span class="artigos-title-1">Artigos</span></h2>
-          <span class="artigos-title">Artigos</span></h2>
+          <span class="artigos-title-1">Artigos</span>
+          <span class="artigos-title">Artigos</span>
           <br>
           <section class="container">
             <!-- Artigo de Moda Metalizada -->
@@ -323,7 +309,7 @@
                 <section class="artigo-texto">
                   <h3 class="vintelo-text">MODA |</h3>
                   <h3 class="vintelo-text">METALIZADA |</h3>
-                  <a href="/artigo" class="ler-agora">Ler agora</a>
+                  <a href="/cadastro" class="ler-agora">Ler agora</a>
                 </section>
               </nav>
             </article>
