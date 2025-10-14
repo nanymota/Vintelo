@@ -657,7 +657,7 @@ h3 {
   color: #7f7a7b;
   display: block;       
   text-align: right;    
-  margin-right: -400px;
+  margin-right: -1250px;
   text-decoration: underline;
   text-decoration-color: rgb(255, 255, 255);
   font-family: 'Raleway', sans-serif;
@@ -1334,15 +1334,24 @@ h3 {
 }
 
 .artigos-title {
-  color: #7a2d39;
-  font-size: 40px;
-  text-align: center;
+  font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 55px;
+    color: #7d2838;
+    line-height: 1.2;
+    margin-left: -900px;
+    display: inline-block;
+    height: 100px;
 }
 
 .artigos-title-1 {
-  color: #7a2d39;
-  font-size: 40px;
-  text-align: center;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  font-size: 30px;
+  letter-spacing: 8px;
+  color: #7d2838;
+  margin-left: -1000px;
+  display: inline-block;
 }
 
 .container {
@@ -1647,6 +1656,7 @@ h1 {
   max-width: 1200px;
   margin: 0 auto;
   align-items: start;
+  height: 430px
 }
 
 .image-section figure img {
@@ -2144,13 +2154,13 @@ h1 {
 @media (min-width: 992px) {
   .titulo-brecho-section .garimpe-text {
     font-size: 18px;
-    margin-left: 60px;
+    margin-left: -1000px;
     margin-top: 30px;
   }
   
   .titulo-brecho-section .vintelo-text {
     font-size: 50px;
-    margin-left: 100px;
+    margin-left: -900px;
     margin-bottom: 20px;
   }
 }
