@@ -50,10 +50,27 @@
 
             <!-- Login Form -->
             <section id="login-form" class="tab-content active">
+                <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
+                    <section class="alert alert-danger">
+                        <ul>
+                            <% listaErros.array().forEach(function(error) { %>
+                                <li><%= error.msg %></li>
+                            <% }); %>
+                        </ul>
+                    </section>
+                <% } %>
+                
+                <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+                    <section class="alert alert-<%= dadosNotificacao.tipo %>">
+                        <strong><%= dadosNotificacao.titulo || 'Atenção' %>:</strong> <%= dadosNotificacao.mensagem %>
+                    </section>
+                <% } %>
+                
                 <form action="/login-admin" method="post" class="admin-form">
                     <section class="form-group">
                         <label for="email_login">Email</label>
-                        <input type="email" id="email_login" name="email_usu" placeholder="Digite seu email" required>
+                        <input type="email" id="email_login" name="email_usu" placeholder="Digite seu email" 
+                               value="<%= typeof valores !== 'undefined' && valores.email_usu ? valores.email_usu : '' %>" required>
                     </section>
                     <section class="form-group">
                         <label for="senha_login">Senha</label>
@@ -65,26 +82,51 @@
 
             <!-- Cadastro Form -->
             <section id="cadastro-form" class="tab-content">
+                <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
+                    <section class="alert alert-danger">
+                        <ul>
+                            <% listaErros.array().forEach(function(error) { %>
+                                <li><%= error.msg %></li>
+                            <% }); %>
+                        </ul>
+                    </section>
+                <% } %>
+                
+                <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
+                    <section class="alert alert-<%= dadosNotificacao.tipo %>">
+                        <strong><%= dadosNotificacao.titulo || 'Atenção' %>:</strong> <%= dadosNotificacao.mensagem %>
+                    </section>
+                <% } %>
+                
                 <form action="/cadastroadm" method="post" class="admin-form">
                     <section class="form-row">
                         <section class="form-group">
                             <label for="user_usuario">Nome de Usuário</label>
-                            <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" required>
+                            <input type="text" id="user_usuario" name="user_usuario" placeholder="Digite o nome de usuário" 
+                                   value="<%= typeof valores !== 'undefined' && valores.user_usuario ? valores.user_usuario : '' %>" 
+                                   minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+" 
+                                   title="Nome de usuário deve ter 3-20 caracteres (apenas letras, números e _)" required>
                         </section>
                         <section class="form-group">
                             <label for="nome_usuario">Nome Completo</label>
-                            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" required>
+                            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Digite o nome completo" 
+                                   value="<%= typeof valores !== 'undefined' && valores.nome_usuario ? valores.nome_usuario : '' %>" 
+                                   minlength="2" maxlength="70" pattern="[a-zA-ZÀ-ÿ\s]+" 
+                                   title="Nome deve conter apenas letras e espaços" required>
                         </section>
                     </section>
                     
                     <section class="form-row">
                         <section class="form-group">
                             <label for="email_usuario">Email</label>
-                            <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" required>
+                            <input type="email" id="email_usuario" name="email_usuario" placeholder="email@exemplo.com" 
+                                   value="<%= typeof valores !== 'undefined' && valores.email_usuario ? valores.email_usuario : '' %>" required>
                         </section>
                         <section class="form-group">
                             <label for="celular_usuario">Celular</label>
-                            <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" required>
+                            <input type="tel" id="celular_usuario" name="celular_usuario" placeholder="(11) 99999-9999" 
+                                   value="<%= typeof valores !== 'undefined' && valores.celular_usuario ? valores.celular_usuario : '' %>" 
+                                   pattern="[0-9]{11}" title="Celular deve ter 11 dígitos" required>
                         </section>
                     </section>
                     

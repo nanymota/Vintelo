@@ -59,11 +59,63 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Validação em tempo real do nome de usuário
+    const userInput = document.getElementById('user_usuario');
+    if (userInput) {
+        userInput.addEventListener('input', function() {
+            const value = this.value;
+            const isValid = /^[a-zA-Z0-9_]*$/.test(value) && value.length <= 20;
+            
+            if (!isValid && value.length > 0) {
+                this.setCustomValidity('Nome de usuário deve conter apenas letras, números e _');
+            } else if (value.length < 3 && value.length > 0) {
+                this.setCustomValidity('Nome de usuário deve ter pelo menos 3 caracteres');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
+    
+    // Validação do formulário de login
+    const loginForm = document.querySelector('form[action="/login-admin"]');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const email = document.getElementById('email_login').value;
+            const senha = document.getElementById('senha_login').value;
+            
+            if (!email || !senha) {
+                e.preventDefault();
+                alert('Email e senha são obrigatórios!');
+                return;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                e.preventDefault();
+                alert('Digite um email válido!');
+                return;
+            }
+        });
+    }
+    
     const cadastroForm = document.querySelector('form[action="/cadastroadm"]');
     if (cadastroForm) {
         cadastroForm.addEventListener('submit', async function(e) {
+            const userUsuario = document.getElementById('user_usuario').value;
             const senha = document.getElementById('senha_usuario').value;
             const confirmarSenha = document.getElementById('confirmar_senha').value;
+            
+            // Validar nome de usuário
+            if (userUsuario.length < 3 || userUsuario.length > 20) {
+                e.preventDefault();
+                alert('Nome de usuário deve ter entre 3 e 20 caracteres!');
+                return;
+            }
+            
+            if (!/^[a-zA-Z0-9_]+$/.test(userUsuario)) {
+                e.preventDefault();
+                alert('Nome de usuário deve conter apenas letras, números e _');
+                return;
+            }
             
             if (senha !== confirmarSenha) {
                 e.preventDefault();

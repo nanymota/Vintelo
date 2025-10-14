@@ -13,6 +13,9 @@ const {
 } = require("../models/autenticador_middleware");
 
 const usuarioController = require("../controllers/usuarioController");
+const adminController = require("../controllers/adminController");
+const { body, validationResult } = require("express-validator");
+const pool = require('../config/pool_conexoes');
 const brechoController = require("../controllers/brechoController");
 const carrinhoController = require("../controllers/carrinhoController");
 const produtoController = require("../controllers/produtoController");
@@ -252,221 +255,24 @@ router.get('/cadastroadm', function(req, res){
     }); 
 });
 
-router.post('/cadastroadm', async function(req, res){
-    try {
-        const { user_usuario, nome_usuario, email_usuario, celular_usuario, cep_usuario, logradouro_usuario, numero_usuario, bairro_usuario, cidade_usuario, uf_usuario, senha_usuario, confirmar_senha } = req.body;
-        
-        // Validações de campos obrigatórios
-        if (!user_usuario?.trim() || !nome_usuario?.trim() || !email_usuario?.trim() || !celular_usuario?.trim() || !cep_usuario?.trim() || !logradouro_usuario?.trim() || !numero_usuario?.trim() || !bairro_usuario?.trim() || !cidade_usuario?.trim() || !uf_usuario?.trim() || !senha_usuario) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Todos os campos são obrigatórios', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de nome de usuário
-        if (user_usuario.length < 3 || user_usuario.length > 20 || !/^[a-zA-Z0-9_]+$/.test(user_usuario)) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome de usuário deve ter 3-20 caracteres (apenas letras, números e _)', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de nome completo
-        if (nome_usuario.length < 2 || nome_usuario.length > 70 || !/^[a-zA-ZÀ-ſ\s]+$/.test(nome_usuario)) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome deve ter 2-70 caracteres (apenas letras e espaços)', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email_usuario)) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Email inválido', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de celular
-        const celularLimpo = celular_usuario.replace(/\D/g, '');
-        if (celularLimpo.length !== 11 || !celularLimpo.startsWith('11')) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Celular deve ter 11 dígitos e começar com 11', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de CEP
-        const cepLimpo = cep_usuario.replace(/\D/g, '');
-        if (cepLimpo.length !== 8) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'CEP deve ter 8 dígitos', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de logradouro
-        if (logradouro_usuario.length < 5 || logradouro_usuario.length > 100) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Logradouro deve ter entre 5 e 100 caracteres', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de número
-        if (numero_usuario.length > 4 || !/^[0-9]+$/.test(numero_usuario)) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Número deve ter até 4 dígitos', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de bairro
-        if (bairro_usuario.length < 2 || bairro_usuario.length > 30) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Bairro deve ter entre 2 e 30 caracteres', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de cidade
-        if (cidade_usuario.length < 2 || cidade_usuario.length > 30) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Cidade deve ter entre 2 e 30 caracteres', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de UF
-        const ufsValidas = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-        if (!ufsValidas.includes(uf_usuario.toUpperCase())) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'UF inválida', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Validação de senha
-        if (senha_usuario.length < 6) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Senha deve ter pelo menos 6 caracteres', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        if (senha_usuario !== confirmar_senha) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Senhas não coincidem', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        // Verificar duplicatas no banco
-        const [emailExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE EMAIL_USUARIO = ?', [email_usuario]);
-        if (emailExiste.length > 0) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Email já cadastrado', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        const [userExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE USER_USUARIO = ?', [user_usuario]);
-        if (userExiste.length > 0) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Nome de usuário já existe', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        const [celularExiste] = await pool.query('SELECT ID_USUARIO FROM USUARIOS WHERE CELULAR_USUARIO = ?', [celularLimpo]);
-        if (celularExiste.length > 0) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Celular já cadastrado', tipo: 'error' },
-                valores: req.body
-            });
-        }
-        
-        const senhaHash = bcrypt.hashSync(senha_usuario, 10);
-        
-        const [resultado] = await pool.query(`
-            INSERT INTO USUARIOS (USER_USUARIO, NOME_USUARIO, EMAIL_USUARIO, CELULAR_USUARIO, SENHA_USUARIO, TIPO_USUARIO, CEP_USUARIO, LOGRADOURO_USUARIO, NUMERO_USUARIO, BAIRRO_USUARIO, CIDADE_USUARIO, UF_USUARIO)
-            VALUES (?, ?, ?, ?, ?, 'a', ?, ?, ?, ?, ?, ?)
-        `, [user_usuario.trim(), nome_usuario.trim(), email_usuario.trim(), celularLimpo, senhaHash, cepLimpo, logradouro_usuario.trim(), numero_usuario, bairro_usuario.trim(), cidade_usuario.trim(), uf_usuario.toUpperCase()]);
-        
-        await pool.query('INSERT INTO ADMINISTRADORES (ID_USUARIO, CPF_ADM) VALUES (?, ?)', [resultado.insertId, '00000000000']);
-        
-        req.session.autenticado = {
-            autenticado: nome_usuario,
-            id: resultado.insertId,
-            tipo: 'a',
-            nome: nome_usuario,
-            email: email_usuario
-        };
-        
-        res.redirect('/homeadm');
-    } catch (error) {
-        console.log('Erro completo:', error);
-        res.render('pages/cadastroadm', {
-            listaErros: null,
-            dadosNotificacao: { titulo: 'Erro!', mensagem: 'Erro interno: ' + error.message, tipo: 'error' },
-            valores: req.body
-        });
-    }
-});
+router.post('/cadastroadm', adminController.regrasValidacaoAdmin, adminController.cadastrarAdmin);
 
-router.post('/login-admin', async function(req, res){
+router.post('/login-admin', adminController.regrasValidacaoLogin, adminController.loginAdmin);
+
+// Rota de teste para verificar administradores
+router.get('/test-admins', async (req, res) => {
     try {
-        const { email_usu, senha_usu } = req.body;
+        const [usuarios] = await pool.query('SELECT ID_USUARIO, NOME_USUARIO, EMAIL_USUARIO, TIPO_USUARIO, STATUS_USUARIO FROM USUARIOS WHERE TIPO_USUARIO = "a"');
+        const [admins] = await pool.query('SELECT * FROM ADMINISTRADORES LIMIT 5');
         
-        const [admin] = await pool.query(`
-            SELECT u.*, a.CPF_ADMIN 
-            FROM USUARIOS u 
-            JOIN ADMINISTRADORES a ON u.ID_USUARIO = a.ID_USUARIO 
-            WHERE u.EMAIL_USUARIO = ? AND u.TIPO_USUARIO = 'a'
-        `, [email_usu]);
-        
-        if (admin.length === 0 || !bcrypt.compareSync(senha_usu, admin[0].SENHA_USUARIO)) {
-            return res.render('pages/cadastroadm', {
-                listaErros: null,
-                dadosNotificacao: { titulo: 'Erro!', mensagem: 'Credenciais inválidas', tipo: 'error' },
-                valores: {}
-            });
-        }
-        
-        req.session.autenticado = {
-            autenticado: admin[0].NOME_USUARIO,
-            id: admin[0].ID_USUARIO,
-            tipo: admin[0].TIPO_USUARIO,
-            nome: admin[0].NOME_USUARIO,
-            email: admin[0].EMAIL_USUARIO
-        };
-        
-        res.redirect('/homeadm');
-    } catch (error) {
-        console.log('Erro no login admin:', error);
-        res.render('pages/cadastroadm', {
-            listaErros: null,
-            dadosNotificacao: { titulo: 'Erro!', mensagem: 'Erro interno do servidor', tipo: 'error' },
-            valores: {}
+        res.json({
+            usuarios_admin: usuarios,
+            tabela_administradores: admins,
+            total_usuarios_admin: usuarios.length,
+            total_administradores: admins.length
         });
+    } catch (error) {
+        res.json({ erro: error.message });
     }
 });
 
