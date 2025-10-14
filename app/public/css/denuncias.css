@@ -116,7 +116,10 @@ header nav.grid img {
 }
 
 .maria {
-    height: 35px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .img-tamanho {

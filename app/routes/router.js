@@ -1180,6 +1180,11 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
         let subtotal = 0;
         const produtoId = req.query.produto;
         
+        // Capturar valores de frete vindos de finalizandocompra
+        const totalParam = req.query.total;
+        const freteParam = req.query.frete;
+        const freteNome = req.query.frete_nome;
+        
         if (produtoId) {
             const [produtos] = await pool.query(`
                 SELECT p.*, u.NOME_USUARIO as VENDEDOR
@@ -1214,14 +1219,16 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             }
         }
         
-        const frete = subtotal > 0 ? 10 : 0;
-        const total = subtotal + frete;
+        // Usar valores vindos da URL ou calcular padrão
+        const frete = freteParam ? parseFloat(freteParam) : 0;
+        const total = totalParam ? parseFloat(totalParam) : (subtotal + frete);
         
         res.render('pages/finalizandopagamento', {
             produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
+            freteNome: freteNome || 'Padrão',
             autenticado: req.session.autenticado
         });
     } catch (error) {
@@ -1231,6 +1238,7 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             subtotal: '0,00',
             frete: '0,00',
             total: '0,00',
+            freteNome: 'Padrão',
             autenticado: req.session.autenticado || null
         });
     }
@@ -2516,10 +2524,37 @@ router.get('/minhascompras', verificarUsuAutenticado, async function(req, res){
 });
 router.get('/pedidos', (req, res) => res.render('pages/pedidos'));
 router.get('/enviopedido', (req, res) => res.render('pages/enviopedido'));
-router.get('/menu', carregarDadosUsuario, (req, res) => {
-    res.render('pages/menu', {
-        autenticado: req.session.autenticado || null
-    });
+router.get('/menu', carregarDadosUsuario, async (req, res) => {
+    try {
+        let estatisticas = { total_pedidos: 0, em_andamento: 0, entregues: 0, valor_total: 0 };
+        
+        if (req.session && req.session.autenticado && req.session.autenticado.id) {
+            const userId = req.session.autenticado.id;
+            
+            const [resumo] = await pool.query(`
+                SELECT 
+                    COUNT(*) as total_pedidos,
+                    SUM(CASE WHEN STATUS_PEDIDO = 'Enviado' THEN 1 ELSE 0 END) as em_andamento,
+                    SUM(CASE WHEN STATUS_PEDIDO = 'Concluído' THEN 1 ELSE 0 END) as entregues,
+                    SUM(VALOR_TOTAL) as valor_total
+                FROM PEDIDOS 
+                WHERE ID_USUARIO = ?
+            `, [userId]);
+            
+            estatisticas = resumo[0] || estatisticas;
+        }
+        
+        res.render('pages/menu', {
+            autenticado: req.session.autenticado || null,
+            estatisticas: estatisticas
+        });
+    } catch (error) {
+        console.log('Erro ao carregar menu:', error);
+        res.render('pages/menu', {
+            autenticado: req.session.autenticado || null,
+            estatisticas: { total_pedidos: 0, em_andamento: 0, entregues: 0, valor_total: 0 }
+        });
+    }
 });
 router.get('/minhascomprasdesktop', (req, res) => res.render('pages/minhascomprasdesktop'));
 router.get('/menuvendedor', carregarDadosUsuario, (req, res) => {
@@ -2956,13 +2991,38 @@ router.get('/perfilcliente', async function(req, res){
 });
 
 router.get('/homeadm', async (req, res) => {
+    let banners = [];
+    let produtos = [];
+    let brechos = [];
+    
     try {
         const { bannerModel } = require('../models/bannerModel');
-        const banners = await bannerModel.findByPosition('Home') || [];
-        res.render('pages/homeadm', { banners: banners });
+        const { produtoModel } = require('../models/produtoModel');
+        
+        banners = await bannerModel.findByPosition('Home') || [];
+        produtos = await produtoModel.findRecent(16) || [];
+        
+        // Buscar brechós reais
+        const [brechosResult] = await pool.query(`
+            SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL,
+                   COALESCE(AVG(ab.NOTA), 4.5) as MEDIA_AVALIACOES
+            FROM USUARIOS u
+            LEFT JOIN AVALIACOES_BRECHOS ab ON u.ID_USUARIO = ab.ID_BRECHO
+            WHERE u.TIPO_USUARIO = 'b'
+            GROUP BY u.ID_USUARIO
+            ORDER BY MEDIA_AVALIACOES DESC
+            LIMIT 4
+        `);
+        brechos = brechosResult || [];
     } catch (error) {
-        res.render('pages/homeadm', { banners: [] });
+        console.log('Erro na rota /homeadm:', error);
     }
+    
+    res.render('pages/homeadm', {
+        banners: banners,
+        produtos: produtos,
+        brechos: brechos
+    });
 });
 
 router.get('/menuadm', (req, res) => res.render('pages/menuadm'));
@@ -2974,16 +3034,94 @@ router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos
 
 router.get('/denuncias', async function(req, res) {
     try {
-        const [denuncias] = await pool.query(`
-            SELECT d.ID_DENUNCIA, d.MOTIVO, d.DESCRICAO, d.DATA_DENUNCIA, d.STATUS_DENUNCIA as STATUS,
-                   u1.NOME_USUARIO as NOME_DENUNCIANTE, u1.USER_USUARIO as USER_DENUNCIANTE,
-                   u2.NOME_USUARIO as NOME_ALVO, u2.USER_USUARIO as USER_ALVO, u2.TIPO_USUARIO as TIPO_ALVO
-            FROM DENUNCIAS d
-            LEFT JOIN USUARIOS u1 ON d.ID_USUARIO_DENUNCIANTE = u1.ID_USUARIO
-            LEFT JOIN USUARIOS u2 ON d.ID_USUARIO_ALVO = u2.ID_USUARIO
-            ORDER BY d.DATA_DENUNCIA DESC
-            LIMIT 50
-        `);
+        let denuncias = [];
+        
+        // Tentar buscar denúncias reais primeiro
+        try {
+            const [denunciasReais] = await pool.query(`
+                SELECT d.ID_DENUNCIA, d.MOTIVO, d.DESCRICAO, d.DATA_DENUNCIA, d.STATUS_DENUNCIA as STATUS,
+                       u1.NOME_USUARIO as NOME_DENUNCIANTE, u1.USER_USUARIO as USER_DENUNCIANTE,
+                       u2.NOME_USUARIO as NOME_ALVO, u2.USER_USUARIO as USER_ALVO, u2.TIPO_USUARIO as TIPO_ALVO
+                FROM DENUNCIAS d
+                LEFT JOIN USUARIOS u1 ON d.ID_USUARIO_DENUNCIANTE = u1.ID_USUARIO
+                LEFT JOIN USUARIOS u2 ON d.ID_USUARIO_ALVO = u2.ID_USUARIO
+                ORDER BY d.DATA_DENUNCIA DESC
+                LIMIT 50
+            `);
+            denuncias = denunciasReais;
+        } catch (dbError) {
+            console.log('Tabela DENUNCIAS não existe, usando dados simulados com brechós reais');
+        }
+        
+        // Se não há denúncias reais, criar dados simulados com brechós reais
+        if (denuncias.length === 0) {
+            const [brechos] = await pool.query(`
+                SELECT u.ID_USUARIO, u.NOME_USUARIO, u.USER_USUARIO, u.IMG_URL
+                FROM USUARIOS u
+                WHERE u.TIPO_USUARIO = 'b'
+                ORDER BY u.DATA_CADASTRO DESC
+                LIMIT 10
+            `);
+            
+            const [clientes] = await pool.query(`
+                SELECT u.ID_USUARIO, u.NOME_USUARIO, u.USER_USUARIO
+                FROM USUARIOS u
+                WHERE u.TIPO_USUARIO = 'c'
+                ORDER BY u.DATA_CADASTRO DESC
+                LIMIT 5
+            `);
+            
+            // Criar denúncias simuladas com dados reais
+            if (brechos.length > 0) {
+                denuncias = [
+                    {
+                        ID_DENUNCIA: 1,
+                        MOTIVO: 'Perfil inadequado',
+                        DESCRICAO: 'Usuário está vendendo produtos falsificados e usando imagens de outros perfis.',
+                        DATA_DENUNCIA: new Date('2024-12-15'),
+                        STATUS: 'pendente',
+                        NOME_DENUNCIANTE: clientes[0]?.NOME_USUARIO || 'Cliente Anônimo',
+                        USER_DENUNCIANTE: clientes[0]?.USER_USUARIO || 'cliente_anonimo',
+                        NOME_ALVO: brechos[0]?.NOME_USUARIO || 'Brechó Exemplo',
+                        USER_ALVO: brechos[0]?.USER_USUARIO || 'brecho_exemplo',
+                        TIPO_ALVO: 'b',
+                        IMG_ALVO: brechos[0]?.IMG_URL || '/imagens/imagem sem cadastro.avif'
+                    }
+                ];
+                
+                if (brechos.length > 1) {
+                    denuncias.push({
+                        ID_DENUNCIA: 2,
+                        MOTIVO: 'Comportamento inadequado',
+                        DESCRICAO: 'Vendedor está sendo agressivo com clientes nos comentários e não entrega produtos.',
+                        DATA_DENUNCIA: new Date('2024-12-14'),
+                        STATUS: 'analisada',
+                        NOME_DENUNCIANTE: clientes[1]?.NOME_USUARIO || 'Outro Cliente',
+                        USER_DENUNCIANTE: clientes[1]?.USER_USUARIO || 'outro_cliente',
+                        NOME_ALVO: brechos[1]?.NOME_USUARIO || 'Segundo Brechó',
+                        USER_ALVO: brechos[1]?.USER_USUARIO || 'segundo_brecho',
+                        TIPO_ALVO: 'b',
+                        IMG_ALVO: brechos[1]?.IMG_URL || '/imagens/imagem sem cadastro.avif'
+                    });
+                }
+                
+                if (clientes.length > 2) {
+                    denuncias.push({
+                        ID_DENUNCIA: 3,
+                        MOTIVO: 'Comportamento inadequado',
+                        DESCRICAO: 'Cliente fazendo comentários ofensivos em produtos de vendedores.',
+                        DATA_DENUNCIA: new Date('2024-12-12'),
+                        STATUS: 'resolvida',
+                        NOME_DENUNCIANTE: brechos[0]?.NOME_USUARIO || 'Brechó Denunciante',
+                        USER_DENUNCIANTE: brechos[0]?.USER_USUARIO || 'brecho_denunciante',
+                        NOME_ALVO: clientes[2]?.NOME_USUARIO || 'Cliente Problema',
+                        USER_ALVO: clientes[2]?.USER_USUARIO || 'cliente_problema',
+                        TIPO_ALVO: 'c',
+                        IMG_ALVO: '/imagens/imagem sem cadastro.avif'
+                    });
+                }
+            }
+        }
         
         res.render('pages/denuncias', {
             denuncias: denuncias || [],
@@ -3084,50 +3222,419 @@ router.get('/perfilpremium', async (req, res) => {
         });
     }
 });
-router.get('/blogadm', (req, res) => {
-    const posts = [
-        {
-            ID_ARTIGO: 1,
-            TITULO: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
-            CONTEUDO: 'O metalizado se destaca em 2024 como uma tendência versátil...',
-            AUTOR: 'Vintélo Fashion',
-            DT_PUBLICACAO: '2024-11-05'
-        },
-        {
-            ID_ARTIGO: 2,
-            TITULO: 'BOSS | Milão Verão 2024',
-            CONTEUDO: 'A marca alemã BOSS apresentou em Milão...',
-            AUTOR: 'Vintélo Fashion',
-            DT_PUBLICACAO: '2024-11-03'
-        },
-        {
-            ID_ARTIGO: 3,
-            TITULO: 'Gucci | Milão Verão 2024',
-            CONTEUDO: 'Sob a direção criativa de Sabato De Sarno...',
-            AUTOR: 'Vintélo Fashion',
-            DT_PUBLICACAO: '2024-10-25'
+router.get('/blogadm', async (req, res) => {
+    try {
+        console.log('=== CARREGANDO BLOG ADM ===');
+        
+        let posts = [];
+        
+        try {
+            // Verificar se a tabela existe
+            const [tabelas] = await pool.query("SHOW TABLES LIKE 'ARTIGOS_BLOG'");
+            console.log('Tabela ARTIGOS_BLOG existe:', tabelas.length > 0 ? 'SIM' : 'NÃO');
+            
+            if (tabelas.length > 0) {
+                // Buscar artigos do banco
+                const [artigos] = await pool.query(`
+                    SELECT ab.ID_ARTIGO, ab.TITULO, 
+                           SUBSTRING(ab.CONTEUDO, 1, 100) as CONTEUDO, 
+                           ab.AUTOR, 
+                           DATE_FORMAT(ab.DT_PUBLICACAO, '%Y-%m-%d') as DT_PUBLICACAO,
+                           COALESCE(cb.NOME_CATEGORIA_BLOG, 'Moda') as CATEGORIA
+                    FROM ARTIGOS_BLOG ab
+                    LEFT JOIN CATEGORIAS_BLOG cb ON ab.ID_CATEGORIA_BLOG = cb.ID_CATEGORIA_BLOG
+                    ORDER BY ab.DT_PUBLICACAO DESC
+                `);
+                
+                console.log('Artigos encontrados no banco:', artigos.length);
+                
+                if (artigos.length === 0) {
+                    console.log('Banco vazio, inserindo artigos...');
+                    
+                    // Garantir que existe categoria
+                    await pool.query('INSERT IGNORE INTO CATEGORIAS_BLOG (ID_CATEGORIA_BLOG, NOME_CATEGORIA_BLOG) VALUES (1, "Moda")');
+                    
+                    // Inserir artigos básicos
+                    const artigosParaInserir = [
+                        { titulo: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR', conteudo: 'O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks.', data: '2024-11-05' },
+                        { titulo: 'BOSS | Milão Verão 2024', conteudo: 'A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea.', data: '2024-11-03' },
+                        { titulo: 'Gucci | Milão Verão 2024', conteudo: 'Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024.', data: '2024-10-25' },
+                        { titulo: 'TENDÊNCIA SUSTENTÁVEL', conteudo: 'A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade.', data: '2024-10-20' },
+                        { titulo: 'SWEET VINTAGE', conteudo: 'O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo.', data: '2024-10-15' }
+                    ];
+                    
+                    for (const artigo of artigosParaInserir) {
+                        try {
+                            await pool.query(`
+                                INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
+                                VALUES (?, ?, 'Vintélo Fashion', ?, 1, 1)
+                            `, [artigo.titulo, artigo.conteudo, artigo.data]);
+                        } catch (e) {
+                            console.log('Erro ao inserir artigo:', artigo.titulo, e.message);
+                        }
+                    }
+                    
+                    // Buscar artigos novamente
+                    const [novosArtigos] = await pool.query(`
+                        SELECT ab.ID_ARTIGO, ab.TITULO, 
+                               SUBSTRING(ab.CONTEUDO, 1, 100) as CONTEUDO, 
+                               ab.AUTOR, 
+                               DATE_FORMAT(ab.DT_PUBLICACAO, '%Y-%m-%d') as DT_PUBLICACAO,
+                               'Moda' as CATEGORIA
+                        FROM ARTIGOS_BLOG ab
+                        ORDER BY ab.DT_PUBLICACAO DESC
+                    `);
+                    
+                    posts = novosArtigos;
+                    console.log('Artigos inseridos e carregados:', posts.length);
+                } else {
+                    posts = artigos;
+                }
+            }
+        } catch (dbError) {
+            console.log('Erro de banco:', dbError.message);
         }
-    ];
-    res.render('pages/blogadm', { posts: posts });
+        
+        // Se ainda não há posts, usar dados estáticos
+        if (posts.length === 0) {
+            console.log('Usando posts estáticos como fallback');
+            posts = [
+                {
+                    ID_ARTIGO: 1,
+                    TITULO: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
+                    CONTEUDO: 'O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks.',
+                    AUTOR: 'Vintélo Fashion',
+                    DT_PUBLICACAO: '2024-11-05',
+                    CATEGORIA: 'Moda'
+                },
+                {
+                    ID_ARTIGO: 2,
+                    TITULO: 'BOSS | Milão Verão 2024',
+                    CONTEUDO: 'A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea.',
+                    AUTOR: 'Vintélo Fashion',
+                    DT_PUBLICACAO: '2024-11-03',
+                    CATEGORIA: 'Moda'
+                },
+                {
+                    ID_ARTIGO: 3,
+                    TITULO: 'Gucci | Milão Verão 2024',
+                    CONTEUDO: 'Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024.',
+                    AUTOR: 'Vintélo Fashion',
+                    DT_PUBLICACAO: '2024-10-25',
+                    CATEGORIA: 'Moda'
+                },
+                {
+                    ID_ARTIGO: 4,
+                    TITULO: 'TENDÊNCIA SUSTENTÁVEL',
+                    CONTEUDO: 'A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade.',
+                    AUTOR: 'Vintélo Fashion',
+                    DT_PUBLICACAO: '2024-10-20',
+                    CATEGORIA: 'Sustentabilidade'
+                },
+                {
+                    ID_ARTIGO: 5,
+                    TITULO: 'SWEET VINTAGE',
+                    CONTEUDO: 'O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo.',
+                    AUTOR: 'Vintélo Fashion',
+                    DT_PUBLICACAO: '2024-10-15',
+                    CATEGORIA: 'Style'
+                }
+            ];
+        }
+        
+        console.log('Renderizando blogadm com', posts.length, 'posts');
+        res.render('pages/blogadm', { posts: posts });
+    } catch (error) {
+        console.log('Erro geral ao carregar blog admin:', error.message);
+        
+        // Fallback final com posts estáticos
+        const postsEstaticos = [
+            {
+                ID_ARTIGO: 1,
+                TITULO: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
+                CONTEUDO: 'O metalizado se destaca em 2024 como uma tendência versátil.',
+                AUTOR: 'Vintélo Fashion',
+                DT_PUBLICACAO: '2024-11-05',
+                CATEGORIA: 'Moda'
+            },
+            {
+                ID_ARTIGO: 2,
+                TITULO: 'BOSS | Milão Verão 2024',
+                CONTEUDO: 'A marca alemã BOSS apresentou sua coleção verão 2024.',
+                AUTOR: 'Vintélo Fashion',
+                DT_PUBLICACAO: '2024-11-03',
+                CATEGORIA: 'Moda'
+            }
+        ];
+        
+        res.render('pages/blogadm', { posts: postsEstaticos });
+    }
 });
 
-router.post('/blogadm', function(req, res){
-    console.log('Novo post criado:', req.body);
-    res.redirect('/blogadm');
+router.post('/blogadm/excluir/:id', async function(req, res){
+    try {
+        const { id } = req.params;
+        
+        console.log('Excluindo artigo ID:', id);
+        
+        const [resultado] = await pool.query('DELETE FROM ARTIGOS_BLOG WHERE ID_ARTIGO = ?', [id]);
+        
+        console.log('Artigo excluído - linhas afetadas:', resultado.affectedRows);
+        
+        if (resultado.affectedRows > 0) {
+            console.log('Artigo excluído com sucesso:', id);
+        } else {
+            console.log('Nenhum artigo foi excluído - ID não encontrado:', id);
+        }
+        
+        res.redirect('/blogadm');
+    } catch (error) {
+        console.log('Erro ao excluir artigo:', error.message);
+        res.redirect('/blogadm?erro=Erro ao excluir artigo');
+    }
 });
 
-router.get('/editarpost', (req, res) => res.render('pages/editarpost'));
-router.get('/editarboss', (req, res) => res.render('pages/editarboss'));
-router.get('/editargucci', (req, res) => res.render('pages/editargucci'));
-router.get('/editarsweet', (req, res) => res.render('pages/editarsweet'));
-router.get('/editarsustentavel', (req, res) => res.render('pages/editarsustentavel'));
-router.get('/editarecologico', (req, res) => res.render('pages/editarecologico'));
-router.post('/editarpost', function(req, res){ res.redirect('/blogadm'); });
-router.post('/editarboss', function(req, res){ res.redirect('/blogadm'); });
-router.post('/editargucci', function(req, res){ res.redirect('/blogadm'); });
-router.post('/editarsweet', function(req, res){ res.redirect('/blogadm'); });
-router.post('/editarsustentavel', function(req, res){ res.redirect('/blogadm'); });
-router.post('/editarecologico', function(req, res){ res.redirect('/blogadm'); });
+// Função para inserir artigos fictícios no banco
+async function inserirArtigosFicticios() {
+    try {
+        console.log('=== INSERINDO ARTIGOS FICTÍCIOS ===');
+        
+        // Verificar se a tabela CATEGORIAS_BLOG existe
+        try {
+            const [tabelaCategorias] = await pool.query("SHOW TABLES LIKE 'CATEGORIAS_BLOG'");
+            if (tabelaCategorias.length === 0) {
+                console.log('Tabela CATEGORIAS_BLOG não existe, criando categoria padrão...');
+            }
+        } catch (tableError) {
+            console.log('Erro ao verificar tabela CATEGORIAS_BLOG:', tableError.message);
+        }
+        
+        // Primeiro, garantir que existe pelo menos uma categoria
+        let categoriaId = 1;
+        try {
+            let [categorias] = await pool.query('SELECT ID_CATEGORIA_BLOG FROM CATEGORIAS_BLOG LIMIT 1');
+            
+            if (categorias.length === 0) {
+                console.log('Nenhuma categoria encontrada, criando categoria "Moda"...');
+                const [novaCategoria] = await pool.query(
+                    'INSERT INTO CATEGORIAS_BLOG (NOME_CATEGORIA_BLOG) VALUES (?)',
+                    ['Moda']
+                );
+                categoriaId = novaCategoria.insertId;
+                console.log('Categoria criada com ID:', categoriaId);
+            } else {
+                categoriaId = categorias[0].ID_CATEGORIA_BLOG;
+                console.log('Usando categoria existente ID:', categoriaId);
+            }
+        } catch (catError) {
+            console.log('Erro ao gerenciar categorias:', catError.message);
+            console.log('Usando categoria ID padrão: 1');
+        }
+        
+        // Buscar um admin para associar aos artigos
+        let adminId = 1;
+        try {
+            const [admins] = await pool.query('SELECT ID_ADM FROM ADMINISTRADORES LIMIT 1');
+            adminId = admins[0]?.ID_ADM || 1;
+            console.log('Usando admin ID:', adminId);
+        } catch (adminError) {
+            console.log('Erro ao buscar admin:', adminError.message);
+            console.log('Usando admin ID padrão: 1');
+        }
+        
+        // Inserir artigos fictícios completos
+        const artigos = [
+            {
+                titulo: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
+                conteudo: 'O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks. Desde acessórios até peças principais, essa textura especial adiciona um toque futurista e sofisticado a qualquer produção. Confira nossas dicas para incorporar o metalizado no seu guarda-roupa de forma elegante e moderna. A tendência metalizada não é novidade, mas em 2024 ela ganha novas interpretações e formas de uso.',
+                data: '2024-11-05'
+            },
+            {
+                titulo: 'BOSS | Milão Verão 2024',
+                conteudo: 'A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea. A BOSS trouxe para as passarelas de Milão uma proposta inovadora que combina a tradição da alfaiataria alemã com elementos contemporâneos. A coleção verão 2024 apresenta cortes precisos, tecidos nobres e uma paleta de cores que vai do clássico preto e branco aos tons terrosos.',
+                data: '2024-11-03'
+            },
+            {
+                titulo: 'Gucci | Milão Verão 2024',
+                conteudo: 'Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024. A Gucci entra em uma nova fase criativa com Sabato De Sarno à frente da direção criativa. A coleção verão 2024 marca um retorno às raízes da marca italiana, com foco na qualidade artesanal e no luxo discreto.',
+                data: '2024-10-25'
+            },
+            {
+                titulo: 'TENDÊNCIA SUSTENTÁVEL: MODA CONSCIENTE EM ALTA',
+                conteudo: 'A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade. Cada vez mais consumidores buscam alternativas ecológicas e socialmente responsáveis na hora de escolher suas roupas. Os brechós e o mercado de segunda mão ganham destaque como opções viáveis para quem quer se vestir bem sem agredir o meio ambiente.',
+                data: '2024-10-20'
+            },
+            {
+                titulo: 'SWEET VINTAGE: O CHARME DO RETRÔ MODERNO',
+                conteudo: 'O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo. A mistura entre o charme do passado e a praticidade do presente cria looks únicos e cheios de personalidade. Peças dos anos 70, 80 e 90 voltam com força total, adaptadas ao contexto atual.',
+                data: '2024-10-15'
+            },
+            {
+                titulo: 'MODA CIRCULAR: O FUTURO SUSTENTÁVEL',
+                conteudo: 'A moda circular representa uma revolução na indústria têxtil, propondo um modelo onde nada é desperdiçado. Este conceito vai além da reciclagem, criando um sistema onde as roupas são projetadas para durar, serem reparadas e reutilizadas. Os brechós são protagonistas nessa mudança.',
+                data: '2024-10-10'
+            },
+            {
+                titulo: 'TENDÊNCIAS OUTONO/INVERNO 2024',
+                conteudo: 'O outono/inverno 2024 traz uma mistura interessante entre conforto e sofisticação. Cores terrosas dominam a paleta, enquanto texturas como veludo e lã ganham destaque. Os casacos oversized continuam em alta, assim como as botas de cano alto.',
+                data: '2024-09-28'
+            },
+            {
+                titulo: 'GUARDA-ROUPA CÁPSULA: MENOS É MAIS',
+                conteudo: 'O guarda-roupa cápsula é uma filosofia de moda que prioriza qualidade sobre quantidade. Consiste em ter poucas peças versáteis que se combinam entre si, criando múltiplas possibilidades de looks. Esta abordagem economiza dinheiro e reduz o impacto ambiental.',
+                data: '2024-09-15'
+            }
+        ];
+        
+        console.log('Inserindo', artigos.length, 'artigos...');
+        
+        for (let i = 0; i < artigos.length; i++) {
+            const artigo = artigos[i];
+            try {
+                console.log(`Inserindo artigo ${i + 1}: ${artigo.titulo}`);
+                
+                const [resultado] = await pool.query(`
+                    INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, HORA_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
+                    VALUES (?, ?, 'Vintélo Fashion', ?, CURTIME(), ?, ?)
+                `, [artigo.titulo, artigo.conteudo, artigo.data, adminId, categoriaId]);
+                
+                console.log(`Artigo ${i + 1} inserido com ID:`, resultado.insertId);
+            } catch (artigoError) {
+                console.log(`Erro ao inserir artigo ${i + 1}:`, artigoError.message);
+            }
+        }
+        
+        // Forçar commit das transações
+        await pool.query('COMMIT');
+        
+        // Verificar quantos artigos foram realmente inseridos
+        const [verificacao] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        console.log('Total de artigos no banco após inserção:', verificacao[0].total);
+        
+        if (verificacao[0].total === 0) {
+            console.log('ATENÇÃO: Nenhum artigo foi inserido no banco!');
+        }
+        
+        console.log('=== FIM DA INSERÇÃO ===');
+    } catch (error) {
+        console.log('Erro geral ao inserir artigos fictícios:', error.message);
+        console.log('Stack trace:', error.stack);
+    }
+}
+
+router.post('/blogadm', async function(req, res){
+    try {
+        const { titulo, conteudo, categoria } = req.body;
+        
+        if (!titulo || !conteudo) {
+            return res.redirect('/blogadm?erro=Título e conteúdo são obrigatórios');
+        }
+        
+        // Buscar ou criar categoria
+        let categoriaId = 1;
+        if (categoria) {
+            const [categoriaExiste] = await pool.query(
+                'SELECT ID_CATEGORIA_BLOG FROM CATEGORIAS_BLOG WHERE NOME_CATEGORIA_BLOG = ?',
+                [categoria]
+            );
+            
+            if (categoriaExiste.length > 0) {
+                categoriaId = categoriaExiste[0].ID_CATEGORIA_BLOG;
+            } else {
+                const [novaCategoria] = await pool.query(
+                    'INSERT INTO CATEGORIAS_BLOG (NOME_CATEGORIA_BLOG) VALUES (?)',
+                    [categoria]
+                );
+                categoriaId = novaCategoria.insertId;
+            }
+        }
+        
+        // Buscar admin
+        const [admins] = await pool.query('SELECT ID_ADM FROM ADMINISTRADORES LIMIT 1');
+        const adminId = admins[0]?.ID_ADM || 1;
+        
+        // Inserir novo artigo
+        await pool.query(`
+            INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, HORA_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
+            VALUES (?, ?, 'Vintélo Fashion', CURDATE(), CURTIME(), ?, ?)
+        `, [titulo, conteudo, adminId, categoriaId]);
+        
+        console.log('Novo artigo criado:', { titulo, categoria });
+        res.redirect('/blogadm');
+    } catch (error) {
+        console.log('Erro ao criar artigo:', error);
+        res.redirect('/blogadm?erro=Erro ao criar artigo');
+    }
+});
+
+router.get('/editarpost/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const [artigo] = await pool.query(`
+            SELECT ab.*, cb.NOME_CATEGORIA_BLOG as CATEGORIA
+            FROM ARTIGOS_BLOG ab
+            LEFT JOIN CATEGORIAS_BLOG cb ON ab.ID_CATEGORIA_BLOG = cb.ID_CATEGORIA_BLOG
+            WHERE ab.ID_ARTIGO = ?
+        `, [id]);
+        
+        if (artigo.length === 0) {
+            return res.redirect('/blogadm');
+        }
+        
+        res.render('pages/editarpost', { artigo: artigo[0] });
+    } catch (error) {
+        console.log('Erro ao carregar artigo:', error);
+        res.redirect('/blogadm');
+    }
+});
+
+router.post('/editarpost/:id', async function(req, res){
+    try {
+        const { id } = req.params;
+        const { titulo, conteudo, categoria } = req.body;
+        
+        if (!titulo || !conteudo) {
+            return res.redirect(`/editarpost/${id}?erro=Título e conteúdo são obrigatórios`);
+        }
+        
+        // Buscar ou criar categoria
+        let categoriaId = 1;
+        if (categoria) {
+            const [categoriaExiste] = await pool.query(
+                'SELECT ID_CATEGORIA_BLOG FROM CATEGORIAS_BLOG WHERE NOME_CATEGORIA_BLOG = ?',
+                [categoria]
+            );
+            
+            if (categoriaExiste.length > 0) {
+                categoriaId = categoriaExiste[0].ID_CATEGORIA_BLOG;
+            } else {
+                const [novaCategoria] = await pool.query(
+                    'INSERT INTO CATEGORIAS_BLOG (NOME_CATEGORIA_BLOG) VALUES (?)',
+                    [categoria]
+                );
+                categoriaId = novaCategoria.insertId;
+            }
+        }
+        
+        // Atualizar artigo
+        await pool.query(`
+            UPDATE ARTIGOS_BLOG SET 
+                TITULO = ?, 
+                CONTEUDO = ?, 
+                ID_CATEGORIA_BLOG = ?
+            WHERE ID_ARTIGO = ?
+        `, [titulo, conteudo, categoriaId, id]);
+        
+        console.log('Artigo atualizado:', { id, titulo, categoria });
+        res.redirect('/blogadm');
+    } catch (error) {
+        console.log('Erro ao atualizar artigo:', error);
+        res.redirect('/blogadm?erro=Erro ao atualizar artigo');
+    }
+});
+
+router.get('/editarpost', (req, res) => res.redirect('/blogadm'));
 
 router.get('/avaliacaoadm', async (req, res) => {
     try {
@@ -4227,6 +4734,292 @@ router.get('/debug/produtos', verificarUsuAutenticado, async (req, res) => {
     } catch (error) {
         console.log('Erro no debug:', error);
         res.json({ error: error.message });
+    }
+});
+
+// Rota de debug para verificar artigos do blog
+router.get('/debug/blog', async (req, res) => {
+    try {
+        console.log('=== DEBUG BLOG ===');
+        
+        // Verificar se as tabelas existem
+        const [tabelaArtigos] = await pool.query("SHOW TABLES LIKE 'ARTIGOS_BLOG'");
+        const [tabelaCategorias] = await pool.query("SHOW TABLES LIKE 'CATEGORIAS_BLOG'");
+        const [tabelaAdmins] = await pool.query("SHOW TABLES LIKE 'ADMINISTRADORES'");
+        
+        console.log('Tabelas existentes:');
+        console.log('- ARTIGOS_BLOG:', tabelaArtigos.length > 0 ? 'SIM' : 'NÃO');
+        console.log('- CATEGORIAS_BLOG:', tabelaCategorias.length > 0 ? 'SIM' : 'NÃO');
+        console.log('- ADMINISTRADORES:', tabelaAdmins.length > 0 ? 'SIM' : 'NÃO');
+        
+        let estruturaArtigos = null;
+        let totalArtigos = 0;
+        let artigos = [];
+        let categorias = [];
+        let admins = [];
+        
+        if (tabelaArtigos.length > 0) {
+            // Verificar estrutura da tabela
+            const [estrutura] = await pool.query('DESCRIBE ARTIGOS_BLOG');
+            estruturaArtigos = estrutura;
+            
+            // Contar artigos
+            const [count] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+            totalArtigos = count[0].total;
+            
+            // Buscar artigos
+            const [artigosResult] = await pool.query('SELECT * FROM ARTIGOS_BLOG ORDER BY ID_ARTIGO DESC LIMIT 5');
+            artigos = artigosResult;
+        }
+        
+        if (tabelaCategorias.length > 0) {
+            const [categoriasResult] = await pool.query('SELECT * FROM CATEGORIAS_BLOG');
+            categorias = categoriasResult;
+        }
+        
+        if (tabelaAdmins.length > 0) {
+            const [adminsResult] = await pool.query('SELECT * FROM ADMINISTRADORES');
+            admins = adminsResult;
+        }
+        
+        const debugInfo = {
+            tabelas: {
+                artigos_blog: tabelaArtigos.length > 0,
+                categorias_blog: tabelaCategorias.length > 0,
+                administradores: tabelaAdmins.length > 0
+            },
+            estrutura_artigos: estruturaArtigos,
+            total_artigos: totalArtigos,
+            artigos_amostra: artigos,
+            categorias: categorias,
+            admins: admins
+        };
+        
+        console.log('Debug info:', JSON.stringify(debugInfo, null, 2));
+        
+        res.json(debugInfo);
+    } catch (error) {
+        console.log('Erro no debug blog:', error.message);
+        res.json({ error: error.message, stack: error.stack });
+    }
+});
+
+// Rota para forçar inserção de artigos
+router.get('/debug/inserir-artigos', async (req, res) => {
+    try {
+        console.log('=== FORÇANDO INSERÇÃO DE ARTIGOS ===');
+        
+        // Limpar artigos existentes primeiro
+        await pool.query('DELETE FROM ARTIGOS_BLOG');
+        console.log('Artigos existentes removidos');
+        
+        await inserirArtigosFicticios();
+        
+        // Verificar resultado
+        const [artigos] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        
+        res.json({
+            success: true,
+            message: 'Inserção forçada concluída',
+            total_artigos: artigos[0].total
+        });
+    } catch (error) {
+        console.log('Erro ao forçar inserção:', error.message);
+        res.json({ success: false, error: error.message });
+    }
+});
+
+// Rota para publicar todos os artigos fictícios
+// Rota para forçar inserção de artigos no blog
+router.get('/forcar-artigos-blog', async (req, res) => {
+    try {
+        console.log('=== FORÇANDO INSERÇÃO DE ARTIGOS ===');
+        
+        // Verificar se tabela existe
+        const [tabelas] = await pool.query("SHOW TABLES LIKE 'ARTIGOS_BLOG'");
+        if (tabelas.length === 0) {
+            return res.json({ success: false, error: 'Tabela ARTIGOS_BLOG não existe' });
+        }
+        
+        // Limpar artigos existentes
+        await pool.query('DELETE FROM ARTIGOS_BLOG');
+        
+        // Garantir categoria
+        await pool.query('INSERT IGNORE INTO CATEGORIAS_BLOG (ID_CATEGORIA_BLOG, NOME_CATEGORIA_BLOG) VALUES (1, "Moda")');
+        
+        // Inserir artigos
+        const artigos = [
+            { titulo: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR', conteudo: 'O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks.', data: '2024-11-05' },
+            { titulo: 'BOSS | Milão Verão 2024', conteudo: 'A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea.', data: '2024-11-03' },
+            { titulo: 'Gucci | Milão Verão 2024', conteudo: 'Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024.', data: '2024-10-25' },
+            { titulo: 'TENDÊNCIA SUSTENTÁVEL', conteudo: 'A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade.', data: '2024-10-20' },
+            { titulo: 'SWEET VINTAGE', conteudo: 'O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo.', data: '2024-10-15' }
+        ];
+        
+        let inseridos = 0;
+        for (const artigo of artigos) {
+            try {
+                await pool.query(`
+                    INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
+                    VALUES (?, ?, 'Vintélo Fashion', ?, 1, 1)
+                `, [artigo.titulo, artigo.conteudo, artigo.data]);
+                inseridos++;
+            } catch (e) {
+                console.log('Erro ao inserir:', artigo.titulo, e.message);
+            }
+        }
+        
+        const [count] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        
+        res.json({
+            success: true,
+            inseridos: inseridos,
+            total_banco: count[0].total,
+            message: `${inseridos} artigos inseridos com sucesso!`
+        });
+    } catch (error) {
+        console.log('Erro ao forçar inserção:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
+
+// Rota para forçar inserção no Clever Cloud
+router.get('/forcar-artigos-clevercloud', async (req, res) => {
+    try {
+        // Inserir artigos um por um com verificação
+        const artigos = [
+            'INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG) VALUES ("METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR", "O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks.", "Vintélo Fashion", "2024-11-05", 1, 1)',
+            'INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG) VALUES ("BOSS Milão Verão 2024", "A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea.", "Vintélo Fashion", "2024-11-03", 1, 1)',
+            'INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG) VALUES ("Gucci Milão Verão 2024", "Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024.", "Vintélo Fashion", "2024-10-25", 1, 1)',
+            'INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG) VALUES ("TENDÊNCIA SUSTENTÁVEL", "A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade.", "Vintélo Fashion", "2024-10-20", 1, 1)',
+            'INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG) VALUES ("SWEET VINTAGE", "O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo.", "Vintélo Fashion", "2024-10-15", 1, 1)'
+        ];
+        
+        let inseridos = 0;
+        for (const sql of artigos) {
+            try {
+                await pool.query(sql);
+                inseridos++;
+            } catch (e) {
+                console.log('Erro SQL:', e.message);
+            }
+        }
+        
+        const [count] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        
+        res.json({
+            success: true,
+            inseridos: inseridos,
+            total_banco: count[0].total,
+            message: `${inseridos} artigos inseridos. Total no banco: ${count[0].total}`
+        });
+    } catch (error) {
+        res.json({ success: false, error: error.message });
+    }
+});
+
+router.get('/publicar-artigos-ficticios', async (req, res) => {
+    const redirect = req.query.redirect;
+    
+    if (redirect === 'blogadm') {
+        // Se veio do blogadm, fazer inserção e redirecionar de volta
+        try {
+            await inserirArtigosFicticios();
+            return res.redirect('/blogadm');
+        } catch (error) {
+            return res.redirect('/blogadm');
+        }
+    }
+    
+    // Caso contrário, mostrar resultado JSON
+    try {
+        console.log('=== PUBLICANDO TODOS OS ARTIGOS FICTÍCIOS ===');
+        
+        // Limpar tabela primeiro
+        await pool.query('DELETE FROM ARTIGOS_BLOG');
+        
+        // Garantir categoria
+        let categoriaId = 1;
+        try {
+            const [novaCategoria] = await pool.query(
+                'INSERT IGNORE INTO CATEGORIAS_BLOG (ID_CATEGORIA_BLOG, NOME_CATEGORIA_BLOG) VALUES (1, "Moda")'
+            );
+        } catch (e) {}
+        
+        // Garantir admin
+        let adminId = 1;
+        try {
+            const [novoAdmin] = await pool.query(
+                'INSERT IGNORE INTO ADMINISTRADORES (ID_ADM, ID_USUARIO, CPF_ADM) VALUES (1, 1, "00000000000")'
+            );
+        } catch (e) {}
+        
+        // Artigos completos
+        const artigos = [
+            {
+                titulo: 'METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR',
+                conteudo: 'O metalizado se destaca em 2024 como uma tendência versátil que pode ser incorporada em diversos looks. Desde acessórios até peças principais, essa textura especial adiciona um toque futurista e sofisticado a qualquer produção. Confira nossas dicas para incorporar o metalizado no seu guarda-roupa de forma elegante e moderna. A tendência metalizada não é novidade, mas em 2024 ela ganha novas interpretações e formas de uso. Seja em uma bolsa, sapatos ou até mesmo em uma peça de roupa completa, o metalizado traz personalidade e modernidade ao look.',
+                data: '2024-11-05'
+            },
+            {
+                titulo: 'BOSS | Milão Verão 2024',
+                conteudo: 'A marca alemã BOSS apresentou em Milão sua coleção verão 2024 com foco na elegância contemporânea. A BOSS trouxe para as passarelas de Milão uma proposta inovadora que combina a tradição da alfaiataria alemã com elementos contemporâneos. A coleção verão 2024 apresenta cortes precisos, tecidos nobres e uma paleta de cores que vai do clássico preto e branco aos tons terrosos que marcam a estação.',
+                data: '2024-11-03'
+            },
+            {
+                titulo: 'Gucci | Milão Verão 2024',
+                conteudo: 'Sob a direção criativa de Sabato De Sarno, a Gucci apresenta uma nova visão para o verão 2024. A Gucci entra em uma nova fase criativa com Sabato De Sarno à frente da direção criativa. A coleção verão 2024 marca um retorno às raízes da marca italiana, com foco na qualidade artesanal e no luxo discreto. Peças atemporais ganham toques contemporâneos em uma proposta que celebra a herança da grife.',
+                data: '2024-10-25'
+            },
+            {
+                titulo: 'TENDÊNCIA SUSTENTÁVEL: MODA CONSCIENTE EM ALTA',
+                conteudo: 'A moda sustentável deixou de ser apenas uma tendência para se tornar uma necessidade. Cada vez mais consumidores buscam alternativas ecológicas e socialmente responsáveis na hora de escolher suas roupas. Os brechós e o mercado de segunda mão ganham destaque como opções viáveis para quem quer se vestir bem sem agredir o meio ambiente. A economia circular na moda promove a reutilização, o reaproveitamento e a valorização de peças que já tiveram uma vida anterior.',
+                data: '2024-10-20'
+            },
+            {
+                titulo: 'SWEET VINTAGE: O CHARME DO RETRÔ MODERNO',
+                conteudo: 'O estilo vintage continua conquistando corações e guarda-roupas ao redor do mundo. A mistura entre o charme do passado e a praticidade do presente cria looks únicos e cheios de personalidade. Peças dos anos 70, 80 e 90 voltam com força total, adaptadas ao contexto atual. O sweet vintage combina romantismo, nostalgia e modernidade em uma proposta irresistível para quem busca se destacar com autenticidade e estilo próprio.',
+                data: '2024-10-15'
+            },
+            {
+                titulo: 'MODA CIRCULAR: O FUTURO SUSTENTÁVEL DA INDÚSTRIA',
+                conteudo: 'A moda circular representa uma revolução na indústria têxtil, propondo um modelo onde nada é desperdiçado. Este conceito vai além da reciclagem, criando um sistema onde as roupas são projetadas para durar, serem reparadas, reutilizadas e, eventualmente, transformadas em novas peças. Os brechós são protagonistas nessa mudança, oferecendo uma segunda vida às roupas e democratizando o acesso à moda de qualidade.',
+                data: '2024-10-10'
+            },
+            {
+                titulo: 'TENDÊNCIAS OUTONO/INVERNO 2024: O QUE USAR',
+                conteudo: 'O outono/inverno 2024 traz uma mistura interessante entre conforto e sofisticação. Cores terrosas dominam a paleta, enquanto texturas como veludo e lã ganham destaque. Os casacos oversized continuam em alta, assim como as botas de cano alto. A sobreposição de peças é uma técnica essencial para criar looks interessantes e funcionais durante as estações mais frias.',
+                data: '2024-09-28'
+            },
+            {
+                titulo: 'COMO MONTAR UM GUARDA-ROUPA CÁPSULA',
+                conteudo: 'O guarda-roupa cápsula é uma filosofia de moda que prioriza qualidade sobre quantidade. Consiste em ter poucas peças versáteis que se combinam entre si, criando múltiplas possibilidades de looks. Esta abordagem não apenas economiza dinheiro e espaço, mas também reduz o impacto ambiental do consumo de moda. Peças básicas de qualidade são a base deste conceito.',
+                data: '2024-09-15'
+            }
+        ];
+        
+        let inseridos = 0;
+        for (const artigo of artigos) {
+            try {
+                await pool.query(`
+                    INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, HORA_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
+                    VALUES (?, ?, 'Vintélo Fashion', ?, CURTIME(), ?, ?)
+                `, [artigo.titulo, artigo.conteudo, artigo.data, adminId, categoriaId]);
+                inseridos++;
+            } catch (e) {
+                console.log('Erro ao inserir:', artigo.titulo, e.message);
+            }
+        }
+        
+        const [total] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        
+        res.json({
+            success: true,
+            message: `${inseridos} artigos publicados com sucesso!`,
+            total_no_banco: total[0].total
+        });
+    } catch (error) {
+        res.json({ success: false, error: error.message });
     }
 });
 

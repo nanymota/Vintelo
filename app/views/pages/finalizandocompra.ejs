@@ -252,9 +252,10 @@
                 <img src="<%= produto.imagem %>" alt="<%= produto.NOME_PRODUTO %>">
               </a>
               <h2><%= produto.NOME_PRODUTO %></h2>
-              <p class="price">R$<%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/coraçao de fav2.png"></button>
-              <button class="cart" data-produto-id="<%= produto.ID_PRODUTO %>"><img src="/imagens/sacola.png" class="img-sacola"></button>
+              <p class="price">R$ <%= parseFloat(produto.PRECO || 0).toFixed(2).replace('.', ',') %></p>
+              <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO || 0) / 2).toFixed(2).replace('.', ',') %></p>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="/imagens/Heart.png"></button>
+              <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="/imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% }) %>
         <% } else { %>
@@ -262,7 +263,7 @@
             <img src="/imagens/oculos.png" alt="Óculos de sol">
             <h2>Óculos de sol</h2>
             <p class="price">R$12,00</p>
-            <button class="favorite"><img src="/imagens/coraçao de fav2.png"></button>
+            <button class="favorite"><img src="/imagens/Heart.png"></button>
             <button class="cart" onclick="alert('Produto não disponível')"><img src="/imagens/sacola.png" class="img-sacola"></button>
           </article>
         <% } %>
@@ -355,9 +356,26 @@
       
       window.freteEscolhido = { nome, preco: parseFloat(preco), prazo };
       
-      // Atualizar valor do frete na tela
+      // Atualizar valores na tela
       const freteSpan = document.querySelector('.pedido-detalhes .detalhe:nth-child(2) span:last-child');
+      const totalSpan = document.querySelector('.pedido-detalhes .detalhe.total span:last-child');
+      const subtotalText = document.querySelector('.pedido-detalhes .detalhe:first-child span:last-child').textContent;
+      
       if (freteSpan) freteSpan.textContent = `R$ ${preco}`;
+      
+      // Calcular novo total
+      const subtotal = parseFloat(subtotalText.replace('R$ ', '').replace(',', '.'));
+      const novoTotal = subtotal + parseFloat(preco);
+      
+      if (totalSpan) totalSpan.textContent = `R$ ${novoTotal.toFixed(2).replace('.', ',')}`;
+      
+      // Atualizar botão de finalizar
+      const btnFinalizar = document.querySelector('.finalizar-compra');
+      if (btnFinalizar && btnFinalizar.tagName === 'A') {
+        const href = btnFinalizar.getAttribute('href');
+        const baseUrl = href.split('?')[0];
+        btnFinalizar.setAttribute('href', `${baseUrl}?total=${novoTotal.toFixed(2)}&frete=${preco}&frete_nome=${nome}`);
+      }
     }
   </script>
 </body>

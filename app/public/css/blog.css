@@ -120,6 +120,13 @@ body {
     transform: scale(1.1);
 }
 
+.maria {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /*            Mobile            */
 .mobile-content {
     padding: 0;

@@ -69,55 +69,24 @@
                 </select>
             </section>
 
+            <% if (typeof artigo !== 'undefined' && artigo) { %>
             <section class="form-section">
-                <label for="imagem-principal">Imagem Principal</label>
-                <section class="image-upload">
-                    <img src="imagens/metalizado.png" alt="Imagem atual" class="current-image" id="preview-principal">
-                    <input type="file" id="imagem-principal" name="imagem-principal" accept="image/*" onchange="previewImage(this, 'preview-principal')">
-                    <label for="imagem-principal" class="upload-btn">Alterar Imagem</label>
-                </section>
+                <label for="autor">Autor</label>
+                <input type="text" id="autor" name="autor" value="<%= artigo.AUTOR || 'Vintélo Fashion' %>" readonly>
             </section>
+
+            <section class="form-section">
+                <label for="data">Data de Publicação</label>
+                <input type="date" id="data" name="data" value="<%= artigo.DT_PUBLICACAO ? new Date(artigo.DT_PUBLICACAO).toISOString().split('T')[0] : '' %>" readonly>
+            </section>
+            <% } %>
 
             <section class="form-section">
                 <label for="resumo">Resumo/Descrição</label>
                 <textarea id="resumo" name="resumo" rows="4" required>"Brilha, brilha, movie star". A tendência metalizada de 2024 é a oportunidade para você transformar cada momento em uma chance para reluzir, incorporando esse brilho atemporal ao seu estilo diário, reinventando o básico com um toque de glamour.</textarea>
             </section>
 
-            <section class="form-section">
-                <label>Imagens do Conteúdo</label>
-                <section class="content-images">
-                    <section class="image-item">
-                        <img src="imagens/look1.png" alt="Look 1" class="content-image" id="preview-1">
-                        <input type="file" id="look1" name="look1" accept="image/*" onchange="previewImage(this, 'preview-1')">
-                        <label for="look1" class="upload-btn">Alterar Look 1</label>
-                    </section>
-                    <section class="image-item">
-                        <img src="imagens/look2.png" alt="Look 2" class="content-image" id="preview-2">
-                        <input type="file" id="look2" name="look2" accept="image/*" onchange="previewImage(this, 'preview-2')">
-                        <label for="look2" class="upload-btn">Alterar Look 2</label>
-                    </section>
-                    <section class="image-item">
-                        <img src="imagens/look3.png" alt="Look 3" class="content-image" id="preview-3">
-                        <input type="file" id="look3" name="look3" accept="image/*" onchange="previewImage(this, 'preview-3')">
-                        <label for="look3" class="upload-btn">Alterar Look 3</label>
-                    </section>
-                    <section class="image-item">
-                        <img src="imagens/look4.png" alt="Look 4" class="content-image" id="preview-4">
-                        <input type="file" id="look4" name="look4" accept="image/*" onchange="previewImage(this, 'preview-4')">
-                        <label for="look4" class="upload-btn">Alterar Look 4</label>
-                    </section>
-                    <section class="image-item">
-                        <img src="imagens/look5.png" alt="Look 5" class="content-image" id="preview-5">
-                        <input type="file" id="look5" name="look5" accept="image/*" onchange="previewImage(this, 'preview-5')">
-                        <label for="look5" class="upload-btn">Alterar Look 5</label>
-                    </section>
-                </section>
-            </section>
 
-            <section class="form-section">
-                <label for="subtitulo">Subtítulo</label>
-                <input type="text" id="subtitulo" name="subtitulo" value="OCASIÕES PARA APOSTAR NA TENDÊNCIA METALIZADA">
-            </section>
 
             <section class="form-section">
                 <label for="conteudo">Conteúdo Principal</label>

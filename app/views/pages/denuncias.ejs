@@ -73,99 +73,50 @@
 
         <!-- Lista de Denúncias -->
         <section class="denuncias-list">
-            <!-- Denúncias carregadas via JavaScript -->
-                <!-- Denúncia 1 -->
-                <article class="denuncia-card" data-id="1" data-status="pendente">
-                    <section class="denuncia-header">
-                        <span class="status-badge pendente">Pendente</span>
-                        <span class="data">15/12/2024</span>
-                    </section>
-                    
-                    <section class="denuncia-content">
-                        <section class="perfil-denunciado">
-                            <img src="imagens/brecho1.png" alt="Perfil" class="perfil-img">
-                            <section class="perfil-info">
-                                <h3>@mayte_brechó</h3>
-                                <p>Mayte Silva</p>
-                                <span class="tipo-usuario">Vendedor</span>
+            <% if (denuncias && denuncias.length > 0) { %>
+                <% denuncias.forEach(denuncia => { %>
+                    <article class="denuncia-card" data-id="<%= denuncia.ID_DENUNCIA %>" data-status="<%= denuncia.STATUS %>">
+                        <section class="denuncia-header">
+                            <span class="status-badge <%= denuncia.STATUS %>"><%= denuncia.STATUS === 'pendente' ? 'Pendente' : denuncia.STATUS === 'analisada' ? 'Em análise' : 'Resolvida' %></span>
+                            <span class="data"><%= new Date(denuncia.DATA_DENUNCIA).toLocaleDateString('pt-BR') %></span>
+                        </section>
+                        
+                        <section class="denuncia-content">
+                            <section class="perfil-denunciado">
+                                <img src="<%= denuncia.IMG_ALVO || '/imagens/imagem sem cadastro.avif' %>" alt="Perfil" class="perfil-img">
+                                <section class="perfil-info">
+                                    <h3>@<%= denuncia.USER_ALVO || 'usuario' %></h3>
+                                    <p><%= denuncia.NOME_ALVO || 'Nome não informado' %></p>
+                                    <span class="tipo-usuario"><%= denuncia.TIPO_ALVO === 'b' ? 'Vendedor' : 'Comprador' %></span>
+                                </section>
+                            </section>
+                            
+                            <section class="denuncia-detalhes">
+                                <h4>Tipo: <%= denuncia.MOTIVO || 'Não especificado' %></h4>
+                                <p class="motivo"><%= denuncia.DESCRICAO || 'Sem descrição' %></p>
+                                <p class="denunciante">Denunciado por: @<%= denuncia.USER_DENUNCIANTE || 'anonimo' %></p>
+                                <% if (denuncia.STATUS === 'resolvida') { %>
+                                    <p class="resolucao"><strong>Resolução:</strong> Caso analisado e resolvido pela equipe administrativa.</p>
+                                <% } %>
                             </section>
                         </section>
                         
-                        <section class="denuncia-detalhes">
-                            <h4>Tipo: Perfil inadequado</h4>
-                            <p class="motivo">Usuário está vendendo produtos falsificados e usando imagens de outros perfis.</p>
-                            <p class="denunciante">Denunciado por: @maria_cliente</p>
+                        <section class="denuncia-actions">
+                            <% if (denuncia.STATUS !== 'resolvida') { %>
+                                <button class="btn-analisar" onclick="analisarDenuncia(<%= denuncia.ID_DENUNCIA %>)">Analisar</button>
+                                <button class="btn-resolver" onclick="resolverDenuncia(<%= denuncia.ID_DENUNCIA %>)">Resolver</button>
+                                <button class="btn-rejeitar" onclick="rejeitarDenuncia(<%= denuncia.ID_DENUNCIA %>)">Rejeitar</button>
+                            <% } else { %>
+                                <span class="status-text">Caso resolvido</span>
+                            <% } %>
                         </section>
-                    </section>
-                    
-                    <section class="denuncia-actions">
-                        <button class="btn-analisar" onclick="analisarDenuncia(1)">Analisar</button>
-                        <button class="btn-resolver" onclick="resolverDenuncia(1)">Resolver</button>
-                        <button class="btn-rejeitar" onclick="rejeitarDenuncia(1)">Rejeitar</button>
-                    </section>
-                </article>
-
-                <!-- Denúncia 2 -->
-                <article class="denuncia-card" data-id="2" data-status="analisada">
-                    <section class="denuncia-header">
-                        <span class="status-badge analisada">Em análise</span>
-                        <span class="data">14/12/2024</span>
-                    </section>
-                    
-                    <section class="denuncia-content">
-                        <section class="perfil-denunciado">
-                            <img src="imagens/brecho2.png" alt="Perfil" class="perfil-img">
-                            <section class="perfil-info">
-                                <h3>@karine_vintage</h3>
-                                <p>Karine Santos</p>
-                                <span class="tipo-usuario">Vendedor</span>
-                            </section>
-                        </section>
-                        
-                        <section class="denuncia-detalhes">
-                            <h4>Tipo: Comportamento inadequado</h4>
-                            <p class="motivo">Vendedor está sendo agressivo com clientes nos comentários e não entrega produtos.</p>
-                            <p class="denunciante">Denunciado por: @ana_compras</p>
-                        </section>
-                    </section>
-                    
-                    <section class="denuncia-actions">
-                        <button class="btn-analisar" onclick="analisarDenuncia(2)">Analisar</button>
-                        <button class="btn-resolver" onclick="resolverDenuncia(2)">Resolver</button>
-                        <button class="btn-rejeitar" onclick="rejeitarDenuncia(2)">Rejeitar</button>
-                    </section>
-                </article>
-
-                <!-- Denúncia 3 -->
-                <article class="denuncia-card" data-id="3" data-status="resolvida">
-                    <section class="denuncia-header">
-                        <span class="status-badge resolvida">Resolvida</span>
-                        <span class="data">12/12/2024</span>
-                    </section>
-                    
-                    <section class="denuncia-content">
-                        <section class="perfil-denunciado">
-                            <img src="imagens/icone sem cadastro.png" alt="Perfil" class="perfil-img">
-                            <section class="perfil-info">
-                                <h3>@joao_cliente</h3>
-                                <p>João Oliveira</p>
-                                <span class="tipo-usuario">Comprador</span>
-                            </section>
-                        </section>
-                        
-                        <section class="denuncia-detalhes">
-                            <h4>Tipo: Comportamento inadequado</h4>
-                            <p class="motivo">Cliente fazendo comentários ofensivos em produtos de vendedores.</p>
-                            <p class="denunciante">Denunciado por: @loja_vintage</p>
-                            <p class="resolucao"><strong>Resolução:</strong> Usuário advertido e comentários removidos.</p>
-                        </section>
-                    </section>
-                    
-                    <section class="denuncia-actions">
-                        <span class="status-text">Caso resolvido</span>
-                    </section>
-                </article>
-
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <section class="empty-state">
+                    <p>Nenhuma denúncia encontrada.</p>
+                </section>
+            <% } %>
         </section>
     </main>
 

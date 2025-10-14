@@ -14,7 +14,7 @@
             <p>10% OFF na primeira compra</p>
         </section>
         <header class="main-header">
-            <a href="/homecomprador">
+            <a href="<% if (autenticado && autenticado.tipo === 'b') { %>/homevendedor<% } else if (autenticado && autenticado.tipo === 'a') { %>/homeadm<% } else { %>/homecomprador<% } %>">
                 <img src="imagens/logo.png" class="img-logo" alt="Vintélo">
             </a>
             <nav>
@@ -29,8 +29,12 @@
                     <input type="text" placeholder="Buscar...">
                 </form>
                 <ul>
-                    <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/menu"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
+                    <% if (autenticado && autenticado.tipo === 'b') { %>
+                        <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Criar Brechó"></a></li>
+                    <% } else { %>
+                        <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
+                    <% } %>
+                    <li><a href="/menu"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -46,7 +50,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menu">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu" class="maria">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="maria">
                 </a>
             </nav>
         </header>
@@ -56,7 +60,7 @@
         <section class="container">
             <section class="titulo-section">
                 <span class="garimpe-text">Menu</span><br>
-                <span class="vintelo-text">Vintélo</span>
+                <span class="vintelo-text"><% if (autenticado && autenticado.tipo === 'b') { %>Vendedor<% } else { %>Vintélo<% } %></span>
             </section>
             
             <section class="profile-wrapper">
@@ -64,39 +68,94 @@
                 <aside class="profile-sidebar">
                     <section class="profile-info">
                         <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-image maria">
-                        <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Usuário' %></h2>
-                        <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'usuario' %></p>
+                        <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Usuário' %></h2>
+                        <p>@<%= autenticado && autenticado.nome ? autenticado.nome.toLowerCase().replace(/\s+/g, '') : 'usuario' %></p>
                     </section>
                     <nav class="profile-menu">
                         <a href="#" class="active">Geral</a>
-                        <a href="/criarbrecho">Criar Brechó</a>
-                        <a href="/perfilcliente">Informação da conta</a>
-                        <a href="/sacola1">Sacola</a>
-                        <a href="/menucompras">Minhas compras</a>
+                        <% if (autenticado && autenticado.tipo === 'b') { %>
+                            <a href="/informacao">Informação da conta</a>
+                            <a href="/estatistica">Estatística de Vendas</a>
+                            <a href="/pedidosdesktop">Pedidos</a>
+                            <a href="/planos">Tornar-se Premium</a>
+                        <% } else { %>
+                            <a href="/criarbrecho">Criar Brechó</a>
+                            <a href="/perfilcliente">Informação da conta</a>
+                            <a href="/sacola1">Sacola</a>
+                        <% } %>
+                        <a href="/minhascompras">Minhas compras</a>
                         <a href="#">Meus cartões</a>
                         <a href="/favoritos">Favoritos</a>
                         <a href="/blog">Blog</a>
-                        <a href="/index">Sair</a>
+                        <a href="/sair">Sair</a>
                     </nav>
                 </aside>
 
                 <!-- Conteúdo Principal -->
                 <section class="profile-content">
-                    <section class="orders">
-                        <h3>Minhas compras</h3>
-                        <section class="empty-box">
-                            <img src="imagens/compras vazia.png" alt="Ícone de caminhão vazio">
-                            <p>Você ainda não realizou nenhuma compra</p>
+                    <% if (autenticado && autenticado.tipo === 'b') { %>
+                        <!-- Conteúdo Vendedor -->
+                        <section class="orders">
+                            <h3>Estatísticas de Vendas</h3>
+                            <section class="stats-grid">
+                                <section class="stat-card">
+                                    <h4>Produtos Ativos</h4>
+                                    <p class="stat-number">0</p>
+                                </section>
+                                <section class="stat-card">
+                                    <h4>Vendas do Mês</h4>
+                                    <p class="stat-number">0</p>
+                                </section>
+                            </section>
                         </section>
-                    </section>
-                    
-                    <section class="favorites">
-                        <h3>Favoritos</h3>
-                        <section class="empty-box">
-                            <img src="imagens/coraçao vazio.png" alt="Ícone de coração vazio">
-                            <p>Você ainda não favoritou nenhuma peça ou brechó</p>
+                        
+                        <section class="favorites">
+                            <h3>Ações Rápidas</h3>
+                            <section class="quick-actions">
+                                <a href="/adicionar" class="action-btn">Adicionar Produto</a>
+                                <a href="/estatistica" class="action-btn">Ver Estatísticas</a>
+                                <a href="/planos" class="action-btn">Planos Premium</a>
+                            </section>
                         </section>
-                    </section>
+                    <% } else { %>
+                        <!-- Conteúdo Comprador -->
+                        <section class="orders">
+                            <h3>Minhas compras</h3>
+                            <% if (typeof estatisticas !== 'undefined' && estatisticas.total_pedidos > 0) { %>
+                                <section class="stats-grid">
+                                    <section class="stat-card">
+                                        <h4>Total de Pedidos</h4>
+                                        <p class="stat-number"><%= estatisticas.total_pedidos %></p>
+                                    </section>
+                                    <section class="stat-card">
+                                        <h4>Em Andamento</h4>
+                                        <p class="stat-number"><%= estatisticas.em_andamento %></p>
+                                    </section>
+                                    <section class="stat-card">
+                                        <h4>Entregues</h4>
+                                        <p class="stat-number"><%= estatisticas.entregues %></p>
+                                    </section>
+                                    <section class="stat-card">
+                                        <h4>Valor Total</h4>
+                                        <p class="stat-number">R$ <%= estatisticas.valor_total.toFixed(2) %></p>
+                                    </section>
+                                </section>
+                            <% } else { %>
+                                <section class="empty-box">
+                                    <img src="imagens/compras vazia.png" alt="Ícone de caminhão vazio">
+                                    <p>Você ainda não realizou nenhuma compra</p>
+                                </section>
+                            <% } %>
+                        </section>
+                        
+                        <section class="favorites">
+                            <h3>Favoritos</h3>
+                            <section class="empty-box">
+                                <img src="imagens/coraçao vazio.png" alt="Ícone de coração vazio">
+                                <p>Você ainda não favoritou nenhuma peça ou brechó</p>
+                            </section>
+                        </section>
+                    <% } %>
                 </section>
             </section>
         </section>

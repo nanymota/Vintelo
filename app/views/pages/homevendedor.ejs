@@ -207,66 +207,20 @@
       </nav>
       <section class="product-grid">
         <% if (produtos && produtos.length > 0) { %>
-          <% produtos.slice(0, 4).forEach(produto => { %>
+          <% for (let i = 0; i < Math.min(8, produtos.length); i++) { %>
             <article class="product-card">
-              <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
-              <h2><%= produto.NOME_PRODUTO %></h2>
-              <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-              <p class="Descrição">ou em 2x de R$<%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="adicionarSacola(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+              <a href="/produto/<%= produtos[i].ID_PRODUTO %>"><img src="<%= produtos[i].URL_IMG ? '/' + produtos[i].URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produtos[i].NOME_PRODUTO %>"></a>
+              <h2><%= produtos[i].NOME_PRODUTO %></h2>
+              <p class="price">R$<%= parseFloat(produtos[i].PRECO).toFixed(2).replace('.', ',') %></p>
+              <p class="Descrição">ou em 2x de R$<%= (parseFloat(produtos[i].PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produtos[i].ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+              <button class="cart" onclick="adicionarSacola(<%= produtos[i].ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
-          <% }); %>
+          <% } %>
         <% } else { %>
           <p>Nenhum produto encontrado.</p>
         <% } %>
       </section>
-      
-      </section>
-
-      <!--                                           PRODUTOS OCULTOS                                              -->
-      <section class="produtos-ocultos">
-        <section class="product-grid">
-          <article class="product-card">
-            <img src="imagens/cropped flor.png" alt="cropped flor">
-            <h2>Cropeed Floral</h2>
-            <p class="price">R$49,99</p>
-            <p class="Descrição">ou em 2x de R$25,00</p>
-            <br>
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-          </article>
-
-          <article class="product-card">
-            <img src="imagens/vestido branco2.png" alt="vestido branco2">
-            <h2>Vestido Branco </h2>
-            <p class="price">R$39,99</p>
-            <p class="Descrição">ou em 2x de R$20,00</p>
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-          </article>
-
-          <article class="product-card">
-            <img src="imagens/conjunto de blusa rosa.png" alt="Conjunto rosa de lã">
-            <h2>Conjunto rosa </h2>
-            <p class="price">R$29,99</p>
-            <p class="Descrição">ou em 2x de R$15,00</p>
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-          </article>
-
-          <article class="product-card">
-            <a href="/produto1"><img src="imagens/vestido roxo2.png" alt="vestido roxo2"></a>
-            <h2>Vestido Roxo </h2>
-            <p class="price">R$19,99</p>
-            <p class="Descrição">ou em 2x de R$10,00</p>
-            <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-          </article>
-
-          <a href="/"><span class="ver">Ver tudo</span></a>
-
-        </section>
       </section>
 
       
@@ -278,16 +232,16 @@
       
       <ul class="brechos-grid">
         <% if (brechos && brechos.length > 0) { %>
-          <% brechos.slice(0, 4).forEach(brecho => { %>
+          <% for (let i = 0; i < Math.min(4, brechos.length); i++) { %>
             <li class="profile-item">
-              <img src="<%= brecho.IMAGEM ? '/' + brecho.IMAGEM : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME %>" class="profile-image">
+              <img src="<%= brechos[i].IMAGEM ? '/' + brechos[i].IMAGEM : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brechos[i].NOME %>" class="profile-image">
               <section class="profile-info">
-                <strong><%= brecho.NOME %></strong>
-                <span class="rating"><%= brecho.MEDIA_AVALIACAO ? parseFloat(brecho.MEDIA_AVALIACAO).toFixed(1) : '0.0' %> ⭐</span>
+                <strong><%= brechos[i].NOME %></strong>
+                <span class="rating"><%= brechos[i].MEDIA_AVALIACAO ? parseFloat(brechos[i].MEDIA_AVALIACAO).toFixed(1) : '0.0' %> ⭐</span>
               </section>
-              <a href="/brecho/<%= brecho.ID_USUARIO %>"><button class="follow-button">Favoritar</button></a>
+              <a href="/brecho/<%= brechos[i].ID_USUARIO %>"><button class="follow-button">Favoritar</button></a>
             </li>
-          <% }); %>
+          <% } %>
         <% } else { %>
           <li class="profile-item">
             <img src="/imagens/imagem sem cadastro.avif" alt="Nenhum brechó" class="profile-image">
@@ -372,6 +326,28 @@
                   <button class="cart" onclick="adicionarSacola(<%= produtos[i].ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
               <% } %>
+            <% } %>
+          </section>
+        </section>
+        <% } %>
+        
+        <!--                                        TERCEIRA FILEIRA DE PRODUTOS                                               -->
+        <% if (produtos && produtos.length > 16) { %>
+        <section class="produtos-ocultos">
+          <nav class="grid-produtos">
+            <h1>Mais Produtos</h1>
+            <a href="/categorias" class="ver-tudo">Ver tudo</a>
+          </nav>
+          <section class="product-grid">
+            <% for (let i = 16; i < Math.min(20, produtos.length); i++) { %>
+              <article class="product-card">
+                <a href="/produto/<%= produtos[i].ID_PRODUTO %>"><img src="<%= produtos[i].URL_IMG ? '/' + produtos[i].URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produtos[i].NOME_PRODUTO %>"></a>
+                <h2><%= produtos[i].NOME_PRODUTO %></h2>
+                <p class="price">R$<%= parseFloat(produtos[i].PRECO).toFixed(2).replace('.', ',') %></p>
+                <p class="Descrição">ou em 2x de R$<%= (parseFloat(produtos[i].PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+                <button class="favorite" onclick="toggleFavorite(this, <%= produtos[i].ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                <button class="cart" onclick="adicionarSacola(<%= produtos[i].ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+              </article>
             <% } %>
           </section>
         </section>

@@ -75,9 +75,26 @@ function selecionarFrete(nome, preco, prazo) {
         prazo: prazo
     };
     
-    const btnComprar = document.querySelector('.btn-comprar-desktop, .submit-btn');
-    if (btnComprar) {
-        btnComprar.textContent = `Comprar - Frete: R$ ${preco} (${nome})`;
+    // Atualizar valores mobile
+    const freteSpanMobile = document.getElementById('shipping-cost');
+    const totalSpanMobile = document.getElementById('total');
+    const subtotalMobile = document.getElementById('subtotal');
+    
+    if (freteSpanMobile) freteSpanMobile.textContent = `R$${preco}`;
+    
+    // Calcular novo total mobile
+    if (subtotalMobile && totalSpanMobile) {
+        const subtotal = parseFloat(subtotalMobile.textContent.replace('R$', '').replace(',', '.'));
+        const novoTotal = subtotal + parseFloat(preco);
+        totalSpanMobile.textContent = `R$${novoTotal.toFixed(2).replace('.', ',')}`;
+        
+        // Atualizar botão mobile
+        const btnFinalizar = document.querySelector('.finalizar-compra');
+        if (btnFinalizar && btnFinalizar.tagName === 'A') {
+            const href = btnFinalizar.getAttribute('href');
+            const baseUrl = href.split('?')[0];
+            btnFinalizar.setAttribute('href', `${baseUrl}?total=${novoTotal.toFixed(2)}&frete=${preco}&frete_nome=${nome}`);
+        }
     }
 }
 

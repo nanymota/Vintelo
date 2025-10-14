@@ -72,167 +72,103 @@
 
         <!-- Desktop Content -->
         <main class="desktop-content oculto-mobile">
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">05 nov</span>
-                    <h3 class="category">Style</h3>
-                    <h2 class="post-title">Moda Metalizada</h2>
-                    <p class="post-excerpt">"Brilha, brilha, movie star". A tendência metalizada de 2024...</p>
-                    <a href="/artigo" class="read-more">Ver agora</a>
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach(post => { %>
+                    <section class="featured-post">
+                        <section class="post-content">
+                            <span class="date"><%= post.DT_PUBLICACAO %></span>
+                            <h3 class="category"><%= post.CATEGORIA || 'Geral' %></h3>
+                            <h2 class="post-title"><%= post.TITULO %></h2>
+                            <p class="post-excerpt"><%= typeof post.CONTEUDO === 'string' ? post.CONTEUDO.substring(0, 100) : post.CONTEUDO %>...</p>
+                            <a href="/artigo" class="read-more">Ver agora</a>
+                        </section>
+                        <% 
+                            let imagemPost = 'imagens/metalizado.png';
+                            if (post.TITULO && post.TITULO.includes('BOSS')) {
+                                imagemPost = 'imagens/boss.png';
+                            } else if (post.TITULO && post.TITULO.includes('Gucci')) {
+                                imagemPost = 'imagens/gucci.png';
+                            } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
+                                imagemPost = 'imagens/sustentavel.png';
+                            } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
+                                imagemPost = 'imagens/vintage.png';
+                            }
+                        %>
+                        <img src="<%= imagemPost %>" alt="<%= post.TITULO %>" class="post-image">
+                        <section class="admin-controls">
+                            <a href="/editarpost/<%= post.ID_ARTIGO %>" class="admin-btn">Editar</a>
+                            <a href="/blogadm/excluir/<%= post.ID_ARTIGO %>" class="admin-btn" onclick="return confirm('Excluir artigo?')">Excluir</a>
+                        </section>
+                    </section>
+                <% }); %>
+            <% } else { %>
+                <section class="featured-post">
+                    <p>Nenhum artigo encontrado. <a href="#" onclick="toggleForm()">Criar primeiro artigo</a></p>
                 </section>
-                <img src="imagens/metalizado.png" alt="Moda Metalizada" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(1)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(1)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">03 nov</span>
-                    <h3 class="category">BOSS</h3>
-                    <h2 class="post-title">BOSS | Milão Verão 2024</h2>
-                    <p class="post-excerpt">Uma distopia na qual seres humanos se unem às máquinas...</p>
-                    <a href="/bossartigo" class="read-more">Ver agora</a>
-                </section>
-                <img src="imagens/boss milão.png" alt="BOSS Milão" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(2)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(2)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">25 out</span>
-                    <h3 class="category">Gucci</h3>
-                    <h2 class="post-title">Gucci | Milão Verão 2024</h2>
-                    <p class="post-excerpt">Nova era com Sabato De Sarno...</p>
-                    <a href="/gucciartigo" class="read-more">Ver agora</a>
-                </section>
-                <img src="imagens/gucci-milao 1.png" alt="Gucci Milão" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(3)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(3)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">20 out</span>
-                    <h3 class="category">Tendência</h3>
-                    <h2 class="post-title">Tendência Sweet Colors</h2>
-                    <p class="post-excerpt">Para a primavera/verão 2024, as cores são inspiradas na beleza da natureza...</p>
-                    <a href="/sweer" class="read-more">Ver agora</a>
-                </section>
-                <img src="imagens/tendencia sweer.png" alt="Tendência Sweet" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(4)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(4)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">15 out</span>
-                    <h3 class="category">Sustentabilidade</h3>
-                    <h2 class="post-title">Moda Sustentável</h2>
-                    <p class="post-excerpt">A tendência é sustentável. Fast fashion vs Moda sustentável...</p>
-                    <a href="/tensustentavel" class="read-more">Ver agora</a>
-                </section>
-                <img src="imagens/tendencia sustentável.png" alt="Moda Sustentável" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(5)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(5)">Excluir</button>
-                </section>
-            </section>
-
-            <section class="featured-post">
-                <section class="post-content">
-                    <span class="date">10 out</span>
-                    <h3 class="category">Ecológico</h3>
-                    <h2 class="post-title">Nosso Lado Ecológico</h2>
-                    <p class="post-excerpt">Descubra como a moda pode ser mais sustentável e ecológica...</p>
-                    <a href="/ecologicoartigo" class="read-more">Ver agora</a>
-                </section>
-                <img src="imagens/moda sustentável.png" alt="Lado Ecológico" class="post-image">
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(6)">Editar</button>
-                    <button class="admin-btn" onclick="excluirPost(6)">Excluir</button>
-                </section>
-            </section>
+            <% } %>
         </main>
 
         <!-- Mobile Content -->
         <main class="mobile-content mobile-only">
-            <section class="mobile-hero">
-                <img src="imagens/metalizado.png" alt="Tendências de moda" class="hero-image">
-                <section class="mobile-card-content">
-                    <h2>MODA | METALIZADA <br> Verão 2025</h2>
-                    <a href="/artigo">Ver artigo</a>
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach((post, index) => { %>
+                    <% if (index === 0) { %>
+                        <section class="mobile-hero">
+                            <% 
+                                let imagemMobile = 'imagens/metalizado.png';
+                                if (post.TITULO && post.TITULO.includes('BOSS')) {
+                                    imagemMobile = 'imagens/boss.png';
+                                } else if (post.TITULO && post.TITULO.includes('Gucci')) {
+                                    imagemMobile = 'imagens/gucci.png';
+                                } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
+                                    imagemMobile = 'imagens/sustentavel.png';
+                                } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
+                                    imagemMobile = 'imagens/vintage.png';
+                                }
+                            %>
+                            <img src="<%= imagemMobile %>" alt="<%= post.TITULO %>" class="hero-image">
+                            <section class="mobile-card-content">
+                                <h2><%= post.TITULO %></h2>
+                                <a href="/artigo">Ver artigo</a>
+                            </section>
+                            <section class="admin-controls">
+                                <a href="/editarpost/<%= post.ID_ARTIGO %>" class="admin-btn">Editar</a>
+                                <a href="/blogadm/excluir/<%= post.ID_ARTIGO %>" class="admin-btn" onclick="return confirm('Excluir artigo?')">Excluir</a>
+                            </section>
+                        </section>
+                        <section class="mobile-articles">
+                    <% } else { %>
+                        <article class="mobile-card">
+                            <% 
+                                let imagemCard = 'imagens/metalizado.png';
+                                if (post.TITULO && post.TITULO.includes('BOSS')) {
+                                    imagemCard = 'imagens/boss.png';
+                                } else if (post.TITULO && post.TITULO.includes('Gucci')) {
+                                    imagemCard = 'imagens/gucci.png';
+                                } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
+                                    imagemCard = 'imagens/sustentavel.png';
+                                } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
+                                    imagemCard = 'imagens/vintage.png';
+                                }
+                            %>
+                            <img src="<%= imagemCard %>" alt="<%= post.TITULO %>">
+                            <section class="mobile-card-content">
+                                <h2><%= post.TITULO %></h2>
+                                <a href="/artigo">Ver artigo</a>
+                            </section>
+                            <section class="admin-controls">
+                                <a href="/editarpost/<%= post.ID_ARTIGO %>" class="admin-btn">Editar</a>
+                                <a href="/blogadm/excluir/<%= post.ID_ARTIGO %>" class="admin-btn" onclick="return confirm('Excluir artigo?')">Excluir</a>
+                            </section>
+                        </article>
+                    <% } %>
+                <% }); %>
                 </section>
-                <section class="admin-controls">
-                    <button class="admin-btn" onclick="editarPost(1)">Editar</button>
+            <% } else { %>
+                <section class="mobile-hero">
+                    <p>Nenhum artigo encontrado.</p>
                 </section>
-            </section>
-
-            <section class="mobile-articles">
-                <article class="mobile-card">
-                    <img src="imagens/boss milão 2.png" alt="BOSS Milão">
-                    <section class="mobile-card-content">
-                        <h2>BOSS | Milão <br> Verão 2024</h2>
-                        <a href="/bossartigo">Ver artigo</a>
-                    </section>
-                    <section class="admin-controls">
-                        <button class="admin-btn" onclick="editarPost(2)">Editar</button>
-                    </section>
-                </article>
-
-                <article class="mobile-card">
-                    <img src="imagens/gucci-milao 1.png" alt="Gucci Milão">
-                    <section class="mobile-card-content">
-                        <h2>Gucci | Milão <br> Verão 2024</h2>
-                        <a href="/gucciartigo">Ver artigo</a>
-                    </section>
-                    <section class="admin-controls">
-                        <button class="admin-btn" onclick="editarPost(3)">Editar</button>
-                    </section>
-                </article>
-
-                <article class="mobile-card">
-                    <img src="imagens/tendencia sweer.png" alt="Tendência Sweet">
-                    <section class="mobile-card-content">
-                        <h2>Tendência <br> Sweet</h2>
-                        <a href="/sweer">Ver artigo</a>
-                    </section>
-                    <section class="admin-controls">
-                        <button class="admin-btn" onclick="editarPost(4)">Editar</button>
-                    </section>
-                </article>
-
-                <article class="mobile-card">
-                    <img src="imagens/tendencia sustentável.png" alt="Moda Sustentável">
-                    <section class="mobile-card-content">
-                        <h2>A tendência é: <br>Sustentável</h2>
-                        <a href="/tensustentavel">Ver artigo</a>
-                    </section>
-                    <section class="admin-controls">
-                        <button class="admin-btn" onclick="editarPost(5)">Editar</button>
-                    </section>
-                </article>
-
-                <section class="mobile-featured">
-                    <section class="featured-text">
-                        <h3>MODA <span>Sustentável</span></h3>
-                        <p class="subtitle">Fast fashion <br> Moda sustentável</p>
-                        <a href="/ecologicoartigo" class="description">NOSSO LADO ECOLÓGICO</a>
-                    </section>
-                    <img src="imagens/moda sustentável.png" alt="Moda sustentável" class="featured-img">
-                    <section class="admin-controls">
-                        <button class="admin-btn" onclick="editarPost(6)">Editar</button>
-                    </section>
-                </section>
-            </section>
+            <% } %>
         </main>
     </main>
 

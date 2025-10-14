@@ -305,6 +305,11 @@ input[readonly]:focus {
     display: none;
   }
 
+  header {
+    background-color: transparent;
+    padding: 0;
+  }
+
   .content{
     display: none;
   }
