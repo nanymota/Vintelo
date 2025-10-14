@@ -39,7 +39,7 @@ header nav.grid img {
 
 /*                 cabeçalho Desktop                 */
 .discount-banner {
-    background: #7D2838;
+    background: linear-gradient(135deg, #7D2838 0%, #a53860 100%);
     color: white;
     text-align: center;
     padding: 12px 20px;

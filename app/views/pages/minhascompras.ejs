@@ -74,75 +74,7 @@
         </nav>
         
         <!-- Layout Desktop com Sidebar -->
-        <section class="container oculto-mobile">
-            <aside class="filtro">
-                <details open>
-                    <summary>Categorias</summary>
-                    <section class="categories-grid">
-                        <button class="category-btn active" data-category="todos">Todos</button>
-                        <button class="category-btn" data-category="vestidos">Vestidos</button>
-                        <button class="category-btn" data-category="blusas">Blusas</button>
-                        <button class="category-btn" data-category="calcas">Calças</button>
-                        <button class="category-btn" data-category="saias">Saias</button>
-                        <button class="category-btn" data-category="acessorios">Acessórios</button>
-                        <button class="category-btn" data-category="calcados">Calçados</button>
-                        <button class="category-btn" data-category="casacos">Casacos</button>
-                        <button class="category-btn" data-category="conjuntos">Conjuntos</button>
-                        <button class="category-btn" data-category="plus-size">Plus Size</button>
-                    </section>
-                </details>
-                <details open>
-                    <summary>Ordenar por</summary>
-                    <ul>
-                        <li onclick="sortProducts('recent')">Mais recentes</li>
-                        <li onclick="sortProducts('price-low')">Menor preço</li>
-                        <li onclick="sortProducts('price-high')">Maior preço</li>
-                        <li onclick="sortProducts('popular')">Mais populares</li>
-                    </ul>
-                </details>
-                <details open>
-                    <summary>Valor</summary>
-                    <section class="faixa-valor">
-                        <label for="min">Min</label>
-                        <input type="range" id="min" min="0" max="500" value="10" oninput="updatePriceRange()">
-                        <label for="max">Max</label>
-                        <input type="range" id="max" min="0" max="500" value="300" oninput="updatePriceRange()">
-                    </section>
-                    <section class="valores">
-                        <input type="text" id="min-value" placeholder="10" onchange="filterByPrice()">
-                        <input type="text" id="max-value" placeholder="300" onchange="filterByPrice()">
-                    </section>
-                </details>
-                <details open>
-                    <summary>Tamanhos</summary>
-                    <section class="sizes-grid">
-                        <button class="size-btn" data-size="pp">PP</button>
-                        <button class="size-btn" data-size="p">P</button>
-                        <button class="size-btn" data-size="m">M</button>
-                        <button class="size-btn" data-size="g">G</button>
-                        <button class="size-btn" data-size="gg">GG</button>
-                        <button class="size-btn" data-size="xgg">XGG</button>
-                    </section>
-                </details>
-                <details>
-                    <summary>Condição</summary>
-                    <ul>
-                        <li><input type="checkbox" id="novo"> <label for="novo">Novo</label></li>
-                        <li><input type="checkbox" id="seminovo"> <label for="seminovo">Seminovo</label></li>
-                        <li><input type="checkbox" id="usado"> <label for="usado">Usado</label></li>
-                    </ul>
-                </details>
-                <button class="button-filtro" onclick="applyFilters()">APLICAR FILTROS</button>
-                <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
-            </aside>
-            
-            <section class="product-grid">
-                <%- typeof carrinhoHtml !== 'undefined' ? carrinhoHtml : '<section class="empty-state"><p>Sua sacola está vazia</p><a href="/homecomprador" class="btn-continue">Continuar Comprando</a></section>' %>
-            </section>
-        </section>
         
-        </section>
-    </main>
 
     <!-- Rodapé -->
     <footer class="footer">
