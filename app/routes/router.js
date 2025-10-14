@@ -71,35 +71,75 @@ router.post(
 );
 
 router.get("/", carregarDadosUsuario, async function (req, res) {
+  let banners = [];
+  let produtos = [];
+  let brechos = [];
+  
   try {
     const { bannerModel } = require('../models/bannerModel');
-    const banners = await bannerModel.findByPosition('Home');
-    res.render('pages/index', {
-      autenticado: req.session ? req.session.autenticado : null,
-      banners: banners || []
-    });
+    const { produtoModel } = require('../models/produtoModel');
+    
+    banners = await bannerModel.findByPosition('Home') || [];
+    produtos = await produtoModel.findRecent(16) || [];
+    
+    // Buscar brechós reais
+    const [brechosResult] = await pool.query(`
+      SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL,
+             COALESCE(AVG(ab.NOTA), 4.5) as MEDIA_AVALIACOES
+      FROM USUARIOS u
+      LEFT JOIN AVALIACOES_BRECHOS ab ON u.ID_USUARIO = ab.ID_BRECHO
+      WHERE u.TIPO_USUARIO = 'b'
+      GROUP BY u.ID_USUARIO
+      ORDER BY MEDIA_AVALIACOES DESC
+      LIMIT 4
+    `);
+    brechos = brechosResult || [];
   } catch (error) {
-    res.render('pages/index', {
-      autenticado: req.session ? req.session.autenticado : null,
-      banners: []
-    });
+    console.log('Erro na rota /:', error);
   }
+  
+  res.render('pages/index', {
+    autenticado: req.session ? req.session.autenticado : null,
+    banners: banners,
+    produtos: produtos,
+    brechos: brechos
+  });
 });
 
 router.get("/index", async function (req, res) {
+  let banners = [];
+  let produtos = [];
+  let brechos = [];
+  
   try {
     const { bannerModel } = require('../models/bannerModel');
-    const banners = await bannerModel.findByPosition('Home');
-    res.render('pages/index', {
-      autenticado: req.session ? req.session.autenticado : null,
-      banners: banners || []
-    });
+    const { produtoModel } = require('../models/produtoModel');
+    
+    banners = await bannerModel.findByPosition('Home') || [];
+    produtos = await produtoModel.findRecent(16) || [];
+    
+    // Buscar brechós reais
+    const [brechosResult] = await pool.query(`
+      SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL,
+             COALESCE(AVG(ab.NOTA), 4.5) as MEDIA_AVALIACOES
+      FROM USUARIOS u
+      LEFT JOIN AVALIACOES_BRECHOS ab ON u.ID_USUARIO = ab.ID_BRECHO
+      WHERE u.TIPO_USUARIO = 'b'
+      GROUP BY u.ID_USUARIO
+      ORDER BY MEDIA_AVALIACOES DESC
+      LIMIT 4
+    `);
+    brechos = brechosResult || [];
   } catch (error) {
-    res.render('pages/index', {
-      autenticado: req.session ? req.session.autenticado : null,
-      banners: []
-    });
+    console.log('Erro na rota /index:', error);
   }
+  
+  res.render('pages/index', {
+    autenticado: req.session ? req.session.autenticado : null,
+    banners: banners,
+    produtos: produtos,
+    brechos: brechos
+  });
 });
 
 router.get("/favoritar", verificarUsuAutenticado, function (req, res) {
@@ -650,66 +690,85 @@ router.get('/perfil2', carregarDadosUsuario, (req, res) => res.render('pages/per
 router.get('/perfil3', carregarDadosUsuario, (req, res) => res.render('pages/perfil3', { autenticado: req.session.autenticado || null }));
 
 router.get('/homecomprador', carregarDadosUsuario, async function(req, res){
+    let banners = [];
+    let produtos = [];
+    let brechos = [];
+    
     try {
-        const { produtoModel } = require('../models/produtoModel');
         const { bannerModel } = require('../models/bannerModel');
-        const produtos = await produtoModel.findRecent(8) || [];
-        const banners = await bannerModel.findByPosition('Home') || [];
+        const { produtoModel } = require('../models/produtoModel');
         
-        res.render('pages/homecomprador', {
-            autenticado: req.session.autenticado,
-            produtos: produtos,
-            banners: banners
-        });
+        banners = await bannerModel.findByPosition('Home') || [];
+        produtos = await produtoModel.findRecent(16) || [];
+        
+        // Buscar brechós reais
+        const [brechosResult] = await pool.query(`
+            SELECT u.ID_USUARIO, u.NOME_USUARIO, u.IMG_URL,
+                   COALESCE(AVG(ab.NOTA), 4.5) as MEDIA_AVALIACOES
+            FROM USUARIOS u
+            LEFT JOIN AVALIACOES_BRECHOS ab ON u.ID_USUARIO = ab.ID_BRECHO
+            WHERE u.TIPO_USUARIO = 'b'
+            GROUP BY u.ID_USUARIO
+            ORDER BY MEDIA_AVALIACOES DESC
+            LIMIT 4
+        `);
+        brechos = brechosResult || [];
     } catch (error) {
-        console.log('Erro ao buscar dados:', error);
-        res.render('pages/homecomprador', {
-            autenticado: req.session.autenticado,
-            produtos: [],
-            banners: []
-        });
+        console.log('Erro na rota /homecomprador:', error);
     }
+    
+    res.render('pages/homecomprador', {
+        autenticado: req.session.autenticado || null,
+        produtos: produtos,
+        banners: banners,
+        brechos: brechos
+    });
 });
 
 router.get('/homevendedor', carregarDadosUsuario, async function(req, res){
+    let banners = [];
+    let produtos = [];
+    let brechos = [];
+    
     try {
-        const { produtoModel } = require('../models/produtoModel');
         const { bannerModel } = require('../models/bannerModel');
-        const produtos = await produtoModel.findRecent(8) || [];
-        const banners = await bannerModel.findByPosition('Home') || [];
-        const brechoData = req.session.brecho || {
-            nome: 'Meu Brechó',
-            proprietario: 'Vendedor',
-            avaliacao: '0.0',
-            itens_venda: '0',
-            vendidos: '0',
-            seguidores: '0'
-        };
+        const { produtoModel } = require('../models/produtoModel');
         
-        res.render('pages/homevendedor', {
-            brecho: brechoData,
-            autenticado: req.session.autenticado,
-            produtos: produtos || [],
-            banners: banners
-        });
+        banners = await bannerModel.findByPosition('Home') || [];
+        produtos = await produtoModel.findRecent(16) || [];
+        
+        // Buscar brechós reais
+        const [brechosResult] = await pool.query(`
+            SELECT u.ID_USUARIO, u.NOME_USUARIO as NOME, u.IMG_URL as IMAGEM,
+                   COALESCE(AVG(ab.NOTA), 4.5) as MEDIA_AVALIACAO
+            FROM USUARIOS u
+            LEFT JOIN AVALIACOES_BRECHOS ab ON u.ID_USUARIO = ab.ID_BRECHO
+            WHERE u.TIPO_USUARIO = 'b'
+            GROUP BY u.ID_USUARIO
+            ORDER BY MEDIA_AVALIACAO DESC
+            LIMIT 4
+        `);
+        brechos = brechosResult || [];
     } catch (error) {
-        console.log('Erro ao buscar dados:', error);
-        const brechoData = req.session.brecho || {
-            nome: 'Meu Brechó',
-            proprietario: 'Vendedor',
-            avaliacao: '0.0',
-            itens_venda: '0',
-            vendidos: '0',
-            seguidores: '0'
-        };
-        
-        res.render('pages/homevendedor', {
-            brecho: brechoData,
-            autenticado: req.session.autenticado,
-            produtos: [],
-            banners: []
-        });
+        console.log('Erro na rota /homevendedor:', error);
     }
+    
+    const brechoData = req.session.brecho || {
+        nome: 'Meu Brechó',
+        proprietario: 'Vendedor',
+        avaliacao: '0.0',
+        itens_venda: '0',
+        vendidos: '0',
+        seguidores: '0'
+    };
+    
+    res.render('pages/homevendedor', {
+        brecho: brechoData,
+        autenticado: req.session.autenticado || null,
+        produtos: produtos,
+        banners: banners,
+        brechos: brechos
+    });
 });
 
 

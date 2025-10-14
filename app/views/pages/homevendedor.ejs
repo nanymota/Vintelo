@@ -34,7 +34,7 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+          <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria"></a></li>
           <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
           <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
@@ -59,7 +59,7 @@
             <li>
               <a href="/perfilvender">
                 <section class="profile-section">
-                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-pic maria">
+                  <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Perfil" class="profile-pic maria">
                   <section class="profile-info">
                     <h2><%= autenticado && autenticado.nome ? autenticado.nome : 'Vendedor' %></h2>
                   </section>
@@ -115,7 +115,7 @@
         <img src="imagens/logo.png" class="logo">
         <a href="/menuvendedor">
           <div class="profile-container">
-            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="profile-pic maria" />
+            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Menu" class="profile-pic maria" />
           </div>
         </a>
       </nav>
@@ -207,7 +207,7 @@
       </nav>
       <section class="product-grid">
         <% if (produtos && produtos.length > 0) { %>
-          <% produtos.forEach(produto => { %>
+          <% produtos.slice(0, 4).forEach(produto => { %>
             <article class="product-card">
               <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
               <h2><%= produto.NOME_PRODUTO %></h2>
@@ -277,41 +277,27 @@
       </section>
       
       <ul class="brechos-grid">
-        <li class="profile-item">
-          <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
-          <section class="profile-info">
-            <strong>Mayte</strong>
-            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho2.png" alt="Karine" class="profile-image">
-          <section class="profile-info">
-            <strong>Karine</strong>
-            <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <a href="/perfil2"><button class="follow-button">Favoritar</button></a>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho3.png" alt="Coisitas" class="profile-image">
-          <section class="profile-info">
-            <strong>Coisitas</strong>
-            <span class="rating">4.8 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <a href="/perfil3"><button class="follow-button">Favoritar</button></a>
-        </li>
-
-        <li class="profile-item">
-          <img src="imagens/brecho4.png" alt="Luana" class="profile-image">
-          <section class="profile-info">
-            <strong>Luana</strong>
-            <span class="rating">4.7 ⭐⭐⭐⭐⭐</span>
-          </section>
-          <a href="/perfil1"><button class="follow-button">Favoritar</button></a>
-        </li>
+        <% if (brechos && brechos.length > 0) { %>
+          <% brechos.slice(0, 4).forEach(brecho => { %>
+            <li class="profile-item">
+              <img src="<%= brecho.IMAGEM ? '/' + brecho.IMAGEM : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME %>" class="profile-image">
+              <section class="profile-info">
+                <strong><%= brecho.NOME %></strong>
+                <span class="rating"><%= brecho.MEDIA_AVALIACAO ? parseFloat(brecho.MEDIA_AVALIACAO).toFixed(1) : '0.0' %> ⭐</span>
+              </section>
+              <a href="/brecho/<%= brecho.ID_USUARIO %>"><button class="follow-button">Favoritar</button></a>
+            </li>
+          <% }); %>
+        <% } else { %>
+          <li class="profile-item">
+            <img src="/imagens/imagem sem cadastro.avif" alt="Nenhum brechó" class="profile-image">
+            <section class="profile-info">
+              <strong>Nenhum brechó encontrado</strong>
+              <span class="rating">0.0 ⭐</span>
+            </section>
+            <button class="follow-button" disabled>Favoritar</button>
+          </li>
+        <% } %>
       </ul>
 
 
@@ -352,82 +338,44 @@
         </section>
         
         <!--                                        PRODUTOS OCULTOS                                               -->
+        <% if (produtos && produtos.length > 8) { %>
         <section class="produtos-ocultos">
           <nav class="grid-produtos">
             <h1>Confira</h1>
             <a href="/categorias" class="ver-tudo">Ver tudo</a>
           </nav>
           <section class="product-grid">
-            <article class="product-card">
-              <img src="imagens/oculos.png" alt="Óculos de sol">
-              <h2>Óculos de sol</h2>
-              <br>
-              <p class="price">R$12,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/colar.png" alt="Conjunto 3 colares de prata">
-              <h2>Colares de prata</h2>
-              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/bolsa.png" alt="Bolsa preta com alça dourada">
-              <h2>Bolsa preta </h2>
-              <p class="price">R$20,00 <br>ou em 2x R$10,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/aneis.png" alt="Anel de prata">
-              <h2>Anel de prata</h2>
-              <br>
-              <p class="price">R$15,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
+            <% if (produtos && produtos.length > 8) { %>
+              <% for (let i = 8; i < Math.min(12, produtos.length); i++) { %>
+                <article class="product-card">
+                  <a href="/produto/<%= produtos[i].ID_PRODUTO %>"><img src="<%= produtos[i].URL_IMG ? '/' + produtos[i].URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produtos[i].NOME_PRODUTO %>"></a>
+                  <h2><%= produtos[i].NOME_PRODUTO %></h2>
+                  <p class="price">R$<%= parseFloat(produtos[i].PRECO).toFixed(2).replace('.', ',') %></p>
+                  <p class="Descrição">ou em 2x de R$<%= (parseFloat(produtos[i].PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produtos[i].ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                  <button class="cart" onclick="adicionarSacola(<%= produtos[i].ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+              <% } %>
+            <% } %>
           </section>
 
           
           <section class="product-grid">
-            <article class="product-card">
-              <img src="imagens/pulseira.png" alt="Bracelete">
-              <h2>Bracelete</h2>
-              <p class="price">R$19,99 <br>ou em 2x R$10,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/relogios.png" alt="Relógio Rose Gold">
-              <h2>Relógio Rose Gold</h2>
-              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/bolsa brilhante.png" alt="Salto preto com prata">
-              <h2>Bolsa Brilhante</h2>
-              <p class="price">R$29,99 <br>ou em 2x R$15,00</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
-
-            <article class="product-card">
-              <img src="imagens/BraceleteDuplo.png" alt="Bracelete Duplo">
-              <h2>Bracelete Duplo</h2>
-              <p class="price">R$28,90 <br>ou em 2x R$14,45</p>
-              <button class="favorite"><img src="imagens/coraçao de fav2.png"></button>
-              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
-            </article>
+            <% if (produtos && produtos.length > 12) { %>
+              <% for (let i = 12; i < Math.min(16, produtos.length); i++) { %>
+                <article class="product-card">
+                  <a href="/produto/<%= produtos[i].ID_PRODUTO %>"><img src="<%= produtos[i].URL_IMG ? '/' + produtos[i].URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produtos[i].NOME_PRODUTO %>"></a>
+                  <h2><%= produtos[i].NOME_PRODUTO %></h2>
+                  <p class="price">R$<%= parseFloat(produtos[i].PRECO).toFixed(2).replace('.', ',') %></p>
+                  <p class="Descrição">ou em 2x de R$<%= (parseFloat(produtos[i].PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produtos[i].ID_PRODUTO %>)"><img src="imagens/coraçao de fav2.png"></button>
+                  <button class="cart" onclick="adicionarSacola(<%= produtos[i].ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+              <% } %>
+            <% } %>
           </section>
         </section>
+        <% } %>
         <!--                                        Seção de artigos                                               -->
         <section class="titulo-artigo-section">
           <span class="garimpe-text">Tendências</span><br>
@@ -435,7 +383,7 @@
         </section>
         <section class="artigos">
           <br>
-          <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
+          <a href="/blog"><img src="imagens/boss milão.png" class="img-Boss"></a>
           <p class="p-artigos">Confira:</p>
           <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
           <br>
