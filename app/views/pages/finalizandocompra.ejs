@@ -62,15 +62,14 @@
       <!-- Shipping Section -->
       <section class="shipping-section">
         <h4>Calcular frete</h4>
-        <form class="shipping-form" onsubmit="return false;">
-          <input type="text" id="cep-mobile" placeholder="Digite seu CEP" maxlength="9">
-          <button type="button" onclick="calculateShipping()">Calcular</button>
-        </form>
-        <section class="shipping-options" id="shipping-options-mobile">
-          <p>Opções de entrega:</p>
-          <label><input type="radio" name="shipping-mobile" value="10.00" onchange="updateShipping(10.00)"> PAC - R$ 10,00 (5-7 dias)</label>
-          <label><input type="radio" name="shipping-mobile" value="15.00" onchange="updateShipping(15.00)"> SEDEX - R$ 15,00 (2-3 dias)</label>
+        <section class="frete-input">
+          <input type="text" id="cep_frete" placeholder="00000-000" maxlength="9" oninput="formatCEPFrete(this)">
+          <button onclick="calcularFrete()" class="btn-calcular">Calcular</button>
         </section>
+        <section id="frete-loading" style="display: none;">
+          <p>Calculando frete...</p>
+        </section>
+        <section id="frete-result"></section>
       </section>
 
       <!-- Order Info -->
@@ -198,17 +197,16 @@
 
         <section class="pedido-info">
           <!-- Cálculo de Frete Desktop -->
-          <section class="shipping-section">
+          <section class="frete-calculator">
             <h4>Calcular frete</h4>
-            <form class="shipping-form" onsubmit="return false;">
-              <input type="text" id="cep-desktop" placeholder="Digite seu CEP" maxlength="9">
-              <button type="button" onclick="calculateShippingDesktop()">Calcular</button>
-            </form>
-            <section class="shipping-options" id="shipping-options-desktop">
-              <p>Opções de entrega:</p>
-              <label><input type="radio" name="shipping-desktop" value="10.00" onchange="updateShippingDesktop(10.00)"> PAC - R$ 10,00 (5-7 dias)</label>
-              <label><input type="radio" name="shipping-desktop" value="15.00" onchange="updateShippingDesktop(15.00)"> SEDEX - R$ 15,00 (2-3 dias)</label>
+            <section class="frete-input">
+              <input type="text" id="cep_frete_desktop" placeholder="00000-000" maxlength="9" oninput="formatCEPFrete(this)">
+              <button onclick="calcularFreteDesktop()" class="btn-calcular">Calcular</button>
             </section>
+            <section id="frete-loading-desktop" style="display: none;">
+              <p>Calculando frete...</p>
+            </section>
+            <section id="frete-result-desktop"></section>
           </section>
           
           <h2>Informações do pedido</h2>
@@ -286,9 +284,81 @@
     </footer>
   </section>
   <script src="/js/finalizandocompra.js"></script>
+  <script src="/js/frete-calculator.js"></script>
   <script src="/js/perfil-autenticado.js"></script>
   <script src="/js/navegacao.js"></script>
   <script src="/js/favoritos-global.js"></script>
   <script src="/js/sacola-global.js"></script>
+  <script>
+    // Função para desktop
+    async function calcularFreteDesktop() {
+      const cepDestino = document.getElementById('cep_frete_desktop').value.replace(/\D/g, '');
+      
+      if (cepDestino.length !== 8) {
+        alert('Digite um CEP válido');
+        return;
+      }
+
+      const loadingDiv = document.getElementById('frete-loading-desktop');
+      const resultDiv = document.getElementById('frete-result-desktop');
+      
+      loadingDiv.style.display = 'block';
+      resultDiv.innerHTML = '';
+
+      try {
+        const response = await fetch('/api/calcular-frete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cep_destino: cepDestino, produto_id: 1 })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          mostrarOpcoesEntregaDesktop(data.opcoes);
+        } else {
+          resultDiv.innerHTML = '<p>Erro ao calcular frete</p>';
+        }
+      } catch (error) {
+        resultDiv.innerHTML = '<p>Erro ao calcular frete</p>';
+      } finally {
+        loadingDiv.style.display = 'none';
+      }
+    }
+    
+    function mostrarOpcoesEntregaDesktop(opcoes) {
+      const resultDiv = document.getElementById('frete-result-desktop');
+      let html = '<h4>Opções de entrega:</h4>';
+      
+      opcoes.forEach((opcao, index) => {
+        html += `
+          <div class="opcao-frete" onclick="selecionarFreteDesktop('${opcao.name}', '${opcao.price}', '${opcao.delivery_time}')" data-selected="false">
+            <span>${opcao.name}</span>
+            <span>R$ ${opcao.price}</span>
+            <span>${opcao.delivery_time} dias úteis</span>
+            <span class="selecionar-btn">Selecionar</span>
+          </div>
+        `;
+      });
+      
+      resultDiv.innerHTML = html;
+    }
+    
+    function selecionarFreteDesktop(nome, preco, prazo) {
+      document.querySelectorAll('#frete-result-desktop .opcao-frete').forEach(opcao => {
+        opcao.classList.remove('selecionado');
+        opcao.querySelector('.selecionar-btn').textContent = 'Selecionar';
+      });
+      
+      event.target.closest('.opcao-frete').classList.add('selecionado');
+      event.target.closest('.opcao-frete').querySelector('.selecionar-btn').textContent = 'Selecionado';
+      
+      window.freteEscolhido = { nome, preco: parseFloat(preco), prazo };
+      
+      // Atualizar valor do frete na tela
+      const freteSpan = document.querySelector('.pedido-detalhes .detalhe:nth-child(2) span:last-child');
+      if (freteSpan) freteSpan.textContent = `R$ ${preco}`;
+    }
+  </script>
 </body>
 </html>

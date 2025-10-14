@@ -4404,3 +4404,67 @@ router.post('/debug/criar-produto-teste', verificarUsuAutenticado, async (req, r
         res.json({ success: false, error: error.message });
     }
 });
+
+// Rota para calcular frete
+router.post('/api/calcular-frete', async function(req, res){
+    try {
+        const { cep_destino, produto_id } = req.body;
+        
+        if (!cep_destino || cep_destino.length !== 8) {
+            return res.json({ success: false, message: 'CEP inválido' });
+        }
+        
+        // Buscar dados do produto
+        const [produto] = await pool.query(
+            'SELECT PRECO, NOME_PRODUTO FROM PRODUTOS WHERE ID_PRODUTO = ?',
+            [produto_id]
+        );
+        
+        if (produto.length === 0) {
+            return res.json({ success: false, message: 'Produto não encontrado' });
+        }
+        
+        // Simular cálculo de frete baseado no CEP
+        const cepOrigem = '01310100'; // CEP da empresa (São Paulo)
+        const valor = parseFloat(produto[0].PRECO);
+        
+        // Calcular frete simulado baseado na distância do CEP
+        const cepNum = parseInt(cep_destino);
+        let frete = 15.00; // Frete base
+        
+        // Ajustar frete por região (simulação)
+        if (cepNum >= 1000000 && cepNum <= 19999999) { // SP
+            frete = 12.00;
+        } else if (cepNum >= 20000000 && cepNum <= 28999999) { // RJ
+            frete = 18.00;
+        } else if (cepNum >= 30000000 && cepNum <= 39999999) { // MG
+            frete = 20.00;
+        } else {
+            frete = 25.00; // Outras regiões
+        }
+        
+        // Opções de entrega simuladas
+        const opcoes = [
+            {
+                name: 'PAC',
+                price: frete.toFixed(2),
+                delivery_time: '7-10'
+            },
+            {
+                name: 'SEDEX',
+                price: (frete * 1.8).toFixed(2),
+                delivery_time: '2-4'
+            },
+            {
+                name: 'SEDEX 10',
+                price: (frete * 2.5).toFixed(2),
+                delivery_time: '1'
+            }
+        ];
+        
+        res.json({ success: true, opcoes: opcoes });
+    } catch (error) {
+        console.log('Erro ao calcular frete:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
