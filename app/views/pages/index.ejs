@@ -290,7 +290,44 @@
             <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
           </li>
         <% } %>
-      </ul>
+       </ul>
+      
+
+       <section class="produtos-ocultos">
+        <ul class="brechos-grid">
+          <% if (brechos && brechos.length > 0) { %>
+            <% brechos.forEach(brecho => { %>
+              <li class="profile-item">
+                <a href="/brecho/<%= brecho.ID_USUARIO %>">
+                  <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-image">
+                </a>
+                <section class="profile-info">
+                  <strong><%= brecho.NOME_USUARIO %></strong>
+                  <span class="rating"><%= parseFloat(brecho.MEDIA_AVALIACOES).toFixed(1) %> ⭐⭐⭐⭐⭐</span>
+                </section>
+                <button class="follow-button" onclick="toggleFavoriteBrecho(this, <%= brecho.ID_USUARIO %>)">Favoritar</button>
+              </li>
+            <% }) %>
+          <% } else { %>
+            <li class="profile-item">
+              <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+              <section class="profile-info">
+                <strong>Mayte</strong>
+                <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+              </section>
+              <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
+            </li>
+          <% } %>
+         </ul>
+
+
+
+
+
+       </section>
+
+
+      
         <!--                                       banner de cadastro                                              -->
         <a href="/cadastro">
           <img src="imagens/bannercash.png" class="img-cashback">
@@ -331,7 +368,6 @@
         <section class="produtos-ocultos">
           <nav class="grid-produtos">
             <h1>Confira</h1>
-            <a href="/categorias" class="ver-tudo">Ver tudo</a>
           </nav>
           <section class="product-grid">
             <% if (produtos && produtos.length > 8) { %>
@@ -362,7 +398,17 @@
             <% } %>
           </section>
         </section>
+
+
+        
+
+        <section class="produtos-ocultos">
+        <a href="/categorias" class="ver-tudo">Ver tudo</a>
+        </section>
+
+
         <!--                                        Seção de artigos                                               -->
+        <section class="oculto-desktop">                                        
         <section class="titulo-artigo-section">
           <span class="garimpe-text">Conheça os</span><br>
           <span class="vintelo-text">Artigos</span>
@@ -376,6 +422,7 @@
             <p class="texto-esquerda">
           <a href="/cadastro" class="link-preto">Ler agora</a>
           </p>
+        </section>
         </section>
         
 
