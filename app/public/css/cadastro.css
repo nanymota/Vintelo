@@ -90,7 +90,7 @@ header .grid {
 
 .button {
   text-decoration: none;
-  background-color: #7D2838;
+  background: linear-gradient(135deg, #7D2838 0%, #a53860 100%);
   font-size: 20px;
   color: white;
   padding: 10px 30px;

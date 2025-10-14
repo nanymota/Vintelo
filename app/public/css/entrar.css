@@ -265,7 +265,7 @@ input[type="checkbox"]:checked + .toggle:before {
   .login-btn {
     width: 100%;
     padding: 30px;
-    background-color: #6f1d1b;
+    background: linear-gradient(135deg, #7D2838 0%, #a53860 100%);
     color: #fff;
     font-size: 36px;
     border: none;
