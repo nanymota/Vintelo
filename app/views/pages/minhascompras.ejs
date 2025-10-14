@@ -1,191 +1,172 @@
-
 <!DOCTYPE html>
-<html>
-  <meta charset="UTF-8">
-  <head>
-    <title>Vintélo</title>
-    <link rel="stylesheet" href="css/minhascompras.css">
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintélo - Sacola</title>
+    <link rel="stylesheet" href="css/sacola.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-    
-  </head>
-  <body>
+</head>
+<body>
     <!-- Cabeçalho Desktop -->
     <section class="oculto-mobile">
-      <section class="top-bar">
-        <p>10% OFF na primeira compra</p>
-      </section>
-      <section class="main-header">
-        <a href="/homecomprador">
-          <img src="imagens/logo.png" class="img-logo">
-        </a>
-        <nav>
-          <a href="/categorias">Vestidos</a>
-          <a href="/categorias">Saias</a>
-          <a href="/categorias">Blusas</a>
-          <a href="/categorias">Calças</a>
-          <a href="/categorias">Outros</a>
-        </nav>
-        <section class="search-profile">
-          <form>
-            <input type="text" placeholder="Buscar...">
-          </form>
-          <ul>
-            <li><a href="/perfilcliente"><img src="imagens/icone sem cadastro.png" class="img-tamanho user-profile-img"></a></li>
-            <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho"></a></li>
-            <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
-          </ul>
-        </section>
-      </section>
+        <header>
+            <section class="top-bar">
+                <p class="banner">10% OFF na primeira compra</p>
+            </section>
+            <section class="main-header">
+                <a href="/homecomprador">
+                    <img src="imagens/logo.png" class="img-logo">
+                </a>
+                <nav>
+                    <a href="/categorias">Vestidos</a>
+                    <a href="/categorias">Saias</a>
+                    <a href="/categorias">Blusas</a>
+                    <a href="/categorias">Calças</a>
+                    <a href="/categorias">Outros</a>
+                </nav>
+                <section class="search-profile">
+                    <form>
+                        <input type="text" placeholder="Buscar...">
+                    </form>
+                    <ul>
+                        <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-sacola"></a></li>
+                        <% if (autenticado && autenticado.autenticado) { %>
+                            <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
+                        <% } else { %>
+                            <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                        <% } %>
+                        <li><a href="/favoritos" style="display: block;"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos" style="animation: none; transition: none;"></a></li>
+                    </ul>
+                </section>
+            </section>
+        </header>
     </section>
 
     <!-- Cabeçalho Mobile -->
     <section class="oculto-desktop">
-      <header>
-        <nav class="grid">
-          <a href="javascript:void(0)" class="seta-voltar">
-            <img src="imagens/seta.png" alt="seta-voltar">
-          </a>
-          <h1>Minhas compras</h1>
-          <a href="javascript:void(0)" onclick="goBack()">
-            <img src="imagens/carrinho.png" alt="Descrição da Imagem" />
-          </a>
-        </nav>
-      </header>
+        <header>
+            <nav class="grid">
+                <a href="javascript:void(0)" onclick="goBack()">
+                    <img src="imagens/seta.png" alt="Seta Voltar">
+                </a>
+                <img src="imagens/logo.png" alt="Logo">
+                <% if (autenticado && autenticado.autenticado) { %>
+                    <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
+                        <img src="<%= autenticado.imagem ? autenticado.imagem : 'imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                    </a>
+                <% } else { %>
+                    <a href="javascript:void(0)" onclick="goBack()">
+                        <img src="imagens/icone sem cadastro.png" alt="Perfil">
+                    </a>
+                <% } %>
+            </nav>
+        </header>
     </section>
-        <main class="main">
-        <section class="order-section">
-          <% if (typeof pedidos !== 'undefined' && pedidos && pedidos.length > 0) { %>
-            <% pedidos.forEach(function(pedido, index) { %>
-              <section class="order-date"><%= new Date(pedido.DT_PEDIDO).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' }) %></section>
-              <section class="order-card">
-                <section class="order-content">
-                  <img src="<%= pedido.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= pedido.NOME_PRODUTO %>" class="product-image">
-                  <section class="order-info">
-                    <h2 class="product-title"><%= pedido.NOME_PRODUTO %></h2>
-                    <p class="status <%= pedido.STATUS_PEDIDO === 'Enviado' ? 'in-progress' : pedido.STATUS_PEDIDO === 'Cancelado' ? 'canceled' : 'delivered' %>">
-                      <%= pedido.STATUS_PEDIDO === 'Enviado' ? 'A caminho' : pedido.STATUS_PEDIDO === 'Cancelado' ? 'Pedido cancelado' : 'Entregue' %>
-                    </p>
-                    <p class="delivery-info">
-                      <% if (pedido.STATUS_PEDIDO === 'Enviado') { %>
-                        Chegará em breve
-                      <% } else if (pedido.STATUS_PEDIDO === 'Cancelado') { %>
-                        Reembolso processado
-                      <% } else { %>
-                        Entregue com sucesso
-                      <% } %>
-                    </p>
-                    <section class="order-actions">
-                      <% if (pedido.STATUS_PEDIDO !== 'Cancelado') { %>
-                        <button class="track-btn" onclick="toggleTracking(this)">Rastrear Pedido</button>
-                      <% } %>
-                      <button class="details-btn" onclick="toggleOrderDetails(this)">Ver Detalhes</button>
-                    </section>
-                  </section>
-                </section>
-            
-                <section class="order-details" style="display: none;">
-                  <h3>Detalhes do Pedido</h3>
-                  <section class="detail-row">
-                    <span class="detail-label">Número do Pedido:</span>
-                    <span class="detail-value">#<%= pedido.ID_PEDIDO %></span>
-                  </section>
-                  <section class="detail-row">
-                    <span class="detail-label">Data do Pedido:</span>
-                    <span class="detail-value"><%= new Date(pedido.DT_PEDIDO).toLocaleDateString('pt-BR') %></span>
-                  </section>
-                  <section class="detail-row">
-                    <span class="detail-label">Valor Total:</span>
-                    <span class="detail-value">R$ <%= parseFloat(pedido.VALOR_TOTAL || 0).toFixed(2).replace('.', ',') %></span>
-                  </section>
-                  <section class="detail-row">
-                    <span class="detail-label">Forma de Pagamento:</span>
-                    <span class="detail-value">PIX</span>
-                  </section>
-                  <section class="detail-row">
-                    <span class="detail-label">Vendedor:</span>
-                    <span class="detail-value"><%= pedido.VENDEDOR || 'Vintélo' %></span>
-                  </section>
-                  <% if (pedido.CODIGO_RASTREIO) { %>
-                    <section class="detail-row">
-                      <span class="detail-label">Código de Rastreio:</span>
-                      <span class="detail-value"><%= pedido.CODIGO_RASTREIO %></span>
-                    </section>
-                  <% } %>
-                </section>
-                <section class="tracking-details" style="display: none;">
-                  <section class="tracking-step completed">
-                    <span class="step-icon">✓</span>
-                    <section class="step-info">
-                      <p class="step-title">Pedido Confirmado</p>
-                      <p class="step-time"><%= new Date(pedido.DT_PEDIDO).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) %> - 10:30</p>
-                    </section>
-                  </section>
-                  <% if (pedido.STATUS_PEDIDO !== 'Cancelado') { %>
-                    <section class="tracking-step <%= pedido.STATUS_PEDIDO === 'Enviado' || pedido.STATUS_PEDIDO === 'Concluído' ? 'completed' : '' %>">
-                      <span class="step-icon"><%= pedido.STATUS_PEDIDO === 'Enviado' || pedido.STATUS_PEDIDO === 'Concluído' ? '✓' : '○' %></span>
-                      <section class="step-info">
-                        <p class="step-title">Em Preparação</p>
-                        <p class="step-time">Processando...</p>
-                      </section>
-                    </section>
-                    <section class="tracking-step <%= pedido.STATUS_PEDIDO === 'Enviado' ? 'active' : pedido.STATUS_PEDIDO === 'Concluído' ? 'completed' : '' %>">
-                      <span class="step-icon"><%= pedido.STATUS_PEDIDO === 'Enviado' ? '🚚' : pedido.STATUS_PEDIDO === 'Concluído' ? '✓' : '○' %></span>
-                      <section class="step-info">
-                        <p class="step-title">Saiu para Entrega</p>
-                        <p class="step-time"><%= pedido.STATUS_PEDIDO === 'Enviado' || pedido.STATUS_PEDIDO === 'Concluído' ? 'Em trânsito' : 'Aguardando' %></p>
-                      </section>
-                    </section>
-                    <section class="tracking-step <%= pedido.STATUS_PEDIDO === 'Concluído' ? 'completed' : '' %>">
-                      <span class="step-icon"><%= pedido.STATUS_PEDIDO === 'Concluído' ? '✓' : '○' %></span>
-                      <section class="step-info">
-                        <p class="step-title">Entregue</p>
-                        <p class="step-time"><%= pedido.STATUS_PEDIDO === 'Concluído' ? 'Entregue' : 'Previsão em breve' %></p>
-                      </section>
-                    </section>
-                  <% } %>
-                </section>
-              </section>
-            <% }); %>
-          <% } else { %>
-            <section class="no-orders">
-              <div class="empty-state">
-                <img src="imagens/compras vazia.png" alt="Nenhuma compra" class="empty-icon">
-                <h2>Você ainda não fez nenhuma compra</h2>
-                <p>Explore nossos produtos e encontre peças incríveis!</p>
-                <div class="empty-actions">
-                  <a href="/categorias" class="btn-primary">Começar a Comprar</a>
-                  <a href="/favoritos" class="btn-secondary">Ver Favoritos</a>
-                </div>
-              </div>
-            </section>
-          <% } %>
-        </section>
 
-      </section>
+    <main>
+        <center><img src="imagens/caminhao compras.png" class="img-responsiva"></center>
+        <nav class="category-nav category-nav-mobile">
+            <br>
+            <span class="garimpe-text">Sua</span><br>
+            <span class="vintelo-text">Sacola</span>
+            <br>
+        </nav>
+        
+        <!-- Layout Desktop com Sidebar -->
+        <section class="container oculto-mobile">
+            <aside class="filtro">
+                <details open>
+                    <summary>Categorias</summary>
+                    <section class="categories-grid">
+                        <button class="category-btn active" data-category="todos">Todos</button>
+                        <button class="category-btn" data-category="vestidos">Vestidos</button>
+                        <button class="category-btn" data-category="blusas">Blusas</button>
+                        <button class="category-btn" data-category="calcas">Calças</button>
+                        <button class="category-btn" data-category="saias">Saias</button>
+                        <button class="category-btn" data-category="acessorios">Acessórios</button>
+                        <button class="category-btn" data-category="calcados">Calçados</button>
+                        <button class="category-btn" data-category="casacos">Casacos</button>
+                        <button class="category-btn" data-category="conjuntos">Conjuntos</button>
+                        <button class="category-btn" data-category="plus-size">Plus Size</button>
+                    </section>
+                </details>
+                <details open>
+                    <summary>Ordenar por</summary>
+                    <ul>
+                        <li onclick="sortProducts('recent')">Mais recentes</li>
+                        <li onclick="sortProducts('price-low')">Menor preço</li>
+                        <li onclick="sortProducts('price-high')">Maior preço</li>
+                        <li onclick="sortProducts('popular')">Mais populares</li>
+                    </ul>
+                </details>
+                <details open>
+                    <summary>Valor</summary>
+                    <section class="faixa-valor">
+                        <label for="min">Min</label>
+                        <input type="range" id="min" min="0" max="500" value="10" oninput="updatePriceRange()">
+                        <label for="max">Max</label>
+                        <input type="range" id="max" min="0" max="500" value="300" oninput="updatePriceRange()">
+                    </section>
+                    <section class="valores">
+                        <input type="text" id="min-value" placeholder="10" onchange="filterByPrice()">
+                        <input type="text" id="max-value" placeholder="300" onchange="filterByPrice()">
+                    </section>
+                </details>
+                <details open>
+                    <summary>Tamanhos</summary>
+                    <section class="sizes-grid">
+                        <button class="size-btn" data-size="pp">PP</button>
+                        <button class="size-btn" data-size="p">P</button>
+                        <button class="size-btn" data-size="m">M</button>
+                        <button class="size-btn" data-size="g">G</button>
+                        <button class="size-btn" data-size="gg">GG</button>
+                        <button class="size-btn" data-size="xgg">XGG</button>
+                    </section>
+                </details>
+                <details>
+                    <summary>Condição</summary>
+                    <ul>
+                        <li><input type="checkbox" id="novo"> <label for="novo">Novo</label></li>
+                        <li><input type="checkbox" id="seminovo"> <label for="seminovo">Seminovo</label></li>
+                        <li><input type="checkbox" id="usado"> <label for="usado">Usado</label></li>
+                    </ul>
+                </details>
+                <button class="button-filtro" onclick="applyFilters()">APLICAR FILTROS</button>
+                <button class="clear-filters" onclick="clearFilters()">Limpar Filtros</button>
+            </aside>
+            
+            <section class="product-grid">
+                <%- typeof carrinhoHtml !== 'undefined' ? carrinhoHtml : '<section class="empty-state"><p>Sua sacola está vazia</p><a href="/homecomprador" class="btn-continue">Continuar Comprando</a></section>' %>
+            </section>
+        </section>
+        
+        </section>
     </main>
-    <!--                                                    Rodapé                                                      -->
+
+    <!-- Rodapé -->
     <footer class="footer">
-      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
-      <section class="social-media">
-        <p class="p-footer">Siga nossas redes sociais</p>
-        <ul class="social-links">
-          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png" alt="Facebook"></a></li>
-          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png" alt="Pinterest"></a></li>
-          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/Instagram.png" alt="Instagram"></a></li>
-        </ul>
-      </section>
-       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+        <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+        <section class="social-media">
+            <p class="rodape">Siga nossas redes sociais</p>
+            <ul class="social-links">
+                <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/icone do face.jpeg" alt="Facebook"></a></li>
+                <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/icone do twitter.jpeg" alt="Twitter"></a></li>
+                <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img src="imagens/icone do insta.jpeg" alt="Instagram"></a></li>
+            </ul>
+        </section>
+        <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-    <script src="/js/perfil-autenticado.js"></script>
+
+    <script src="/js/n.js"></script>
     <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script src="script/minhascompras.js"></script>
+    <script src="/js/carrinho-global.js"></script>
     <script src="/js/busca-global.js"></script>
-        <script>
+    <script>
         function goBack() {
             window.history.back();
         }
     </script>
-    </body>
-    </html>
-    
+    <script src="/js/favoritos-global.js"></script>
+</body>
+</html>
