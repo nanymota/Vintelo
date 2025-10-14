@@ -48,24 +48,36 @@
         </aside>
         <section class="form-section">
             <section class="form-container">
-                <h2>Crie seu brechó</h2>
-                <p>Insira os dados do seu brechó</p>
+                <section class="form-header">
+                    <img src="imagens/logo.png" alt="Vintélo Logo" class="desktop-logo">
+                    <span class="garimpe-text">Crie seu</span><br>
+                    <span class="vintelo-text">Brechó</span>
+                    <p class="form-description">Transforme suas peças em oportunidades de negócio</p>
+                </section>
                 
                 <section class="login-register">
                     <section class="login">
-                        <h3>Entrar</h3>
+                        <h3>Já tem conta?</h3>
                         <form id="loginForm" action="/entrar" method="post" >
-                            <label for="email_login">Email ou nome de usuário</label>
-                            <input type="text" id="email_login" name="email_usu" placeholder="Digite aqui...">
+                            <section class="form-group">
+                                <label for="email_login">Email ou nome de usuário</label>
+                                <input type="text" id="email_login" name="email_usu" placeholder="Digite aqui...">
+                            </section>
 
-                            <label for="senha_login">Senha</label>
-                            <input type="password" id="senha_login" name="senha_usu" placeholder="Digite aqui...">
+                            <section class="form-group">
+                                <label for="senha_login">Senha</label>
+                                <input type="password" id="senha_login" name="senha_usu" placeholder="Digite aqui...">
+                            </section>
 
                             <button class="submit-btn">Entrar</button>
                         </form>
                     </section>
 
                     <section class="register">
+                        <section class="register-header">
+                            <h3>Criar Conta</h3>
+                            <p>Preencha os dados para criar seu brechó</p>
+                        </section>
                         
                         <!-- Notificações -->
                         <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
@@ -88,83 +100,118 @@
                         
                         <form id="registerForm" action="/criarbrecho" method="post">
                             <!-- Seção Informações do Brechó -->
-                            <section class="collapsible-section">
+                            <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('brecho-info')">
                                     <h4>Informações do Brechó</h4>
                                     <span class="arrow" id="brecho-arrow">▼</span>
                                 </section>
                                 <section class="section-content" id="brecho-info">
-                                    <label for="nomeusu_usu">Nome do Brechó</label>
-                                    <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.nomeusu_usu || '' %>" required>
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="nomeusu_usu">Nome do Brechó</label>
+                                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.nomeusu_usu || '' %>" required>
+                                        </section>
+                                    </section>
 
-                                    <label for="cnpj_brecho">CNPJ (Opcional)</label>
-                                    <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cnpj_brecho || '' %>">
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="cnpj_brecho">CNPJ</label>
+                                            <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.cnpj_brecho || '' %>">
+                                        </section>
+                                        <section class="form-group">
+                                            <label for="razao_social">Razão Social</label>
+                                            <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.razao_social || '' %>">
+                                        </section>
+                                    </section>
 
-                                    <label for="razao_social">Razão Social (Opcional)</label>
-                                    <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.razao_social || '' %>">
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="email_usu">Endereço de email</label>
+                                            <input type="email" id="email_usu" name="email_usu" placeholder="seu@email.com" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
+                                        </section>
+                                        <section class="form-group">
+                                            <label for="nome_usu">Nome Completo</label>
+                                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Seu nome completo" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.nome_usu || '' %>" required>
+                                        </section>
+                                    </section>
 
-                                    <label for="email_usu">Endereço de email</label>
-                                    <input type="email" id="email_usu" name="email_usu" placeholder="conta.sanders@exemplo.com" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
-
-                                    <label for="nome_usu">Nome Completo</label>
-                                    <input type="text" id="nome_usu" name="nome_usu" placeholder="Digite seu nome completo" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.nome_usu || '' %>" required>
-
-                                    <label for="fone_usu">Contato</label>
-                                    <input type="tel" id="fone_usu" name="fone_usu" placeholder="11999999999" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.fone_usu || '' %>" maxlength="11" required>
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="fone_usu">Contato</label>
+                                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(11) 99999-9999" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.fone_usu || '' %>" maxlength="11" required>
+                                        </section>
+                                    </section>
                                 </section>
                             </section>
 
                             <!-- Seção Segurança -->
-                            <section class="collapsible-section">
+                            <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('security-info')">
                                     <h4>Segurança</h4>
                                     <span class="arrow" id="security-arrow">▼</span>
                                 </section>
                                 <section class="section-content" id="security-info">
-                                    <label for="senha_usu">Senha</label>
-                                    <input type="password" id="senha_usu" name="senha_usu" placeholder="Mínimo 8 caracteres" required>
-                                    
-                                    <label for="confirmar_senha">Confirmar Senha</label>
-                                    <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="senha_usu">Senha</label>
+                                            <input type="password" id="senha_usu" name="senha_usu" placeholder="Mínimo 8 caracteres" required>
+                                        </section>
+                                        <section class="form-group">
+                                            <label for="confirmar_senha">Confirmar Senha</label>
+                                            <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
+                                        </section>
+                                    </section>
                                 </section>
                             </section>
 
                             <!-- Seção Endereço -->
-                            <section class="collapsible-section">
+                            <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('address-info')">
                                     <h4>Endereço</h4>
                                     <span class="arrow" id="address-arrow">▼</span>
                                 </section>
                                 <section class="section-content" id="address-info">
-                                    <label for="cep">CEP</label>
-                                    <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cep || '' %>" required>
+                                    <section class="form-row">
+                                        <section class="form-group small">
+                                            <label for="cep">CEP</label>
+                                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.cep || '' %>" required>
+                                        </section>
+                                        <section class="form-group">
+                                            <label for="endereco">Endereço</label>
+                                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." 
+                                                value="<%= typeof valores !== 'undefined' && valores?.endereco || '' %>" required>
+                                        </section>
+                                        <section class="form-group small">
+                                            <label for="numero">Número</label>
+                                            <input type="text" id="numero" name="numero" placeholder="123" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.numero || '' %>" maxlength="4" required>
+                                        </section>
+                                    </section>
 
-                                    <label for="endereco">Endereço</label>
-                                    <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." 
-                                        value="<%= typeof valores !== 'undefined' && valores?.endereco || '' %>" required>
-
-                                    <label for="numero">Número</label>
-                                    <input type="text" id="numero" name="numero" placeholder="123" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.numero || '' %>" maxlength="4" required>
-
-                                    <label for="bairro">Bairro</label>
-                                    <input type="text" id="bairro" name="bairro" placeholder="Bairro" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.bairro || '' %>" required>
-
-                                    <label for="cidade">Cidade</label>
-                                    <input type="text" id="cidade" name="cidade" placeholder="Cidade" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.cidade || '' %>" required>
-
-                                    <label for="uf">UF</label>
-                                    <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" 
-                                        value="<%= typeof valores !== 'undefined' && valores?.uf || '' %>" required>
+                                    <section class="form-row">
+                                        <section class="form-group">
+                                            <label for="bairro">Bairro</label>
+                                            <input type="text" id="bairro" name="bairro" placeholder="Nome do bairro" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.bairro || '' %>" required>
+                                        </section>
+                                        <section class="form-group">
+                                            <label for="cidade">Cidade</label>
+                                            <input type="text" id="cidade" name="cidade" placeholder="Nome da cidade" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.cidade || '' %>" required>
+                                        </section>
+                                        <section class="form-group small">
+                                            <label for="uf">UF</label>
+                                            <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" 
+                                                value="<%= typeof valores !== 'undefined' && valores?.uf || '' %>" required>
+                                        </section>
+                                    </section>
                                 </section>
                             </section>
 
