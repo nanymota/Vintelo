@@ -84,6 +84,11 @@ body {
     width: 45px;
 }
 
+.maria {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /*                         Mobile                */
 .mobile-header {
     display: block;
