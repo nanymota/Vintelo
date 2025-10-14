@@ -254,7 +254,9 @@
             </article>
           <% } %>
 
+          <section class="oculto-desktop">
           <a href="/categorias"><span class="ver">Ver tudo</span></a>
+          </section>
 
         </section>
       </section>
@@ -266,6 +268,8 @@
         <span class="vintelo-text">Brechós</span>
       </section>
       
+
+      <section class="oculto-desktop">
       <ul class="brechos-grid">
         <% if (brechos && brechos.length > 0) { %>
           <% brechos.forEach(brecho => { %>
@@ -291,6 +295,7 @@
           </li>
         <% } %>
        </ul>
+       </section>
       
 
        <section class="produtos-ocultos">
@@ -319,11 +324,6 @@
             </li>
           <% } %>
          </ul>
-
-
-
-
-
        </section>
 
 
@@ -344,8 +344,8 @@
               <nav class="grid-artigos">
                 <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
                 <section class="artigo-texto">
-                  <h3 class="vintelo-text">MODA |</h3>
-                  <h3 class="vintelo-text">METALIZADA |</h3>
+                  <h3 class="vintelo-text">MODA|</h3>
+                  <h3 class="vintelo-text">METALIZADA|</h3>
                   <a href="/cadastro" class="ler-agora">Ler agora</a>
                 </section>
               </nav>

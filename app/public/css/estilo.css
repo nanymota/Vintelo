@@ -813,7 +813,7 @@ h3 {
 @media (min-width: 992px) {
   .brechos-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     padding: 40px 150px;
     list-style: none;
@@ -825,9 +825,9 @@ h3 {
     display: flex;
     align-items: center;
     background-color: white;
-    padding: 20px 30px;
+    padding: 20px 10px;
     border-radius: 25px;
-    box-shadow: 0 700px 850px rgba(0, 0, 0, 0.1);
+    box-shadow: -1px 4px 50px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
     gap: 15px;
@@ -1195,7 +1195,7 @@ h3 {
    background-color: white;
    padding: 40px 35px;
    border-radius: 40px;
-   box-shadow: 0 100px 150px rgba(0, 0, 0, 0.1);
+   box-shadow: 1px 0px 30px 20px rgba(0, 0, 0, 0.1);
    gap: 10px;
    margin: 10px;
    margin-bottom: 50px;
@@ -1386,13 +1386,16 @@ h3 {
   font-size: 50px;
   color: #000;
   line-height: 1.2;
-  margin: 2px 0;
+  margin: 2px 13px;
 }
 
 .artigo-texto .ler-agora {
   font-size: 18px;
   color: #464344;
   text-decoration: none;
+  position: relative;
+  top: 50px;
+  font-family: 'Raleway', sans-serif;
 }
 
 .cashback-banner {
