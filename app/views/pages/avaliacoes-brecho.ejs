@@ -21,23 +21,23 @@
     <main>
         <section class="brecho-header">
             <img src="<%= brecho.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
-            <div class="brecho-info">
+            <section class="brecho-info">
                 <h1><%= brecho.NOME_USUARIO %></h1>
-                <div class="rating">
+                <section class="rating">
                     <span class="stars">★★★★★</span>
                     <span class="rating-number"><%= mediaAvaliacoes.toFixed(1) %></span>
                     <span class="total-reviews">(<%= totalAvaliacoes %> avaliações)</span>
-                </div>
-            </div>
+                </section>
+            </section>
         </section>
 
         <% if (autenticado && autenticado.tipo === 'c') { %>
         <section class="add-review">
             <h2>Deixe sua avaliação</h2>
             <form id="reviewForm">
-                <div class="rating-input">
+                <section class="rating-input">
                     <label>Nota:</label>
-                    <div class="stars-input">
+                    <section class="stars-input">
                         <input type="radio" name="nota" value="1" id="star1">
                         <label for="star1">★</label>
                         <input type="radio" name="nota" value="2" id="star2">
@@ -48,8 +48,8 @@
                         <label for="star4">★</label>
                         <input type="radio" name="nota" value="5" id="star5">
                         <label for="star5">★</label>
-                    </div>
-                </div>
+                    </section>
+                </section>
                 <textarea name="comentario" placeholder="Escreva sua avaliação..." required></textarea>
                 <button type="submit">Enviar Avaliação</button>
             </form>
@@ -60,21 +60,21 @@
             <h2>Avaliações (<%= avaliacoes.length %>)</h2>
             <% if (avaliacoes.length > 0) { %>
                 <% avaliacoes.forEach(avaliacao => { %>
-                <div class="review-item">
-                    <div class="review-header">
+                <section class="review-item">
+                    <section class="review-header">
                         <img src="<%= avaliacao.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="user-img">
-                        <div class="review-info">
+                        <section class="review-info">
                             <h3><%= avaliacao.NOME_USUARIO %></h3>
-                            <div class="review-rating">
+                            <section class="review-rating">
                                 <% for(let i = 1; i <= 5; i++) { %>
                                     <span class="star <%= i <= avaliacao.NOTA ? 'filled' : '' %>">★</span>
                                 <% } %>
-                            </div>
+                            </section>
                             <span class="review-date"><%= new Date(avaliacao.DT_AVALIACAO).toLocaleDateString('pt-BR') %></span>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
                     <p class="review-comment"><%= avaliacao.COMENTARIO %></p>
-                </div>
+                </section>
                 <% }); %>
             <% } else { %>
                 <p class="no-reviews">Ainda não há avaliações para este brechó</p>
