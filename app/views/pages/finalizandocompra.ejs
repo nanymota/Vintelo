@@ -355,9 +355,26 @@
       
       window.freteEscolhido = { nome, preco: parseFloat(preco), prazo };
       
-      // Atualizar valor do frete na tela
+      // Atualizar valores na tela
       const freteSpan = document.querySelector('.pedido-detalhes .detalhe:nth-child(2) span:last-child');
+      const totalSpan = document.querySelector('.pedido-detalhes .detalhe.total span:last-child');
+      const subtotalText = document.querySelector('.pedido-detalhes .detalhe:first-child span:last-child').textContent;
+      
       if (freteSpan) freteSpan.textContent = `R$ ${preco}`;
+      
+      // Calcular novo total
+      const subtotal = parseFloat(subtotalText.replace('R$ ', '').replace(',', '.'));
+      const novoTotal = subtotal + parseFloat(preco);
+      
+      if (totalSpan) totalSpan.textContent = `R$ ${novoTotal.toFixed(2).replace('.', ',')}`;
+      
+      // Atualizar botão de finalizar
+      const btnFinalizar = document.querySelector('.finalizar-compra');
+      if (btnFinalizar && btnFinalizar.tagName === 'A') {
+        const href = btnFinalizar.getAttribute('href');
+        const baseUrl = href.split('?')[0];
+        btnFinalizar.setAttribute('href', `${baseUrl}?total=${novoTotal.toFixed(2)}&frete=${preco}&frete_nome=${nome}`);
+      }
     }
   </script>
 </body>

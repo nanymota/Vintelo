@@ -1180,6 +1180,11 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
         let subtotal = 0;
         const produtoId = req.query.produto;
         
+        // Capturar valores de frete vindos de finalizandocompra
+        const totalParam = req.query.total;
+        const freteParam = req.query.frete;
+        const freteNome = req.query.frete_nome;
+        
         if (produtoId) {
             const [produtos] = await pool.query(`
                 SELECT p.*, u.NOME_USUARIO as VENDEDOR
@@ -1214,14 +1219,16 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             }
         }
         
-        const frete = subtotal > 0 ? 10 : 0;
-        const total = subtotal + frete;
+        // Usar valores vindos da URL ou calcular padrão
+        const frete = freteParam ? parseFloat(freteParam) : 0;
+        const total = totalParam ? parseFloat(totalParam) : (subtotal + frete);
         
         res.render('pages/finalizandopagamento', {
             produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
+            freteNome: freteNome || 'Padrão',
             autenticado: req.session.autenticado
         });
     } catch (error) {
@@ -1231,6 +1238,7 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             subtotal: '0,00',
             frete: '0,00',
             total: '0,00',
+            freteNome: 'Padrão',
             autenticado: req.session.autenticado || null
         });
     }
