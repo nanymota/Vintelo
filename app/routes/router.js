@@ -29,7 +29,6 @@ const { bannerController } = require("../controllers/bannerController");
 const usuarioModel = require('../models/usuarioModel');
 const tipoUsuarioModel = require('../models/tipoUsuarioModel');
 const cliente = require('../models/clienteModel');
-const pool = require('../config/pool_conexoes');
 
 const uploadFile = require("../util/uploader");
 const uploadProduto = require("../util/uploaderProduto");

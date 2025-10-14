@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
+<meta charset="UTF-8">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vintélo - Administração</title>
-  <link rel="stylesheet" href="css/estilo.css">
-  <link rel="stylesheet" href="css/estilo2.css">
+  <link rel="stylesheet" href="/css/estilo.css">
+  <link rel="stylesheet" href="/css/profile-sections.css">
   <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 
@@ -19,7 +19,7 @@
   <section class="oculto-mobile">
     <header class="main-header">
       <a href="/homeadm">
-        <img src="imagens/logo.png" class="img-logo" alt="Logo Vintélo">
+        <img src="/imagens/logo.png" class="img-logo">
       </a>
       <nav>
         <a href="/blogadm">Blog</a>
@@ -33,9 +33,9 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/homeadm"><img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil Admin"></a></li>
-          <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-          <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2" alt="Favoritos"></a></li>
+          <li><a href="/homeadm"><img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="maria"></a></li>
+          <li><a href="/homeadm"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
+          <li><a href="/homeadm"><img src="/imagens/icone coraçao.png" class="img-tamanho2"></a></li>
         </ul>
       </section>
     </header>
@@ -58,7 +58,7 @@
             <li>
               <a href="/homeadm">
                 <section class="profile-section">
-                  <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Admin" class="profile-pic icone-sem-cadastro maria">
+                  <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Admin" class="profile-pic maria">
                   <section class="profile-info">
                     <h2>Administrador</h2>
                   </section>
@@ -73,44 +73,48 @@
             <aside class="sidebar-menu">
               <ul>
                 <li>
-                  <a href="/vistoriapedidos"><img src="imagens/check.svg" class="icones" alt="Pedidos"></a>
+                  <a href="/vistoriapedidos"><img src="imagens/check.svg" alt="Pedidos"></a>
                   Pedidos
                 </li>
                 <li>
-                  <a href="/produtosadm"><img src="imagens/add produto.svg" class="icones" alt="Produtos"></a>
+                  <a href="/produtosadm"><img src="imagens/add produto.svg" alt="Produtos"></a>
                   Produtos
                 </li>
                 <li>
-                  <a href="/administradorperfis"><img src="imagens/adm.svg" class="icones" alt="Perfis"></a>
+                  <a href="/administradorperfis"><img src="imagens/adm.svg" alt="Perfis"></a>
                   Administrador de Perfis
                 </li>
                 <li>
-                  <a href="/denuncias"><img src="imagens/denuncia_icon.svg" class="icones" alt="Denúncias"></a>
+                  <a href="/denuncias"><img src="imagens/denuncia_icon.svg" alt="Denúncias"></a>
                   Denúncias
                 </li>
                 <li>
-                  <a href="/perfilpremium"><img src="imagens/estrela_icon_adm.svg" class="icones" alt="Premium"></a>
+                  <a href="/perfilpremium"><img src="imagens/estrela_icon_adm.svg" alt="Premium"></a>
                   Perfil Premium
                 </li>
                 <li>
-                  <a href="/blogadm"><img src="imagens/blog.svg" class="icones" alt="Blog"></a>
+                  <a href="/blogadm"><img src="imagens/blog.svg" alt="Blog"></a>
                   Blog
                 </li>
                 <li>
-                  <a href="/estatisticaadm"><img src="imagens/estatistica.png" class="icones" alt="Estatísticas"></a>
+                  <a href="/estatisticaadm"><img src="imagens/estatistica.png" alt="Estatísticas"></a>
                   Estatísticas
                 </li>
               </ul>
             </aside>
         </nav>
-        <img src="imagens/logo.png" class="logo" alt="Logo Vintélo">
+        <img src="/imagens/logo.png" class="logo">
         <a href="/homeadm">
-          <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="logo maria" alt="Perfil Admin" />
+          <div class="profile-container">
+            <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-pic maria" />
+          </div>
         </a>
       </nav>
     </header>
    </section>
     <main>
+      
+
       <br>
       <!--                                        barra de pesquisa                                              -->
       <section class="oculto-desktop">
@@ -125,7 +129,10 @@
           </section>
         </section>
         <script src="/js/script.js"></script>
+        <script src="/js/menu-auth.js"></script>
       </section>
+      
+
       <br>
 
 
@@ -192,25 +199,33 @@
         </section>
       </nav>
       <!--                                    Seção dos produtos                                              -->
-      <div class="grid-produtos">
+      <nav class="grid-produtos">
         <h3>Novidades</h3>
-      </div>
+        
+      </nav>
+      <!-- Seção unificada: apenas 4 produtos -->
       <section class="product-grid">
         <% if (produtos && produtos.length > 0) { %>
           <% produtos.slice(0, 4).forEach(produto => { %>
             <article class="product-card">
-              <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="/<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+              <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
               <h2><%= produto.NOME_PRODUTO %></h2>
-              <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-              <p class="Descrição">ou em 2x de R$<%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite"><img src="/imagens/Heart.png"></button>
+              <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+              <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
               <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
-          <% }); %>
+          <% }) %>
         <% } else { %>
-          <p>Nenhum produto cadastrado</p>
+          <article class="product-card">
+            <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
+            <h2>Vestido branco com decote</h2>
+            <p class="price">R$49,99</p>
+            <p class="Descrição">ou em 2x de R$25,00</p>
+            <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
         <% } %>
-        <a href="/produtosadm" class="oculto-desktop"><span class="ver">Ver todos</span></a>
       </section>
 
       <!--                                           PRODUTOS OCULTOS                                              -->
@@ -219,16 +234,28 @@
           <% if (produtos && produtos.length > 4) { %>
             <% produtos.slice(4, 8).forEach(produto => { %>
               <article class="product-card">
-                <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="/<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
                 <h2><%= produto.NOME_PRODUTO %></h2>
-                <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                <p class="Descrição">ou em 2x de R$<%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-                <button class="favorite"><img src="/imagens/Heart.png"></button>
+                <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+                <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                 <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
               </article>
-            <% }); %>
+            <% }) %>
+          <% } else { %>
+            <article class="product-card">
+              <img src="imagens/cropped flor.png" alt="cropped flor">
+              <h2>Cropeed Floral</h2>
+              <p class="price">R$49,99</p>
+              <p class="Descrição">ou em 2x de R$25,00</p>
+              <br>
+              <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
           <% } %>
-          <a href="/produtosadm"><span class="ver">Ver todos</span></a>
+
+          <a href="/categorias"><span class="ver">Ver tudo</span></a>
+
         </section>
       </section>
 
@@ -243,17 +270,24 @@
         <% if (brechos && brechos.length > 0) { %>
           <% brechos.forEach(brecho => { %>
             <li class="profile-item">
-              <img src="/<%= brecho.IMG_URL || 'imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-image">
+              <a href="/brecho/<%= brecho.ID_USUARIO %>">
+                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-image">
+              </a>
               <section class="profile-info">
                 <strong><%= brecho.NOME_USUARIO %></strong>
                 <span class="rating"><%= parseFloat(brecho.MEDIA_AVALIACOES).toFixed(1) %> ⭐⭐⭐⭐⭐</span>
               </section>
-              <a href="/brecho/<%= brecho.ID_USUARIO %>"><button class="follow-button">Ver Perfil</button></a>
+              <button class="follow-button" onclick="toggleFavoriteBrecho(this, <%= brecho.ID_USUARIO %>)">Favoritar</button>
             </li>
-          <% }); %>
+          <% }) %>
         <% } else { %>
           <li class="profile-item">
-            <p>Nenhum brechó cadastrado</p>
+            <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+            <section class="profile-info">
+              <strong>Mayte</strong>
+              <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+            </section>
+            <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
           </li>
         <% } %>
       </ul>
@@ -261,8 +295,8 @@
 
 
         <!--                                       banner de cadastro                                              -->
-        <a href="/cadastro">
-          <img src="imagens/bannercash.png" class="img-cashback">
+        <a href="/criarbrecho">
+          <img src="imagens/criar brecho.png" class="img-cashback">
         </a>
         <br>
         <br>
@@ -272,24 +306,24 @@
           <section class="container">
             <!-- Artigo de Moda Metalizada -->
             <article class="artigo">
-              <div class="grid-artigos">
+              <nav class="grid-artigos">
                 <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
-                <div class="artigo-texto">
+                <section class="artigo-texto">
                   <h3 class="vintelo-text">MODA |</h3>
                   <h3 class="vintelo-text">METALIZADA |</h3>
                   <a href="/artigo" class="ler-agora">Ler agora</a>
-                </div>
-              </div>
+                </section>
+              </nav>
             </article>
 
             <!-- Banner de Cashback -->
             <article class="cashback-banner">
 
-              <img src="imagens/bannercash.png" alt="Ganhe Cashback" class="imagem-banner">
+              <img src="imagens/criar brecho.png" alt="Ganhe Cashback" class="imagem-banner">
               <section class="cashback-texto">
                 <h3>Ganhe Cashback</h3>
                 <p>em sua primeira compra</p>
-                <a href="/cadastro" class="cadastre-se">Cadastre-se</a>
+                <a href="/criarbrecho" class="cadastre-se">Cadastre-se</a>
               </section>
             </article>
           </section>
@@ -297,21 +331,30 @@
         
         <!--                                        PRODUTOS OCULTOS                                               -->
         <section class="produtos-ocultos">
-          <div class="grid-produtos">
+          <nav class="grid-produtos">
             <h1>Confira</h1>
-            <a href="/categorias" class="ver-tudo">Ver tudo</a>
-          </div>
+            <a href="/blog" class="ver-tudo">Ver tudo</a>
+          </nav>
           <section class="product-grid">
             <% if (produtos && produtos.length > 8) { %>
               <% produtos.slice(8, 12).forEach(produto => { %>
                 <article class="product-card">
-                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="/<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
                   <h2><%= produto.NOME_PRODUTO %></h2>
-                  <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                  <button class="favorite"><img src="/imagens/Heart.png"></button>
+                  <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                   <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-              <% }); %>
+              <% }) %>
+            <% } else { %>
+              <article class="product-card">
+                <img src="imagens/oculos.png" alt="Óculos de sol">
+                <h2>Óculos de sol</h2>
+                <br>
+                <p class="price">R$12,00</p>
+                <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+                <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+              </article>
             <% } %>
           </section>
 
@@ -320,13 +363,13 @@
             <% if (produtos && produtos.length > 12) { %>
               <% produtos.slice(12, 16).forEach(produto => { %>
                 <article class="product-card">
-                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="/<%= produto.URL_IMG || 'imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
                   <h2><%= produto.NOME_PRODUTO %></h2>
-                  <p class="price">R$<%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                  <button class="favorite"><img src="/imagens/Heart.png"></button>
+                  <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                   <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
-              <% }); %>
+              <% }) %>
             <% } %>
           </section>
         </section>
@@ -338,16 +381,13 @@
         </section>
         <section class="artigos">
           <br>
-          <a href="/cadastro"><img src="imagens/boss milão.png" class="img-Boss"></a>
+          <a href="/bossartigo"><img src="imagens/boss milão.png" class="img-Boss"></a>
           <p class="p-artigos">Confira:</p>
           <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
-          <br>
-            <p class="texto-esquerda">
           <a href="/blogadm" class="link-preto">Editar</a>
-          </p>
-
+          <br>
         </section>
-        <!--                               seção artigos ocultos para mobile                                       -->
+      <!--                               seção artigos ocultos para mobile                                       -->
     <section class="oculto-mobile">
     <section class="sweet-colors">
     <!-- Seção da imagem principal -->
@@ -394,7 +434,7 @@
         </figure>
       </section>
       <footer class="footer-link">
-        <a href="/blogadm" class="link">Ler mais &gt;</a>
+        <a href="/blogadm" class="link">Editar &gt;</a>
       </footer>
 
      </section>
@@ -417,12 +457,14 @@
       </section>
       <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
     </footer>
-    <script src="/js/dinamicahome.js"></script>
-    <script src="/js/favoritos.js"></script>
     <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
+    <script src="js/busca-global.js"></script>
+    <script src="js/favoritos-global.js"></script>
+    <script src="js/seguir-brechos.js"></script>
+    <script src="script/dinamicahome.js"></script>
+    <script src="js/homecomprador.js"></script>
     <script src="/js/sacola-global.js"></script>
-    <script src="/js/homeadm.js"></script>
 </body>
 
 </html>
