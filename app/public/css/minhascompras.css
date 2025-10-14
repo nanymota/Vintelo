@@ -15,18 +15,18 @@ body {
 /*        cebeçalho Mobile         */
 header {
   background-color: #fff;
+  padding: 20px;
 }
 
 header .grid {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 15px;
 }
 
 header img {
-  height: 80px;
+  height: 40px;
+  transition: transform 0.3s ease;
 }
 
 header h1 {
@@ -368,6 +368,9 @@ nav a:hover {
   color: #fff;
   padding: 20px 0;
   text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .p-footer{
