@@ -39,7 +39,7 @@
                     <input type="text" placeholder="Buscar posts...">
                 </form>
                 <ul>
-                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                    <li><a href="/homeadm"><img src="imagens/icone sem cadastro.png" class="maria" style="border-radius: 50%;"></a></li>
                     <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
                     <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2"></a></li>
                 </ul>
@@ -84,14 +84,16 @@
                         </section>
                         <% 
                             let imagemPost = 'imagens/metalizado.png';
-                            if (post.TITULO && post.TITULO.includes('BOSS')) {
-                                imagemPost = 'imagens/boss.png';
-                            } else if (post.TITULO && post.TITULO.includes('Gucci')) {
-                                imagemPost = 'imagens/gucci.png';
-                            } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
-                                imagemPost = 'imagens/sustentavel.png';
-                            } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
-                                imagemPost = 'imagens/vintage.png';
+                            if (post.TITULO && (post.TITULO.includes('BOSS') || post.TITULO.includes('Boss'))) {
+                                imagemPost = 'imagens/boss milão.png';
+                            } else if (post.TITULO && (post.TITULO.includes('Gucci') || post.TITULO.includes('GUCCI'))) {
+                                imagemPost = 'imagens/gucci-milao 1.png';
+                            } else if (post.TITULO && (post.TITULO.includes('Sweet') || post.TITULO.includes('SWEET') || post.TITULO.includes('sweer'))) {
+                                imagemPost = 'imagens/tendencia sweer.png';
+                            } else if (post.TITULO && (post.TITULO.includes('Sustentável') || post.TITULO.includes('SUSTENTÁVEL') || post.TITULO.includes('sustentável'))) {
+                                imagemPost = 'imagens/tendencia sustentável.png';
+                            } else if (post.TITULO && (post.TITULO.includes('Moda') && post.TITULO.includes('Sustentável'))) {
+                                imagemPost = 'imagens/moda sustentável.png';
                             }
                         %>
                         <img src="<%= imagemPost %>" alt="<%= post.TITULO %>" class="post-image">
@@ -116,14 +118,16 @@
                         <section class="mobile-hero">
                             <% 
                                 let imagemMobile = 'imagens/metalizado.png';
-                                if (post.TITULO && post.TITULO.includes('BOSS')) {
-                                    imagemMobile = 'imagens/boss.png';
-                                } else if (post.TITULO && post.TITULO.includes('Gucci')) {
-                                    imagemMobile = 'imagens/gucci.png';
-                                } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
-                                    imagemMobile = 'imagens/sustentavel.png';
-                                } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
-                                    imagemMobile = 'imagens/vintage.png';
+                                if (post.TITULO && (post.TITULO.includes('BOSS') || post.TITULO.includes('Boss'))) {
+                                    imagemMobile = 'imagens/boss milão 2.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Gucci') || post.TITULO.includes('GUCCI'))) {
+                                    imagemMobile = 'imagens/gucci-milao 1.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Sweet') || post.TITULO.includes('SWEET') || post.TITULO.includes('sweer'))) {
+                                    imagemMobile = 'imagens/tendencia sweer.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Sustentável') || post.TITULO.includes('SUSTENTÁVEL') || post.TITULO.includes('sustentável'))) {
+                                    imagemMobile = 'imagens/tendencia sustentável.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Moda') && post.TITULO.includes('Sustentável'))) {
+                                    imagemMobile = 'imagens/moda sustentável.png';
                                 }
                             %>
                             <img src="<%= imagemMobile %>" alt="<%= post.TITULO %>" class="hero-image">
@@ -141,14 +145,16 @@
                         <article class="mobile-card">
                             <% 
                                 let imagemCard = 'imagens/metalizado.png';
-                                if (post.TITULO && post.TITULO.includes('BOSS')) {
-                                    imagemCard = 'imagens/boss.png';
-                                } else if (post.TITULO && post.TITULO.includes('Gucci')) {
-                                    imagemCard = 'imagens/gucci.png';
-                                } else if (post.TITULO && post.TITULO.includes('SUSTENT')) {
-                                    imagemCard = 'imagens/sustentavel.png';
-                                } else if (post.TITULO && post.TITULO.includes('VINTAGE')) {
-                                    imagemCard = 'imagens/vintage.png';
+                                if (post.TITULO && (post.TITULO.includes('BOSS') || post.TITULO.includes('Boss'))) {
+                                    imagemCard = 'imagens/boss milão 2.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Gucci') || post.TITULO.includes('GUCCI'))) {
+                                    imagemCard = 'imagens/gucci-milao 1.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Sweet') || post.TITULO.includes('SWEET') || post.TITULO.includes('sweer'))) {
+                                    imagemCard = 'imagens/tendencia sweer.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Sustentável') || post.TITULO.includes('SUSTENTÁVEL') || post.TITULO.includes('sustentável'))) {
+                                    imagemCard = 'imagens/tendencia sustentável.png';
+                                } else if (post.TITULO && (post.TITULO.includes('Moda') && post.TITULO.includes('Sustentável'))) {
+                                    imagemCard = 'imagens/moda sustentável.png';
                                 }
                             %>
                             <img src="<%= imagemCard %>" alt="<%= post.TITULO %>">

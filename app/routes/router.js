@@ -8,7 +8,8 @@ const {
   verificarUsuAutenticado,
   limparSessao,
   verificarUsuAutorizado,
-  carregarDadosUsuario
+  carregarDadosUsuario,
+  verificarAdmin
 } = require("../models/autenticador_middleware");
 
 const usuarioController = require("../controllers/usuarioController");
@@ -2990,7 +2991,7 @@ router.get('/perfilcliente', async function(req, res){
     }
 });
 
-router.get('/homeadm', async (req, res) => {
+router.get('/homeadm', carregarDadosUsuario, async (req, res) => {
     let banners = [];
     let produtos = [];
     let brechos = [];
@@ -3021,7 +3022,8 @@ router.get('/homeadm', async (req, res) => {
     res.render('pages/homeadm', {
         banners: banners,
         produtos: produtos,
-        brechos: brechos
+        brechos: brechos,
+        user: req.user || null
     });
 });
 
@@ -3431,15 +3433,14 @@ async function inserirArtigosFicticios() {
             console.log('Usando categoria ID padrão: 1');
         }
         
-        // Buscar um admin para associar aos artigos
-        let adminId = 1;
+        // Inserir artigos sem ID_ADM (tornar campo opcional)
+        let adminId = null;
         try {
             const [admins] = await pool.query('SELECT ID_ADM FROM ADMINISTRADORES LIMIT 1');
-            adminId = admins[0]?.ID_ADM || 1;
-            console.log('Usando admin ID:', adminId);
+            adminId = admins[0]?.ID_ADM || null;
+            console.log('Admin ID:', adminId);
         } catch (adminError) {
-            console.log('Erro ao buscar admin:', adminError.message);
-            console.log('Usando admin ID padrão: 1');
+            console.log('Sem admin disponível, inserindo sem ID_ADM');
         }
         
         // Inserir artigos fictícios completos
@@ -3494,9 +3495,11 @@ async function inserirArtigosFicticios() {
                 console.log(`Inserindo artigo ${i + 1}: ${artigo.titulo}`);
                 
                 const [resultado] = await pool.query(`
-                    INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, HORA_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
-                    VALUES (?, ?, 'Vintélo Fashion', ?, CURTIME(), ?, ?)
-                `, [artigo.titulo, artigo.conteudo, artigo.data, adminId, categoriaId]);
+                    INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_CATEGORIA_BLOG)
+                    VALUES (?, ?, 'Vintélo Fashion', ?, ?)
+                `, [artigo.titulo, artigo.conteudo, artigo.data, categoriaId]);
+                
+                console.log(`Artigo ${i + 1} inserido com ID:`, resultado.insertId);
                 
                 console.log(`Artigo ${i + 1} inserido com ID:`, resultado.insertId);
             } catch (artigoError) {
@@ -3549,15 +3552,11 @@ router.post('/blogadm', async function(req, res){
             }
         }
         
-        // Buscar admin
-        const [admins] = await pool.query('SELECT ID_ADM FROM ADMINISTRADORES LIMIT 1');
-        const adminId = admins[0]?.ID_ADM || 1;
-        
-        // Inserir novo artigo
+        // Inserir novo artigo sem ID_ADM
         await pool.query(`
-            INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, HORA_PUBLICACAO, ID_ADM, ID_CATEGORIA_BLOG)
-            VALUES (?, ?, 'Vintélo Fashion', CURDATE(), CURTIME(), ?, ?)
-        `, [titulo, conteudo, adminId, categoriaId]);
+            INSERT INTO ARTIGOS_BLOG (TITULO, CONTEUDO, AUTOR, DT_PUBLICACAO, ID_CATEGORIA_BLOG)
+            VALUES (?, ?, 'Vintélo Fashion', CURDATE(), ?)
+        `, [titulo, conteudo, categoriaId]);
         
         console.log('Novo artigo criado:', { titulo, categoria });
         res.redirect('/blogadm');
@@ -3567,74 +3566,206 @@ router.post('/blogadm', async function(req, res){
     }
 });
 
-router.get('/editarpost/:id', async (req, res) => {
+router.get('/editarpost/:id', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         const { id } = req.params;
+        console.log('=== GET EDITARPOST ===');
+        console.log('ID recebido:', id);
+        console.log('Sessão autenticada:', req.session?.autenticado);
+        
+        // Validar ID
+        if (!id || isNaN(id)) {
+            console.log('ID inválido:', id);
+            return res.redirect('/blogadm?erro=ID do artigo inválido');
+        }
+        
+        // Middleware já verificou autenticação e autorização
+        
+        console.log('Buscando artigo no banco...');
+        
+        // Primeiro verificar se a tabela existe
+        const [tabelaExiste] = await pool.query("SHOW TABLES LIKE 'ARTIGOS_BLOG'");
+        if (tabelaExiste.length === 0) {
+            console.log('Tabela ARTIGOS_BLOG não existe');
+            return res.redirect('/blogadm?erro=Sistema de blog não configurado');
+        }
         
         const [artigo] = await pool.query(`
-            SELECT ab.*, cb.NOME_CATEGORIA_BLOG as CATEGORIA
+            SELECT ab.*, COALESCE(cb.NOME_CATEGORIA_BLOG, 'Moda') as CATEGORIA
             FROM ARTIGOS_BLOG ab
             LEFT JOIN CATEGORIAS_BLOG cb ON ab.ID_CATEGORIA_BLOG = cb.ID_CATEGORIA_BLOG
             WHERE ab.ID_ARTIGO = ?
-        `, [id]);
+        `, [parseInt(id)]);
+        
+        console.log('Artigos encontrados:', artigo.length);
         
         if (artigo.length === 0) {
-            return res.redirect('/blogadm');
+            console.log('Artigo não encontrado');
+            return res.redirect('/blogadm?erro=Artigo não encontrado');
         }
         
-        res.render('pages/editarpost', { artigo: artigo[0] });
+        console.log('Artigo carregado:', {
+            id: artigo[0].ID_ARTIGO,
+            titulo: artigo[0].TITULO,
+            categoria: artigo[0].CATEGORIA
+        });
+        
+        res.render('pages/editarpost', { 
+            artigo: artigo[0],
+            autenticado: req.session.autenticado
+        });
     } catch (error) {
-        console.log('Erro ao carregar artigo:', error);
-        res.redirect('/blogadm');
+        console.log('ERRO ao carregar artigo:', error);
+        res.redirect('/blogadm?erro=Erro interno do servidor');
     }
 });
 
-router.post('/editarpost/:id', async function(req, res){
+router.post('/editarpost/:id', verificarUsuAutenticado, verificarAdmin, async function(req, res){
     try {
         const { id } = req.params;
-        const { titulo, conteudo, categoria } = req.body;
+        const { titulo, conteudo, categoria, resumo } = req.body;
         
-        if (!titulo || !conteudo) {
+        console.log('=== POST EDITARPOST ===');
+        console.log('ID do artigo:', id);
+        console.log('Dados recebidos:', { titulo, categoria, resumo: resumo?.substring(0, 50) });
+        
+        // Validar ID
+        if (!id || isNaN(id)) {
+            console.log('ID inválido:', id);
+            return res.redirect('/blogadm?erro=ID do artigo inválido');
+        }
+        
+        // Middleware já verificou autenticação e autorização
+        
+        // Validar dados obrigatórios
+        if (!titulo?.trim() || !conteudo?.trim()) {
+            console.log('Erro: Campos obrigatórios vazios');
             return res.redirect(`/editarpost/${id}?erro=Título e conteúdo são obrigatórios`);
         }
         
-        // Buscar ou criar categoria
+        if (titulo.trim().length < 5) {
+            return res.redirect(`/editarpost/${id}?erro=Título deve ter pelo menos 5 caracteres`);
+        }
+        
+        if (conteudo.trim().length < 20) {
+            return res.redirect(`/editarpost/${id}?erro=Conteúdo deve ter pelo menos 20 caracteres`);
+        }
+        
+        // Verificar se o artigo existe
+        const [artigoExiste] = await pool.query('SELECT ID_ARTIGO FROM ARTIGOS_BLOG WHERE ID_ARTIGO = ?', [parseInt(id)]);
+        if (artigoExiste.length === 0) {
+            console.log('Artigo não encontrado');
+            return res.redirect('/blogadm?erro=Artigo não encontrado');
+        }
+        
+        // Processar categoria
         let categoriaId = 1;
-        if (categoria) {
-            const [categoriaExiste] = await pool.query(
-                'SELECT ID_CATEGORIA_BLOG FROM CATEGORIAS_BLOG WHERE NOME_CATEGORIA_BLOG = ?',
-                [categoria]
-            );
-            
-            if (categoriaExiste.length > 0) {
-                categoriaId = categoriaExiste[0].ID_CATEGORIA_BLOG;
-            } else {
-                const [novaCategoria] = await pool.query(
-                    'INSERT INTO CATEGORIAS_BLOG (NOME_CATEGORIA_BLOG) VALUES (?)',
-                    [categoria]
+        if (categoria?.trim()) {
+            try {
+                // Verificar se categoria existe
+                const [categoriaExiste] = await pool.query(
+                    'SELECT ID_CATEGORIA_BLOG FROM CATEGORIAS_BLOG WHERE NOME_CATEGORIA_BLOG = ?',
+                    [categoria.trim()]
                 );
-                categoriaId = novaCategoria.insertId;
+                
+                if (categoriaExiste.length > 0) {
+                    categoriaId = categoriaExiste[0].ID_CATEGORIA_BLOG;
+                } else {
+                    // Criar nova categoria
+                    const [novaCategoria] = await pool.query(
+                        'INSERT INTO CATEGORIAS_BLOG (NOME_CATEGORIA_BLOG) VALUES (?)',
+                        [categoria.trim()]
+                    );
+                    categoriaId = novaCategoria.insertId;
+                }
+            } catch (catError) {
+                console.log('Erro ao processar categoria:', catError);
+                // Usar categoria padrão em caso de erro
             }
         }
         
         // Atualizar artigo
-        await pool.query(`
+        console.log('Atualizando artigo...');
+        const [resultado] = await pool.query(`
             UPDATE ARTIGOS_BLOG SET 
                 TITULO = ?, 
                 CONTEUDO = ?, 
                 ID_CATEGORIA_BLOG = ?
+                ${resumo ? ', RESUMO = ?' : ''}
             WHERE ID_ARTIGO = ?
-        `, [titulo, conteudo, categoriaId, id]);
+        `, resumo ? 
+            [titulo.trim(), conteudo.trim(), categoriaId, resumo.trim(), parseInt(id)] :
+            [titulo.trim(), conteudo.trim(), categoriaId, parseInt(id)]
+        );
         
-        console.log('Artigo atualizado:', { id, titulo, categoria });
-        res.redirect('/blogadm');
+        console.log('Resultado da atualização:', resultado.affectedRows, 'linhas afetadas');
+        
+        if (resultado.affectedRows === 0) {
+            return res.redirect(`/editarpost/${id}?erro=Nenhuma alteração foi detectada`);
+        }
+        
+        console.log('✅ Artigo atualizado com sucesso!');
+        res.redirect('/blogadm?sucesso=Artigo atualizado com sucesso');
+        
     } catch (error) {
-        console.log('Erro ao atualizar artigo:', error);
-        res.redirect('/blogadm?erro=Erro ao atualizar artigo');
+        console.log('❌ ERRO ao atualizar artigo:', error);
+        
+        let mensagemErro = 'Erro interno do servidor';
+        if (error.code === 'ER_DATA_TOO_LONG') {
+            mensagemErro = 'Algum campo contém dados muito longos';
+        } else if (error.code === 'ER_BAD_NULL_ERROR') {
+            mensagemErro = 'Campo obrigatório não pode estar vazio';
+        } else if (error.code === 'ER_NO_SUCH_TABLE') {
+            mensagemErro = 'Tabela do blog não encontrada';
+        }
+        
+        res.redirect(`/editarpost/${req.params.id}?erro=${encodeURIComponent(mensagemErro)}`);
     }
 });
 
 router.get('/editarpost', (req, res) => res.redirect('/blogadm'));
+
+// Rota de teste para verificar se a tabela existe
+router.get('/test-blog', async (req, res) => {
+    try {
+        console.log('=== TESTE DO SISTEMA DE BLOG ===');
+        
+        // Verificar se as tabelas existem
+        const [tabelaArtigos] = await pool.query("SHOW TABLES LIKE 'ARTIGOS_BLOG'");
+        const [tabelaCategorias] = await pool.query("SHOW TABLES LIKE 'CATEGORIAS_BLOG'");
+        
+        console.log('Tabela ARTIGOS_BLOG existe:', tabelaArtigos.length > 0);
+        console.log('Tabela CATEGORIAS_BLOG existe:', tabelaCategorias.length > 0);
+        
+        if (tabelaArtigos.length === 0) {
+            return res.json({ 
+                success: false, 
+                message: 'Tabela ARTIGOS_BLOG não existe',
+                tables: { artigos: false, categorias: tabelaCategorias.length > 0 }
+            });
+        }
+        
+        // Contar artigos
+        const [countArtigos] = await pool.query('SELECT COUNT(*) as total FROM ARTIGOS_BLOG');
+        console.log('Total de artigos:', countArtigos[0].total);
+        
+        // Buscar alguns artigos para teste
+        const [artigos] = await pool.query('SELECT ID_ARTIGO, TITULO FROM ARTIGOS_BLOG LIMIT 5');
+        
+        res.json({
+            success: true,
+            message: 'Sistema de blog funcionando',
+            data: {
+                totalArtigos: countArtigos[0].total,
+                artigos: artigos,
+                tables: { artigos: true, categorias: tabelaCategorias.length > 0 }
+            }
+        });
+    } catch (error) {
+        console.log('Erro no teste:', error);
+        res.json({ success: false, message: 'Erro: ' + error.message });
+    }
+});
 
 router.get('/avaliacaoadm', async (req, res) => {
     try {
@@ -3675,9 +3806,7 @@ router.post('/avaliacaoadm/excluir/:id', async (req, res) => {
         res.json({ success: false, message: 'Erro ao excluir avaliação' });
     }
 });
-router.get('/editarpost', (req, res) => res.render('pages/editarpost'));
 
-router.post('/editarpost', function(req, res){ console.log('Post editado:', req.body); res.redirect('/blogadm'); });
 
 router.get('/brechoadm', async (req, res) => {
     try {
@@ -3822,17 +3951,88 @@ router.get('/produtosadm/detalhes/:id', async (req, res) => {
     }
 });
 
-router.post('/produtosadm/excluir', async (req, res) => {
+router.post('/produtosadm/excluir', verificarUsuAutenticado, async (req, res) => {
     try {
         const { produtoId } = req.body;
         
-        await pool.query('DELETE FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
-        await pool.query('DELETE FROM PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+        console.log('=== EXCLUSÃO DE PRODUTO ADMIN ===');
+        console.log('Produto ID:', produtoId);
+        console.log('Usuário:', req.session.autenticado);
         
-        res.json({ success: true, message: 'Produto excluído com sucesso' });
+        // Verificar se o usuário é admin
+        if (!req.session.autenticado || req.session.autenticado.tipo !== 'a') {
+            console.log('Acesso negado - usuário não é admin');
+            return res.json({ success: false, message: 'Acesso negado. Apenas administradores podem excluir produtos.' });
+        }
+        
+        // Validar ID do produto
+        if (!produtoId || isNaN(produtoId)) {
+            console.log('ID do produto inválido:', produtoId);
+            return res.json({ success: false, message: 'ID do produto inválido' });
+        }
+        
+        // Verificar se o produto existe
+        const [produtoExiste] = await pool.query('SELECT ID_PRODUTO, NOME_PRODUTO FROM PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+        
+        if (produtoExiste.length === 0) {
+            console.log('Produto não encontrado:', produtoId);
+            return res.json({ success: false, message: 'Produto não encontrado' });
+        }
+        
+        console.log('Excluindo produto:', produtoExiste[0].NOME_PRODUTO);
+        
+        // Iniciar transação para garantir integridade
+        await pool.query('START TRANSACTION');
+        
+        try {
+            // Excluir registros relacionados primeiro (ordem importante)
+            
+            // 1. Excluir das tabelas de relacionamento
+            await pool.query('DELETE FROM FAVORITOS WHERE ID_ITEM = ? AND TIPO_ITEM = "produto"', [produtoId]);
+            console.log('Favoritos removidos');
+            
+            await pool.query('DELETE FROM ITENS_SACOLA WHERE ID_PRODUTO = ?', [produtoId]);
+            console.log('Itens da sacola removidos');
+            
+            // 2. Excluir imagens do produto
+            const [imagensResult] = await pool.query('DELETE FROM IMG_PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+            console.log('Imagens removidas:', imagensResult.affectedRows);
+            
+            // 3. Excluir o produto
+            const [produtoResult] = await pool.query('DELETE FROM PRODUTOS WHERE ID_PRODUTO = ?', [produtoId]);
+            console.log('Produto removido:', produtoResult.affectedRows);
+            
+            if (produtoResult.affectedRows === 0) {
+                throw new Error('Falha ao excluir o produto da tabela principal');
+            }
+            
+            // Confirmar transação
+            await pool.query('COMMIT');
+            
+            console.log('Produto excluído com sucesso!');
+            res.json({ success: true, message: 'Produto excluído com sucesso' });
+            
+        } catch (transactionError) {
+            // Reverter transação em caso de erro
+            await pool.query('ROLLBACK');
+            throw transactionError;
+        }
+        
     } catch (error) {
-        console.log('Erro ao excluir produto:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        console.log('Erro detalhado ao excluir produto:', error);
+        
+        // Tratar erros específicos
+        let mensagemErro = 'Erro interno do servidor';
+        
+        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+            mensagemErro = 'Não é possível excluir este produto pois ele possui referências em outras tabelas';
+        } else if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+            mensagemErro = 'Erro de integridade referencial';
+        } else if (error.message.includes('Falha ao excluir')) {
+            mensagemErro = error.message;
+        }
+        
+        res.json({ success: false, message: mensagemErro });
     }
 });
 
@@ -4800,6 +5000,56 @@ router.get('/debug/blog', async (req, res) => {
         res.json(debugInfo);
     } catch (error) {
         console.log('Erro no debug blog:', error.message);
+        res.json({ error: error.message, stack: error.stack });
+    }
+});
+
+// Rota de debug para testar editarpost
+router.get('/debug/editarpost', async (req, res) => {
+    try {
+        console.log('=== DEBUG EDITARPOST ===');
+        
+        // Verificar estrutura da tabela
+        const [estrutura] = await pool.query('DESCRIBE ARTIGOS_BLOG');
+        console.log('Estrutura da tabela ARTIGOS_BLOG:', estrutura);
+        
+        // Buscar artigos existentes
+        const [artigos] = await pool.query('SELECT * FROM ARTIGOS_BLOG ORDER BY ID_ARTIGO DESC LIMIT 5');
+        console.log('Artigos encontrados:', artigos.length);
+        
+        // Verificar categorias
+        const [categorias] = await pool.query('SELECT * FROM CATEGORIAS_BLOG');
+        console.log('Categorias encontradas:', categorias.length);
+        
+        // Testar uma atualização simples se houver artigos
+        let testeAtualizacao = null;
+        if (artigos.length > 0) {
+            const artigoTeste = artigos[0];
+            console.log('Testando atualização no artigo:', artigoTeste.ID_ARTIGO);
+            
+            const [resultado] = await pool.query(
+                'UPDATE ARTIGOS_BLOG SET TITULO = ? WHERE ID_ARTIGO = ?',
+                [artigoTeste.TITULO, artigoTeste.ID_ARTIGO]
+            );
+            
+            testeAtualizacao = {
+                artigoId: artigoTeste.ID_ARTIGO,
+                affectedRows: resultado.affectedRows,
+                changedRows: resultado.changedRows
+            };
+        }
+        
+        res.json({
+            estruturaTabela: estrutura,
+            totalArtigos: artigos.length,
+            artigos: artigos,
+            totalCategorias: categorias.length,
+            categorias: categorias,
+            testeAtualizacao: testeAtualizacao,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.log('Erro no debug editarpost:', error);
         res.json({ error: error.message, stack: error.stack });
     }
 });

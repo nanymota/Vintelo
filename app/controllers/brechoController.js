@@ -3,14 +3,14 @@ const usuario = require("../models/usuarioModel");
 const { body, validationResult } = require("express-validator");
 const validator = require('validator');
 const bcrypt = require("bcryptjs");
-
+ 
 const sanitizeInput = (input) => {
     if (typeof input === 'string') {
         return validator.escape(input.trim());
     }
     return input;
 };
-
+ 
 const sanitizeObject = (obj) => {
     const sanitized = {};
     for (const key in obj) {
@@ -18,9 +18,9 @@ const sanitizeObject = (obj) => {
     }
     return sanitized;
 };
-
+ 
 const brechoController = {
-
+ 
     regrasValidacaoBrecho: [
         body("cnpj_brecho")
             .optional({ checkFalsy: true })
@@ -39,7 +39,7 @@ const brechoController = {
             .optional({ checkFalsy: true })
             .isLength({ min: 3, max: 100 }).withMessage("Razão social deve ter de 3 a 100 caracteres!")
     ],
-
+ 
     regrasValidacaoUsuario: [
         body("nomeusu_usu")
             .isLength({ min: 3, max: 45 }).withMessage("Nome do brechó deve ter de 3 a 45 caracteres!")
@@ -96,24 +96,24 @@ const brechoController = {
             .notEmpty().withMessage("Número é obrigatório!")
             .isLength({ min: 1, max: 10 }).withMessage("Número deve ter de 1 a 10 caracteres!")
     ],
-
+ 
     mostrarPerfil: async (req, res) => {
         try {
             const results = await brechoModel.findId(req.session.autenticado.id);
             const brecho = results.length > 0 ? results[0] : null;
-            
+           
             // Buscar produtos do usuário
             const pool = require('../config/pool_conexoes');
             const [produtos] = await pool.query(
-                `SELECT p.*, i.URL_IMG, u.NOME_USUARIO as VENDEDOR 
-                 FROM PRODUTOS p 
-                 LEFT JOIN IMG_PRODUTOS i ON p.ID_PRODUTO = i.ID_PRODUTO 
-                 JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO 
+                `SELECT p.*, i.URL_IMG, u.NOME_USUARIO as VENDEDOR
+                 FROM PRODUTOS p
+                 LEFT JOIN IMG_PRODUTOS i ON p.ID_PRODUTO = i.ID_PRODUTO
+                 JOIN USUARIOS u ON p.ID_USUARIO = u.ID_USUARIO
                  WHERE p.ID_USUARIO = ? AND p.STATUS_PRODUTO = 'd'
                  ORDER BY p.DATA_CADASTRO DESC`,
                 [req.session.autenticado.id]
             );
-            
+           
             res.render("pages/perfilvender", {
                 brecho: brecho,
                 produtos: produtos || [],
@@ -136,11 +136,11 @@ const brechoController = {
             });
         }
     },
-
+ 
     mostrarFormulario: async (req, res) => {
         try {
             let valores = {};
-            
+           
             if (req.session && req.session.autenticado && req.session.autenticado.id) {
                 const userDetails = await usuario.findId(req.session.autenticado.id);
                 if (userDetails && userDetails.length > 0) {
@@ -159,7 +159,7 @@ const brechoController = {
                     };
                 }
             }
-            
+           
             res.render("pages/criarbrecho", {
                 listaErros: null,
                 dadosNotificacao: null,
@@ -174,12 +174,12 @@ const brechoController = {
             });
         }
     },
-
+ 
     mostrarInformacoes: async (req, res) => {
         try {
             const results = await brechoModel.findId(req.session.autenticado.id);
             const brecho = results.length > 0 ? results[0] : null;
-            
+           
             res.render("pages/perfilvender", {
                 brecho: brecho,
                 dadosNotificacao: null,
@@ -202,23 +202,31 @@ const brechoController = {
             });
         }
     },
-
+ 
     criarBrecho: async (req, res) => {
         console.log('=== INÍCIO CRIAR BRECHÓ ===');
         console.log('Dados recebidos:', req.body);
-        
+       
         const erros = validationResult(req);
         console.log('Erros de validação:', erros.array());
-        
+       
         if (!erros.isEmpty()) {
-            console.log('Retornando com erros de validação');
+            console.log('Retornando com erros de validação:', erros.array());
+           
+            const primeiroErro = erros.array()[0];
+            const notificacao = {
+                titulo: sanitizeInput("Erro de Validação!"),
+                mensagem: sanitizeInput(primeiroErro.msg),
+                tipo: "error"
+            };
+           
             return res.render("pages/criarbrecho", {
                 listaErros: erros,
-                dadosNotificacao: null,
+                dadosNotificacao: notificacao,
                 valores: sanitizeObject(req.body)
             });
         }
-        
+       
         const dadosUsuario = {
             USER_USUARIO: req.body.nomeusu_usu.trim(),
             SENHA_USUARIO: bcrypt.hashSync(req.body.senha_usu, 12),
@@ -234,15 +242,15 @@ const brechoController = {
             TIPO_USUARIO: 'b',
             STATUS_USUARIO: 'a'
         };
-
+ 
         try {
             let userId;
-            
+           
             if (req.session && req.session.autenticado && req.session.autenticado.id) {
                 // Usuário já autenticado - atualizar para tipo brechó
                 userId = req.session.autenticado.id;
                 console.log('Atualizando usuário existente ID:', userId);
-                
+               
                 const dadosAtualizacao = {
                     TIPO_USUARIO: 'b',
                     USER_USUARIO: req.body.nomeusu_usu.trim(),
@@ -255,7 +263,7 @@ const brechoController = {
                     UF_USUARIO: req.body.uf.toUpperCase().trim(),
                     CEP_USUARIO: req.body.cep.replace(/\D/g, '')
                 };
-                
+               
                 await usuario.update(dadosAtualizacao, userId);
                 req.session.autenticado.tipo = 'b';
             } else {
@@ -263,7 +271,7 @@ const brechoController = {
                 console.log('Criando novo usuário com dados:', dadosUsuario);
                 const createUsuario = await usuario.create(dadosUsuario);
                 userId = createUsuario.insertId;
-                
+               
                 req.session.autenticado = {
                     id: userId,
                     nome: dadosUsuario.NOME_USUARIO,
@@ -273,42 +281,77 @@ const brechoController = {
                     imagem: null
                 };
             }
-            
+           
             const dadosBrecho = {
                 ID_USUARIO: userId,
                 CNPJ_BRECHO: req.body.cnpj_brecho ? req.body.cnpj_brecho.replace(/\D/g, '') : '',
                 RAZAO_SOCIAL: req.body.razao_social ? sanitizeInput(req.body.razao_social.trim()) : sanitizeInput(req.body.nomeusu_usu.trim()),
                 NOME_FANTASIA: sanitizeInput(req.body.nomeusu_usu.trim())
             };
-            
+           
             console.log('Criando brechó com dados:', dadosBrecho);
             const createBrecho = await brechoModel.create(dadosBrecho);
             console.log('Resultado criação brechó:', createBrecho);
-            
-            console.log('Redirecionando para /homevendedor');
-            res.redirect('/homevendedor');
+           
+            console.log('Brechó criado com sucesso! Redirecionando para /homevendedor');
+           
+            // Adicionar mensagem de sucesso na sessão
+            req.session.mensagemSucesso = {
+                titulo: "Sucesso!",
+                mensagem: "Brechó criado com sucesso! Bem-vindo ao Vintélo!",
+                tipo: "success"
+            };
+           
+            // Garantir que a sessão seja salva antes do redirecionamento
+            req.session.save((err) => {
+                if (err) {
+                    console.log('Erro ao salvar sessão:', err);
+                    // Mesmo com erro na sessão, fazer o redirecionamento
+                }
+                console.log('Executando redirecionamento para /homevendedor');
+                return res.redirect('/homevendedor');
+            });
         } catch (error) {
             console.error('Erro ao criar brechó:', {
                 error: error.message,
                 stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
             });
+           
+            let mensagemErro = "Erro interno do servidor";
+           
+            if (error.message.includes('Duplicate')) {
+                if (error.message.includes('EMAIL_USUARIO')) {
+                    mensagemErro = "E-mail já cadastrado!";
+                } else if (error.message.includes('USER_USUARIO')) {
+                    mensagemErro = "Nome de usuário já existe!";
+                } else if (error.message.includes('CNPJ_BRECHO')) {
+                    mensagemErro = "CNPJ já cadastrado!";
+                } else {
+                    mensagemErro = "E-mail ou nome de usuário já cadastrado!";
+                }
+            } else if (error.code === 'ER_DATA_TOO_LONG') {
+                mensagemErro = "Algum campo contém dados muito longos";
+            } else if (error.code === 'ER_BAD_NULL_ERROR') {
+                mensagemErro = "Campo obrigatório não pode estar vazio";
+            }
+           
+            const notificacao = {
+                titulo: sanitizeInput("Erro!"),
+                mensagem: sanitizeInput(mensagemErro),
+                tipo: "error"
+            };
+           
             res.render("pages/criarbrecho", {
                 listaErros: null,
-                dadosNotificacao: {
-                    titulo: sanitizeInput("Erro!"),
-                    mensagem: error.message.includes('Duplicate') ? 
-                        sanitizeInput("E-mail ou nome de usuário já cadastrado!") : 
-                        sanitizeInput("Erro interno do servidor"),
-                    tipo: "error"
-                },
+                dadosNotificacao: notificacao,
                 valores: sanitizeObject(req.body)
             });
         }
     },
-
+ 
     atualizarInformacoes: async (req, res) => {
         const erros = validationResult(req);
-        
+       
         if (!erros.isEmpty()) {
             return res.render("pages/informacao", {
                 listaErros: erros,
@@ -316,7 +359,7 @@ const brechoController = {
                 valores: req.body
             });
         }
-
+ 
         const dadosUsuario = {
             NOME_USUARIO: req.body.nome_usu,
             EMAIL_USUARIO: req.body.email,
@@ -324,18 +367,18 @@ const brechoController = {
             CEP_USUARIO: req.body.cep ? req.body.cep.replace("-", "") : null,
             NUMERO_USUARIO: req.body.numero || null
         };
-
+ 
         const dadosBrecho = {
             ID_USUARIO: createUsuario.insertId,
             CNPJ_BRECHO: req.body.cnpj || null,
             RAZAO_SOCIAL: req.body.razao_social || null,
             NOME_FANTASIA: req.body.nome_fantasia || null
         };
-
+ 
         try {
             await usuario.update(dadosUsuario, req.session.autenticado.id);
             await brechoModel.update(dadosBrecho, req.session.autenticado.id);
-            
+           
             res.render("pages/informacao", {
                 listaErros: null,
                 dadosNotificacao: {
@@ -362,12 +405,12 @@ const brechoController = {
             });
         }
     },
-
+ 
     excluirBrecho: async (req, res) => {
         try {
             await brechoModel.delete(req.session.autenticado.id);
             await usuario.update({ STATUS_USUARIO: 'i' }, req.session.autenticado.id);
-            
+           
             req.session.destroy();
             res.redirect('/homevendedor');
         } catch (error) {
@@ -386,5 +429,5 @@ const brechoController = {
         }
     }
 };
-
+ 
 module.exports = brechoController;

@@ -46,28 +46,57 @@
     </section>
 
     <main class="edit-container">
-        <form class="edit-form" action="/editarpost" method="post" enctype="multipart/form-data">
+        <!-- Mensagens de erro e sucesso -->
+        <% if (typeof req !== 'undefined' && req.query && req.query.erro) { %>
+        <div class="alert alert-error" style="background-color: #fee; border: 1px solid #fcc; color: #c33; padding: 10px; margin: 10px 0; border-radius: 5px;">
+            <strong>Erro:</strong> <%= req.query.erro %>
+        </div>
+        <% } %>
+        
+        <% if (typeof req !== 'undefined' && req.query && req.query.sucesso) { %>
+        <div class="alert alert-success" style="background-color: #efe; border: 1px solid #cfc; color: #3c3; padding: 10px; margin: 10px 0; border-radius: 5px;">
+            <strong>Sucesso:</strong> <%= req.query.sucesso %>
+        </div>
+        <% } %>
+        
+        <form class="edit-form" action="/editarpost/<%= typeof artigo !== 'undefined' && artigo ? artigo.ID_ARTIGO : '' %>" method="post" enctype="multipart/form-data">
             <section class="form-header">
                 <h2>Editar Artigo</h2>
                 <p>Modifique o conteúdo do seu post</p>
+                <% if (typeof artigo !== 'undefined' && artigo) { %>
+                <p><strong>ID do Artigo:</strong> <%= artigo.ID_ARTIGO %></p>
+                <% } %>
             </section>
 
+            <% if (typeof artigo !== 'undefined' && artigo) { %>
+            <input type="hidden" name="artigo_id" value="<%= artigo.ID_ARTIGO %>">
+            <% } else { %>
+            <div class="alert alert-error" style="background-color: #fee; border: 1px solid #fcc; color: #c33; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                <strong>Erro:</strong> Artigo não encontrado
+            </div>
+            <% } %>
+
+            <% if (typeof artigo !== 'undefined' && artigo) { %>
             <section class="form-section">
                 <label for="titulo">Título do Artigo</label>
-                <input type="text" id="titulo" name="titulo" value="METALIZADO: 7 LOOKS PARA VOCÊ SE INSPIRAR" required>
+                <input type="text" id="titulo" name="titulo" value="<%= artigo.TITULO || '' %>" required minlength="5">
             </section>
 
             <section class="form-section">
                 <label for="categoria">Categoria</label>
                 <select id="categoria" name="categoria" required>
-                    <option value="Style" selected>Style</option>
-                    <option value="Moda">Moda</option>
-                    <option value="Tendência">Tendência</option>
-                    <option value="Sustentabilidade">Sustentabilidade</option>
-                    <option value="BOSS">BOSS</option>
-                    <option value="Gucci">Gucci</option>
+                    <% 
+                    const categoriaAtual = artigo.CATEGORIA || 'Moda';
+                    %>
+                    <option value="Style" <%= categoriaAtual === 'Style' ? 'selected' : '' %>>Style</option>
+                    <option value="Moda" <%= categoriaAtual === 'Moda' ? 'selected' : '' %>>Moda</option>
+                    <option value="Tendência" <%= categoriaAtual === 'Tendência' ? 'selected' : '' %>>Tendência</option>
+                    <option value="Sustentabilidade" <%= categoriaAtual === 'Sustentabilidade' ? 'selected' : '' %>>Sustentabilidade</option>
+                    <option value="BOSS" <%= categoriaAtual === 'BOSS' ? 'selected' : '' %>>BOSS</option>
+                    <option value="Gucci" <%= categoriaAtual === 'Gucci' ? 'selected' : '' %>>Gucci</option>
                 </select>
             </section>
+            <% } %>
 
             <% if (typeof artigo !== 'undefined' && artigo) { %>
             <section class="form-section">
@@ -79,24 +108,27 @@
                 <label for="data">Data de Publicação</label>
                 <input type="date" id="data" name="data" value="<%= artigo.DT_PUBLICACAO ? new Date(artigo.DT_PUBLICACAO).toISOString().split('T')[0] : '' %>" readonly>
             </section>
-            <% } %>
 
             <section class="form-section">
                 <label for="resumo">Resumo/Descrição</label>
-                <textarea id="resumo" name="resumo" rows="4" required>"Brilha, brilha, movie star". A tendência metalizada de 2024 é a oportunidade para você transformar cada momento em uma chance para reluzir, incorporando esse brilho atemporal ao seu estilo diário, reinventando o básico com um toque de glamour.</textarea>
+                <textarea id="resumo" name="resumo" rows="4"><%= artigo.RESUMO || '' %></textarea>
             </section>
-
-
 
             <section class="form-section">
                 <label for="conteudo">Conteúdo Principal</label>
-                <textarea id="conteudo" name="conteudo" rows="8" required>O metalizado se destaca em 2024 como uma tendência versátil, perfeita para diversas ocasiões, desde o oferecendo um toque de sofisticação e modernidade para qualquer look. Seja em um encontro casual, uma reunião importante ou uma noite festiva, incorporar elementos metalizados é uma forma de expressar individualidade e brilhar em qualquer cenário. Deu para ver que o metalizado, em 2024, é sobre brincar com a moda e encontrar sua própria voz dentro das tendências, não é mesmo? Não há regras, apenas o convite para experimentar. Lembre-se: o brilho metalizado não é mais reservado para as estrelas: é para todos que querem adicionar um pouco de glamour ao seu dia a dia.</textarea>
+                <textarea id="conteudo" name="conteudo" rows="8" required minlength="20"><%= artigo.CONTEUDO || '' %></textarea>
             </section>
 
             <section class="form-actions">
                 <button type="button" class="btn-secondary" onclick="window.location.href='/blogadm'">Cancelar</button>
                 <button type="submit" class="btn-primary">Salvar Alterações</button>
             </section>
+            <% } else { %>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="window.location.href='/blogadm'">Voltar ao Blog</button>
+            </div>
+            <% } %>
+
         </form>
     </main>
 
@@ -126,6 +158,16 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        <% if (typeof artigo !== 'undefined' && artigo) { %>
+        document.querySelector('.edit-form')?.addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Salvando...';
+            }
+        });
+        <% } %>
     </script>
     <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>

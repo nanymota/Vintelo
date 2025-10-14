@@ -12,17 +12,19 @@ function notify(titulo, texto, tipo, posicao,duracao=3000) {
         gap: 20,
         distance: 20,
         type: 1,
-        position:posicao 
+        position:posicao
     })
 }
-
+ 
 // barra de pesquisa //
 document.addEventListener("DOMContentLoaded", () => {
   const searchIcon = document.querySelector(".search-icon");
   const searchInput = document.querySelector(".search-form input");
-
-  searchIcon.addEventListener("click", () => {
-    searchInput.classList.toggle("ativo");
-    searchInput.focus();
-  });
+ 
+  if (searchIcon && searchInput) {
+    searchIcon.addEventListener("click", () => {
+      searchInput.classList.toggle("ativo");
+      searchInput.focus();
+    });
+  }
 });

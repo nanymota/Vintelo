@@ -33,7 +33,7 @@
           <input type="text" placeholder="Buscar...">
         </form>
         <ul>
-          <li><a href="/homeadm"><img src="/imagens/icone sem cadastro.png" class="maria" alt="Perfil Admin"></a></li>
+          <li><a href="/homeadm"><img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil Admin"></a></li>
           <li><a href="/homeadm"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
           <li><a href="/homeadm"><img src="imagens/icone coraçao.png" class="img-tamanho2" alt="Favoritos"></a></li>
         </ul>
@@ -58,7 +58,7 @@
             <li>
               <a href="/homeadm">
                 <section class="profile-section">
-                  <img src="/imagens/icone sem cadastro.png" alt="Admin" class="profile-pic icone-sem-cadastro">
+                  <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Admin" class="profile-pic icone-sem-cadastro maria">
                   <section class="profile-info">
                     <h2>Administrador</h2>
                   </section>
@@ -105,7 +105,7 @@
         </nav>
         <img src="imagens/logo.png" class="logo" alt="Logo Vintélo">
         <a href="/homeadm">
-          <img src="/imagens/icone sem cadastro.png" class="logo" alt="Perfil Admin" />
+          <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="logo maria" alt="Perfil Admin" />
         </a>
       </nav>
     </header>

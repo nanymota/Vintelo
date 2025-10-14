@@ -6,16 +6,16 @@
     <title>Vintélo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <script src="script/script.js"></script>
-    <script src="script/cep.js"></script>
+    <script src="script/simple-notify-config.js"></script>
     <link rel="stylesheet" href="css/cadastro.css">
     <link rel="stylesheet" href="css/criarbrecho.css">
     <script src="js/criarbrecho.js"></script>
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
-    
+ 
+   
 </head>
 <body>
-
+ 
     <header>
         <nav class="grid">
             <a href="javascript:void(0)" onclick="goBack()">
@@ -54,7 +54,7 @@
                     <span class="vintelo-text">Brechó</span>
                     <p class="form-description">Transforme suas peças em oportunidades de negócio</p>
                 </section>
-                
+               
                 <section class="login-register">
                     <section class="login">
                         <h3>Já tem conta?</h3>
@@ -63,43 +63,25 @@
                                 <label for="email_login">Email ou nome de usuário</label>
                                 <input type="text" id="email_login" name="email_usu" placeholder="Digite aqui...">
                             </section>
-
+ 
                             <section class="form-group">
                                 <label for="senha_login">Senha</label>
                                 <input type="password" id="senha_login" name="senha_usu" placeholder="Digite aqui...">
                             </section>
-
+ 
                             <button class="submit-btn">Entrar</button>
                         </form>
                     </section>
-
+ 
                     <section class="register">
                         <section class="register-header">
                             <h3>Criar Conta</h3>
                             <p>Preencha os dados para criar seu brechó</p>
                         </section>
-                        
-                        <!-- Notificações -->
-                        <% if (typeof dadosNotificacao !== 'undefined' && dadosNotificacao) { %>
-                            <aside class="alert alert-<%= dadosNotificacao.tipo %>" role="alert">
-                                <strong><%= dadosNotificacao.titulo || '' %></strong>
-                                <%= dadosNotificacao.mensagem %>
-                            </aside>
-                        <% } %>
-                        
-                        <!-- Erros de validação -->
-                        <% if (typeof listaErros !== 'undefined' && listaErros && !listaErros.isEmpty()) { %>
-                            <aside class="alert alert-error" role="alert">
-                                <ul>
-                                    <% listaErros.errors.forEach(function(erro) { %>
-                                        <li><%= erro.msg %></li>
-                                    <% }); %>
-                                </ul>
-                            </aside>
-                        <% } %>
-                        
+                       
+ 
+                       
                         <form id="registerForm" action="/criarbrecho" method="post">
-                            <!-- Seção Informações do Brechó -->
                             <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('brecho-info')">
                                     <h4>Informações do Brechó</h4>
@@ -109,48 +91,47 @@
                                     <section class="form-row">
                                         <section class="form-group">
                                             <label for="nomeusu_usu">Nome do Brechó</label>
-                                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó" 
+                                            <input type="text" id="nomeusu_usu" name="nomeusu_usu" placeholder="Digite o nome do brechó"
                                                 value="<%= typeof valores !== 'undefined' && valores?.nomeusu_usu || '' %>" required>
                                         </section>
                                     </section>
-
+ 
                                     <section class="form-row">
                                         <section class="form-group">
                                             <label for="cnpj_brecho">CNPJ</label>
-                                            <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00" 
+                                            <input type="text" id="cnpj_brecho" name="cnpj_brecho" placeholder="00.000.000/0001-00"
                                                 value="<%= typeof valores !== 'undefined' && valores?.cnpj_brecho || '' %>">
                                         </section>
                                         <section class="form-group">
                                             <label for="razao_social">Razão Social</label>
-                                            <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa" 
+                                            <input type="text" id="razao_social" name="razao_social" placeholder="Razão Social da Empresa"
                                                 value="<%= typeof valores !== 'undefined' && valores?.razao_social || '' %>">
                                         </section>
                                     </section>
-
+ 
                                     <section class="form-row">
                                         <section class="form-group">
                                             <label for="nome_usu">Nome Completo</label>
-                                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Seu nome completo" 
+                                            <input type="text" id="nome_usu" name="nome_usu" placeholder="Seu nome completo"
                                                 value="<%= typeof valores !== 'undefined' && valores?.nome_usu || '' %>" required>
                                         </section>
                                     </section>
-
+ 
                                     <section class="form-row">
                                         <section class="form-group">
                                             <label for="email_usu">Endereço de email</label>
-                                            <input type="email" id="email_usu" name="email_usu" placeholder="seu@email.com" 
+                                            <input type="email" id="email_usu" name="email_usu" placeholder="seu@email.com"
                                                 value="<%= typeof valores !== 'undefined' && valores?.email_usu || '' %>" required>
                                         </section>
                                         <section class="form-group">
                                             <label for="fone_usu">Contato</label>
-                                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(11) 99999-9999" 
+                                            <input type="tel" id="fone_usu" name="fone_usu" placeholder="(11) 99999-9999"
                                                 value="<%= typeof valores !== 'undefined' && valores?.fone_usu || '' %>" maxlength="11" required>
                                         </section>
                                     </section>
                                 </section>
                             </section>
-
-                            <!-- Seção Segurança -->
+ 
                             <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('security-info')">
                                     <h4>Segurança</h4>
@@ -169,8 +150,7 @@
                                     </section>
                                 </section>
                             </section>
-
-                            <!-- Seção Endereço -->
+ 
                             <section class="form-section-card">
                                 <section class="section-header" onclick="toggleSection('address-info')">
                                     <h4>Endereço</h4>
@@ -180,41 +160,41 @@
                                     <section class="form-row">
                                         <section class="form-group small">
                                             <label for="cep">CEP</label>
-                                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" 
+                                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9"
                                                 value="<%= typeof valores !== 'undefined' && valores?.cep || '' %>" required>
                                         </section>
                                         <section class="form-group">
                                             <label for="endereco">Endereço</label>
-                                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..." 
+                                            <input type="text" id="endereco" name="endereco" placeholder="Rua, Avenida..."
                                                 value="<%= typeof valores !== 'undefined' && valores?.endereco || '' %>" required>
                                         </section>
                                         <section class="form-group small">
                                             <label for="numero">Número</label>
-                                            <input type="text" id="numero" name="numero" placeholder="123" 
+                                            <input type="text" id="numero" name="numero" placeholder="123"
                                                 value="<%= typeof valores !== 'undefined' && valores?.numero || '' %>" maxlength="4" required>
                                         </section>
                                     </section>
-
+ 
                                     <section class="form-row">
                                         <section class="form-group">
                                             <label for="bairro">Bairro</label>
-                                            <input type="text" id="bairro" name="bairro" placeholder="Nome do bairro" 
+                                            <input type="text" id="bairro" name="bairro" placeholder="Nome do bairro"
                                                 value="<%= typeof valores !== 'undefined' && valores?.bairro || '' %>" required>
                                         </section>
                                         <section class="form-group">
                                             <label for="cidade">Cidade</label>
-                                            <input type="text" id="cidade" name="cidade" placeholder="Nome da cidade" 
+                                            <input type="text" id="cidade" name="cidade" placeholder="Nome da cidade"
                                                 value="<%= typeof valores !== 'undefined' && valores?.cidade || '' %>" required>
                                         </section>
                                         <section class="form-group small">
                                             <label for="uf">UF</label>
-                                            <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2" 
+                                            <input type="text" id="uf" name="uf" placeholder="SP" maxlength="2"
                                                 value="<%= typeof valores !== 'undefined' && valores?.uf || '' %>" required>
                                         </section>
                                     </section>
                                 </section>
                             </section>
-
+ 
                             <button type="submit" name="submit" id="submit" class="submit-btn">Criar brechó</button>
                         </form>
                     </section>
@@ -222,13 +202,14 @@
             </section>
         </section>
     </main>
-    <script src="/js/perfil-autenticado.js"></script>
-    <script src="/js/navegacao.js"></script>
-    <script src="/js/navegacao.js"></script>
     <script>
-        function goBack() {
-            window.history.back();
+        // Verificar se os elementos existem antes de carregar scripts
+        if (document.querySelector('.search-icon') || document.querySelector('.search-form')) {
+            const script = document.createElement('script');
+            script.src = '/js/perfil-autenticado.js';
+            document.head.appendChild(script);
         }
     </script>
+ 
 </body>
 </html>

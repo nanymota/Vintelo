@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const cepInput = document.getElementById('cep');
-    
+   
     if (cepInput) {
         cepInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -9,52 +9,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             e.target.value = value;
         });
-
+ 
         cepInput.addEventListener('blur', function() {
             const cep = this.value.replace(/\D/g, '');
-            
+           
             if (cep.length === 8) {
                 buscarCEP(cep);
             }
         });
     }
 });
-
+ 
 function buscarCEP(cep) {
-    document.getElementById('endereco').value = '';
-    document.getElementById('bairro').value = '';
-    document.getElementById('cidade').value = '';
-    document.getElementById('uf').value = '';
-    
-    document.getElementById('endereco').placeholder = 'Buscando...';
-    
+    const endereco = document.getElementById('endereco');
+    const bairro = document.getElementById('bairro');
+    const cidade = document.getElementById('cidade');
+    const uf = document.getElementById('uf');
+   
+    if (!endereco || !bairro || !cidade || !uf) {
+        console.log('Elementos de endereço não encontrados');
+        return;
+    }
+   
+    endereco.value = '';
+    bairro.value = '';
+    cidade.value = '';
+    uf.value = '';
+   
+    endereco.placeholder = 'Buscando...';
+   
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(response => response.json())
         .then(data => {
             if (data.erro) {
                 alert('CEP não encontrado!');
-                document.getElementById('endereco').placeholder = 'Rua, Avenida...';
+                endereco.placeholder = 'Rua, Avenida...';
                 return;
             }
-            
-            document.getElementById('endereco').value = data.logradouro || '';
-            document.getElementById('bairro').value = data.bairro || '';
-            document.getElementById('cidade').value = data.localidade || '';
-            document.getElementById('uf').value = data.uf || '';
-            
-            document.getElementById('endereco').placeholder = 'Rua, Avenida...';
-            
+           
+            endereco.value = data.logradouro || '';
+            bairro.value = data.bairro || '';
+            cidade.value = data.localidade || '';
+            uf.value = data.uf || '';
+           
+            endereco.placeholder = 'Rua, Avenida...';
+           
             if (!data.logradouro) {
-                document.getElementById('endereco').focus();
+                endereco.focus();
             }
         })
         .catch(error => {
             console.error('Erro ao buscar CEP:', error);
             alert('Erro ao buscar CEP. Tente novamente.');
-            document.getElementById('endereco').placeholder = 'Rua, Avenida...';
+            endereco.placeholder = 'Rua, Avenida...';
         });
 }
-
+ 
 function validarCEP(cep) {
     const cepRegex = /^\d{5}-?\d{3}$/;
     return cepRegex.test(cep);

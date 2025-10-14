@@ -60,19 +60,60 @@ gravarUsuAutenticado = async (req, res, next) => {
 
 verificarUsuAutorizado = (tipoPermitido, destinoFalha) => {
     return (req, res, next) => {
-        if (req.session.autenticado.autenticado != null &&
-            tipoPermitido.find(function (element) { return element == req.session.autenticado.tipo }) != undefined) {
+        console.log('=== VERIFICAR AUTORIZAÇÃO ===');
+        console.log('Sessão autenticada:', req.session?.autenticado);
+        console.log('Tipos permitidos:', tipoPermitido);
+        console.log('Tipo do usuário:', req.session?.autenticado?.tipo);
+        
+        if (!req.session?.autenticado?.autenticado) {
+            console.log('Usuário não autenticado');
+            return res.redirect('/login');
+        }
+        
+        const userType = req.session.autenticado.tipo;
+        const isAuthorized = Array.isArray(tipoPermitido) ? 
+            tipoPermitido.includes(userType) : 
+            tipoPermitido === userType;
+        
+        console.log('Autorizado:', isAuthorized);
+        
+        if (isAuthorized) {
             next();
         } else {
-            res.render(destinoFalha, req.session.autenticado);
+            console.log('Acesso negado - redirecionando para:', destinoFalha);
+            if (destinoFalha.includes('/')) {
+                res.redirect(destinoFalha);
+            } else {
+                res.render(destinoFalha, { autenticado: req.session.autenticado });
+            }
         }
     };
 }
+
+// Middleware específico para verificar se é admin
+verificarAdmin = (req, res, next) => {
+    console.log('=== VERIFICAR ADMIN ===');
+    console.log('Sessão:', req.session?.autenticado);
+    
+    if (!req.session?.autenticado?.autenticado) {
+        console.log('Usuário não autenticado');
+        return res.redirect('/login');
+    }
+    
+    if (req.session.autenticado.tipo !== 'a') {
+        console.log('Usuário não é admin:', req.session.autenticado.tipo);
+        return res.redirect('/homecomprador');
+    }
+    
+    console.log('✅ Usuário é admin');
+    next();
+};
 
 module.exports = {
     verificarUsuAutenticado,
     limparSessao,
     gravarUsuAutenticado,
     verificarUsuAutorizado,
-    carregarDadosUsuario
+    carregarDadosUsuario,
+    verificarAdmin
 }
