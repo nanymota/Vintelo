@@ -49,8 +49,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { 
+        fileSize: 5 * 1024 * 1024,
+        files: 1
+    },
     fileFilter: function (req, file, cb) {
+        console.log('Validando arquivo:', {
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size
+        });
+        
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
@@ -71,6 +80,20 @@ async function ensureUploadDirectory() {
         }
     }
 }
+
+// Configurar pool de conexões com timeout menor
+pool.on('connection', function (connection) {
+    console.log('Nova conexão estabelecida como id ' + connection.threadId);
+    connection.query('SET SESSION wait_timeout = 60');
+    connection.query('SET SESSION interactive_timeout = 60');
+});
+
+pool.on('error', function(err) {
+    console.log('Erro no pool de conexões:', err.code);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('Conexão perdida, tentando reconectar...');
+    }
+});
 
 // Executar na inicialização
 ensureUploadDirectory();
@@ -2739,14 +2762,58 @@ router.post('/upload-foto-perfil', upload.single('foto'), async function(req, re
         const userId = req.session.autenticado.id;
         const imagePath = 'imagem/perfil/' + req.file.filename;
         
+        console.log('Arquivo:', {
+            fieldname: req.file.fieldname,
+            originalname: req.file.originalname,
+            encoding: req.file.encoding,
+            mimetype: req.file.mimetype,
+            destination: req.file.destination,
+            filename: req.file.filename,
+            path: req.file.path,
+            size: req.file.size
+        });
+        
         console.log('Atualizando usuário ID:', userId, 'com imagem:', imagePath);
         
-        const [result] = await pool.query('UPDATE USUARIOS SET IMG_URL = ? WHERE ID_USUARIO = ?', 
-            [imagePath, userId]);
+        // Implementar retry com timeout para evitar ECONNRESET
+        let attempts = 0;
+        const maxAttempts = 3;
+        let result;
+        
+        while (attempts < maxAttempts) {
+            try {
+                attempts++;
+                console.log(`Tentativa ${attempts} de atualização no banco...`);
+                
+                // Usar timeout menor e connection específica
+                const connection = await pool.getConnection();
+                try {
+                    await connection.query('SET SESSION wait_timeout = 30');
+                    [result] = await connection.query(
+                        'UPDATE USUARIOS SET IMG_URL = ? WHERE ID_USUARIO = ?', 
+                        [imagePath, userId]
+                    );
+                    connection.release();
+                    break; // Sucesso, sair do loop
+                } catch (connError) {
+                    connection.release();
+                    throw connError;
+                }
+            } catch (dbError) {
+                console.log(`Erro na tentativa ${attempts}:`, dbError.message);
+                
+                if (attempts >= maxAttempts) {
+                    throw dbError;
+                }
+                
+                // Aguardar antes da próxima tentativa
+                await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+            }
+        }
         
         console.log('Resultado da atualização:', result);
         
-        if (result.affectedRows > 0) {
+        if (result && result.affectedRows > 0) {
             req.session.autenticado.imagem = imagePath;
             res.json({ success: true, imagePath: imagePath });
         } else {
@@ -2755,7 +2822,18 @@ router.post('/upload-foto-perfil', upload.single('foto'), async function(req, re
         
     } catch (error) {
         console.log('ERRO no upload:', error);
-        res.json({ success: false, error: error.message });
+        
+        // Tratar erros específicos
+        let errorMessage = error.message;
+        if (error.code === 'ECONNRESET') {
+            errorMessage = 'Conexão com banco perdida. Tente novamente.';
+        } else if (error.code === 'ETIMEDOUT') {
+            errorMessage = 'Timeout na conexão. Tente novamente.';
+        } else if (error.code === 'ER_LOCK_WAIT_TIMEOUT') {
+            errorMessage = 'Banco ocupado. Tente novamente em alguns segundos.';
+        }
+        
+        res.json({ success: false, error: errorMessage });
     }
 });
 

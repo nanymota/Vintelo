@@ -34,7 +34,7 @@
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
                     <li>
                         <% if (typeof autenticado !== 'undefined' && autenticado) { %>
-                            <a href="/perfilcliente"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a>
+                            <a href="/perfilcliente"><img src="<%= (usuario && usuario.imagem) ? '/' + usuario.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a>
                         <% } else { %>
                             <a href="/menu"><img src="/imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a>
                         <% } %>
@@ -67,15 +67,15 @@
                 <section class="profile-section">
                     <section class="profile-header">
                         <section class="profile-photo">
-                            <img id="profile-img" src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
+                            <img id="profile-img" src="<%= (usuario && usuario.imagem) ? '/' + usuario.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
                             <button class="photo-edit-btn" type="button" onclick="editProfilePhoto()">
                                 <span>+</span>
                             </button>
                             <input type="file" id="profile-photo-input" name="foto" accept="image/jpeg,image/jpg,image/png" style="display: none;">
                         </section>
                         <section class="profile-info">
-                            <h2 id="profile-name">Maria Silva</h2>
-                            <p id="profile-email">maria.silva@email.com</p>
+                            <h2 id="profile-name"><%= (usuario && usuario.nome) ? usuario.nome : 'Usuário' %></h2>
+                            <p id="profile-email"><%= (usuario && usuario.email) ? usuario.email : 'email@exemplo.com' %></p>
                         </section>
                     </section>
 

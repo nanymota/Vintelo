@@ -42,20 +42,20 @@ class PerfilCliente {
 
     setFallbackData() {
         this.userData = {
-            nome: 'Maria Silva',
-            email: 'maria.silva@email.com',
+            nome: 'Usuário',
+            email: 'email@exemplo.com',
             telefone: '(11) 99999-9999',
             imagem: '/imagens/imagem sem cadastro.avif',
-            compras: 12,
-            favoritos: 5,
-            avaliacoes: 3,
-            bio: 'Apaixonada por moda sustentável e peças únicas!',
-            logradouro: 'Rua das Flores',
-            numero: '123',
-            bairro: 'Vila Madalena',
-            cidade: 'São Paulo',
-            uf: 'SP',
-            cep: '05435000'
+            compras: 0,
+            favoritos: 0,
+            avaliacoes: 0,
+            bio: '',
+            logradouro: '',
+            numero: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
+            cep: ''
         };
     }
 
@@ -63,11 +63,21 @@ class PerfilCliente {
         if (!this.userData) return;
 
      
-        document.getElementById('profile-img').src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
-        document.getElementById('profile-name').textContent = this.userData.nome || 'Maria Silva';
-        document.getElementById('profile-email').textContent = this.userData.email || 'maria.silva@email.com';
+        const profileImg = document.getElementById('profile-img');
+        if (profileImg) {
+            profileImg.src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
+        }
+        
+        const profileName = document.getElementById('profile-name');
+        if (profileName) {
+            profileName.textContent = this.userData.nome || 'Usuário';
+        }
+        
+        const profileEmail = document.getElementById('profile-email');
+        if (profileEmail) {
+            profileEmail.textContent = this.userData.email || 'email@exemplo.com';
+        }
 
-  
         const headerImg = document.querySelector('.maria');
         if (headerImg) {
             headerImg.src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';

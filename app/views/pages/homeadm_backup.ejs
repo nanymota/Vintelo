@@ -73,15 +73,15 @@
             <aside class="sidebar-menu">
               <ul>
                 <li>
-                  <a href="/vistoriapedidos"><img src="imagens/check.svg" alt="Pedidos"></a>
+                  <a href="/vistoriapedidos"><img src="imagens/check_icon.svg" alt="Pedidos"></a>
                   Pedidos
                 </li>
                 <li>
-                  <a href="/produtosadm"><img src="imagens/add produto.svg" alt="Produtos"></a>
+                  <a href="/produtosadm"><img src="imagens/add_icon.svg" alt="Produtos"></a>
                   Produtos
                 </li>
                 <li>
-                  <a href="/administradorperfis"><img src="imagens/adm.svg" alt="Perfis"></a>
+                  <a href="/administradorperfis"><img src="imagens/adm_icon.svg" alt="Perfis"></a>
                   Administrador de Perfis
                 </li>
                 <li>
@@ -93,11 +93,11 @@
                   Perfil Premium
                 </li>
                 <li>
-                  <a href="/blogadm"><img src="imagens/blog.svg" alt="Blog"></a>
+                  <a href="/blogadm"><img src="imagens/blog_icon.svg" alt="Blog"></a>
                   Blog
                 </li>
                 <li>
-                  <a href="/estatisticaadm"><img src="imagens/estatistica.png" alt="Estatísticas"></a>
+                  <a href="/estatisticaadm"><img src="imagens/estatistica_icon.sgv" alt="Estatísticas"></a>
                   Estatísticas
                 </li>
               </ul>
@@ -212,7 +212,7 @@
               <h2><%= produto.NOME_PRODUTO %></h2>
               <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
               <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav.png"></button>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
               <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% }) %>
@@ -222,7 +222,7 @@
             <h2>Vestido branco com decote</h2>
             <p class="price">R$49,99</p>
             <p class="Descrição">ou em 2x de R$25,00</p>
-            <button class="favorite"><img src="imagens/coraçao de fav.png"></button>
+            <button class="favorite"><img src="imagens/coração de fav2.png"></button>
             <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
           </article>
         <% } %>
@@ -238,7 +238,7 @@
                 <h2><%= produto.NOME_PRODUTO %></h2>
                 <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
                 <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
-                <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav.png"></button>
+                <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                 <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
               </article>
             <% }) %>
@@ -249,7 +249,7 @@
               <p class="price">R$49,99</p>
               <p class="Descrição">ou em 2x de R$25,00</p>
               <br>
-              <button class="favorite"><img src="imagens/coraçao de fav.png"></button>
+              <button class="favorite"><img src="imagens/coração de fav2.png"></button>
               <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
             </article>
           <% } %>
@@ -342,7 +342,7 @@
                   <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
                   <h2><%= produto.NOME_PRODUTO %></h2>
                   <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav.png"></button>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                   <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
               <% }) %>
@@ -352,7 +352,7 @@
                 <h2>Óculos de sol</h2>
                 <br>
                 <p class="price">R$12,00</p>
-                <button class="favorite"><img src="imagens/coraçao de fav.png"></button>
+                <button class="favorite"><img src="imagens/coração de fav2.png"></button>
                 <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
               </article>
             <% } %>
@@ -366,7 +366,7 @@
                   <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
                   <h2><%= produto.NOME_PRODUTO %></h2>
                   <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
-                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coraçao de fav.png"></button>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
                   <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
                 </article>
               <% }) %>
