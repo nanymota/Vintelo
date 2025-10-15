@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Upload Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .result { margin-top: 20px; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input[type="file"] { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste de Upload - Debug</h1>
+        
+        <div>
+            <h3>1. Verificar Sessão</h3>
+            <button onclick="verificarSessao()">Verificar Sessão</button>
+            <div id="sessao-result"></div>
+        </div>
+
+        <div>
+            <h3>2. Teste Upload Simples</h3>
+            <input type="file" id="foto" accept="image/*">
+            <button onclick="testarUpload()">Testar Upload</button>
+            <div id="upload-result"></div>
+        </div>
+
+        <div>
+            <h3>3. Teste Upload Debug (sem autenticação)</h3>
+            <input type="file" id="foto-debug" accept="image/*">
+            <button onclick="testarUploadDebug()">Testar Upload Debug</button>
+            <div id="upload-debug-result"></div>
+        </div>
+    </div>
+
+    <script>
+        async function verificarSessao() {
+            try {
+                const response = await fetch('/debug-session');
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('sessao-result');
+                resultDiv.innerHTML = `
+                    <div class="result info">
+                        <h4>Status da Sessão:</h4>
+                        <p><strong>Sessão existe:</strong> ${data.session}</p>
+                        <p><strong>Usuário autenticado:</strong> ${data.autenticado}</p>
+                        <p><strong>User ID:</strong> ${data.userId || 'N/A'}</p>
+                        <p><strong>Tipo de usuário:</strong> ${data.userType || 'N/A'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('sessao-result').innerHTML = `
+                    <div class="result error">
+                        <p>Erro ao verificar sessão: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testarUpload() {
+            const fileInput = document.getElementById('foto');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('upload-result').innerHTML = `
+                    <div class="result error">
+                        <p>Por favor, selecione um arquivo</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('foto', file);
+
+            try {
+                const response = await fetch('/upload-foto-perfil', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('upload-result');
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <p>Upload realizado com sucesso!</p>
+                            <p><strong>Caminho da imagem:</strong> ${data.imagePath}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <p>Erro no upload: ${data.error}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('upload-result').innerHTML = `
+                    <div class="result error">
+                        <p>Erro de conexão: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testarUploadDebug() {
+            const fileInput = document.getElementById('foto-debug');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('upload-debug-result').innerHTML = `
+                    <div class="result error">
+                        <p>Por favor, selecione um arquivo</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('foto', file);
+
+            try {
+                const response = await fetch('/test-upload-debug', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('upload-debug-result');
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <p>Upload debug realizado com sucesso!</p>
+                            <p><strong>Caminho da imagem:</strong> ${data.imagePath}</p>
+                            <p><strong>Info do arquivo:</strong></p>
+                            <pre>${JSON.stringify(data.fileInfo, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <p>Erro no upload debug: ${data.error}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('upload-debug-result').innerHTML = `
+                    <div class="result error">
+                        <p>Erro de conexão: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Upload Simples</title>
+</head>
+<body>
+    <h1>Teste de Upload de Foto</h1>
+    
+    <div>
+        <h3>1. Verificar se está logado</h3>
+        <button onclick="checkAuth()">Verificar Autenticação</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <div>
+        <h3>2. Upload de Foto</h3>
+        <input type="file" id="photo" accept="image/*">
+        <button onclick="uploadPhoto()">Enviar Foto</button>
+        <div id="upload-result"></div>
+    </div>
+
+    <script>
+        async function checkAuth() {
+            try {
+                const response = await fetch('/debug-session');
+                const data = await response.json();
+                document.getElementById('auth-result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('auth-result').innerHTML = 
+                    `<p style="color: red;">Erro: ${error.message}</p>`;
+            }
+        }
+
+        async function uploadPhoto() {
+            const fileInput = document.getElementById('photo');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Selecione um arquivo primeiro!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('foto', file);
+
+            try {
+                console.log('Enviando arquivo:', file.name, file.size, file.type);
+                
+                const response = await fetch('/upload-foto-perfil', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    document.getElementById('upload-result').innerHTML = 
+                        `<p style="color: green;">Sucesso! Imagem: ${data.imagePath}</p>`;
+                } else {
+                    document.getElementById('upload-result').innerHTML = 
+                        `<p style="color: red;">Erro: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error('Erro completo:', error);
+                document.getElementById('upload-result').innerHTML = 
+                    `<p style="color: red;">Erro de conexão: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
