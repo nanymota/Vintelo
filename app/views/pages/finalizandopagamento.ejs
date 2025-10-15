@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vintélo</title> 
-    <link rel="stylesheet" href="css/finalizandopagamento.css"> 
+    <link rel="stylesheet" href="css/finalizandopagamento.css">
+    <link rel="stylesheet" href="css/frete-pagamento.css">
 
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
     
@@ -63,7 +64,7 @@
                         <% if (produto.categoria) { %><p>Categoria: <%= produto.categoria %></p><% } %>
                         <p>Quantidade: <%= produto.quantidade %></p>
                         <p>Total</p>
-                        <span>R$ <%= (produto.preco * produto.quantidade).toFixed(2) %></span>
+                        <span id="produto-total">R$ <%= (produto.preco * produto.quantidade).toFixed(2) %></span>
                     </section>
                 <% } else { %>
                     <img src="imagens/vestido branco.png" alt="Produto" class="cart-item-img">
@@ -77,6 +78,21 @@
           </section>
 
           <section class="content">
+
+            <!-- Seção de Cálculo de Frete -->
+            <section class="payment-summary" style="border-left: 4px solid #722F37;">
+              <h2 style="color: #722F37;">Calcular frete</h2>
+              <section class="summary-content">
+                <section class="summary-item">
+                  <input type="text" id="cep_frete" placeholder="00000-000" maxlength="9" class="frete-input-container">
+                  <button onclick="calcularFrete()" class="frete-btn-calcular" style="background-color: #722F37; border-color: #722F37;">Calcular</button>
+                </section>
+                <section id="frete-loading" class="frete-loading">
+                  <p>Calculando frete...</p>
+                </section>
+                <section id="frete-result"></section>
+              </section>
+            </section>
 
             <section class="payment-summary">
               <h2>Resumo do pedido</h2>
@@ -100,25 +116,25 @@
                     <span>Subtotal</span>
                     <span>R$ <%= subtotal || '49,90' %></span>
                 </section>
-                <section class="summary-item">
-                    <span>Frete (<%= freteNome || 'Padrão' %>)</span>
-                    <span>R$ <%= frete || '10,00' %></span>
+                <section class="summary-item" id="frete-item">
+                    <span>Frete (<%= freteNome || 'Calcular' %>)</span>
+                    <span id="frete-valor">R$ <%= frete || '0,00' %></span>
                 </section>
-                <section class="summary-item total-line">
+                <section class="summary-item total-line" id="total-item">
                     <span>Total</span>
-                    <span>R$ <%= total || '59,90' %></span>
+                    <span id="total-valor">R$ <%= total || '59,90' %></span>
                 </section>
               </section>
             </section>
             
 
             <section class="oculto-mobile">
-              <button class="finalize-button" onclick="processarPagamento()">Pagar com Mercado Pago</button>
+              <button class="finalize-button" onclick="processarPagamento()" style="background-color: #722F37; border-color: #722F37;">Pagar com Mercado Pago</button>
             </section>
           </section>
           </section>
           <section class="oculto-desktop">
-            <button class="finalize-button" onclick="processarPagamento()">Pagar com Mercado Pago</button>
+            <button class="finalize-button" onclick="processarPagamento()" style="background-color: #722F37; border-color: #722F37;">Pagar com Mercado Pago</button>
           </main>
           </section>
     </main>
@@ -138,12 +154,121 @@
     </footer>
   </section>
   <script src="js/pagamento.js"></script>
+
   <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script>
         function goBack() {
             window.history.back();
         }
+        
+        // Funções de frete
+        async function calcularFrete() {
+            const cepDestino = document.getElementById('cep_frete').value.replace(/\D/g, '');
+            
+            if (cepDestino.length !== 8) {
+                alert('Digite um CEP válido');
+                return;
+            }
+
+            const loadingDiv = document.getElementById('frete-loading');
+            const resultDiv = document.getElementById('frete-result');
+            
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/calcular-frete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cep_destino: cepDestino, produto_id: 1 })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    mostrarOpcoesEntrega(data.opcoes);
+                } else {
+                    resultDiv.innerHTML = '<p>Erro ao calcular frete</p>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<p>Erro ao calcular frete</p>';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        function mostrarOpcoesEntrega(opcoes) {
+            const resultDiv = document.getElementById('frete-result');
+            let html = '<h4 class="frete-title">Opções de entrega:</h4>';
+            
+            opcoes.forEach((opcao) => {
+                html += `
+                    <div class="opcao-frete" onclick="selecionarFrete('${opcao.name}', '${opcao.price}', '${opcao.delivery_time}')">
+                        <div class="frete-info">
+                            <span class="frete-nome">${opcao.name}</span>
+                            <span class="frete-prazo">${opcao.delivery_time} dias úteis</span>
+                        </div>
+                        <div class="frete-preco-area">
+                            <div class="frete-preco">R$ ${opcao.price}</div>
+                            <span class="selecionar-btn" style="background-color: #722F37; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">Selecionar</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultDiv.innerHTML = html;
+        }
+
+        function selecionarFrete(nome, preco, prazo) {
+            document.querySelectorAll('.opcao-frete').forEach(opcao => {
+                opcao.classList.remove('selecionado');
+                const btn = opcao.querySelector('.selecionar-btn');
+                btn.textContent = 'Selecionar';
+                btn.style.backgroundColor = '#722F37';
+                btn.classList.remove('selecionado');
+            });
+            
+            const selectedOption = event.target.closest('.opcao-frete');
+            selectedOption.classList.add('selecionado');
+            const btn = selectedOption.querySelector('.selecionar-btn');
+            btn.textContent = '✓';
+            btn.style.backgroundColor = '#5a252a';
+            btn.classList.add('selecionado');
+            
+            // Atualizar valores na tela
+            const urlParams = new URLSearchParams(window.location.search);
+            const subtotalParam = urlParams.get('subtotal') || '0';
+            const subtotal = parseFloat(subtotalParam);
+            const valorFrete = parseFloat(preco);
+            const novoTotal = subtotal + valorFrete;
+            
+            document.getElementById('frete-valor').textContent = `R$ ${valorFrete.toFixed(2)}`;
+            document.getElementById('total-valor').textContent = `R$ ${novoTotal.toFixed(2)}`;
+            
+            const freteLabel = document.querySelector('#frete-item span:first-child');
+            if (freteLabel) {
+                freteLabel.textContent = `Frete (${nome})`;
+            }
+        }
+
+        function formatCEPFrete(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+            }
+            input.value = value;
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            const cepInput = document.getElementById('cep_frete');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    formatCEPFrete(e.target);
+                });
+            }
+        });
     </script>
 </body>
 </html>

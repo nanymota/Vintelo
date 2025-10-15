@@ -862,8 +862,8 @@ router.get('/finalizandocompra', verificarUsuAutenticado, async function(req, re
             }
         }
         
-        const frete = subtotal > 0 ? 10 : 0;
-        const total = subtotal + frete;
+        const frete = 0; // Frete será calculado em finalizandopagamento
+        const total = subtotal; // Total sem frete
         
         // Buscar produtos sugeridos reais
         const [produtosSugeridos] = await pool.query(`
@@ -1061,10 +1061,11 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
         let subtotal = 0;
         const produtoId = req.query.produto;
         
-        // Capturar valores de frete vindos de finalizandocompra
-        const totalParam = req.query.total;
-        const freteParam = req.query.frete;
-        const freteNome = req.query.frete_nome;
+        // Capturar valores vindos de finalizandocompra
+        const subtotalParam = req.query.subtotal;
+        
+        console.log('=== FINALIZANDO PAGAMENTO ===');
+        console.log('Parâmetros recebidos:', { produtoId, subtotalParam });
         
         if (produtoId) {
             const [produtos] = await pool.query(`
@@ -1100,16 +1101,26 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             }
         }
         
-        // Usar valores vindos da URL ou calcular padrão
-        const frete = freteParam ? parseFloat(freteParam) : 0;
-        const total = totalParam ? parseFloat(totalParam) : (subtotal + frete);
+        // Usar subtotal da URL se disponível
+        if (subtotalParam) {
+            subtotal = parseFloat(subtotalParam);
+        }
+        
+        const frete = 0; // Frete será calculado na página
+        const total = subtotal; // Total inicial sem frete
+        
+        console.log('Valores calculados:', {
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2)
+        });
         
         res.render('pages/finalizandopagamento', {
             produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
-            freteNome: freteNome || 'Padrão',
+            freteNome: 'Calcular',
             autenticado: req.session.autenticado
         });
     } catch (error) {
@@ -2220,6 +2231,111 @@ router.get('/estatistica', carregarDadosUsuario, async (req, res) => {
             produtosDetalhes: []
         };
         res.render('pages/estatistica', { autenticado: req.session.autenticado, estatisticas });
+    }
+});
+
+// API endpoint para estatísticas
+router.get('/api/estatisticas', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const userId = req.session.autenticado.id;
+        
+        // Buscar produtos do usuário
+        const [produtos] = await pool.query(
+            'SELECT COUNT(*) as total FROM PRODUTOS WHERE ID_USUARIO = ?',
+            [userId]
+        );
+        
+        // Buscar produtos vendidos
+        const [vendas] = await pool.query(
+            'SELECT COUNT(*) as total, SUM(PRECO) as receita FROM PRODUTOS WHERE ID_USUARIO = ? AND STATUS_PRODUTO != "d"',
+            [userId]
+        );
+        
+        // Buscar visualizações
+        const [visualizacoes] = await pool.query(
+            `SELECT COUNT(DISTINCT f.ID_USUARIO) as total 
+             FROM FAVORITOS f 
+             JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
+             WHERE p.ID_USUARIO = ? AND f.TIPO_ITEM = 'produto'`,
+            [userId]
+        );
+        
+        // Buscar produtos por categoria com quantidade real
+        const [produtosCategorias] = await pool.query(
+            `SELECT TIPO_PRODUTO as categoria, COUNT(*) as quantidade, 
+                    SUM(CASE WHEN STATUS_PRODUTO != 'd' THEN 1 ELSE 0 END) as vendidos
+             FROM PRODUTOS WHERE ID_USUARIO = ? 
+             GROUP BY TIPO_PRODUTO
+             ORDER BY quantidade DESC`,
+            [userId]
+        );
+        
+        const totalProdutos = produtos[0]?.total || 0;
+        const totalVendas = vendas[0]?.total || 0;
+        const totalVisualizacoes = Math.max(visualizacoes[0]?.total || 0, totalProdutos * 2);
+        const taxaConversao = totalVisualizacoes > 0 ? ((totalVendas / totalVisualizacoes) * 100).toFixed(1) : 0;
+        
+        const estatisticas = {
+            brecho: { NOME_BRECHO: req.session.autenticado.nome + ' Brechó' },
+            totalProdutos: totalProdutos,
+            totalVendas: totalVendas,
+            receitaTotal: parseFloat(vendas[0]?.receita) || 0,
+            totalVisualizacoes: totalVisualizacoes,
+            taxaConversao: parseFloat(taxaConversao),
+            vendasCategoria: produtosCategorias
+        };
+        
+        res.json(estatisticas);
+    } catch (error) {
+        console.log('Erro na API de estatísticas:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+// API para calcular frete
+router.post('/api/calcular-frete', async (req, res) => {
+    try {
+        const { cep_destino, produto_id } = req.body;
+        
+        // Validar CEP
+        if (!cep_destino || cep_destino.length !== 8) {
+            return res.json({ success: false, message: 'CEP inválido' });
+        }
+        
+        // Buscar dados do produto se fornecido
+        let peso = 0.5; // kg padrão
+        let valor = 50; // valor padrão
+        
+        if (produto_id) {
+            const [produto] = await pool.query('SELECT PRECO FROM PRODUTOS WHERE ID_PRODUTO = ?', [produto_id]);
+            if (produto.length > 0) {
+                valor = parseFloat(produto[0].PRECO);
+            }
+        }
+        
+        // Simular cálculo de frete (valores fixos para demonstração)
+        const opcoes = [
+            {
+                name: 'PAC',
+                price: '15.90',
+                delivery_time: '8'
+            },
+            {
+                name: 'SEDEX',
+                price: '25.50',
+                delivery_time: '3'
+            },
+            {
+                name: 'SEDEX 10',
+                price: '35.00',
+                delivery_time: '1'
+            }
+        ];
+        
+        res.json({ success: true, opcoes: opcoes });
+    } catch (error) {
+        console.log('Erro ao calcular frete:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
     }
 });
 
