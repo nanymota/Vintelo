@@ -224,9 +224,9 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
         
         // Upload da foto
         const formData = new FormData();
-        formData.append('profile-photo', file);
+        formData.append('foto', file);
         
-        fetch('/perfilcliente/foto', {
+        fetch('/upload-foto-perfil', {
             method: 'POST',
             body: formData
         })
@@ -234,8 +234,13 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
         .then(data => {
             if (data.success) {
                 console.log('Foto enviada com sucesso');
+                // Atualizar imagem no header também
+                const headerImg = document.querySelector('.maria');
+                if (headerImg) {
+                    headerImg.src = '/' + data.imagePath;
+                }
             } else {
-                alert('Erro ao enviar foto');
+                alert('Erro ao enviar foto: ' + (data.error || 'Erro desconhecido'));
             }
         })
         .catch(error => {

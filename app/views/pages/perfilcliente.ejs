@@ -32,7 +32,13 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/perfilcliente"><img src="/imagens/icone sem cadastro.png" class="maria" alt="Perfil"></a></li>
+                    <li>
+                        <% if (typeof autenticado !== 'undefined' && autenticado) { %>
+                            <a href="/perfilcliente"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a>
+                        <% } else { %>
+                            <a href="/menu"><img src="/imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a>
+                        <% } %>
+                    </li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -55,19 +61,17 @@
     </section>
 
     <main>
-        <section class="container">
-            <h1>Meu Perfil</h1>
-            
+        <section class="container">   
             <section class="content-wrapper">
                 <!-- Informações do Perfil -->
                 <section class="profile-section">
                     <section class="profile-header">
                         <section class="profile-photo">
-                            <img id="profile-img" src="/imagens/icone sem cadastro.png" alt="Foto do perfil">
-                            <button class="photo-edit-btn" onclick="editProfilePhoto()">
+                            <img id="profile-img" src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto do perfil">
+                            <button class="photo-edit-btn" type="button" onclick="editProfilePhoto()">
                                 <span>+</span>
                             </button>
-                            <input type="file" id="profile-photo-input" name="profile-photo" accept="image/*" style="display: none;" onchange="uploadProfilePhoto(this)">
+                            <input type="file" id="profile-photo-input" name="foto" accept="image/jpeg,image/jpg,image/png" style="display: none;">
                         </section>
                         <section class="profile-info">
                             <h2 id="profile-name">Maria Silva</h2>

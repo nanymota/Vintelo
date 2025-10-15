@@ -30,7 +30,7 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -46,7 +46,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menuvendedor">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" alt="Menu">
+                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Menu">
                 </a>
             </nav>
         </header>
@@ -61,7 +61,7 @@
                 <aside class="profile-sidebar">
                     <section class="profile-info">
                         <section class="photo-upload-container">
-                            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Logo do brechó" class="profile-image" id="profileImage">
+                            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Logo do brechó" class="profile-image" id="profileImage">
                             <section class="photo-upload-overlay">
                                 <input type="file" id="photoInput" accept="image/*" style="display: none;">
                                 <button type="button" class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
@@ -362,7 +362,7 @@
                 const formData = new FormData();
                 formData.append('foto', file);
                 
-                fetch('/upload-foto', {
+                fetch('/upload-foto-perfil', {
                     method: 'POST',
                     body: formData
                 })
@@ -370,8 +370,13 @@
                 .then(data => {
                     if (data.success) {
                         console.log('Logo do brechó enviada com sucesso');
+                        // Atualizar imagem no header também
+                        const headerImg = document.querySelector('.maria');
+                        if (headerImg) {
+                            headerImg.src = '/' + data.imagePath;
+                        }
                     } else {
-                        alert('Erro ao enviar logo');
+                        alert('Erro ao enviar logo: ' + (data.error || 'Erro desconhecido'));
                     }
                 })
                 .catch(error => {

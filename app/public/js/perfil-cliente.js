@@ -45,7 +45,7 @@ class PerfilCliente {
             nome: 'Maria Silva',
             email: 'maria.silva@email.com',
             telefone: '(11) 99999-9999',
-            imagem: '/imagens/icone sem cadastro.png',
+            imagem: '/imagens/imagem sem cadastro.avif',
             compras: 12,
             favoritos: 5,
             avaliacoes: 3,
@@ -63,14 +63,14 @@ class PerfilCliente {
         if (!this.userData) return;
 
      
-        document.getElementById('profile-img').src = this.userData.imagem || '/imagens/icone sem cadastro.png';
+        document.getElementById('profile-img').src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
         document.getElementById('profile-name').textContent = this.userData.nome || 'Maria Silva';
         document.getElementById('profile-email').textContent = this.userData.email || 'maria.silva@email.com';
 
   
         const headerImg = document.querySelector('.maria');
         if (headerImg) {
-            headerImg.src = this.userData.imagem || '/imagens/icone sem cadastro.png';
+            headerImg.src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
         }
 
 
@@ -156,35 +156,70 @@ class PerfilCliente {
     }
 
     setupEventListeners() {
-        // Profile photo upload
         const photoInput = document.getElementById('profile-photo-input');
+        const editPhotoBtn = document.querySelector('.photo-edit-btn');
+        
         if (photoInput) {
-            photoInput.addEventListener('change', (e) => this.uploadProfilePhoto(e.target));
+            photoInput.addEventListener('change', (e) => {
+                this.uploadProfilePhoto(e.target);
+            });
+        }
+        
+        if (editPhotoBtn && photoInput) {
+            editPhotoBtn.addEventListener('click', () => {
+                photoInput.click();
+            });
         }
     }
 
     async uploadProfilePhoto(input) {
-        if (input.files && input.files[0]) {
-            const formData = new FormData();
-            formData.append('profile-photo', input.files[0]);
+        if (!input.files || !input.files[0]) return;
+        
+        const file = input.files[0];
+        
+        // Validações simples
+        if (!file.type.startsWith('image/')) {
+            alert('Apenas imagens são permitidas!');
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Arquivo muito grande! Máximo 5MB.');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('foto', file);
+        
+        try {
+            const response = await fetch('/upload-foto-perfil', {
+                method: 'POST',
+                body: formData
+            });
             
-            try {
-                const response = await fetch('/perfilcliente/foto', {
-                    method: 'POST',
-                    body: formData
-                });
+            const data = await response.json();
+            
+            if (data.success) {
+                const newImageUrl = '/' + data.imagePath + '?t=' + Date.now();
                 
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('profile-img').src = '/' + data.imagePath;
-                    const headerImg = document.querySelector('.maria');
-                    if (headerImg) headerImg.src = '/' + data.imagePath;
-                }
-            } catch (error) {
-                console.error('Erro ao fazer upload:', error);
+                // Atualizar imagens
+                const profileImg = document.getElementById('profile-img');
+                if (profileImg) profileImg.src = newImageUrl;
+                
+                const headerImg = document.querySelector('.maria');
+                if (headerImg) headerImg.src = newImageUrl;
+                
+                alert('Foto atualizada com sucesso!');
+            } else {
+                alert('Erro: ' + data.error);
             }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao enviar foto. Tente novamente.');
         }
     }
+
+
 
     async removeFavorite(produtoId) {
         try {
@@ -249,7 +284,6 @@ class PerfilCliente {
     }
 }
 
-// Global functions for onclick handlers
 function editProfilePhoto() {
     document.getElementById('profile-photo-input').click();
 }

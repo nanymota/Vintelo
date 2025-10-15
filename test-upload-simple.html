@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Upload</title>
+</head>
+<body>
+    <h1>Teste de Upload de Foto</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="foto" name="foto" accept="image/*" required>
+        <button type="submit">Enviar Foto</button>
+    </form>
+    
+    <div id="resultado"></div>
+    
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('foto');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Selecione um arquivo');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('foto', file);
+            
+            try {
+                const response = await fetch('/upload-foto-perfil', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('resultado').innerHTML = 
+                    '<h3>Resultado:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+                if (data.success) {
+                    document.getElementById('resultado').innerHTML += 
+                        '<br><img src="/' + data.imagePath + '" style="max-width: 200px;">';
+                }
+            } catch (error) {
+                document.getElementById('resultado').innerHTML = 
+                    '<h3>Erro:</h3><p>' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>

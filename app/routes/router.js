@@ -32,6 +32,48 @@ const cliente = require('../models/clienteModel');
 
 const uploadFile = require("../util/uploader");
 const uploadProduto = require("../util/uploaderProduto");
+const fs = require('fs');
+const { promisify } = require('util');
+const mkdir = promisify(fs.mkdir);
+
+// Configuração do multer para upload de foto
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './app/public/imagem/perfil/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'perfil-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: function (req, file, cb) {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Apenas imagens são permitidas'));
+        }
+    }
+});
+
+// Garantir que o diretório de upload existe
+async function ensureUploadDirectory() {
+    const uploadDir = './app/public/imagem/perfil/';
+    try {
+        await mkdir(uploadDir, { recursive: true });
+        console.log('Diretório de upload verificado:', uploadDir);
+    } catch (error) {
+        if (error.code !== 'EEXIST') {
+            console.log('Erro ao criar diretório de upload:', error.message);
+        }
+    }
+}
+
+// Executar na inicialização
+ensureUploadDirectory();
 
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const client = new MercadoPagoConfig({
@@ -273,6 +315,16 @@ router.get('/test-admins', async (req, res) => {
     } catch (error) {
         res.json({ erro: error.message });
     }
+});
+
+// Rota de teste para upload
+router.get('/test-upload', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../test-upload-simple.html'));
+});
+
+// Rota de debug para upload
+router.get('/debug-upload', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../debug-upload.html'));
 });
 
 router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "pages/restrito"), function (req, res) {
@@ -2626,113 +2678,166 @@ router.get('/planos', carregarDadosUsuario, async (req, res) => {
     }
 });
 
-router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(req, res){
-    try {
-        console.log('Rota /perfilcliente/foto chamada');
-        console.log('Arquivo recebido:', req.file);
-        console.log('Sessão:', req.session?.autenticado);
-        
-        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
-            const imagePath = 'imagem/perfil/' + req.file.filename;
-            const dadosUsuario = {
-                IMG_URL: imagePath
-            };
-            
-            console.log('Atualizando usuário com:', dadosUsuario);
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            req.session.autenticado.imagem = imagePath;
-            
-            console.log('Upload realizado com sucesso:', imagePath);
-            res.json({
-                success: true,
-                imagePath: imagePath
-            });
-        } else {
-            console.log('Falha na validação:', {
-                session: !!req.session,
-                autenticado: !!req.session?.autenticado,
-                id: req.session?.autenticado?.id,
-                file: !!req.file
-            });
-            res.json({ success: false, error: 'Arquivo não enviado ou usuário não autenticado' });
-        }
-    } catch (error) {
-        console.log('Erro ao salvar foto:', error);
-        res.json({ success: false, error: 'Erro ao fazer upload da foto: ' + error.message });
-    }
+
+
+// Rota de debug para verificar se o usuário está logado
+router.get('/debug-session', (req, res) => {
+    res.json({
+        session: !!req.session,
+        autenticado: !!req.session?.autenticado,
+        userId: req.session?.autenticado?.id,
+        userType: req.session?.autenticado?.tipo,
+        fullSession: req.session
+    });
 });
 
-router.post('/upload-foto', uploadFile('foto'), async function(req, res){
+// Rota de teste para upload sem autenticação (apenas para debug)
+router.post('/test-upload-debug', upload.single('foto'), async function(req, res){
     try {
-        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
-            const imagePath = 'imagem/perfil/' + req.file.filename;
-            const dadosUsuario = {
-                IMG_URL: imagePath
-            };
-            
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            req.session.autenticado.imagem = imagePath;
-            
-            res.json({
-                success: true,
-                imagePath: imagePath
-            });
-        } else {
-            res.json({ success: false, error: 'Arquivo não enviado' });
+        console.log('=== TEST UPLOAD DEBUG ===');
+        console.log('Arquivo recebido:', req.file);
+        
+        if (!req.file) {
+            return res.json({ success: false, error: 'Nenhum arquivo enviado' });
         }
+        
+        const imagePath = 'imagem/perfil/' + req.file.filename;
+        
+        res.json({ 
+            success: true, 
+            imagePath: imagePath,
+            fileInfo: {
+                originalname: req.file.originalname,
+                filename: req.file.filename,
+                size: req.file.size,
+                mimetype: req.file.mimetype
+            }
+        });
+        
     } catch (error) {
-        console.log('Erro ao salvar foto:', error);
+        console.log('Erro no test upload:', error);
         res.json({ success: false, error: error.message });
     }
 });
 
-router.post('/perfilcliente', async function(req, res){
+router.post('/upload-foto-perfil', upload.single('foto'), async function(req, res){
     try {
-        const { nome, email, telefone, cep, logradouro, numero, bairro, cidade, uf, cpf, data_nasc, bio } = req.body;
+        console.log('=== UPLOAD FOTO PERFIL ===');
+        console.log('Sessão:', req.session);
+        console.log('Autenticado:', req.session?.autenticado);
+        console.log('Arquivo:', req.file);
         
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            // Atualizar dados do usuário
-            const dadosUsuario = {
-                NOME_USUARIO: nome,
-                EMAIL_USUARIO: email,
-                CELULAR_USUARIO: telefone,
-                CEP_USUARIO: cep ? cep.replace(/\D/g, '') : '',
-                LOGRADOURO_USUARIO: logradouro,
-                NUMERO_USUARIO: numero,
-                BAIRRO_USUARIO: bairro,
-                CIDADE_USUARIO: cidade,
-                UF_USUARIO: uf
-            };
-            
-            if (bio) {
-                dadosUsuario.DESCRICAO_USUARIO = bio;
-            }
-            
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            
-            // Atualizar dados do cliente
-            if (cpf || data_nasc) {
-                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
-                if (clienteData && clienteData.length > 0) {
-                    const dadosCliente = {};
-                    if (cpf) dadosCliente.CPF_CLIENTE = cpf.replace(/\D/g, '');
-                    if (data_nasc) dadosCliente.DATA_NASC = data_nasc;
-                    
-                    await cliente.update(dadosCliente, req.session.autenticado.id);
+        // Verificar autenticação manualmente
+        if (!req.session || !req.session.autenticado || !req.session.autenticado.id) {
+            return res.json({ success: false, error: 'Usuário não autenticado' });
+        }
+        
+        if (!req.file) {
+            return res.json({ success: false, error: 'Nenhum arquivo enviado' });
+        }
+        
+        const userId = req.session.autenticado.id;
+        const imagePath = 'imagem/perfil/' + req.file.filename;
+        
+        console.log('Atualizando usuário ID:', userId, 'com imagem:', imagePath);
+        
+        const [result] = await pool.query('UPDATE USUARIOS SET IMG_URL = ? WHERE ID_USUARIO = ?', 
+            [imagePath, userId]);
+        
+        console.log('Resultado da atualização:', result);
+        
+        if (result.affectedRows > 0) {
+            req.session.autenticado.imagem = imagePath;
+            res.json({ success: true, imagePath: imagePath });
+        } else {
+            res.json({ success: false, error: 'Falha ao atualizar no banco de dados' });
+        }
+        
+    } catch (error) {
+        console.log('ERRO no upload:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
+
+
+
+router.post('/perfilcliente', verificarUsuAutenticado, async function(req, res){
+    try {
+        console.log('=== SALVANDO PERFIL CLIENTE ===');
+        console.log('Dados recebidos:', req.body);
+        
+        const { nome, email, telefone, cep, logradouro, numero, bairro, cidade, uf, cpf, data_nasc, bio } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        // Validar dados obrigatórios
+        if (!nome || !email) {
+            console.log('Dados obrigatórios não fornecidos');
+            return res.redirect('/perfilcliente?erro=Nome e email são obrigatórios');
+        }
+        
+        // Atualizar dados do usuário
+        const dadosUsuario = {
+            NOME_USUARIO: nome.trim(),
+            EMAIL_USUARIO: email.trim(),
+            CELULAR_USUARIO: telefone ? telefone.trim() : null,
+            CEP_USUARIO: cep ? cep.replace(/\D/g, '') : null,
+            LOGRADOURO_USUARIO: logradouro ? logradouro.trim() : null,
+            NUMERO_USUARIO: numero ? numero.trim() : null,
+            BAIRRO_USUARIO: bairro ? bairro.trim() : null,
+            CIDADE_USUARIO: cidade ? cidade.trim() : null,
+            UF_USUARIO: uf ? uf.trim() : null
+        };
+        
+        if (bio && bio.trim()) {
+            dadosUsuario.DESCRICAO_USUARIO = bio.trim();
+        }
+        
+        console.log('Atualizando usuário com dados:', dadosUsuario);
+        await usuarioModel.update(dadosUsuario, userId);
+        
+        // Atualizar sessão
+        req.session.autenticado.nome = nome.trim();
+        req.session.autenticado.email = email.trim();
+        
+        // Atualizar dados do cliente
+        if (cpf || data_nasc) {
+            try {
+                const clienteData = await cliente.findByUserId(userId);
+                const dadosCliente = {};
+                
+                if (cpf && cpf.trim()) {
+                    dadosCliente.CPF_CLIENTE = cpf.replace(/\D/g, '');
                 }
+                if (data_nasc && data_nasc.trim()) {
+                    dadosCliente.DATA_NASC = data_nasc;
+                }
+                
+                if (Object.keys(dadosCliente).length > 0) {
+                    if (clienteData && clienteData.length > 0) {
+                        await cliente.update(dadosCliente, userId);
+                    } else {
+                        // Criar novo registro de cliente se não existir
+                        dadosCliente.ID_USUARIO = userId;
+                        await cliente.create(dadosCliente);
+                    }
+                }
+            } catch (clienteError) {
+                console.log('Erro ao atualizar dados do cliente:', clienteError.message);
             }
         }
         
-        res.redirect('/perfilcliente');
+        console.log('Perfil atualizado com sucesso!');
+        res.redirect('/perfilcliente?sucesso=Perfil atualizado com sucesso');
+        
     } catch (error) {
-        console.log('Erro ao salvar perfil:', error);
-        res.redirect('/perfilcliente');
+        console.log('ERRO ao salvar perfil:', error);
+        res.redirect('/perfilcliente?erro=Erro ao salvar perfil');
     }
 });
 
 router.get('/perfilcliente', async function(req, res){
     try {
-        console.log('Acessando perfil cliente');
+        console.log('=== CARREGANDO PERFIL CLIENTE ===');
         
         let userData = {
             nome: 'Usuário',
@@ -2755,44 +2860,72 @@ router.get('/perfilcliente', async function(req, res){
         };
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            console.log('Usuário autenticado, buscando dados');
-            const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+            console.log('Usuário autenticado ID:', req.session.autenticado.id);
             
-            if (userDetails && userDetails.length > 0) {
-                const user = userDetails[0];
-                userData.nome = user.NOME_USUARIO || 'Usuário';
-                userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
-                userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
-                userData.imagem = user.IMG_URL || null;
-                userData.user_usuario = user.USER_USUARIO || 'usuario';
-                userData.cep = user.CEP_USUARIO || '';
-                userData.logradouro = user.LOGRADOURO_USUARIO || '';
-                userData.numero = user.NUMERO_USUARIO || '';
-                userData.bairro = user.BAIRRO_USUARIO || '';
-                userData.cidade = user.CIDADE_USUARIO || '';
-                userData.uf = user.UF_USUARIO || '';
+            try {
+                const userDetails = await usuarioModel.findId(req.session.autenticado.id);
                 
-                // Buscar dados do cliente
-                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
-                if (clienteData && clienteData.length > 0) {
-                    userData.cpf = clienteData[0].CPF_CLIENTE || '';
-                    if (clienteData[0].DATA_NASC) {
-                        const date = new Date(clienteData[0].DATA_NASC);
-                        userData.data_nasc = date.toISOString().split('T')[0];
+                if (userDetails && userDetails.length > 0) {
+                    const user = userDetails[0];
+                    console.log('Dados do usuário encontrados:', {
+                        nome: user.NOME_USUARIO,
+                        email: user.EMAIL_USUARIO,
+                        imagem: user.IMG_URL
+                    });
+                    
+                    userData.nome = user.NOME_USUARIO || 'Usuário';
+                    userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
+                    userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
+                    userData.imagem = user.IMG_URL || null;
+                    userData.user_usuario = user.USER_USUARIO || 'usuario';
+                    userData.cep = user.CEP_USUARIO || '';
+                    userData.logradouro = user.LOGRADOURO_USUARIO || '';
+                    userData.numero = user.NUMERO_USUARIO || '';
+                    userData.bairro = user.BAIRRO_USUARIO || '';
+                    userData.cidade = user.CIDADE_USUARIO || '';
+                    userData.uf = user.UF_USUARIO || '';
+                    
+                    // Buscar dados do cliente
+                    try {
+                        const clienteData = await cliente.findByUserId(req.session.autenticado.id);
+                        if (clienteData && clienteData.length > 0) {
+                            userData.cpf = clienteData[0].CPF_CLIENTE || '';
+                            if (clienteData[0].DATA_NASC) {
+                                const date = new Date(clienteData[0].DATA_NASC);
+                                userData.data_nasc = date.toISOString().split('T')[0];
+                            }
+                        }
+                    } catch (clienteError) {
+                        console.log('Erro ao buscar dados do cliente:', clienteError.message);
                     }
+                } else {
+                    console.log('Nenhum dado de usuário encontrado');
                 }
+            } catch (userError) {
+                console.log('Erro ao buscar dados do usuário:', userError.message);
             }
+        } else {
+            console.log('Usuário não autenticado, redirecionando...');
+            return res.redirect('/entrar');
         }
         
-        console.log('Renderizando página');
+        console.log('Renderizando página com dados:', {
+            nome: userData.nome,
+            email: userData.email,
+            imagem: userData.imagem
+        });
+        
         res.render('pages/perfilcliente', {
             usuario: userData,
             favoritos: [],
-            autenticado: req.session ? req.session.autenticado : null
+            autenticado: req.session.autenticado
         });
     } catch (error) {
-        console.log('Erro ao carregar perfil:', error);
-        res.status(500).send('Erro interno do servidor');
+        console.log('ERRO GERAL ao carregar perfil:', error);
+        res.status(500).render('pages/erro', {
+            mensagem: 'Erro interno do servidor',
+            autenticado: req.session ? req.session.autenticado : null
+        });
     }
 });
 

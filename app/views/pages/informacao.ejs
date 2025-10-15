@@ -32,7 +32,7 @@
                 </form>
                 <ul>
                     <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
-                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -48,7 +48,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menuvendedor">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Menu" class="maria">
+                    <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Menu" class="maria">
                 </a>
             </nav>
         </header>
@@ -63,7 +63,7 @@
                 <aside class="profile-sidebar">
                     <section class="profile-info">
                         <section class="photo-upload-container">
-                            <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : 'imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-image maria" id="profileImage">
+                            <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-image maria" id="profileImage">
                             <section class="photo-upload-overlay">
                                 <input type="file" id="photoInput" accept="image/*" style="display: none;">
                                 <button type="button" class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
