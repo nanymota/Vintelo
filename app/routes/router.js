@@ -2223,7 +2223,7 @@ router.get('/estatistica', carregarDadosUsuario, async (req, res) => {
     }
 });
 
-router.get('/estatisticaadm', async (req, res) => {
+router.get('/estatisticaadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         // Buscar estatísticas gerais da plataforma
         const [totalUsuarios] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS');
@@ -3007,7 +3007,7 @@ router.get('/perfilcliente', async function(req, res){
     }
 });
 
-router.get('/homeadm', carregarDadosUsuario, async (req, res) => {
+router.get('/homeadm', verificarUsuAutenticado, verificarAdmin, carregarDadosUsuario, async (req, res) => {
     let banners = [];
     let produtos = [];
     let brechos = [];
@@ -3050,7 +3050,7 @@ router.get('/pedidosadm', (req, res) => res.render('pages/pedidosadm'));
 router.get('/relatorioadm', (req, res) => res.render('pages/relatorioadm'));
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
 
-router.get('/denuncias', async function(req, res) {
+router.get('/denuncias', verificarUsuAutenticado, verificarAdmin, async function(req, res) {
     try {
         let denuncias = [];
         
@@ -3165,7 +3165,7 @@ router.post('/denuncias/rejeitar/:id', denunciaController.rejeitarDenuncia);
 router.get('/denuncias/analisar/:id', denunciaController.analisarDenunciaDetalhada);
 
 router.get('/analisardenuncia', (req, res) => res.render('pages/analisardenuncia'));
-router.get('/perfilpremium', async (req, res) => {
+router.get('/perfilpremium', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     const defaultStats = {
         totalPremium: 0,
         receitaMensal: 0,
@@ -3240,7 +3240,7 @@ router.get('/perfilpremium', async (req, res) => {
         });
     }
 });
-router.get('/blogadm', async (req, res) => {
+router.get('/blogadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         console.log('=== CARREGANDO BLOG ADM ===');
         
@@ -3783,7 +3783,7 @@ router.get('/test-blog', async (req, res) => {
     }
 });
 
-router.get('/avaliacaoadm', async (req, res) => {
+router.get('/avaliacaoadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         // Como não há tabela AVALIACOES, usar dados simulados baseados em usuários reais
         const [usuarios] = await pool.query(`
@@ -3876,7 +3876,7 @@ router.get('/usuariosadm', async (req, res) => {
     }
 });
 
-router.get('/produtosadm', async (req, res) => {
+router.get('/produtosadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         const [produtos] = await pool.query(`
             SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, p.TAMANHO_PRODUTO,
