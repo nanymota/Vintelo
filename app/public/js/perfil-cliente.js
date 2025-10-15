@@ -42,20 +42,20 @@ class PerfilCliente {
 
     setFallbackData() {
         this.userData = {
-            nome: 'Maria Silva',
-            email: 'maria.silva@email.com',
+            nome: 'Usuário',
+            email: 'email@exemplo.com',
             telefone: '(11) 99999-9999',
-            imagem: '/imagens/icone sem cadastro.png',
-            compras: 12,
-            favoritos: 5,
-            avaliacoes: 3,
-            bio: 'Apaixonada por moda sustentável e peças únicas!',
-            logradouro: 'Rua das Flores',
-            numero: '123',
-            bairro: 'Vila Madalena',
-            cidade: 'São Paulo',
-            uf: 'SP',
-            cep: '05435000'
+            imagem: '/imagens/imagem sem cadastro.avif',
+            compras: 0,
+            favoritos: 0,
+            avaliacoes: 0,
+            bio: '',
+            logradouro: '',
+            numero: '',
+            bairro: '',
+            cidade: '',
+            uf: '',
+            cep: ''
         };
     }
 
@@ -63,14 +63,24 @@ class PerfilCliente {
         if (!this.userData) return;
 
      
-        document.getElementById('profile-img').src = this.userData.imagem || '/imagens/icone sem cadastro.png';
-        document.getElementById('profile-name').textContent = this.userData.nome || 'Maria Silva';
-        document.getElementById('profile-email').textContent = this.userData.email || 'maria.silva@email.com';
+        const profileImg = document.getElementById('profile-img');
+        if (profileImg) {
+            profileImg.src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
+        }
+        
+        const profileName = document.getElementById('profile-name');
+        if (profileName) {
+            profileName.textContent = this.userData.nome || 'Usuário';
+        }
+        
+        const profileEmail = document.getElementById('profile-email');
+        if (profileEmail) {
+            profileEmail.textContent = this.userData.email || 'email@exemplo.com';
+        }
 
-  
         const headerImg = document.querySelector('.maria');
         if (headerImg) {
-            headerImg.src = this.userData.imagem || '/imagens/icone sem cadastro.png';
+            headerImg.src = this.userData.imagem || '/imagens/imagem sem cadastro.avif';
         }
 
 
@@ -156,35 +166,70 @@ class PerfilCliente {
     }
 
     setupEventListeners() {
-        // Profile photo upload
         const photoInput = document.getElementById('profile-photo-input');
+        const editPhotoBtn = document.querySelector('.photo-edit-btn');
+        
         if (photoInput) {
-            photoInput.addEventListener('change', (e) => this.uploadProfilePhoto(e.target));
+            photoInput.addEventListener('change', (e) => {
+                this.uploadProfilePhoto(e.target);
+            });
+        }
+        
+        if (editPhotoBtn && photoInput) {
+            editPhotoBtn.addEventListener('click', () => {
+                photoInput.click();
+            });
         }
     }
 
     async uploadProfilePhoto(input) {
-        if (input.files && input.files[0]) {
-            const formData = new FormData();
-            formData.append('profile-photo', input.files[0]);
+        if (!input.files || !input.files[0]) return;
+        
+        const file = input.files[0];
+        
+        // Validações simples
+        if (!file.type.startsWith('image/')) {
+            alert('Apenas imagens são permitidas!');
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Arquivo muito grande! Máximo 5MB.');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('foto', file);
+        
+        try {
+            const response = await fetch('/upload-foto-perfil', {
+                method: 'POST',
+                body: formData
+            });
             
-            try {
-                const response = await fetch('/perfilcliente/foto', {
-                    method: 'POST',
-                    body: formData
-                });
+            const data = await response.json();
+            
+            if (data.success) {
+                const newImageUrl = '/' + data.imagePath + '?t=' + Date.now();
                 
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('profile-img').src = '/' + data.imagePath;
-                    const headerImg = document.querySelector('.maria');
-                    if (headerImg) headerImg.src = '/' + data.imagePath;
-                }
-            } catch (error) {
-                console.error('Erro ao fazer upload:', error);
+                // Atualizar imagens
+                const profileImg = document.getElementById('profile-img');
+                if (profileImg) profileImg.src = newImageUrl;
+                
+                const headerImg = document.querySelector('.maria');
+                if (headerImg) headerImg.src = newImageUrl;
+                
+                alert('Foto atualizada com sucesso!');
+            } else {
+                alert('Erro: ' + data.error);
             }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao enviar foto. Tente novamente.');
         }
     }
+
+
 
     async removeFavorite(produtoId) {
         try {
@@ -249,7 +294,6 @@ class PerfilCliente {
     }
 }
 
-// Global functions for onclick handlers
 function editProfilePhoto() {
     document.getElementById('profile-photo-input').click();
 }

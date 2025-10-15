@@ -31,7 +31,7 @@
                 </form>
                 <ul>
                     <li><a href="/criarbrecho"><img src="imagens/add brecho.png" class="img-tamanho" alt="Criar Brechó"></a></li>
-                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" alt="Perfil"></a></li>
+                    <li><a href="/menuvendedor"><img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" alt="Perfil"></a></li>
                     <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
             </section>
@@ -47,7 +47,7 @@
                 </a>
                 <img src="imagens/logo.png" alt="Vintélo">
                 <a href="/menuvendedor">
-                    <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Menu" class="maria">
+                    <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Menu" class="maria">
                 </a>
             </nav>
         </header>
@@ -64,12 +64,13 @@
                 <!-- Sidebar de Navegação -->
                 <aside class="profile-sidebar">
                     <section class="profile-info">
-                        <img src="<%= autenticado && autenticado.imagem ? autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Foto de perfil" class="profile-image maria">
+                        <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-image maria">
                         <h2><%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'Vendedor' %></h2>
                         <p>@<%= autenticado && autenticado.user_usuario ? autenticado.user_usuario : 'vendedor' %></p>
                     </section>
                     <nav class="profile-menu">
                         <a href="#" class="active">Geral</a>
+                        <a href="/perfilvender">Perfil do Vendedor</a>
                         <a href="/informacao">Informação da conta</a>
                         <a href="/sacola1">Sacola</a>
                         <a href="/minhascomprasdesktop">Minhas compras</a>

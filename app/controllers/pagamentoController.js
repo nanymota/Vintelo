@@ -38,6 +38,7 @@ const processarPagamento = async (req, res) => {
                 failure: `${baseUrl}/pagamento-falha`,
                 pending: `${baseUrl}/pagamento-pendente`
             },
+            auto_return: 'approved',
             external_reference: `vintelo-${Date.now()}`
         };
         

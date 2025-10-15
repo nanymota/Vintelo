@@ -38,7 +38,7 @@
             <% if (typeof autenticado !== 'undefined' && autenticado) { %>
               <a href="/perfilcliente"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria"></a>
             <% } else { %>
-              <a href="/menu"><img src="/imagens/imagem sem cadastro.avif" class="maria"></a>
+              <a href="/cadastro"><img src="/imagens/imagem sem cadastro.avif" class="maria"></a>
             <% } %>
           </li>
           <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
@@ -90,11 +90,7 @@
                 <li>
                   <a href="/minhascompras"><img src="imagens/caminhao.png" alt="Minhas compras"></a>
                   Minhas compras
-                </li>
-                <li>
-                  <a href="#"><img src="imagens/cartao.png" alt="Meus cartões"></a>
-                  Meus cartões
-                </li>
+                </li>>
                 <li>
                   <a href="/favoritos"><img src="imagens/coraçao de fav.png" alt="Favoritos"></a>
                   Favoritos
@@ -107,7 +103,7 @@
             </aside>
         </nav>
         <img src="/imagens/logo.png" class="logo">
-        <a href="/menu">
+        <a href="<%= autenticado ? '/menu' : '/cadastro' %>">
           <div class="profile-container">
             <img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-pic maria" />
           </div>

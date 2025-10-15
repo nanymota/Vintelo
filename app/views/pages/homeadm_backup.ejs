@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <title>Vintélo - Administração</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+  <link rel="stylesheet" href="/css/profile-sections.css">
+  <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
+</head>
+
+<body>
+                                  <!-- Banner 10% off-->
+    <section class="discount-banner">
+      <span class="highlight">10% OFF Na primeira compra</span>
+    </section>
+                                <!-- Cabeçalho da página-->
+  <br>
+  <section class="oculto-mobile">
+    <header class="main-header">
+      <a href="/homeadm">
+        <img src="/imagens/logo.png" class="img-logo">
+      </a>
+      <nav>
+        <a href="/blogadm">Blog</a>
+        <a href="/denuncias">Denúncias</a>
+        <a href="/avaliacaoadm">Avaliações</a>
+        <a href="/estatisticaadm">Estatísticas</a>
+        <a href="/produtosadm">Produtos</a>
+    </nav>
+      <section class="search-profile">
+        <form>
+          <input type="text" placeholder="Buscar...">
+        </form>
+        <ul>
+          <li><a href="/homeadm"><img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" class="maria"></a></li>
+          <li><a href="/homeadm"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
+          <li><a href="/homeadm"><img src="/imagens/icone coraçao.png" class="img-tamanho2"></a></li>
+        </ul>
+      </section>
+    </header>
+  </section>
+                                    <!-- Menu Hamburguer-->
+
+  <section class="oculto-desktop">
+    <header>
+      <nav class="grid">
+        <nav class="menu-hamburger">
+
+          <input id="menu-hamburguer" type="checkbox" />
+          <label for="menu-hamburguer">
+            <section class="menu">
+              <span class="hamburguer"></span>
+            </section>
+          </label>
+
+          <ul class="menu-hamburguer-elements show">
+            <li>
+              <a href="/homeadm">
+                <section class="profile-section">
+                  <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Admin" class="profile-pic maria">
+                  <section class="profile-info">
+                    <h2>Administrador</h2>
+                  </section>
+                  <button class="create-btn">Painel Admin</button>
+                </section>
+              </a>
+            </li>
+            <br>
+            <br>
+            <br>
+            
+            <aside class="sidebar-menu">
+              <ul>
+                <li>
+                  <a href="/vistoriapedidos"><img src="imagens/check_icon.svg" alt="Pedidos"></a>
+                  Pedidos
+                </li>
+                <li>
+                  <a href="/produtosadm"><img src="imagens/add_icon.svg" alt="Produtos"></a>
+                  Produtos
+                </li>
+                <li>
+                  <a href="/administradorperfis"><img src="imagens/adm_icon.svg" alt="Perfis"></a>
+                  Administrador de Perfis
+                </li>
+                <li>
+                  <a href="/denuncias"><img src="imagens/denuncia_icon.svg" alt="Denúncias"></a>
+                  Denúncias
+                </li>
+                <li>
+                  <a href="/perfilpremium"><img src="imagens/estrela_icon_adm.svg" alt="Premium"></a>
+                  Perfil Premium
+                </li>
+                <li>
+                  <a href="/blogadm"><img src="imagens/blog_icon.svg" alt="Blog"></a>
+                  Blog
+                </li>
+                <li>
+                  <a href="/estatisticaadm"><img src="imagens/estatistica_icon.sgv" alt="Estatísticas"></a>
+                  Estatísticas
+                </li>
+              </ul>
+            </aside>
+        </nav>
+        <img src="/imagens/logo.png" class="logo">
+        <a href="/homeadm">
+          <div class="profile-container">
+            <img src="/<%= user && user.IMG_URL ? user.IMG_URL : 'imagens/imagem sem cadastro.avif' %>" alt="Foto de perfil" class="profile-pic maria" />
+          </div>
+        </a>
+      </nav>
+    </header>
+   </section>
+    <main>
+      
+
+      <br>
+      <!--                                        barra de pesquisa                                              -->
+      <section class="oculto-desktop">
+        <section class="search-section">
+          <section class="search-container">
+            <form class="search-form">
+              <button type="button" class="search-icon">
+                <img src="imagens/pesquisa.png" alt="Pesquisar">
+              </button>
+              <input type="text" placeholder="Busque..." required>
+            </form>
+          </section>
+        </section>
+        <script src="/js/script.js"></script>
+        <script src="/js/menu-auth.js"></script>
+      </section>
+      
+
+      <br>
+
+
+      <!--                           Carrossel de banners  mobile                                          -->
+      <section class="oculto-mobile">
+        <section class="carousel-container" style="position: relative;">
+          <a href="/editarbanners" style="position: absolute; top: 20px; left: 20px; background: #7d2838; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: bold; z-index: 10;">Alterar Banners</a>
+          <section class="carousel-slide">
+            <img src="imagens/banner outono.png" alt="Imagem 1">
+            <img src="imagens/banner desk.png" alt="Imagem 2">
+            <img src="imagens/banner boss desk.jpg" alt="Imagem 3">
+          </section>
+          <section class="carousel-indicators">
+            <section class="active"></section>
+          </section>
+        </section>
+      </section>
+
+      <section class="oculto-desktop">
+        <section class="carousel-container" style="position: relative;">
+          <a href="/editarbanners" style="position: absolute; top: 15px; left: 15px; background: #7d2838; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold; z-index: 10;">Alterar Banners</a>
+          <section class="carousel-slide">
+            <img src="imagens/banner outono mobile.png" alt="Imagem 1">
+            <img src="imagens/banner primavera mobile.png" alt="Imagem 2">
+            <img src="imagens/banner boss mobile.png" alt="Imagem 3">
+          </section>
+          <section class="carousel-indicators">
+            <section class="active"></section>
+          </section>
+        </section>
+      </section>
+      <!--                                      Carrossel das categorias                                              -->
+      
+      <!--  Mobile -->
+      <nav class="category-nav category-nav-mobile">
+      <br>
+      <span class="garimpe-text">Garimpe na</span><br>
+      <span class="vintelo-text">Vintélo</span>
+      <br>
+      <ul>
+        <li><a href="#" onclick="showSection('novidades')">Novidades</a></li>
+        <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
+        <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
+      </ul>
+      </nav>
+
+      <!-- Navegação Desktop -->
+      <nav class="category-nav category-nav-desktop">
+        <section class="garimpe-vintelo-container">
+          <span class="garimpe-text">Garimpe na</span><br>
+          <span class="vintelo-text">Vintélo</span>
+        </section>
+
+        <section class="carousel-container">
+          <ul>
+            <li><a href="#" onclick="showSection('novidades')">Novidades</a></li>
+            <li><a href="#" onclick="showSection('descontos')">Descontos</a></li>
+            <li><a href="#" onclick="showSection('brechos')">Brechós</a></li>
+            <li><a href="/categorias">Categorias</a></li>
+            <li><a href="#" onclick="showSection('plussize')">Plusize</a></li>
+          </ul>
+        </section>
+      </nav>
+      <!--                                    Seção dos produtos                                              -->
+      <nav class="grid-produtos">
+        <h3>Novidades</h3>
+        
+      </nav>
+      <!-- Seção unificada: apenas 4 produtos -->
+      <section class="product-grid">
+        <% if (produtos && produtos.length > 0) { %>
+          <% produtos.slice(0, 4).forEach(produto => { %>
+            <article class="product-card">
+              <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+              <h2><%= produto.NOME_PRODUTO %></h2>
+              <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+              <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+              <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
+              <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <article class="product-card">
+            <a href="/produto2"><img src="imagens/vestido branco.png" alt="Vestido branco com decote"></a>
+            <h2>Vestido branco com decote</h2>
+            <p class="price">R$49,99</p>
+            <p class="Descrição">ou em 2x de R$25,00</p>
+            <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+            <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+          </article>
+        <% } %>
+      </section>
+
+      <!--                                           PRODUTOS OCULTOS                                              -->
+      <section class="produtos-ocultos">
+        <section class="product-grid">
+          <% if (produtos && produtos.length > 4) { %>
+            <% produtos.slice(4, 8).forEach(produto => { %>
+              <article class="product-card">
+                <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                <h2><%= produto.NOME_PRODUTO %></h2>
+                <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                <p class="Descrição">ou em 2x de R$ <%= (parseFloat(produto.PRECO) / 2).toFixed(2).replace('.', ',') %></p>
+                <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
+                <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+              </article>
+            <% }) %>
+          <% } else { %>
+            <article class="product-card">
+              <img src="imagens/cropped flor.png" alt="cropped flor">
+              <h2>Cropeed Floral</h2>
+              <p class="price">R$49,99</p>
+              <p class="Descrição">ou em 2x de R$25,00</p>
+              <br>
+              <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+              <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+            </article>
+          <% } %>
+
+          <a href="/categorias"><span class="ver">Ver tudo</span></a>
+
+        </section>
+      </section>
+
+      
+      <!--                                        Perfil dos Brechós                                              -->
+      <section class="titulo-brecho-section">
+        <span class="garimpe-text">Encontre outros</span><br>
+        <span class="vintelo-text">Brechós</span>
+      </section>
+      
+      <ul class="brechos-grid">
+        <% if (brechos && brechos.length > 0) { %>
+          <% brechos.forEach(brecho => { %>
+            <li class="profile-item">
+              <a href="/brecho/<%= brecho.ID_USUARIO %>">
+                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-image">
+              </a>
+              <section class="profile-info">
+                <strong><%= brecho.NOME_USUARIO %></strong>
+                <span class="rating"><%= parseFloat(brecho.MEDIA_AVALIACOES).toFixed(1) %> ⭐⭐⭐⭐⭐</span>
+              </section>
+              <button class="follow-button" onclick="toggleFavoriteBrecho(this, <%= brecho.ID_USUARIO %>)">Favoritar</button>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="profile-item">
+            <img src="imagens/brecho1.png" alt="Mayte" class="profile-image">
+            <section class="profile-info">
+              <strong>Mayte</strong>
+              <span class="rating">4.9 ⭐⭐⭐⭐⭐</span>
+            </section>
+            <button class="follow-button" onclick="toggleFavoriteBrecho(this, 1)">Favoritar</button>
+          </li>
+        <% } %>
+      </ul>
+
+
+
+        <!--                                       banner de cadastro                                              -->
+        <a href="/criarbrecho">
+          <img src="imagens/criar brecho.png" class="img-cashback">
+        </a>
+        <br>
+        <br>
+        <section class="artigos-section">
+          <h2>Conheça os <br><span class="artigos-title">Artigos</span></h2>
+          <br>
+          <section class="container">
+            <!-- Artigo de Moda Metalizada -->
+            <article class="artigo">
+              <nav class="grid-artigos">
+                <img src="imagens/metalizado.png" alt="Moda Metalizada" class="imagem-artigo">
+                <section class="artigo-texto">
+                  <h3 class="vintelo-text">MODA |</h3>
+                  <h3 class="vintelo-text">METALIZADA |</h3>
+                  <a href="/artigo" class="ler-agora">Ler agora</a>
+                </section>
+              </nav>
+            </article>
+
+            <!-- Banner de Cashback -->
+            <article class="cashback-banner">
+
+              <img src="imagens/criar brecho.png" alt="Ganhe Cashback" class="imagem-banner">
+              <section class="cashback-texto">
+                <h3>Ganhe Cashback</h3>
+                <p>em sua primeira compra</p>
+                <a href="/criarbrecho" class="cadastre-se">Cadastre-se</a>
+              </section>
+            </article>
+          </section>
+        </section>
+        
+        <!--                                        PRODUTOS OCULTOS                                               -->
+        <section class="produtos-ocultos">
+          <nav class="grid-produtos">
+            <h1>Confira</h1>
+            <a href="/blog" class="ver-tudo">Ver tudo</a>
+          </nav>
+          <section class="product-grid">
+            <% if (produtos && produtos.length > 8) { %>
+              <% produtos.slice(8, 12).forEach(produto => { %>
+                <article class="product-card">
+                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                  <h2><%= produto.NOME_PRODUTO %></h2>
+                  <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
+                  <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+              <% }) %>
+            <% } else { %>
+              <article class="product-card">
+                <img src="imagens/oculos.png" alt="Óculos de sol">
+                <h2>Óculos de sol</h2>
+                <br>
+                <p class="price">R$12,00</p>
+                <button class="favorite"><img src="imagens/coração de fav2.png"></button>
+                <button class="cart" onclick="addToCart(1)"><img src="imagens/sacola.png" class="img-sacola"></button>
+              </article>
+            <% } %>
+          </section>
+
+          
+          <section class="product-grid">
+            <% if (produtos && produtos.length > 12) { %>
+              <% produtos.slice(12, 16).forEach(produto => { %>
+                <article class="product-card">
+                  <a href="/produto/<%= produto.ID_PRODUTO %>"><img src="<%= produto.URL_IMG ? '/' + produto.URL_IMG : '/imagens/produto-default.png' %>" alt="<%= produto.NOME_PRODUTO %>"></a>
+                  <h2><%= produto.NOME_PRODUTO %></h2>
+                  <p class="price">R$ <%= parseFloat(produto.PRECO).toFixed(2).replace('.', ',') %></p>
+                  <button class="favorite" onclick="toggleFavorite(this, <%= produto.ID_PRODUTO %>)"><img src="imagens/coração de fav2.png"></button>
+                  <button class="cart" onclick="addToCart(<%= produto.ID_PRODUTO %>)"><img src="imagens/sacola.png" class="img-sacola"></button>
+                </article>
+              <% }) %>
+            <% } %>
+          </section>
+        </section>
+        <!--                                        Seção de artigos                                               -->
+
+        <section class="titulo-artigo-section">
+          <span class="garimpe-text">Tendências</span><br>
+          <span class="vintelo-text">Vintélo</span>
+        </section>
+        <section class="artigos">
+          <br>
+          <a href="/bossartigo"><img src="imagens/boss milão.png" class="img-Boss"></a>
+          <p class="p-artigos">Confira:</p>
+          <h3 class="artigo-text">BOSS | MILÃO | VERÃO |</h3>
+          <a href="/blogadm" class="link-preto">Editar</a>
+          <br>
+        </section>
+      <!--                               seção artigos ocultos para mobile                                       -->
+    <section class="oculto-mobile">
+    <section class="sweet-colors">
+    <!-- Seção da imagem principal -->
+    <section class="image-section">
+      <figure>
+        <img src="imagens/tendencia.png" alt="Modelo vestindo roupas coloridas da coleção Sweet Colors">
+        <aside class="extra-info">
+        <p>
+          Nessa paleta encontramos diversos tons versáteis que podem ser facilmente combinados. 
+          As cores claras transmitem elegância e suavidade que combinam com o clima primaveril.
+        </p>
+        <p>
+          Os acessórios nas cores pastéis, combinados com tons naturais e tecidos como linho, 
+          são a grande aposta da estação.
+        </p>
+      </aside>
+      </figure>
+    </section>
+
+    <!-- Seção de conteúdo principal -->
+    <section class="content-section">
+
+      <section class="title">
+        <p>A tendência é:</p>
+        <h1>Sweet Colors</h1>
+      </section>
+
+      <article class="intro-text">
+        <p>
+          Para a primavera/verão 2024, as cores são inspiradas na beleza da natureza 
+          e trazem o retorno da serenidade com tons delicados.
+          A tendência Sweet Colors funciona melhor com tecidos fluidos como chiffon, seda, 
+          algodão orgânico e linho. Texturas suaves como tricô fino e malhas delicadas também 
+          complentam perfeitamente essa estética romântica e contemporânea.
+        </p>
+      </article>
+
+      <section class="images-section">
+        <figure class="image-item">
+          <img src="imagens/salto rosa.png" alt="Sapatos em tom rosa pastel">
+        </figure>
+        <figure class="image-item">
+          <img src="imagens/bolsa brilhante.png" alt="Bolsa em tons neutros com brilho">
+        </figure>
+      </section>
+      <footer class="footer-link">
+        <a href="/blogadm" class="link">Editar &gt;</a>
+      </footer>
+
+     </section>
+    </section>
+    </section>
+    </main>
+    <!--                                                    Rodapé                                                      -->
+    <footer class="footer">
+      <img src="imagens/logo2.jpeg" alt="Imagem do Rodapé" class="footer-image">
+      <section class="social-media">
+        <p class="p-footer">Siga nossas redes sociais</p>
+        <ul class="social-links">
+          <li><a href="https://facebook.com" target="_blank" class="social-link"><img src="imagens/Facebook.png"
+                alt="Facebook"></a></li>
+          <li><a href="https://twitter.com" target="_blank" class="social-link"><img src="imagens/Pinterest.png"
+                alt="Pinterest"></a></li>
+          <li><a href="https://www.instagram.com/vintelobrechos" target="_blank" class="social-link"><img
+                src="imagens/Instagram.png" alt="Instagram"></a></li>
+        </ul>
+      </section>
+      <p class="copyright">©2024 Vintélo. Todos os direitos reservados.</p>
+    </footer>
+    <script src="/js/perfil-autenticado.js"></script>
+    <script src="/js/navegacao.js"></script>
+    <script src="js/busca-global.js"></script>
+    <script src="js/favoritos-global.js"></script>
+    <script src="js/seguir-brechos.js"></script>
+    <script src="script/dinamicahome.js"></script>
+    <script src="js/homecomprador.js"></script>
+    <script src="/js/sacola-global.js"></script>
+</body>
+
+</html>

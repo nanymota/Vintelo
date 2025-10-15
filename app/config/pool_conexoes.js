@@ -7,8 +7,29 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 5,
     queueLimit: 0,
+    acquireTimeout: 30000,
+    timeout: 30000,
+    reconnect: true,
+    idleTimeout: 300000,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0
+});
+
+pool.on('connection', function (connection) {
+    console.log('Nova conexão estabelecida como id ' + connection.threadId);
+    connection.query('SET SESSION wait_timeout = 300');
+    connection.query('SET SESSION interactive_timeout = 300');
+});
+
+pool.on('error', function(err) {
+    console.log('Erro no pool de conexões:', err.code);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('Conexão perdida, pool irá reconectar automaticamente');
+    } else if (err.code === 'ECONNRESET') {
+        console.log('Conexão resetada pelo servidor');
+    }
 });
 
 pool.getConnection((err, conn) => {

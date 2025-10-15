@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avaliações - <%= brecho.NOME_USUARIO %> | Vintélo</title>
     <link rel="stylesheet" href="/css/avaliacoes-brecho.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
     <link rel="icon" href="/imagens/brilhoescuro.png" type="image/x-icon">
 </head>
 <body>
-    <header>
+    <%- include('../partials/header') %>
+    
+    <header class="mobile-header">
         <nav class="grid">
             <a href="javascript:void(0)" id="goBackBtn">
                 <img src="/imagens/seta.png" alt="Voltar">
             </a>
             <img src="/imagens/logo.png" alt="Logo">
-            <div></div>
         </nav>
     </header>
 
     <main>
         <section class="brecho-header">
-            <img src="<%= brecho.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
+            <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
             <section class="brecho-info">
                 <h1><%= brecho.NOME_USUARIO %></h1>
                 <section class="rating">
@@ -31,10 +34,11 @@
             </section>
         </section>
 
-        <% if (autenticado && autenticado.tipo === 'c') { %>
+        <% if (autenticado && autenticado.autenticado) { %>
         <section class="add-review">
             <h2>Deixe sua avaliação</h2>
             <form id="reviewForm">
+                <input type="hidden" id="brechoId" value="<%= brecho.ID_USUARIO %>">
                 <section class="rating-input">
                     <label>Nota:</label>
                     <section class="stars-input">
@@ -50,9 +54,13 @@
                         <label for="star5">★</label>
                     </section>
                 </section>
-                <textarea name="comentario" placeholder="Escreva sua avaliação..." required></textarea>
+                <textarea id="comentario" name="comentario" placeholder="Escreva sua avaliação..." required></textarea>
                 <button type="submit">Enviar Avaliação</button>
             </form>
+        </section>
+        <% } else { %>
+        <section class="add-review">
+            <p>Faça <a href="/entrar">login</a> para avaliar este brechó.</p>
         </section>
         <% } %>
 
@@ -62,7 +70,7 @@
                 <% avaliacoes.forEach(avaliacao => { %>
                 <section class="review-item">
                     <section class="review-header">
-                        <img src="<%= avaliacao.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="user-img">
+                        <img src="<%= avaliacao.IMG_URL ? '/' + avaliacao.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="user-img">
                         <section class="review-info">
                             <h3><%= avaliacao.NOME_USUARIO %></h3>
                             <section class="review-rating">
@@ -81,6 +89,9 @@
             <% } %>
         </section>
     </main>
+    
+    <%- include('../partials/footer') %>
+    
     <script src="/js/perfil-autenticado.js"></script>
     <script src="/js/navegacao.js"></script>
     <script src="/js/avaliacoes-brecho.js"></script>

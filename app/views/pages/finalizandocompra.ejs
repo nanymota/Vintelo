@@ -24,7 +24,7 @@
           </a>
         <% } else { %>
           <a href="javascript:void(0)" onclick="goBack()">
-            <img src="/imagens/icone sem cadastro.png" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            <img src="/imagens/imagem sem cadastro.avif" alt="Perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
           </a>
         <% } %>
       </nav>
@@ -59,27 +59,15 @@
         <% } %>
       </section>
 
-      <!-- Shipping Section -->
-      <section class="shipping-section">
-        <h4>Calcular frete</h4>
-        <section class="frete-input">
-          <input type="text" id="cep_frete" placeholder="00000-000" maxlength="9" oninput="formatCEPFrete(this)">
-          <button onclick="calcularFrete()" class="btn-calcular">Calcular</button>
-        </section>
-        <section id="frete-loading" style="display: none;">
-          <p>Calculando frete...</p>
-        </section>
-        <section id="frete-result"></section>
-      </section>
+
 
       <!-- Order Info -->
       <section class="order-info">
         <h4>Informações do pedido</h4>
         <section class="order-details">
           <p>Subtotal</p><p id="subtotal">R$<%= subtotal || '0,00' %></p>
-          <p>Frete</p><p id="shipping-cost">R$<%= frete || '0,00' %></p>
           <p>Desconto</p><p id="discount">R$0,00</p>
-          <p><strong>Total</strong></p><p><strong id="total">R$<%= total || '0,00' %></strong></p>
+          <p><strong>Total</strong></p><p><strong id="total">R$<%= subtotal || '0,00' %></strong></p>
         </section>
       </section>
 
@@ -120,9 +108,9 @@
       </section>
 
       <% if (produto && produto.produto_id) { %>
-        <a href="/finalizandopagamento?produto=<%= produto.produto_id %>"><button class="finalizar-compra">Finalizar Compra</button></a>
+        <a href="/finalizandopagamento?produto=<%= produto.produto_id %>&subtotal=<%= subtotal %>"><button class="finalizar-compra">Finalizar Compra</button></a>
       <% } else { %>
-        <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+        <a href="/finalizandopagamento?subtotal=<%= subtotal %>"><button class="finalizar-compra">Finalizar Compra</button></a>
       <% } %>
     </main>
   </section>
@@ -154,7 +142,7 @@
               <% if (autenticado && autenticado.imagem) { %>
                 <img src="/<%= autenticado.imagem %>" class="maria">
               <% } else { %>
-                <img src="imagens/icone sem cadastro.png" class="img-tamanho">
+                <img src="/imagens/imagem sem cadastro.avif" class="img-tamanho">
               <% } %>
             </a></li>
             <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
@@ -196,18 +184,7 @@
 
 
         <section class="pedido-info">
-          <!-- Cálculo de Frete Desktop -->
-          <section class="frete-calculator">
-            <h4>Calcular frete</h4>
-            <section class="frete-input">
-              <input type="text" id="cep_frete_desktop" placeholder="00000-000" maxlength="9" oninput="formatCEPFrete(this)">
-              <button onclick="calcularFreteDesktop()" class="btn-calcular">Calcular</button>
-            </section>
-            <section id="frete-loading-desktop" style="display: none;">
-              <p>Calculando frete...</p>
-            </section>
-            <section id="frete-result-desktop"></section>
-          </section>
+
           
           <h2>Informações do pedido</h2>
           <section class="pedido-detalhes">
@@ -216,16 +193,12 @@
               <span>R$ <%= subtotal || '0,00' %></span>
             </section>
             <section class="detalhe">
-              <span>Frete</span>
-              <span>R$ <%= frete || '0,00' %></span>
-            </section>
-            <section class="detalhe">
               <span>Desconto</span>
               <span>R$ 0,00</span>
             </section>
             <section class="detalhe total">
               <span>Total</span>
-              <span>R$ <%= total || '0,00' %></span>
+              <span>R$ <%= subtotal || '0,00' %></span>
             </section>
           </section>
           <section class="cupom">
@@ -233,9 +206,9 @@
             <button>Inserir</button>
           </section>
           <% if (produto && produto.produto_id) { %>
-            <a href="/finalizandopagamento?produto=<%= produto.produto_id %>"><button class="finalizar-compra">Finalizar Compra</button></a>
+            <a href="/finalizandopagamento?produto=<%= produto.produto_id %>&subtotal=<%= subtotal %>"><button class="finalizar-compra">Finalizar Compra</button></a>
           <% } else { %>
-            <a href="/finalizandopagamento"><button class="finalizar-compra">Finalizar Compra</button></a>
+            <a href="/finalizandopagamento?subtotal=<%= subtotal %>"><button class="finalizar-compra">Finalizar Compra</button></a>
           <% } %>
         </section>
       </section>
@@ -356,6 +329,8 @@
       
       window.freteEscolhido = { nome, preco: parseFloat(preco), prazo };
       
+      console.log('Frete desktop selecionado:', window.freteEscolhido);
+      
       // Atualizar valores na tela
       const freteSpan = document.querySelector('.pedido-detalhes .detalhe:nth-child(2) span:last-child');
       const totalSpan = document.querySelector('.pedido-detalhes .detalhe.total span:last-child');
@@ -365,17 +340,28 @@
       
       // Calcular novo total
       const subtotal = parseFloat(subtotalText.replace('R$ ', '').replace(',', '.'));
-      const novoTotal = subtotal + parseFloat(preco);
+      const valorFrete = parseFloat(preco);
+      const novoTotal = subtotal + valorFrete;
+      
+      console.log('Cálculo desktop do total:', {
+        subtotal: subtotal,
+        frete: valorFrete,
+        total: novoTotal
+      });
       
       if (totalSpan) totalSpan.textContent = `R$ ${novoTotal.toFixed(2).replace('.', ',')}`;
       
-      // Atualizar botão de finalizar
-      const btnFinalizar = document.querySelector('.finalizar-compra');
-      if (btnFinalizar && btnFinalizar.tagName === 'A') {
-        const href = btnFinalizar.getAttribute('href');
-        const baseUrl = href.split('?')[0];
-        btnFinalizar.setAttribute('href', `${baseUrl}?total=${novoTotal.toFixed(2)}&frete=${preco}&frete_nome=${nome}`);
-      }
+      // Atualizar TODOS os botões de finalizar
+      const btnsFinalizar = document.querySelectorAll('.finalizar-compra');
+      btnsFinalizar.forEach(btn => {
+        if (btn.tagName === 'A') {
+          const href = btn.getAttribute('href');
+          const baseUrl = href.split('?')[0];
+          const novaUrl = `${baseUrl}?total=${novoTotal.toFixed(2)}&frete=${valorFrete.toFixed(2)}&frete_nome=${encodeURIComponent(nome)}`;
+          btn.setAttribute('href', novaUrl);
+          console.log('URL desktop atualizada:', novaUrl);
+        }
+      });
     }
   </script>
 </body>

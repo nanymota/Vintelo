@@ -33,9 +33,9 @@
                   <ul>
                       <li><a href="/sacola1"><img src="imagens/icone saco.png" class="img-tamanho"></a></li>
                       <% if (autenticado && autenticado.autenticado) { %>
-                          <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
+                          <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria" style="border-radius: 50%; object-fit: cover;"></a></li>
                       <% } else { %>
-                          <li><a href="/cadastro"><img src="imagens/icone sem cadastro.png" class="maria"></a></li>
+                          <li><a href="/cadastro"><img src="/imagens/imagem sem cadastro.avif" class="maria"></a></li>
                       <% } %>
                       <li><a href="/favoritos"><img src="imagens/icone coraçao.png" class="img-tamanho"></a></li>
                   </ul>
@@ -54,11 +54,11 @@
           <img src="imagens/logo.png" alt="Logo">
           <% if (autenticado && autenticado.autenticado) { %>
               <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
-                  <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                  <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
               </a>
           <% } else { %>
               <a href="javascript:void(0)" onclick="goBack()">
-                  <img src="imagens/icone sem cadastro.png" alt="Perfil">
+                  <img src="/imagens/imagem sem cadastro.avif" alt="Perfil">
               </a>
           <% } %>
         </nav>

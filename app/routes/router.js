@@ -32,6 +32,71 @@ const cliente = require('../models/clienteModel');
 
 const uploadFile = require("../util/uploader");
 const uploadProduto = require("../util/uploaderProduto");
+const fs = require('fs');
+const { promisify } = require('util');
+const mkdir = promisify(fs.mkdir);
+
+// Configuração do multer para upload de foto
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './app/public/imagem/perfil/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'perfil-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { 
+        fileSize: 5 * 1024 * 1024,
+        files: 1
+    },
+    fileFilter: function (req, file, cb) {
+        console.log('Validando arquivo:', {
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size
+        });
+        
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Apenas imagens são permitidas'));
+        }
+    }
+});
+
+// Garantir que o diretório de upload existe
+async function ensureUploadDirectory() {
+    const uploadDir = './app/public/imagem/perfil/';
+    try {
+        await mkdir(uploadDir, { recursive: true });
+        console.log('Diretório de upload verificado:', uploadDir);
+    } catch (error) {
+        if (error.code !== 'EEXIST') {
+            console.log('Erro ao criar diretório de upload:', error.message);
+        }
+    }
+}
+
+// Configurar pool de conexões com timeout menor
+pool.on('connection', function (connection) {
+    console.log('Nova conexão estabelecida como id ' + connection.threadId);
+    connection.query('SET SESSION wait_timeout = 60');
+    connection.query('SET SESSION interactive_timeout = 60');
+});
+
+pool.on('error', function(err) {
+    console.log('Erro no pool de conexões:', err.code);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('Conexão perdida, tentando reconectar...');
+    }
+});
+
+// Executar na inicialização
+ensureUploadDirectory();
 
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const client = new MercadoPagoConfig({
@@ -273,6 +338,16 @@ router.get('/test-admins', async (req, res) => {
     } catch (error) {
         res.json({ erro: error.message });
     }
+});
+
+// Rota de teste para upload
+router.get('/test-upload', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../test-upload-simple.html'));
+});
+
+// Rota de debug para upload
+router.get('/debug-upload', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../debug-upload.html'));
 });
 
 router.get("/adm", verificarUsuAutenticado, verificarUsuAutorizado([2, 3], "pages/restrito"), function (req, res) {
@@ -787,8 +862,8 @@ router.get('/finalizandocompra', verificarUsuAutenticado, async function(req, re
             }
         }
         
-        const frete = subtotal > 0 ? 10 : 0;
-        const total = subtotal + frete;
+        const frete = 0; // Frete será calculado em finalizandopagamento
+        const total = subtotal; // Total sem frete
         
         // Buscar produtos sugeridos reais
         const [produtosSugeridos] = await pool.query(`
@@ -986,10 +1061,11 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
         let subtotal = 0;
         const produtoId = req.query.produto;
         
-        // Capturar valores de frete vindos de finalizandocompra
-        const totalParam = req.query.total;
-        const freteParam = req.query.frete;
-        const freteNome = req.query.frete_nome;
+        // Capturar valores vindos de finalizandocompra
+        const subtotalParam = req.query.subtotal;
+        
+        console.log('=== FINALIZANDO PAGAMENTO ===');
+        console.log('Parâmetros recebidos:', { produtoId, subtotalParam });
         
         if (produtoId) {
             const [produtos] = await pool.query(`
@@ -1025,16 +1101,26 @@ router.get('/finalizandopagamento', verificarUsuAutenticado, async function(req,
             }
         }
         
-        // Usar valores vindos da URL ou calcular padrão
-        const frete = freteParam ? parseFloat(freteParam) : 0;
-        const total = totalParam ? parseFloat(totalParam) : (subtotal + frete);
+        // Usar subtotal da URL se disponível
+        if (subtotalParam) {
+            subtotal = parseFloat(subtotalParam);
+        }
+        
+        const frete = 0; // Frete será calculado na página
+        const total = subtotal; // Total inicial sem frete
+        
+        console.log('Valores calculados:', {
+            subtotal: subtotal.toFixed(2),
+            frete: frete.toFixed(2),
+            total: total.toFixed(2)
+        });
         
         res.render('pages/finalizandopagamento', {
             produto: produto,
             subtotal: subtotal.toFixed(2),
             frete: frete.toFixed(2),
             total: total.toFixed(2),
-            freteNome: freteNome || 'Padrão',
+            freteNome: 'Calcular',
             autenticado: req.session.autenticado
         });
     } catch (error) {
@@ -2148,7 +2234,112 @@ router.get('/estatistica', carregarDadosUsuario, async (req, res) => {
     }
 });
 
-router.get('/estatisticaadm', async (req, res) => {
+// API endpoint para estatísticas
+router.get('/api/estatisticas', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const userId = req.session.autenticado.id;
+        
+        // Buscar produtos do usuário
+        const [produtos] = await pool.query(
+            'SELECT COUNT(*) as total FROM PRODUTOS WHERE ID_USUARIO = ?',
+            [userId]
+        );
+        
+        // Buscar produtos vendidos
+        const [vendas] = await pool.query(
+            'SELECT COUNT(*) as total, SUM(PRECO) as receita FROM PRODUTOS WHERE ID_USUARIO = ? AND STATUS_PRODUTO != "d"',
+            [userId]
+        );
+        
+        // Buscar visualizações
+        const [visualizacoes] = await pool.query(
+            `SELECT COUNT(DISTINCT f.ID_USUARIO) as total 
+             FROM FAVORITOS f 
+             JOIN PRODUTOS p ON f.ID_ITEM = p.ID_PRODUTO 
+             WHERE p.ID_USUARIO = ? AND f.TIPO_ITEM = 'produto'`,
+            [userId]
+        );
+        
+        // Buscar produtos por categoria com quantidade real
+        const [produtosCategorias] = await pool.query(
+            `SELECT TIPO_PRODUTO as categoria, COUNT(*) as quantidade, 
+                    SUM(CASE WHEN STATUS_PRODUTO != 'd' THEN 1 ELSE 0 END) as vendidos
+             FROM PRODUTOS WHERE ID_USUARIO = ? 
+             GROUP BY TIPO_PRODUTO
+             ORDER BY quantidade DESC`,
+            [userId]
+        );
+        
+        const totalProdutos = produtos[0]?.total || 0;
+        const totalVendas = vendas[0]?.total || 0;
+        const totalVisualizacoes = Math.max(visualizacoes[0]?.total || 0, totalProdutos * 2);
+        const taxaConversao = totalVisualizacoes > 0 ? ((totalVendas / totalVisualizacoes) * 100).toFixed(1) : 0;
+        
+        const estatisticas = {
+            brecho: { NOME_BRECHO: req.session.autenticado.nome + ' Brechó' },
+            totalProdutos: totalProdutos,
+            totalVendas: totalVendas,
+            receitaTotal: parseFloat(vendas[0]?.receita) || 0,
+            totalVisualizacoes: totalVisualizacoes,
+            taxaConversao: parseFloat(taxaConversao),
+            vendasCategoria: produtosCategorias
+        };
+        
+        res.json(estatisticas);
+    } catch (error) {
+        console.log('Erro na API de estatísticas:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+// API para calcular frete
+router.post('/api/calcular-frete', async (req, res) => {
+    try {
+        const { cep_destino, produto_id } = req.body;
+        
+        // Validar CEP
+        if (!cep_destino || cep_destino.length !== 8) {
+            return res.json({ success: false, message: 'CEP inválido' });
+        }
+        
+        // Buscar dados do produto se fornecido
+        let peso = 0.5; // kg padrão
+        let valor = 50; // valor padrão
+        
+        if (produto_id) {
+            const [produto] = await pool.query('SELECT PRECO FROM PRODUTOS WHERE ID_PRODUTO = ?', [produto_id]);
+            if (produto.length > 0) {
+                valor = parseFloat(produto[0].PRECO);
+            }
+        }
+        
+        // Simular cálculo de frete (valores fixos para demonstração)
+        const opcoes = [
+            {
+                name: 'PAC',
+                price: '15.90',
+                delivery_time: '8'
+            },
+            {
+                name: 'SEDEX',
+                price: '25.50',
+                delivery_time: '3'
+            },
+            {
+                name: 'SEDEX 10',
+                price: '35.00',
+                delivery_time: '1'
+            }
+        ];
+        
+        res.json({ success: true, opcoes: opcoes });
+    } catch (error) {
+        console.log('Erro ao calcular frete:', error);
+        res.json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+router.get('/estatisticaadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         // Buscar estatísticas gerais da plataforma
         const [totalUsuarios] = await pool.query('SELECT COUNT(*) as total FROM USUARIOS');
@@ -2626,113 +2817,221 @@ router.get('/planos', carregarDadosUsuario, async (req, res) => {
     }
 });
 
-router.post('/perfilcliente/foto', uploadFile('profile-photo'), async function(req, res){
-    try {
-        console.log('Rota /perfilcliente/foto chamada');
-        console.log('Arquivo recebido:', req.file);
-        console.log('Sessão:', req.session?.autenticado);
-        
-        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
-            const imagePath = 'imagem/perfil/' + req.file.filename;
-            const dadosUsuario = {
-                IMG_URL: imagePath
-            };
-            
-            console.log('Atualizando usuário com:', dadosUsuario);
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            req.session.autenticado.imagem = imagePath;
-            
-            console.log('Upload realizado com sucesso:', imagePath);
-            res.json({
-                success: true,
-                imagePath: imagePath
-            });
-        } else {
-            console.log('Falha na validação:', {
-                session: !!req.session,
-                autenticado: !!req.session?.autenticado,
-                id: req.session?.autenticado?.id,
-                file: !!req.file
-            });
-            res.json({ success: false, error: 'Arquivo não enviado ou usuário não autenticado' });
-        }
-    } catch (error) {
-        console.log('Erro ao salvar foto:', error);
-        res.json({ success: false, error: 'Erro ao fazer upload da foto: ' + error.message });
-    }
+
+
+// Rota de debug para verificar se o usuário está logado
+router.get('/debug-session', (req, res) => {
+    res.json({
+        session: !!req.session,
+        autenticado: !!req.session?.autenticado,
+        userId: req.session?.autenticado?.id,
+        userType: req.session?.autenticado?.tipo,
+        fullSession: req.session
+    });
 });
 
-router.post('/upload-foto', uploadFile('foto'), async function(req, res){
+// Rota de teste para upload sem autenticação (apenas para debug)
+router.post('/test-upload-debug', upload.single('foto'), async function(req, res){
     try {
-        if (req.session && req.session.autenticado && req.session.autenticado.id && req.file) {
-            const imagePath = 'imagem/perfil/' + req.file.filename;
-            const dadosUsuario = {
-                IMG_URL: imagePath
-            };
-            
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            req.session.autenticado.imagem = imagePath;
-            
-            res.json({
-                success: true,
-                imagePath: imagePath
-            });
-        } else {
-            res.json({ success: false, error: 'Arquivo não enviado' });
+        console.log('=== TEST UPLOAD DEBUG ===');
+        console.log('Arquivo recebido:', req.file);
+        
+        if (!req.file) {
+            return res.json({ success: false, error: 'Nenhum arquivo enviado' });
         }
+        
+        const imagePath = 'imagem/perfil/' + req.file.filename;
+        
+        res.json({ 
+            success: true, 
+            imagePath: imagePath,
+            fileInfo: {
+                originalname: req.file.originalname,
+                filename: req.file.filename,
+                size: req.file.size,
+                mimetype: req.file.mimetype
+            }
+        });
+        
     } catch (error) {
-        console.log('Erro ao salvar foto:', error);
+        console.log('Erro no test upload:', error);
         res.json({ success: false, error: error.message });
     }
 });
 
-router.post('/perfilcliente', async function(req, res){
+router.post('/upload-foto-perfil', upload.single('foto'), async function(req, res){
     try {
-        const { nome, email, telefone, cep, logradouro, numero, bairro, cidade, uf, cpf, data_nasc, bio } = req.body;
+        console.log('=== UPLOAD FOTO PERFIL ===');
+        console.log('Sessão:', req.session);
+        console.log('Autenticado:', req.session?.autenticado);
+        console.log('Arquivo:', req.file);
         
-        if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            // Atualizar dados do usuário
-            const dadosUsuario = {
-                NOME_USUARIO: nome,
-                EMAIL_USUARIO: email,
-                CELULAR_USUARIO: telefone,
-                CEP_USUARIO: cep ? cep.replace(/\D/g, '') : '',
-                LOGRADOURO_USUARIO: logradouro,
-                NUMERO_USUARIO: numero,
-                BAIRRO_USUARIO: bairro,
-                CIDADE_USUARIO: cidade,
-                UF_USUARIO: uf
-            };
-            
-            if (bio) {
-                dadosUsuario.DESCRICAO_USUARIO = bio;
-            }
-            
-            await usuarioModel.update(dadosUsuario, req.session.autenticado.id);
-            
-            // Atualizar dados do cliente
-            if (cpf || data_nasc) {
-                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
-                if (clienteData && clienteData.length > 0) {
-                    const dadosCliente = {};
-                    if (cpf) dadosCliente.CPF_CLIENTE = cpf.replace(/\D/g, '');
-                    if (data_nasc) dadosCliente.DATA_NASC = data_nasc;
-                    
-                    await cliente.update(dadosCliente, req.session.autenticado.id);
+        // Verificar autenticação manualmente
+        if (!req.session || !req.session.autenticado || !req.session.autenticado.id) {
+            return res.json({ success: false, error: 'Usuário não autenticado' });
+        }
+        
+        if (!req.file) {
+            return res.json({ success: false, error: 'Nenhum arquivo enviado' });
+        }
+        
+        const userId = req.session.autenticado.id;
+        const imagePath = 'imagem/perfil/' + req.file.filename;
+        
+        console.log('Arquivo:', {
+            fieldname: req.file.fieldname,
+            originalname: req.file.originalname,
+            encoding: req.file.encoding,
+            mimetype: req.file.mimetype,
+            destination: req.file.destination,
+            filename: req.file.filename,
+            path: req.file.path,
+            size: req.file.size
+        });
+        
+        console.log('Atualizando usuário ID:', userId, 'com imagem:', imagePath);
+        
+        // Implementar retry com timeout para evitar ECONNRESET
+        let attempts = 0;
+        const maxAttempts = 3;
+        let result;
+        
+        while (attempts < maxAttempts) {
+            try {
+                attempts++;
+                console.log(`Tentativa ${attempts} de atualização no banco...`);
+                
+                // Usar timeout menor e connection específica
+                const connection = await pool.getConnection();
+                try {
+                    await connection.query('SET SESSION wait_timeout = 30');
+                    [result] = await connection.query(
+                        'UPDATE USUARIOS SET IMG_URL = ? WHERE ID_USUARIO = ?', 
+                        [imagePath, userId]
+                    );
+                    connection.release();
+                    break; // Sucesso, sair do loop
+                } catch (connError) {
+                    connection.release();
+                    throw connError;
                 }
+            } catch (dbError) {
+                console.log(`Erro na tentativa ${attempts}:`, dbError.message);
+                
+                if (attempts >= maxAttempts) {
+                    throw dbError;
+                }
+                
+                // Aguardar antes da próxima tentativa
+                await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
             }
         }
         
-        res.redirect('/perfilcliente');
+        console.log('Resultado da atualização:', result);
+        
+        if (result && result.affectedRows > 0) {
+            req.session.autenticado.imagem = imagePath;
+            res.json({ success: true, imagePath: imagePath });
+        } else {
+            res.json({ success: false, error: 'Falha ao atualizar no banco de dados' });
+        }
+        
     } catch (error) {
-        console.log('Erro ao salvar perfil:', error);
-        res.redirect('/perfilcliente');
+        console.log('ERRO no upload:', error);
+        
+        // Tratar erros específicos
+        let errorMessage = error.message;
+        if (error.code === 'ECONNRESET') {
+            errorMessage = 'Conexão com banco perdida. Tente novamente.';
+        } else if (error.code === 'ETIMEDOUT') {
+            errorMessage = 'Timeout na conexão. Tente novamente.';
+        } else if (error.code === 'ER_LOCK_WAIT_TIMEOUT') {
+            errorMessage = 'Banco ocupado. Tente novamente em alguns segundos.';
+        }
+        
+        res.json({ success: false, error: errorMessage });
+    }
+});
+
+
+
+router.post('/perfilcliente', verificarUsuAutenticado, async function(req, res){
+    try {
+        console.log('=== SALVANDO PERFIL CLIENTE ===');
+        console.log('Dados recebidos:', req.body);
+        
+        const { nome, email, telefone, cep, logradouro, numero, bairro, cidade, uf, cpf, data_nasc, bio } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        // Validar dados obrigatórios
+        if (!nome || !email) {
+            console.log('Dados obrigatórios não fornecidos');
+            return res.redirect('/perfilcliente?erro=Nome e email são obrigatórios');
+        }
+        
+        // Atualizar dados do usuário
+        const dadosUsuario = {
+            NOME_USUARIO: nome.trim(),
+            EMAIL_USUARIO: email.trim(),
+            CELULAR_USUARIO: telefone ? telefone.trim() : null,
+            CEP_USUARIO: cep ? cep.replace(/\D/g, '') : null,
+            LOGRADOURO_USUARIO: logradouro ? logradouro.trim() : null,
+            NUMERO_USUARIO: numero ? numero.trim() : null,
+            BAIRRO_USUARIO: bairro ? bairro.trim() : null,
+            CIDADE_USUARIO: cidade ? cidade.trim() : null,
+            UF_USUARIO: uf ? uf.trim() : null
+        };
+        
+        if (bio && bio.trim()) {
+            dadosUsuario.DESCRICAO_USUARIO = bio.trim();
+        }
+        
+        console.log('Atualizando usuário com dados:', dadosUsuario);
+        await usuarioModel.update(dadosUsuario, userId);
+        
+        // Atualizar sessão
+        req.session.autenticado.nome = nome.trim();
+        req.session.autenticado.email = email.trim();
+        
+        // Atualizar dados do cliente
+        if (cpf || data_nasc) {
+            try {
+                const clienteData = await cliente.findByUserId(userId);
+                const dadosCliente = {};
+                
+                if (cpf && cpf.trim()) {
+                    dadosCliente.CPF_CLIENTE = cpf.replace(/\D/g, '');
+                }
+                if (data_nasc && data_nasc.trim()) {
+                    dadosCliente.DATA_NASC = data_nasc;
+                }
+                
+                if (Object.keys(dadosCliente).length > 0) {
+                    if (clienteData && clienteData.length > 0) {
+                        await cliente.update(dadosCliente, userId);
+                    } else {
+                        // Criar novo registro de cliente se não existir
+                        dadosCliente.ID_USUARIO = userId;
+                        await cliente.create(dadosCliente);
+                    }
+                }
+            } catch (clienteError) {
+                console.log('Erro ao atualizar dados do cliente:', clienteError.message);
+            }
+        }
+        
+        console.log('Perfil atualizado com sucesso!');
+        res.redirect('/perfilcliente?sucesso=Perfil atualizado com sucesso');
+        
+    } catch (error) {
+        console.log('ERRO ao salvar perfil:', error);
+        res.redirect('/perfilcliente?erro=Erro ao salvar perfil');
     }
 });
 
 router.get('/perfilcliente', async function(req, res){
     try {
-        console.log('Acessando perfil cliente');
+        console.log('=== CARREGANDO PERFIL CLIENTE ===');
         
         let userData = {
             nome: 'Usuário',
@@ -2755,48 +3054,76 @@ router.get('/perfilcliente', async function(req, res){
         };
         
         if (req.session && req.session.autenticado && req.session.autenticado.id) {
-            console.log('Usuário autenticado, buscando dados');
-            const userDetails = await usuarioModel.findId(req.session.autenticado.id);
+            console.log('Usuário autenticado ID:', req.session.autenticado.id);
             
-            if (userDetails && userDetails.length > 0) {
-                const user = userDetails[0];
-                userData.nome = user.NOME_USUARIO || 'Usuário';
-                userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
-                userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
-                userData.imagem = user.IMG_URL || null;
-                userData.user_usuario = user.USER_USUARIO || 'usuario';
-                userData.cep = user.CEP_USUARIO || '';
-                userData.logradouro = user.LOGRADOURO_USUARIO || '';
-                userData.numero = user.NUMERO_USUARIO || '';
-                userData.bairro = user.BAIRRO_USUARIO || '';
-                userData.cidade = user.CIDADE_USUARIO || '';
-                userData.uf = user.UF_USUARIO || '';
+            try {
+                const userDetails = await usuarioModel.findId(req.session.autenticado.id);
                 
-                // Buscar dados do cliente
-                const clienteData = await cliente.findByUserId(req.session.autenticado.id);
-                if (clienteData && clienteData.length > 0) {
-                    userData.cpf = clienteData[0].CPF_CLIENTE || '';
-                    if (clienteData[0].DATA_NASC) {
-                        const date = new Date(clienteData[0].DATA_NASC);
-                        userData.data_nasc = date.toISOString().split('T')[0];
+                if (userDetails && userDetails.length > 0) {
+                    const user = userDetails[0];
+                    console.log('Dados do usuário encontrados:', {
+                        nome: user.NOME_USUARIO,
+                        email: user.EMAIL_USUARIO,
+                        imagem: user.IMG_URL
+                    });
+                    
+                    userData.nome = user.NOME_USUARIO || 'Usuário';
+                    userData.email = user.EMAIL_USUARIO || 'email@exemplo.com';
+                    userData.telefone = user.CELULAR_USUARIO || '(11) 99999-9999';
+                    userData.imagem = user.IMG_URL || null;
+                    userData.user_usuario = user.USER_USUARIO || 'usuario';
+                    userData.cep = user.CEP_USUARIO || '';
+                    userData.logradouro = user.LOGRADOURO_USUARIO || '';
+                    userData.numero = user.NUMERO_USUARIO || '';
+                    userData.bairro = user.BAIRRO_USUARIO || '';
+                    userData.cidade = user.CIDADE_USUARIO || '';
+                    userData.uf = user.UF_USUARIO || '';
+                    
+                    // Buscar dados do cliente
+                    try {
+                        const clienteData = await cliente.findByUserId(req.session.autenticado.id);
+                        if (clienteData && clienteData.length > 0) {
+                            userData.cpf = clienteData[0].CPF_CLIENTE || '';
+                            if (clienteData[0].DATA_NASC) {
+                                const date = new Date(clienteData[0].DATA_NASC);
+                                userData.data_nasc = date.toISOString().split('T')[0];
+                            }
+                        }
+                    } catch (clienteError) {
+                        console.log('Erro ao buscar dados do cliente:', clienteError.message);
                     }
+                } else {
+                    console.log('Nenhum dado de usuário encontrado');
                 }
+            } catch (userError) {
+                console.log('Erro ao buscar dados do usuário:', userError.message);
             }
+        } else {
+            console.log('Usuário não autenticado, redirecionando...');
+            return res.redirect('/entrar');
         }
         
-        console.log('Renderizando página');
+        console.log('Renderizando página com dados:', {
+            nome: userData.nome,
+            email: userData.email,
+            imagem: userData.imagem
+        });
+        
         res.render('pages/perfilcliente', {
             usuario: userData,
             favoritos: [],
-            autenticado: req.session ? req.session.autenticado : null
+            autenticado: req.session.autenticado
         });
     } catch (error) {
-        console.log('Erro ao carregar perfil:', error);
-        res.status(500).send('Erro interno do servidor');
+        console.log('ERRO GERAL ao carregar perfil:', error);
+        res.status(500).render('pages/erro', {
+            mensagem: 'Erro interno do servidor',
+            autenticado: req.session ? req.session.autenticado : null
+        });
     }
 });
 
-router.get('/homeadm', carregarDadosUsuario, async (req, res) => {
+router.get('/homeadm', verificarUsuAutenticado, verificarAdmin, carregarDadosUsuario, async (req, res) => {
     let banners = [];
     let produtos = [];
     let brechos = [];
@@ -2839,7 +3166,7 @@ router.get('/pedidosadm', (req, res) => res.render('pages/pedidosadm'));
 router.get('/relatorioadm', (req, res) => res.render('pages/relatorioadm'));
 router.get('/vistoriaprodutos', (req, res) => res.render('pages/vistoriaprodutos'));
 
-router.get('/denuncias', async function(req, res) {
+router.get('/denuncias', verificarUsuAutenticado, verificarAdmin, async function(req, res) {
     try {
         let denuncias = [];
         
@@ -2954,7 +3281,7 @@ router.post('/denuncias/rejeitar/:id', denunciaController.rejeitarDenuncia);
 router.get('/denuncias/analisar/:id', denunciaController.analisarDenunciaDetalhada);
 
 router.get('/analisardenuncia', (req, res) => res.render('pages/analisardenuncia'));
-router.get('/perfilpremium', async (req, res) => {
+router.get('/perfilpremium', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     const defaultStats = {
         totalPremium: 0,
         receitaMensal: 0,
@@ -3029,7 +3356,7 @@ router.get('/perfilpremium', async (req, res) => {
         });
     }
 });
-router.get('/blogadm', async (req, res) => {
+router.get('/blogadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         console.log('=== CARREGANDO BLOG ADM ===');
         
@@ -3572,7 +3899,7 @@ router.get('/test-blog', async (req, res) => {
     }
 });
 
-router.get('/avaliacaoadm', async (req, res) => {
+router.get('/avaliacaoadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         // Como não há tabela AVALIACOES, usar dados simulados baseados em usuários reais
         const [usuarios] = await pool.query(`
@@ -3665,7 +3992,7 @@ router.get('/usuariosadm', async (req, res) => {
     }
 });
 
-router.get('/produtosadm', async (req, res) => {
+router.get('/produtosadm', verificarUsuAutenticado, verificarAdmin, async (req, res) => {
     try {
         const [produtos] = await pool.query(`
             SELECT p.ID_PRODUTO, p.NOME_PRODUTO, p.PRECO, p.TIPO_PRODUTO, p.TAMANHO_PRODUTO,
@@ -4465,27 +4792,149 @@ router.get('/brecho/:id/avaliacoes', carregarDadosUsuario, async (req, res) => {
     }
 });
 
+// Rota alternativa para avaliacoes-brecho (compatibilidade)
+router.get('/avaliacoes-brecho/:id?', carregarDadosUsuario, async (req, res) => {
+    try {
+        const brechoId = req.params.id || req.query.brecho;
+        
+        if (!brechoId) {
+            return res.redirect('/homecomprador');
+        }
+        
+        // Buscar dados do brechó
+        const [brecho] = await pool.query(
+            'SELECT * FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brecho.length === 0) {
+            return res.redirect('/homecomprador');
+        }
+        
+        // Buscar avaliações do brechó
+        const [avaliacoes] = await pool.query(`
+            SELECT ab.*, u.NOME_USUARIO, u.IMG_URL
+            FROM AVALIACOES_BRECHOS ab
+            JOIN USUARIOS u ON ab.ID_USUARIO = u.ID_USUARIO
+            WHERE ab.ID_BRECHO = ?
+            ORDER BY ab.DT_AVALIACAO DESC
+        `, [brechoId]);
+        
+        // Calcular média das avaliações
+        const [mediaResult] = await pool.query(
+            'SELECT AVG(NOTA) as media, COUNT(*) as total FROM AVALIACOES_BRECHOS WHERE ID_BRECHO = ?',
+            [brechoId]
+        );
+        
+        const mediaAvaliacoes = parseFloat(mediaResult[0]?.media) || 0;
+        const totalAvaliacoes = mediaResult[0]?.total || 0;
+        
+        res.render('pages/avaliacoes-brecho', {
+            brecho: brecho[0],
+            avaliacoes: avaliacoes,
+            mediaAvaliacoes: mediaAvaliacoes,
+            totalAvaliacoes: totalAvaliacoes,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar avaliações:', error);
+        res.redirect('/homecomprador');
+    }
+});
+
 router.post('/avaliacoes/criar', verificarUsuAutenticado, async (req, res) => {
     try {
+        console.log('=== CRIAR AVALIAÇÃO ===');
+        console.log('Body recebido:', req.body);
+        console.log('Usuário autenticado:', req.session.autenticado);
+        
         const { nota, comentario, brechoId } = req.body;
         const userId = req.session.autenticado.id;
         
-        if (!nota || !comentario || nota < 1 || nota > 5) {
-            return res.json({ success: false, message: 'Dados inválidos' });
+        // Validações
+        if (!nota || !comentario || !brechoId) {
+            console.log('Dados obrigatórios faltando');
+            return res.json({ success: false, message: 'Todos os campos são obrigatórios' });
         }
         
-        // Criar nova avaliação usando tabela real
-        if (brechoId) {
-            await pool.query(`
-                INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
-                VALUES (?, ?, ?, ?, CURDATE(), CURTIME())
-            `, [userId, brechoId, nota, comentario]);
+        if (nota < 1 || nota > 5) {
+            console.log('Nota inválida:', nota);
+            return res.json({ success: false, message: 'Nota deve ser entre 1 e 5' });
         }
+        
+        if (comentario.trim().length < 5) {
+            console.log('Comentário muito curto');
+            return res.json({ success: false, message: 'Comentário deve ter pelo menos 5 caracteres' });
+        }
+        
+        // Verificar se o brechó existe
+        const [brechoExiste] = await pool.query(
+            'SELECT ID_USUARIO FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brechoExiste.length === 0) {
+            console.log('Brechó não encontrado:', brechoId);
+            return res.json({ success: false, message: 'Brechó não encontrado' });
+        }
+        
+        // Verificar se o usuário já avaliou este brechó
+        const [avaliacaoExiste] = await pool.query(
+            'SELECT ID_AVALIACAO_BRECHO FROM AVALIACOES_BRECHOS WHERE ID_USUARIO = ? AND ID_BRECHO = ?',
+            [userId, brechoId]
+        );
+        
+        if (avaliacaoExiste.length > 0) {
+            console.log('Usuário já avaliou este brechó');
+            return res.json({ success: false, message: 'Você já avaliou este brechó' });
+        }
+        
+        // Criar nova avaliação
+        console.log('Inserindo avaliação no banco...');
+        const [resultado] = await pool.query(`
+            INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
+            VALUES (?, ?, ?, ?, CURDATE(), CURTIME())
+        `, [userId, brechoId, nota, comentario.trim()]);
+        
+        console.log('Avaliação inserida com ID:', resultado.insertId);
         
         res.json({ success: true, message: 'Avaliação criada com sucesso!' });
     } catch (error) {
-        console.log('Erro ao criar avaliação:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        console.log('Erro detalhado ao criar avaliação:', error);
+        res.json({ success: false, message: 'Erro interno do servidor: ' + error.message });
+    }
+});
+
+router.post('/avaliacoes/excluir', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { avaliacaoId } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        const [avaliacao] = await pool.query(
+            'SELECT * FROM AVALIACOES_BRECHOS WHERE ID_AVALIACAO_BRECHO = ?',
+            [avaliacaoId]
+        );
+        
+        if (avaliacao.length === 0) {
+            return res.json({ success: false, message: 'Avaliação não encontrada' });
+        }
+        
+        const isAdmin = req.session.autenticado.tipo === 'a';
+        const isOwner = avaliacao[0].ID_USUARIO === userId;
+        
+        if (!isAdmin && !isOwner) {
+            return res.json({ success: false, message: 'Sem permissão para excluir' });
+        }
+        
+        await pool.query(
+            'DELETE FROM AVALIACOES_BRECHOS WHERE ID_AVALIACAO_BRECHO = ?',
+            [avaliacaoId]
+        );
+        
+        res.json({ success: true, message: 'Avaliação excluída com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao excluir avaliação:', error);
+        res.json({ success: false, message: 'Erro interno do servidor: ' + error.message });
     }
 });
 
@@ -5078,6 +5527,44 @@ router.get('/publicar-artigos-ficticios', async (req, res) => {
     }
 });
 
+// Rota para testar criação de avaliação via GET (apenas para debug)
+router.get('/test-criar-avaliacao/:brechoId', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { brechoId } = req.params;
+        const userId = req.session.autenticado.id;
+        
+        console.log('=== TESTE CRIAR AVALIAÇÃO ===');
+        console.log('Brechó ID:', brechoId);
+        console.log('Usuário ID:', userId);
+        
+        // Verificar se o brechó existe
+        const [brecho] = await pool.query(
+            'SELECT NOME_USUARIO FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brecho.length === 0) {
+            return res.json({ success: false, message: 'Brechó não encontrado' });
+        }
+        
+        // Criar avaliação de teste
+        const [resultado] = await pool.query(`
+            INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
+            VALUES (?, ?, 4, 'Avaliação de teste - Bom atendimento e produtos de qualidade!', CURDATE(), CURTIME())
+        `, [userId, brechoId]);
+        
+        res.json({ 
+            success: true, 
+            message: 'Avaliação de teste criada!',
+            avaliacaoId: resultado.insertId,
+            brecho: brecho[0].NOME_USUARIO
+        });
+    } catch (error) {
+        console.log('Erro no teste:', error);
+        res.json({ success: false, message: 'Erro: ' + error.message });
+    }
+});
+
 module.exports = router;
 
 // API endpoint para status de autenticação (usado pelo perfil-autenticado.js)
@@ -5316,3 +5803,5 @@ router.post('/api/calcular-frete', async function(req, res){
         res.json({ success: false, message: 'Erro interno do servidor' });
     }
 });
+
+module.exports = router;
