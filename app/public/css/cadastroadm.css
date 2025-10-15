@@ -172,41 +172,6 @@ body {
     font-weight: 600;
 }
 
-/* Input validation states */
-.form-group input:invalid {
-    border-color: #dc3545;
-}
-
-.form-group input:valid {
-    border-color: #28a745;
-}
-
-.form-group input:invalid:focus {
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-}
-
-.form-group input:valid:focus {
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-}
-
-.form-group select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #eee;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-    font-family: inherit;
-    background-color: white;
-    cursor: pointer;
-}
-
-.form-group select:focus {
-    outline: none;
-    border-color: #7D2838;
-    box-shadow: 0 0 0 3px rgba(125, 40, 56, 0.1);
-}
-
 /* Forms */
 .admin-forms {
     background: white;
@@ -298,6 +263,41 @@ body {
 
 .form-group input::placeholder {
     color: #999;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+    background-color: white;
+    cursor: pointer;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #7D2838;
+    box-shadow: 0 0 0 3px rgba(125, 40, 56, 0.1);
+}
+
+/* Input validation states */
+.form-group input:invalid {
+    border-color: #dc3545;
+}
+
+.form-group input:valid {
+    border-color: #28a745;
+}
+
+.form-group input:invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-group input:valid:focus {
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
 
 /* Buttons */
