@@ -32,7 +32,7 @@
                     </form>
                     <ul>
                         <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho"></a></li>
-                        <li><a href="/perfilcliente"><img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria"></a></li>
+                        <li><a href="<%= autenticado ? '/perfilcliente' : '/cadastro' %>"><img src="<%= autenticado && autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria"></a></li>
                         <li><a href="/favoritos"><img src="/imagens/icone coraçao.png" class="img-tamanho"></a></li>
                     </ul>
                 </section>

@@ -32,9 +32,9 @@
                 <ul>
                     <li><a href="/sacola1"><img src="/imagens/icone saco.png" class="img-tamanho" alt="Sacola"></a></li>
                     <% if (autenticado && autenticado.autenticado) { %>
-                        <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" class="maria profile-img" alt="Perfil"></a></li>
+                        <li><a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>"><img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" class="maria profile-img" alt="Perfil"></a></li>
                     <% } else { %>
-                        <li><a href="/cadastro"><img src="/imagens/icone sem cadastro.png" class="maria" alt="Perfil"></a></li>
+                        <li><a href="/cadastro"><img src="/imagens/imagem sem cadastro.avif" class="maria" alt="Perfil"></a></li>
                     <% } %>
                     <li><a href="/favoritos"><img src="/imagens/icone coraçao.png" class="img-tamanho" alt="Favoritos"></a></li>
                 </ul>
@@ -51,11 +51,11 @@
                 <img src="/imagens/logo.png" alt="Logo">
                 <% if (autenticado && autenticado.autenticado) { %>
                     <a href="<%= autenticado.tipo === 'b' ? '/menuvendedor' : '/menu' %>">
-                        <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/icone sem cadastro.png' %>" alt="Perfil" class="profile-img-mobile">
+                        <img src="<%= autenticado.imagem ? '/' + autenticado.imagem : '/imagens/imagem sem cadastro.avif' %>" alt="Perfil" class="profile-img-mobile">
                     </a>
                 <% } else { %>
                     <a href="javascript:void(0)" onclick="goBack()">
-                        <img src="/imagens/icone sem cadastro.png" alt="Perfil">
+                        <img src="/imagens/imagem sem cadastro.avif" alt="Perfil">
                     </a>
                 <% } %>
             </nav>
@@ -65,7 +65,7 @@
     <main>
         <% if (brecho) { %>
             <section class="profile-section">
-                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/icone sem cadastro.png' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-pic">
+                <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="profile-pic">
                 <h2><%= brecho.NOME_USUARIO %></h2>
                 <p class="rating"><%= brecho.avaliacao || '4.5' %> <span>&#9733;&#9733;&#9733;&#9733;&#9734;</span></p>
                 
