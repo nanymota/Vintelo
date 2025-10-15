@@ -4598,27 +4598,149 @@ router.get('/brecho/:id/avaliacoes', carregarDadosUsuario, async (req, res) => {
     }
 });
 
+// Rota alternativa para avaliacoes-brecho (compatibilidade)
+router.get('/avaliacoes-brecho/:id?', carregarDadosUsuario, async (req, res) => {
+    try {
+        const brechoId = req.params.id || req.query.brecho;
+        
+        if (!brechoId) {
+            return res.redirect('/homecomprador');
+        }
+        
+        // Buscar dados do brechó
+        const [brecho] = await pool.query(
+            'SELECT * FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brecho.length === 0) {
+            return res.redirect('/homecomprador');
+        }
+        
+        // Buscar avaliações do brechó
+        const [avaliacoes] = await pool.query(`
+            SELECT ab.*, u.NOME_USUARIO, u.IMG_URL
+            FROM AVALIACOES_BRECHOS ab
+            JOIN USUARIOS u ON ab.ID_USUARIO = u.ID_USUARIO
+            WHERE ab.ID_BRECHO = ?
+            ORDER BY ab.DT_AVALIACAO DESC
+        `, [brechoId]);
+        
+        // Calcular média das avaliações
+        const [mediaResult] = await pool.query(
+            'SELECT AVG(NOTA) as media, COUNT(*) as total FROM AVALIACOES_BRECHOS WHERE ID_BRECHO = ?',
+            [brechoId]
+        );
+        
+        const mediaAvaliacoes = parseFloat(mediaResult[0]?.media) || 0;
+        const totalAvaliacoes = mediaResult[0]?.total || 0;
+        
+        res.render('pages/avaliacoes-brecho', {
+            brecho: brecho[0],
+            avaliacoes: avaliacoes,
+            mediaAvaliacoes: mediaAvaliacoes,
+            totalAvaliacoes: totalAvaliacoes,
+            autenticado: req.session.autenticado || null
+        });
+    } catch (error) {
+        console.log('Erro ao carregar avaliações:', error);
+        res.redirect('/homecomprador');
+    }
+});
+
 router.post('/avaliacoes/criar', verificarUsuAutenticado, async (req, res) => {
     try {
+        console.log('=== CRIAR AVALIAÇÃO ===');
+        console.log('Body recebido:', req.body);
+        console.log('Usuário autenticado:', req.session.autenticado);
+        
         const { nota, comentario, brechoId } = req.body;
         const userId = req.session.autenticado.id;
         
-        if (!nota || !comentario || nota < 1 || nota > 5) {
-            return res.json({ success: false, message: 'Dados inválidos' });
+        // Validações
+        if (!nota || !comentario || !brechoId) {
+            console.log('Dados obrigatórios faltando');
+            return res.json({ success: false, message: 'Todos os campos são obrigatórios' });
         }
         
-        // Criar nova avaliação usando tabela real
-        if (brechoId) {
-            await pool.query(`
-                INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
-                VALUES (?, ?, ?, ?, CURDATE(), CURTIME())
-            `, [userId, brechoId, nota, comentario]);
+        if (nota < 1 || nota > 5) {
+            console.log('Nota inválida:', nota);
+            return res.json({ success: false, message: 'Nota deve ser entre 1 e 5' });
         }
+        
+        if (comentario.trim().length < 5) {
+            console.log('Comentário muito curto');
+            return res.json({ success: false, message: 'Comentário deve ter pelo menos 5 caracteres' });
+        }
+        
+        // Verificar se o brechó existe
+        const [brechoExiste] = await pool.query(
+            'SELECT ID_USUARIO FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brechoExiste.length === 0) {
+            console.log('Brechó não encontrado:', brechoId);
+            return res.json({ success: false, message: 'Brechó não encontrado' });
+        }
+        
+        // Verificar se o usuário já avaliou este brechó
+        const [avaliacaoExiste] = await pool.query(
+            'SELECT ID_AVALIACAO_BRECHO FROM AVALIACOES_BRECHOS WHERE ID_USUARIO = ? AND ID_BRECHO = ?',
+            [userId, brechoId]
+        );
+        
+        if (avaliacaoExiste.length > 0) {
+            console.log('Usuário já avaliou este brechó');
+            return res.json({ success: false, message: 'Você já avaliou este brechó' });
+        }
+        
+        // Criar nova avaliação
+        console.log('Inserindo avaliação no banco...');
+        const [resultado] = await pool.query(`
+            INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
+            VALUES (?, ?, ?, ?, CURDATE(), CURTIME())
+        `, [userId, brechoId, nota, comentario.trim()]);
+        
+        console.log('Avaliação inserida com ID:', resultado.insertId);
         
         res.json({ success: true, message: 'Avaliação criada com sucesso!' });
     } catch (error) {
-        console.log('Erro ao criar avaliação:', error);
-        res.json({ success: false, message: 'Erro interno do servidor' });
+        console.log('Erro detalhado ao criar avaliação:', error);
+        res.json({ success: false, message: 'Erro interno do servidor: ' + error.message });
+    }
+});
+
+router.post('/avaliacoes/excluir', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { avaliacaoId } = req.body;
+        const userId = req.session.autenticado.id;
+        
+        const [avaliacao] = await pool.query(
+            'SELECT * FROM AVALIACOES_BRECHOS WHERE ID_AVALIACAO_BRECHO = ?',
+            [avaliacaoId]
+        );
+        
+        if (avaliacao.length === 0) {
+            return res.json({ success: false, message: 'Avaliação não encontrada' });
+        }
+        
+        const isAdmin = req.session.autenticado.tipo === 'a';
+        const isOwner = avaliacao[0].ID_USUARIO === userId;
+        
+        if (!isAdmin && !isOwner) {
+            return res.json({ success: false, message: 'Sem permissão para excluir' });
+        }
+        
+        await pool.query(
+            'DELETE FROM AVALIACOES_BRECHOS WHERE ID_AVALIACAO_BRECHO = ?',
+            [avaliacaoId]
+        );
+        
+        res.json({ success: true, message: 'Avaliação excluída com sucesso!' });
+    } catch (error) {
+        console.log('Erro ao excluir avaliação:', error);
+        res.json({ success: false, message: 'Erro interno do servidor: ' + error.message });
     }
 });
 
@@ -5211,6 +5333,44 @@ router.get('/publicar-artigos-ficticios', async (req, res) => {
     }
 });
 
+// Rota para testar criação de avaliação via GET (apenas para debug)
+router.get('/test-criar-avaliacao/:brechoId', verificarUsuAutenticado, async (req, res) => {
+    try {
+        const { brechoId } = req.params;
+        const userId = req.session.autenticado.id;
+        
+        console.log('=== TESTE CRIAR AVALIAÇÃO ===');
+        console.log('Brechó ID:', brechoId);
+        console.log('Usuário ID:', userId);
+        
+        // Verificar se o brechó existe
+        const [brecho] = await pool.query(
+            'SELECT NOME_USUARIO FROM USUARIOS WHERE ID_USUARIO = ? AND TIPO_USUARIO = "b"',
+            [brechoId]
+        );
+        
+        if (brecho.length === 0) {
+            return res.json({ success: false, message: 'Brechó não encontrado' });
+        }
+        
+        // Criar avaliação de teste
+        const [resultado] = await pool.query(`
+            INSERT INTO AVALIACOES_BRECHOS (ID_USUARIO, ID_BRECHO, NOTA, COMENTARIO, DT_AVALIACAO, HORA)
+            VALUES (?, ?, 4, 'Avaliação de teste - Bom atendimento e produtos de qualidade!', CURDATE(), CURTIME())
+        `, [userId, brechoId]);
+        
+        res.json({ 
+            success: true, 
+            message: 'Avaliação de teste criada!',
+            avaliacaoId: resultado.insertId,
+            brecho: brecho[0].NOME_USUARIO
+        });
+    } catch (error) {
+        console.log('Erro no teste:', error);
+        res.json({ success: false, message: 'Erro: ' + error.message });
+    }
+});
+
 module.exports = router;
 
 // API endpoint para status de autenticação (usado pelo perfil-autenticado.js)
@@ -5449,3 +5609,5 @@ router.post('/api/calcular-frete', async function(req, res){
         res.json({ success: false, message: 'Erro interno do servidor' });
     }
 });
+
+module.exports = router;

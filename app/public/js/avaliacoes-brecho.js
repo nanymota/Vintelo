@@ -2,47 +2,56 @@ document.addEventListener('DOMContentLoaded', function() {
     const reviewForm = document.getElementById('reviewForm');
     
     if (reviewForm) {
-        reviewForm.addEventListener('submit', function(e) {
+        reviewForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            if (!window.isAuthenticated) {
-                alert('Faça login para avaliar');
-                return;
-            }
-            
-            const formData = new FormData(this);
-            const nota = formData.get('nota');
-            const comentario = formData.get('comentario');
+            const nota = document.querySelector('input[name="nota"]:checked')?.value;
+            const comentario = document.getElementById('comentario').value;
+            const brechoId = document.getElementById('brechoId').value;
             
             if (!nota) {
                 alert('Por favor, selecione uma nota');
                 return;
             }
             
-            fetch('/avaliacoes/criar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nota: parseInt(nota),
-                    comentario: comentario,
-                    brechoId: window.brechoId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
+            if (!comentario.trim()) {
+                alert('Por favor, escreva um comentário');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/avaliacoes/criar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nota: parseInt(nota),
+                        comentario: comentario.trim(),
+                        brechoId: parseInt(brechoId)
+                    })
+                });
+                
+                const data = await response.json();
+                
                 if (data.success) {
                     alert('Avaliação enviada com sucesso!');
                     location.reload();
                 } else {
-                    alert(data.message || 'Erro ao enviar avaliação');
+                    alert('Erro: ' + data.message);
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Erro:', error);
-                alert('Erro ao enviar avaliação');
-            });
+                alert('Erro ao enviar avaliação. Tente novamente.');
+            }
+        });
+    }
+    
+    // Botão voltar
+    const goBackBtn = document.getElementById('goBackBtn');
+    if (goBackBtn) {
+        goBackBtn.addEventListener('click', function() {
+            window.history.back();
         });
     }
     

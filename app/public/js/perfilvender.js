@@ -15,7 +15,9 @@ function editProduct(productId) {
                 document.getElementById('editCor').value = produto.COR_PRODUTO || '';
                 document.getElementById('editCondicao').value = produto.CONDICAO_PRODUTO || '';
                 
-                document.getElementById('editProductModal').style.display = 'block';
+                const modal = document.getElementById('editProductModal');
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             } else {
                 showNotification('Erro ao carregar dados do produto', 'error');
             }
@@ -27,7 +29,9 @@ function editProduct(productId) {
 }
 
 function closeEditModal() {
-    document.getElementById('editProductModal').style.display = 'none';
+    const modal = document.getElementById('editProductModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
 }
 
 function deleteProduct(productId) {

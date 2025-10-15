@@ -89,7 +89,7 @@
                 <% if (typeof avaliacoes !== 'undefined' && avaliacoes && avaliacoes.length > 0) { %>
                     <% avaliacoes.filter(av => !av.ID_BRECHO_AVALIADO).forEach(function(avaliacao) { %>
                         <section class="review-item">
-                            <img src="<%= avaliacao.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="profile-pic">
+                            <img src="<%= avaliacao.IMG_URL ? '/' + avaliacao.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= avaliacao.NOME_USUARIO %>" class="profile-pic">
                             <section class="review-content">
                                 <section class="review-header">
                                     <h3><%= avaliacao.NOME_USUARIO %></h3>
@@ -125,7 +125,7 @@
                 <% if (typeof brechos !== 'undefined' && brechos && brechos.length > 0) { %>
                     <% brechos.forEach(function(brecho) { %>
                         <section class="brecho-card">
-                            <img src="<%= brecho.IMG_URL || '/imagens/icone sem cadastro.png' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
+                            <img src="<%= brecho.IMG_URL ? '/' + brecho.IMG_URL : '/imagens/imagem sem cadastro.avif' %>" alt="<%= brecho.NOME_USUARIO %>" class="brecho-img">
                             <section class="brecho-info">
                                 <h3><%= brecho.NOME_USUARIO %></h3>
                                 <p class="brecho-rating">
